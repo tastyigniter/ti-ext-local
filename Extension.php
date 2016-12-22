@@ -5,17 +5,6 @@ if (!defined('BASEPATH')) exit('No direct access allowed');
 class Extension extends \Base_Extension
 {
 
-	public function extensionMeta() {
-		return array(
-			'code'        => 'local_module',
-			'name'       => 'Local',
-			'description' => 'This extension allows your customers to find the nearest location',
-			'author'      => 'SamPoyigi',
-			'icon'        => 'fa-map-marker',
-			'version'     => '1.2',
-		);
-	}
-
 	public function registerComponents() {
 		return array(
 			'local_module/components/Local_module' => array(
