@@ -12,5 +12,8 @@
     "1.0.2": "Removed `local_module` admin edit language text feature",
     "1.0.3": "Improve local module display search box functionality",
     "1.2.0": "Update code to use latest Extension API"
+  },
+  "require": {
+    "cart_module": "2.0.*"
   }
 }
