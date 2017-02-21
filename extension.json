@@ -2,7 +2,7 @@
   "code": "local_module",
   "name": "Local",
   "description": "This extension allows your customers to find the nearest location.",
-  "version": "1.2",
+  "version": "1.2.0",
   "author": "SamPoyigi",
   "icon": "fa-map-marker",
   "homepage": "https://github.com/igniter-labs/ti-local-extension",
@@ -14,6 +14,6 @@
     "1.2.0": "Update code to use latest Extension API"
   },
   "require": {
-    "cart_module": "2.0.*"
+    "cart_module": "2.0.0"
   }
 }
