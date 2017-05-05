@@ -1,10 +1,10 @@
 <?php if (!defined('BASEPATH')) exit('No direct access allowed');
 
-class Local_module extends Base_Component
+class Local_module extends BaseComponent
 {
 
-	public function __construct() {
-		parent::__construct();                                                                    // calls the constructor
+	public function __construct($controller, $params = []) {
+		parent::__construct($controller, $params);                                                                    // calls the constructor
 		$this->load->library('user_agent');                                                        // load the user agent library
 		$this->load->library('location');                                                        // load the location library
 
