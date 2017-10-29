@@ -75,7 +75,6 @@ class Extension extends \System\Classes\BaseExtension
                 'icon'        => '',
                 'model'       => 'SamPoyigi\Local\Models\Settings_model',
                 'permissions' => ['Module.LocalModule'],
-                'url'         => admin_url('extensions/settings/sampoyigi/local'),
             ],
         ];
     }

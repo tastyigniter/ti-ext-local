@@ -211,6 +211,7 @@ class Search extends \System\Classes\BaseComponent
         }
 
         $this->load->model('Reviews_model');
+        $total_reviews = $this->Reviews_model->where('location_id', $location_id)->where('review_status', '1')->count();
         $total_reviews = $this->Reviews_model->getTotalLocationReviews($this->location->getId());
         $data['sampoyigi.local::default.text_total_review'] = sprintf(lang('sampoyigi.local::default.text_total_review'), $total_reviews);
 
