@@ -1,10 +1,10 @@
-<?php if (strlen($localModel->description)) { ?>
+<?php if (strlen($description = $currentLocation->getDescription())) { ?>
     <div class="panel panel-default">
         <div class="panel-body">
             <h4
                 class="wrap-bottom border-bottom"
-            ><?= sprintf(lang('sampoyigi.local::default.text_info_heading'), $localModel->location_name); ?></h4>
-            <p><?= $localModel->description; ?></p>
+            ><?= sprintf(lang('sampoyigi.local::default.text_info_heading'), $currentLocation->getName()); ?></h4>
+            <p><?= $description; ?></p>
         </div>
     </div>
 <?php } ?>
@@ -13,12 +13,12 @@
 <div class="row wrap-bottom">
     <div class="col-sm-6">
         <div class="list-group">
-            <?php if (!empty($workingHourType['opening']) AND $workingHourType['opening'] == '24_7') { ?>
+            <?php if (!empty($openingType) AND $openingType == '24_7') { ?>
                 <div class="list-group-item"><?= lang('sampoyigi.local::default.text_opens_24_7'); ?></div>
             <?php } ?>
             <?php if ($hasDelivery) { ?>
                 <div class="list-group-item">
-                    <?= lang('sampoyigi.local::default.text_delivery_time'); ?>
+                    <?= lang('main::default.local.text_delivery'); ?>
                     <?php if ($deliveryStatus == 'open') { ?>
                         <?= sprintf(lang('sampoyigi.local::default.text_in_minutes'), $deliveryTime); ?>
                     <?php } else if ($deliveryStatus == 'opening') { ?>
@@ -30,7 +30,7 @@
             <?php } ?>
             <?php if ($hasCollection) { ?>
                 <div class="list-group-item">
-                    <?= lang('sampoyigi.local::default.text_collection_time'); ?>
+                    <?= lang('main::default.local.text_collection'); ?>
                     <?php if ($collectionStatus == 'open') { ?>
                         <?= sprintf(lang('sampoyigi.local::default.text_in_minutes'), $collectionTime); ?>
                     <?php } else if ($collectionStatus == 'opening') { ?>

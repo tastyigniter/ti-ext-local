@@ -13,7 +13,10 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
                 <img
                     class="img-responsive img-thumbnail"
                     alt="<?= $menuItem->menu_name; ?>"
-                    src="<?= $menuItem->getThumb(); ?>"
+                    src="<?= $menuItem->getThumb([
+                        'width' => $menuThumWidth,
+                        'height' => $menuThumHeight,
+                    ]); ?>"
                 >
             </div>
         <?php } ?>
@@ -57,9 +60,9 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
                 <?php } else { ?>
                     <a
                         class="btn btn-default btn-cart"
-                        data-cart-control="<?= $menuHasOptions ? 'load' : 'add'; ?>-item"
+                        data-cart-control="<?= $menuHasOptions ? 'load-item' : 'add-item'; ?>"
                         data-menu-id="<?= $menuItem->menu_id; ?>"
-                        data-min-quantity="<?= $menuItem->minimum_qty; ?>"
+                        data-quantity="<?= $menuItem->minimum_qty; ?>"
                     >
                         <span class="fa fa-plus text-primary"></span>
                     </a>

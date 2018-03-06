@@ -19,7 +19,7 @@
                 />
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                    <a class="btn btn-danger" href="<?= page_url(); ?>"><i class="fa fa-times"></i></a>
+                    <a class="btn btn-danger" href="<?= current_url(); ?>"><i class="fa fa-times"></i></a>
                 </span>
             </div>
         </form>
@@ -29,7 +29,7 @@
             <li class="list-group-item  <?= ($key == $filterSorted) ? 'disabled' : '' ?>">
                 <a
                     class="btn-block"
-                    <?= ($key == $filterSorted) ? 'disabled' : 'href="'.site_url($filter['href']).'"'; ?>
+                    <?= ($key == $filterSorted) ? 'disabled' : 'href="'.$filter['href'].'"'; ?>
                 >
                     <i class="fa fa-angle-right"></i>&nbsp;&nbsp;<?= $filter['name']; ?>
                 </a>

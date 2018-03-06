@@ -4,46 +4,30 @@
             <thead>
             <tr>
                 <th></th>
-                <th><?= lang('sampoyigi.local::default.text_opening'); ?></th>
+                <th><?= lang('main::default.local.text_opening'); ?></th>
                 <?php if ($hasDelivery) { ?>
-                    <th><?= lang('sampoyigi.local::default.text_delivery'); ?></th>
+                    <th><?= lang('main::default.local.text_delivery'); ?></th>
                 <?php } ?>
                 <?php if ($hasCollection) { ?>
-                    <th><?= lang('sampoyigi.local::default.text_collection'); ?></th>
+                    <th><?= lang('main::default.local.text_collection'); ?></th>
                 <?php } ?>
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($localHours['opening'] as $day => $openingHour) { ?>
+            <?php foreach ($localHours as $day => $hours) { ?>
                 <tr>
-                    <td><?= $openingHour['day']; ?></td>
-                    <?php foreach ($workingTypes as $type) { ?>
-                        <?php if (isset($localHours[$type][$day])) { ?>
-                            <?php
-                            $hour = $localHours[$type][$day];
-                            ?>
-                            <td<?= count($localHours) == 1 ? ' colspan="9" class="text-center"' : ''; ?>>
-                                <span class="small">
-                                    <?php
-                                    if (!empty($hour['status']))
-                                        echo sprintf(lang('sampoyigi.local::default.text_working_hour'),
-                                            mdate($localTimeFormat, $hour['open']->timestamp),
-                                            mdate($localTimeFormat, $hour['close']->timestamp)
-                                        );
-                                    ?>
-                                </span>
-                                <span class="small text-muted">
-                                    <?php if ($hour['status'] != '1') {
-                                        echo lang('sampoyigi.local::default.text_closed');
-                                    }
-                                    else if (isset($hour['open_all_day']) AND $hour['open_all_day'] == TRUE) {
-                                        echo lang('sampoyigi.local::default.text_24h');
-                                    }; ?>
-                                </span>
-                            </td>
-                        <?php }
-                        else if (count($localHours) > 1) { ?>
-                            <td colspan="9"><?= lang('sampoyigi.local::default.text_same_as_opening_hours'); ?></td>
+                    <td><?= $day; ?></td>
+                    <?php foreach ($hours as $hour) { ?>
+                        <?php if ($hour->type == 'delivery' AND !$hasDelivery) { ?>
+                            <td><?= lang('sampoyigi.local::default.text_closed'); ?></td>
+                        <?php } else if ($hour->type == 'collection' AND !$hasCollection) { ?>
+                            <td><?= lang('sampoyigi.local::default.text_closed'); ?></td>
+                        <?php } else if (!$hour->isEnabled()) { ?>
+                            <td><?= lang('sampoyigi.local::default.text_closed'); ?></td>
+                        <?php } else if ($hour->isOpenAllDay()) { ?>
+                            <td><?= lang('sampoyigi.local::default.text_24h'); ?></td>
+                        <?php } else { ?>
+                            <td><?= sprintf(lang('sampoyigi.local::default.text_working_hour'), $hour->open, $hour->close); ?></td>
                         <?php } ?>
                     <?php } ?>
                 </tr>

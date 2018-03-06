@@ -5,7 +5,7 @@
     ?>
     <a
         class="list-group-item<?= $isActive ? ' active' : ''; ?>"
-        href="<?= restaurant_url('menus/'.$category->permalink_slug) ?>"
+        href="<?= page_url('local/menus', ['category' => $category->permalink_slug]) ?>"
     >
         <?= $category->name ?>
         <?php if (count($children)) { ?>

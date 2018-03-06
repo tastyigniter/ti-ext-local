@@ -2,7 +2,8 @@
 
 namespace SamPoyigi\Local\Components;
 
-use Igniter\Models\Image_tool_model;
+use Location;
+use Admin\Models\Image_tool_model;
 
 class Gallery extends \System\Classes\BaseComponent
 {
@@ -10,36 +11,31 @@ class Gallery extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->prepareVars();
-    }
+        $currentLocation = Location::current();
+        $gallery = $currentLocation->getGallery();
 
-    protected function prepareVars()
-    {
-        if (!$library = $this->property('library'))
-            throw new \Exception("Missing [location library] property in {$this->alias} component");
-
-        $gallery = $library->getGallery();
+        $gallery = $this->processImages($gallery);
 
         $this->id = uniqid($this->alias);
-        $this->page['localGallery'] = $gallery;
-        $this->page['galleryImages'] = $this->prepareImages($gallery);
+        $this->page['gallery'] = $gallery;
     }
 
-    protected function prepareImages($gallery)
+    protected function processImages($gallery)
     {
-        if (!isset($gallery['images']))
-            return [];
-
         $images = [];
-        foreach ($gallery['images'] as $image) {
-            if (strlen($image) > 0) {
-                $images[] = [
-                    'link'  => image_url('data'.$image),
-                    'thumb' => Image_tool_model::resize($image, ['height' => 200]),
-                ];
+        if (isset($gallery['images'])) {
+            foreach ($gallery['images'] as $image) {
+                if (strlen($image) > 0) {
+                    $images[] = [
+                        'link'  => image_url('data'.$image),
+                        'thumb' => Image_tool_model::resize($image, ['height' => 200]),
+                    ];
+                }
             }
         }
 
-        return $images;
+        $gallery['images'] = $images;
+
+        return $gallery;
     }
 }

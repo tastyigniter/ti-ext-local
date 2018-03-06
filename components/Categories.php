@@ -4,43 +4,31 @@ use Admin\Models\Categories_model;
 
 class Categories extends \System\Classes\BaseComponent
 {
-    public function onRender()
+    public function defineProperties()
     {
-        $this->lang->load('categories_module/categories_module');
+        return [
+            'menusPage' => [
+                'label' => 'lang:sampoyigi.local::default.label_menus_page',
+                'type'  => 'text',
+                'default'  => 'local/menus',
+            ],
+        ];
+    }
 
-        $this->addCss(extension_url('categories_module/assets/stylesheet.css'), 'categories-module-css');
-
+    public function onRun()
+    {
+        $this->page['menusPage'] = $this->property('menusPage');
+        $this->page['selectedCategory'] = $this->param('category');
         $this->page['categories'] = $this->loadCategories();
-        $this->page['selectedCategory'] = $this->uri->segment('category');
-//        $rootCategory = $this->page['categories']->first();
-
-//        if (strlen($this->categoryParam))
-//            $this->template->setTitle($rootCategory->name);
-//        $this->page['countMenus'] = $this->Menus_model->getCount();
     }
 
     protected function loadCategories()
     {
-        $query = Categories_model::with(['permalink'])->orderBy('name');
+        $query = Categories_model::orderBy('name');
 
         // category must have at least one menu
-        $query->whereHasMenus();
+//        $query->whereHasMenus();
 
         return $query->get()->toTree();
-    }
-
-    public function buildTree($categories, $prefix = '-')
-    {
-        $tree = '<ul class="list-group list-group-responsive">';
-        foreach ($categories as $category) {
-            $tree .= partial('@tree_node', ['category' => $category]);
-
-            if ($category->children)
-                $tree .= $this->buildTree($category->children, $prefix.'-');
-        }
-
-        $tree .= '</ul>';
-
-        return $tree;
     }
 }

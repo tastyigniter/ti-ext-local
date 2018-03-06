@@ -2,7 +2,7 @@
 
 namespace SamPoyigi\Local\Components;
 
-use Igniter\Libraries\Location\Location;
+use Location;
 
 class Info extends \System\Classes\BaseComponent
 {
@@ -17,34 +17,33 @@ class Info extends \System\Classes\BaseComponent
 
     protected function prepareVars()
     {
-        if (!$library = $this->property('library'))
-            throw new \Exception("Missing [location library] property in {$this->alias} component");
-
-        $libraryModel = $library->getModel();
+        $currentLocation = Location::current();
 
         $this->id = uniqid($this->alias);
-        $this->page['localPayments'] = $library->payments();
-        $this->page['hasDelivery'] = $libraryModel->offersOrderType('delivery');
-        $this->page['hasCollection'] = $libraryModel->offersOrderType('collection');
-        $this->page['deliveryTime'] = $library->deliveryTime();
-        $this->page['collectionTime'] = $library->collectionTime();
-        $this->page['deliveryHour'] = $library->workingTime('delivery');
-        $this->page['collectionHour'] = $library->workingTime('collection');
+        $this->page['currentLocation'] = $currentLocation;
+        $this->page['hasDelivery'] = $currentLocation->hasDelivery();
+        $this->page['hasCollection'] = $currentLocation->hasCollection();
+        $this->page['deliveryTime'] = $currentLocation->deliveryMinutes();
+        $this->page['collectionTime'] = $currentLocation->collectionMinutes();
+//        $this->page['deliveryHour'] = Location::openTime('delivery');
+//        $this->page['collectionHour'] = Location::openTime('collection');
 
-        $this->page['localTimeFormat'] = $timeFormat = config_item('time_format');
-        $this->page['localHours'] = $library->workingHours()->generateHours();
-        $this->page['workingHourType'] = $library->workingType();
-        $this->page['workingTypes'] = $library->workingHours()->getTypes();
-        $this->page['deliveryStatus'] = $library->workingStatus('delivery');
-        $this->page['collectionStatus'] = $library->workingStatus('collection');
-        $this->page['lastOrderTime'] = mdate($timeFormat, strtotime($library->lastOrderTime()));
+        $this->page['localPayments'] = $currentLocation->listAvailablePayments();
+        $this->page['localHours'] = $currentLocation->listWorkingHours()->groupBy('day');
+        $this->page['deliveryAreas'] = $currentLocation->listDeliveryAreas();
 
-        $localPosition = $library->area()->localPosition();
+        $this->page['openingType'] = $currentLocation->workingHourType('opening');
+        $this->page['workingTypes'] = $currentLocation->availableWorkingTypes();
+        $this->page['deliveryStatus'] = Location::workingStatus('delivery');
+        $this->page['collectionStatus'] = Location::workingStatus('collection');
+        $this->page['lastOrderTime'] = Location::lastOrderTime();
 
-        $this->page['deliveryAreas'] = $library->deliveryAreas();
-        $this->page['locationLat'] = $localPosition->latitude;
-        $this->page['locationLng'] = $localPosition->longitude;
-        $this->page['mapAddress'] = $library->getAddress();
-        $this->page['locationTelephone'] = $library->getTelephone();
+        $userPosition = Location::userPosition();
+
+        $this->page['locationLat'] = $userPosition->latitude;
+        $this->page['locationLng'] = $userPosition->longitude;
+        $this->page['mapAddress'] = format_address($currentLocation->getAddress());
+        $this->page['locationTelephone'] = $currentLocation->getTelephone();
+        $this->page['locationDescription'] = $currentLocation->getDescription();
     }
 }

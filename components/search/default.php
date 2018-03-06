@@ -4,13 +4,13 @@
             <h2 class="text-center"><?= lang('sampoyigi.local::default.text_order_summary'); ?></h2>
             <span class="search-label sr-only"><?= lang('sampoyigi.local::default.label_search_query'); ?></span>
             <div class="col-xs-12 col-sm-3 col-md-4 center-block">
-                <?php if (!$showSearch AND $showMenuButton) { ?>
+                <?php if ($hideSearch) { ?>
                     <a class="btn btn-block btn-primary"
-                       href="<?= $localMenuUrl; ?>"><?= lang('sampoyigi.local::default.text_find'); ?></a>
+                       href="<?= restaurant_url($menusPage); ?>"><?= lang('sampoyigi.local::default.text_find'); ?></a>
                 <?php }
                 else { ?>
                     <form
-                        id="location-form"
+                        id="location-search"
                         method="POST"
                         role="form"
                         data-request="<?= $searchEventHandler; ?>"
@@ -22,7 +22,7 @@
                                 class="form-control text-center postcode-control"
                                 name="search_query"
                                 placeholder="<?= lang('sampoyigi.local::default.label_search_query'); ?>"
-                                value="<?= $searchQuery; ?>"
+                                value="<?= $userPosition->formattedAddress; ?>"
                             >
                             <span class="input-group-btn">
                                 <button

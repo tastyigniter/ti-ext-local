@@ -1,11 +1,16 @@
-<?php foreach ($locations as $location) { ?>
+<?php foreach ($locationsList as $location) { ?>
     <?php
-    $locationClass = $location->locationClass;
-    $openingStatus = $locationClass->workingStatus('opening');
-    $deliveryStatus = $locationClass->workingStatus('delivery');
-    $collectionStatus = $locationClass->workingStatus('collection');
-    $hasDelivery = $locationClass->hasDelivery();
-    $hasCollection = $locationClass->hasCollection();
+    $openingStatus = $location->workingScheduleInstance('opening')->getStatus();
+    $deliveryStatus = $location->workingScheduleInstance('delivery')->getStatus();
+    $collectionStatus = $location->workingScheduleInstance('collection')->getStatus();
+    $openingTime = $location->workingScheduleInstance('opening')->getOpenTime();
+    $hasDelivery = $location->hasDelivery();
+    $hasCollection = $location->hasCollection();
+    $distance = $location->calculateDistance($userPosition);
+    $deliveryMinutes = $location->deliveryMinutes();
+    $deliveryTime = $location->workingScheduleInstance('delivery')->getOpenTime();
+    $collectionMinutes = $location->collectionMinutes();
+    $collectionTime = $location->workingScheduleInstance('collection')->getOpenTime();
     ?>
     <div class="panel panel-local">
         <div class="panel-body">
@@ -14,13 +19,15 @@
                     <img class="img-responsive pull-left"
                          src="<?= $location->getThumb(['height' => 90, 'width' => 90]); ?>">
                     <dl>
-                        <dd><h4><?= $location['location_name']; ?></h4></dd>
+                        <dd><h4><?= $location->location_name; ?></h4></dd>
                         <dd>
-                            <span class="text-muted"><?= $locationClass->getAddress(); ?></span>
+                            <span class="text-muted"><?= format_address($location->getAddress()); ?></span>
                         </dd>
+                        <?php if ($distance) { ?>
                         <dd>
-                            <span class="text-muted"><?= $locationClass->checkDistance(); ?> <?= $distanceUnit; ?></span>
+                            <span class="text-muted"><?= $distance; ?> <?= $distanceUnit; ?></span>
                         </dd>
+                        <?php } ?>
                     </dl>
                 </div>
                 <div class="clearfix visible-xs wrap-bottom"></div>
@@ -31,7 +38,7 @@
                             <dt><?= lang('sampoyigi.local::default.text_is_opened'); ?></dt>
                         <?php }
                         else if ($openingStatus == 'opening') { ?>
-                            <dt class="text-muted"><?= sprintf(lang('sampoyigi.local::default.text_opening_time'), $locationClass->openingTime()); ?></dt>
+                            <dt class="text-muted"><?= sprintf(lang('sampoyigi.local::default.text_opening_time'), $openingTime); ?></dt>
                         <?php }
                         else { ?>
                             <dt class="text-muted"><?= lang('sampoyigi.local::default.text_closed'); ?></dt>
@@ -39,10 +46,10 @@
                         <dd class="text-muted">
                             <?php if ($hasDelivery) { ?>
                                 <?php if ($deliveryStatus == 'open') { ?>
-                                    <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), sprintf(lang('sampoyigi.local::default.text_in_minutes'), $locationClass->deliveryTime())); ?>
+                                    <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), sprintf(lang('sampoyigi.local::default.text_in_minutes'), $deliveryMinutes)); ?>
                                 <?php }
                                 else if ($deliveryStatus == 'opening') { ?>
-                                    <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), sprintf(lang('sampoyigi.local::default.text_starts'), $locationClass->workingTime('delivery', 'open'))); ?>
+                                    <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), sprintf(lang('sampoyigi.local::default.text_starts'), $deliveryTime)); ?>
                                 <?php }
                                 else { ?>
                                     <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), lang('sampoyigi.local::default.text_is_closed')); ?>
@@ -52,10 +59,10 @@
                         <dd class="text-muted">
                             <?php if ($hasCollection) { ?>
                                 <?php if ($collectionStatus == 'open') { ?>
-                                    <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), sprintf(lang('sampoyigi.local::default.text_in_minutes'), $locationClass->collectionTime())); ?>
+                                    <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), sprintf(lang('sampoyigi.local::default.text_in_minutes'), $collectionMinutes)); ?>
                                 <?php }
                                 else if ($collectionStatus == 'opening') { ?>
-                                    <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), sprintf(lang('sampoyigi.local::default.text_starts'), $locationClass->workingTime('collection', 'open'))); ?>
+                                    <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), sprintf(lang('sampoyigi.local::default.text_starts'), $collectionTime)); ?>
                                 <?php }
                                 else { ?>
                                     <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), lang('sampoyigi.local::default.text_is_closed')); ?>
@@ -66,7 +73,7 @@
                 </div>
                 <div class="col-xs-6 col-sm-3 text-right">
                     <dl>
-                        <?php if (config_item('allow_reviews')) { ?>
+                        <?php if ($showReviews) { ?>
                             <dd>
                                 <div class="rating rating-sm text-muted">
                                     <span class="fa fa-star"></span>
@@ -80,7 +87,7 @@
                         <?php } ?>
                         <dd>
                             <a class="btn btn-primary"
-                               href="<?= site_url($locationClass->getSlug()); ?>"><?= lang('button_view_menu'); ?></a>
+                               href="<?= page_url('local/menus', ['location' => $location->permalink_slug]); ?>"><?= lang('sampoyigi.local::default.button_view_menu'); ?></a>
                         </dd>
                         <dd class="text-muted small">
                             <?php if (!$hasDelivery AND $hasCollection) { ?>
@@ -103,8 +110,3 @@
         </div>
     </div>
 <?php } ?>
-
-<div class="pagination-bar text-right">
-    <!--    <div class="links">--><? //= $pagination['links']; ?><!--</div>-->
-    <!--    <div class="info">--><? //= $pagination['info']; ?><!--</div>-->
-</div>

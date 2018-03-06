@@ -14,11 +14,11 @@
                     <div class="row">
                         <div class="col-xs-4"><?= $area['name']; ?></div>
                         <div class="col-xs-8 wrap-none">
-                            <?php foreach ($area->listConditions() as $condition) { ?>
-                                <?= sprintf($condition['label'],
-                                    currency_format($condition['amount']),
-                                    currency_format($condition['total'])
-                                ); ?>
+                            <?php foreach ($area->listConditions() as $id => $condition) {
+                                $condition['amount'] = !empty($condition['amount']) ? currency_format($condition['amount']) : lang('main::default.local.text_free');
+                                $condition['total'] = !empty($condition['total']) ? currency_format($condition['total']) : lang('main::default.local.text_delivery_all_orders');
+                                ?>
+                                <?= parse_values($condition, $condition['label']); ?>
                             <?php } ?>
                         </div>
                     </div>

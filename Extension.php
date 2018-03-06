@@ -1,12 +1,20 @@
 <?php namespace SamPoyigi\Local;
 
 use Event;
+use Illuminate\Foundation\AliasLoader;
+use Igniter\Flame\Location\Models\Location as LocationModel;
+use SamPoyigi\Local\Classes\Location as LocationManager;
 
 class Extension extends \System\Classes\BaseExtension
 {
-    public function initialize()
+    public function register()
     {
-        Event::listen('controller.beforeConstructor', function ($controller) {
+        $this->app->singleton('location', function($app) {
+            $location = new LocationManager($app['session.store'], $app['events']);
+
+            $location->setDefaultLocation(params('default_location_id'));
+
+            return $location;
         });
     }
 
@@ -62,19 +70,6 @@ class Extension extends \System\Classes\BaseExtension
             'Module.LocalModule' => [
                 'action'      => ['manage'],
                 'description' => 'Ability to manage local extension settings',
-            ],
-        ];
-    }
-
-    public function registerSettings()
-    {
-        return [
-            'settings' => [
-                'label'       => 'Local Settings',
-                'description' => 'Manage location settings.',
-                'icon'        => '',
-                'model'       => 'SamPoyigi\Local\Models\Settings_model',
-                'permissions' => ['Module.LocalModule'],
             ],
         ];
     }

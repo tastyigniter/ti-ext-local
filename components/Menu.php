@@ -2,77 +2,89 @@
 
 namespace SamPoyigi\Local\Components;
 
-use Igniter\Models\Categories_model;
+use Admin\Models\Categories_model;
+use Admin\Models\Menus_model;
 
 class Menu extends \System\Classes\BaseComponent
 {
-//    public $defaultPartial = 'list';
-
-    public $isHidden = TRUE;
-
-    public $isGrouped = FALSE;
+    protected $location;
 
     protected $list = [];
 
-    public function onRender()
+    public function defineProperties()
     {
-        $this->id = uniqid($this->alias);
-        $menuList = $this->loadMenuList();
-        $this->page['showMenuImages'] = config_item('show_menu_images');
-//        $this->page['categoryCount'] = $this->list->toBase()->getCountForPagination();
-        $this->page['menuList'] = $menuList; //->get()->keyBy('category_id');
-        $this->page['groupMenuList'] = $this->isGrouped;
-//        $this->page['menuItems'] = $menuList->keyBy('category_id');
-//        $this->page['menuLinks'] = $menuList->links();
+        return [
+            'isGrouped' => [
+                'label' => 'Group Menu Items',
+                'type'  => 'switch',
+            ],
+            'menusPerPage' => [
+                'label' => 'Menus Per Page',
+                'type'  => 'number',
+                'default'  => 20,
+            ],
+            'showMenuImages' => [
+                'label' => 'Show Menu Item Images',
+                'type'  => 'switch',
+            ],
+            'menuImageWidth'              => [
+                'label'   => 'lang:sampoyigi.local::default.label_menu_image_height',
+                'type'    => 'number',
+                'default'    => 95,
+                'trigger' => [
+                    'action'    => 'show',
+                    'field'     => 'showMenuImages',
+                    'condition' => 'checked',
+                ],
+            ],
+            'menuImageHeight'              => [
+                'label'   => 'lang:sampoyigi.local::default.label_menu_image_width',
+                'type'    => 'number',
+                'default'    => 80,
+                'trigger' => [
+                    'action'    => 'show',
+                    'field'     => 'showMenuImages',
+                    'condition' => 'checked',
+                ],
+            ],
+        ];
     }
 
-    protected function loadMenuList()
+    public function onRun()
     {
-        if (!$library = $this->property('library'))
-            throw new \Exception("Missing [location library] property in {$this->alias} component");
+        $isGrouped = $this->property('isGrouped');
+        $this->page['menuIsGrouped'] = $isGrouped;
+        $this->page['showMenuImages'] = $this->property('showMenuImages');
 
-        if (!$model = $this->property('model'))
-            throw new \Exception("Missing [model] property in {$this->alias} component");
-
-        if ($model instanceof Categories_model) {
-            $this->isGrouped = TRUE;
-            $list = $this->loadGroupedList($model);
-        }
-        else {
-            $list = $this->loadList($model);
-        }
-
-        return $list;
+        $this->page['menuList'] = $isGrouped ?
+            $this->loadGroupedList() : $this->loadList();
     }
 
-    protected function loadList($model)
+    protected function loadList()
     {
-        $list = $model->with([
-            'categories.permalink',
+        $list = Menus_model::with([
             'special',
             'mealtime',
             'menu_options',
         ])->listFrontEnd([
             'page'      => $this->param('page'),
-            'pageLimit' => $this->property('pageLimit', config_item('menus_page_limit')),
+            'pageLimit' => $this->property('menusPerPage'),
             'sort'      => $this->property('sort', 'menu_priority asc'),
-            'group'     => $this->property('group', 'categories.category_id'),
             'category'  => $this->param('category'),
         ]);
 
         return $list;
     }
 
-    protected function loadGroupedList($model)
+    protected function loadGroupedList()
     {
-        $query = $model->with([
-            'permalink',
+        $query = Categories_model::with([
             'menus' => function ($menusQuery) {
                 $menusQuery->listFrontEnd([
                     'page'      => $this->param('page'),
-                    'pageLimit' => $this->property('pageLimit', config_item('menus_page_limit')),
+                    'pageLimit' => $this->property('menusPerPage'),
                     'sort'      => $this->property('sort', 'menu_priority asc'),
-                    'group'     => $this->property('group', 'categories.category_id'),
+                    'group'     => null, //$this->property('group', 'categories.category_id'),
                     'category'  => null, //$this->param('category'),
                 ]);
             },
@@ -81,7 +93,7 @@ class Menu extends \System\Classes\BaseComponent
             'menus.menu_options',
         ]);
 
-        $query->whereHasMenus();
+//        $query->whereHasMenus();
 
         if ($this->param('category'))
             $query->whereSlug($this->param('category'));
