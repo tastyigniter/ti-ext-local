@@ -62,11 +62,7 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $list = Menus_model::with([
-            'special',
-            'mealtime',
-            'menu_options',
-        ])->listFrontEnd([
+        $list = Menus_model::listFrontEnd([
             'page'      => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort'      => $this->property('sort', 'menu_priority asc'),
@@ -88,9 +84,6 @@ class Menu extends \System\Classes\BaseComponent
                     'category'  => null, //$this->param('category'),
                 ]);
             },
-            'menus.special',
-            'menus.mealtime',
-            'menus.menu_options',
         ]);
 
 //        $query->whereHasMenus();

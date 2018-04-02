@@ -17,6 +17,7 @@ class LocalList extends \System\Classes\BaseComponent
         $this->id = uniqid($this->alias);
         $this->page['distanceUnit'] = setting('distance_unit');
         $this->page['showReviews'] = setting('allow_reviews');
+        $this->page['timeFormat'] = setting('time_format');
         $this->page['filterSearch'] = input('search');
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();
@@ -52,7 +53,7 @@ class LocalList extends \System\Classes\BaseComponent
 
         $options = [
             'page'      => $this->param('page'),
-            'pageLimit' => $this->property('pageLimit', setting('main_page_limit')),
+            'pageLimit' => $this->property('pageLimit'),
             'search'    => $this->param('search'),
             'sort'      => $sortBy,
         ];

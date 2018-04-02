@@ -22,12 +22,9 @@ class Review extends \System\Classes\BaseComponent
         if (!$location = Location::current())
             return null;
 
-        $list = Reviews_model::with([
-            'location',
-            'customer',
-        ])->listFrontEnd([
+        $list = Reviews_model::listFrontEnd([
             'page'      => $this->param('page'),
-            'pageLimit' => $this->property('pageLimit', setting('main_page_limit')),
+            'pageLimit' => $this->property('pageLimit'),
             'sort'      => $this->property('sort', 'date_added asc'),
             'location'  => $location->getKey(),
         ]);

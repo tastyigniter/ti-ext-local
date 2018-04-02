@@ -1,6 +1,3 @@
-<?php
-
-?>
 <!--        <h4>--><?php //echo sprintf(lang('sampoyigi.local::default.text_review_heading'), $reviewList['location_name']); ?><!--</h4>-->
 
 <?php if (count($reviewList)) { ?>
@@ -12,7 +9,7 @@
         <?php } ?>
 
         <li class="list-group-item review-item">
-            <div class="pagination-bar text-right clearfix">
+            <div class="pagination-bar text-right">
                 <div class="links"><?= $reviewList->links(); ?></div>
             </div>
         </li>

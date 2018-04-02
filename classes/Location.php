@@ -125,29 +125,6 @@ class Location extends Manager
         return ($isOpen OR $isOpening);
     }
 
-//    public function payments($split = '')
-//    {
-//        return $this->getModel()->listAvailablePaymentGateways();
-//        $local_payments = (!empty($this->local_options['payments'])) ? $this->local_options['payments'] : null;
-//
-//        $payments = [];
-//        foreach (ComponentManager::instance()->listPaymentGateways() as $code => $payment) {
-//            if (!empty($local_payments) AND !in_array($code, $local_payments)) continue;
-//
-//            $settings = $this->Extensions_model->getSettings($code);
-//            $payments[$code] = array_merge($payment, [
-//                'name'        => isset($payment['name']) ? $this->lang->line($payment['name']) : '',
-//                'description' => isset($payment['description']) ? $this->lang->line($payment['description']) : '',
-//                'priority'    => !empty($settings['priority']) ? $settings['priority'] : '0',
-//                'status'      => empty($settings['status']) ? '0' : '1',
-//            ]);
-//        }
-//
-//        sort_array($payments);
-//
-//        return ($payments AND $split !== '') ? implode(array_column($payments, 'name'), $split) : $payments;
-//    }
-
     //
     //	HOURS
     //
@@ -222,7 +199,7 @@ class Location extends Manager
 
     protected function workingSchedule($type)
     {
-        return $this->getModel()->workingScheduleInstance($type);
+        return $this->getModel()->workingSchedule($type);
     }
 
     //
@@ -277,12 +254,12 @@ class Location extends Manager
         return $this->getModel()->listDeliveryAreas();
     }
 
-    public function deliveryAmount($cartTotal = 0)
+    public function deliveryAmount($cartTotal)
     {
         return $this->coveredArea()->deliveryAmount($cartTotal);
     }
 
-    public function minimumOrder($cartTotal = 0)
+    public function minimumOrder($cartTotal)
     {
         return $this->coveredArea()->minimumOrderTotal($cartTotal);
     }
@@ -297,7 +274,7 @@ class Location extends Manager
         return ($cartTotal >= $this->minimumOrder($cartTotal));
     }
 
-    public function checkDistance($decimalPoint = 0)
+    public function checkDistance($decimalPoint)
     {
         $distance = $this->getModel()->calculateDistance($this->userPosition());
 

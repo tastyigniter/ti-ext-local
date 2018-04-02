@@ -1,16 +1,16 @@
 <?php foreach ($locationsList as $location) { ?>
     <?php
-    $openingStatus = $location->workingScheduleInstance('opening')->getStatus();
-    $deliveryStatus = $location->workingScheduleInstance('delivery')->getStatus();
-    $collectionStatus = $location->workingScheduleInstance('collection')->getStatus();
-    $openingTime = $location->workingScheduleInstance('opening')->getOpenTime();
+    $openingStatus = $location->workingSchedule('opening')->getStatus();
+    $deliveryStatus = $location->workingSchedule('delivery')->getStatus();
+    $collectionStatus = $location->workingSchedule('collection')->getStatus();
+    $openingTime = $location->workingSchedule('opening')->getOpenTime($timeFormat);
     $hasDelivery = $location->hasDelivery();
     $hasCollection = $location->hasCollection();
     $distance = $location->calculateDistance($userPosition);
     $deliveryMinutes = $location->deliveryMinutes();
-    $deliveryTime = $location->workingScheduleInstance('delivery')->getOpenTime();
+    $deliveryTime = $location->workingSchedule('delivery')->getOpenTime($timeFormat);
     $collectionMinutes = $location->collectionMinutes();
-    $collectionTime = $location->workingScheduleInstance('collection')->getOpenTime();
+    $collectionTime = $location->workingSchedule('collection')->getOpenTime($timeFormat);
     ?>
     <div class="panel panel-local">
         <div class="panel-body">

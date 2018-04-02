@@ -3,7 +3,7 @@
 namespace SamPoyigi\Local\Components;
 
 use Location;
-use Admin\Models\Image_tool_model;
+use Main\Models\Image_tool_model;
 
 class Gallery extends \System\Classes\BaseComponent
 {
