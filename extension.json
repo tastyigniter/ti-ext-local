@@ -14,6 +14,6 @@
     "1.2.0": "Update code to use latest Extension API"
   },
   "require": {
-    "cart_module": "2.0.0"
+    "sampoyigi.cart": "*"
   }
 }

@@ -1,6 +1,6 @@
 <div
     class="row local-search bg-warning"
-    style="display: <?= $requiresUserPosition ? 'block' : 'none'; ?>">
+    style="display: <?= (!$userPosition->isValid() AND $requiresUserPosition) ? 'block' : 'none'; ?>">
     <a class="close-search clickable" onclick="$('.local-change, .local-search').slideToggle()">&times;</a>
     <div class="col-xs-12 col-sm-6 center-block">
         <form
