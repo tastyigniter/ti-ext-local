@@ -246,7 +246,7 @@ class Location extends Manager
      */
     public function coveredArea()
     {
-        return $this->getModel()->getDeliveryArea($this->getAreaId());
+        return $this->getModel()->findOrNewDeliveryArea($this->getAreaId());
     }
 
     public function deliveryAreas()
