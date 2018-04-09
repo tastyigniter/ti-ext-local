@@ -62,7 +62,7 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $list = Menus_model::listFrontEnd([
+        $list = Menus_model::with(['mealtime', 'menu_options'])->listFrontEnd([
             'page'      => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort'      => $this->property('sort', 'menu_priority asc'),

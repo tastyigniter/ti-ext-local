@@ -31,7 +31,7 @@ class Local extends \System\Classes\BaseComponent
             'timeFormat'     => [
                 'label'   => 'Time format',
                 'type'    => 'text',
-                'default' => 'D H:i a',
+                'default' => 'H:i a',
             ],
         ];
     }
@@ -59,6 +59,7 @@ class Local extends \System\Classes\BaseComponent
     {
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
         $this->page['menusPage'] = $this->property('menusPage');
+        $this->page['openingTimeFormat'] = $this->property('timeFormat');
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
 
         $this->page['orderType'] = Location::orderType();
@@ -73,9 +74,7 @@ class Local extends \System\Classes\BaseComponent
         $this->page['isOpened'] = Location::isOpened();
         $this->page['isClosed'] = Location::isClosed();
         $this->page['openingType'] = $this->currentLocation->workingHourType('opening');
-        $this->page['openingStatus'] = Location::workingStatus('opening');
-        $this->page['openingTime'] = Location::openTime('opening', $this->property('timeFormat'));
-        $this->page['closingTime'] = Location::closeTime('opening');
+        $this->page['openingSchedule'] = Location::workingSchedule('opening');
     }
 
     protected function overrideLocalFromParam($paramFrom)
@@ -93,8 +92,8 @@ class Local extends \System\Classes\BaseComponent
         $summary = [];
         foreach (Location::getDeliveryChargeConditions() as $condition) {
 
-            $condition['amount'] = !empty($condition['amount']) ? currency_format($condition['amount']) : lang('main::default.local.text_free');
-            $condition['total'] = !empty($condition['total']) ? currency_format($condition['total']) : lang('main::default.local.text_delivery_all_orders');
+            $condition['amount'] = !empty($condition['amount']) ? currency_format($condition['amount']) : lang('sampoyigi.local::default.text_free');
+            $condition['total'] = !empty($condition['total']) ? currency_format($condition['total']) : lang('sampoyigi.local::default.text_delivery_all_orders');
 
             $summary[] = parse_values($condition, $condition['label']);
         }

@@ -1,16 +1,13 @@
 <?php foreach ($locationsList as $location) { ?>
     <?php
-    $openingStatus = $location->workingSchedule('opening')->getStatus();
-    $deliveryStatus = $location->workingSchedule('delivery')->getStatus();
-    $collectionStatus = $location->workingSchedule('collection')->getStatus();
-    $openingTime = $location->workingSchedule('opening')->getOpenTime($timeFormat);
+    $openingSchedule = $location->workingSchedule('opening');
+    $deliverySchedule = $location->workingSchedule('delivery');
+    $collectionSchedule = $location->workingSchedule('collection');
     $hasDelivery = $location->hasDelivery();
     $hasCollection = $location->hasCollection();
     $distance = $location->calculateDistance($userPosition);
     $deliveryMinutes = $location->deliveryMinutes();
-    $deliveryTime = $location->workingSchedule('delivery')->getOpenTime($timeFormat);
     $collectionMinutes = $location->collectionMinutes();
-    $collectionTime = $location->workingSchedule('collection')->getOpenTime($timeFormat);
     ?>
     <div class="panel panel-local">
         <div class="panel-body">
@@ -34,22 +31,22 @@
                 <div class="clearfix visible-xs border-top wrap-bottom"></div>
                 <div class="col-xs-6 col-sm-4">
                     <dl>
-                        <?php if ($openingStatus == 'open') { ?>
+                        <?php if ($openingSchedule->isOpen()) { ?>
                             <dt><?= lang('sampoyigi.local::default.text_is_opened'); ?></dt>
                         <?php }
-                        else if ($openingStatus == 'opening') { ?>
-                            <dt class="text-muted"><?= sprintf(lang('sampoyigi.local::default.text_opening_time'), $openingTime); ?></dt>
+                        else if ($openingSchedule->isOpening()) { ?>
+                            <dt class="text-muted"><?= sprintf(lang('sampoyigi.local::default.text_opening_time'), $openingSchedule->getOpenTime($timeFormat)); ?></dt>
                         <?php }
                         else { ?>
                             <dt class="text-muted"><?= lang('sampoyigi.local::default.text_closed'); ?></dt>
                         <?php } ?>
                         <dd class="text-muted">
                             <?php if ($hasDelivery) { ?>
-                                <?php if ($deliveryStatus == 'open') { ?>
+                                <?php if ($deliverySchedule->isOpen()) { ?>
                                     <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), sprintf(lang('sampoyigi.local::default.text_in_minutes'), $deliveryMinutes)); ?>
                                 <?php }
-                                else if ($deliveryStatus == 'opening') { ?>
-                                    <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), sprintf(lang('sampoyigi.local::default.text_starts'), $deliveryTime)); ?>
+                                else if ($deliverySchedule->isOpening()) { ?>
+                                    <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), sprintf(lang('sampoyigi.local::default.text_starts'), $deliverySchedule->getOpenTime($timeFormat))); ?>
                                 <?php }
                                 else { ?>
                                     <?= sprintf(lang('sampoyigi.local::default.text_delivery_time_info'), lang('sampoyigi.local::default.text_is_closed')); ?>
@@ -58,11 +55,11 @@
                         </dd>
                         <dd class="text-muted">
                             <?php if ($hasCollection) { ?>
-                                <?php if ($collectionStatus == 'open') { ?>
+                                <?php if ($collectionSchedule->isOpen()) { ?>
                                     <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), sprintf(lang('sampoyigi.local::default.text_in_minutes'), $collectionMinutes)); ?>
                                 <?php }
-                                else if ($collectionStatus == 'opening') { ?>
-                                    <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), sprintf(lang('sampoyigi.local::default.text_starts'), $collectionTime)); ?>
+                                else if ($collectionSchedule->isOpening()) { ?>
+                                    <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), sprintf(lang('sampoyigi.local::default.text_starts'), $collectionSchedule->getOpenTime($timeFormat))); ?>
                                 <?php }
                                 else { ?>
                                     <?= sprintf(lang('sampoyigi.local::default.text_collection_time_info'), lang('sampoyigi.local::default.text_is_closed')); ?>

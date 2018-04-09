@@ -25,8 +25,6 @@ class Info extends \System\Classes\BaseComponent
         $this->page['hasCollection'] = $currentLocation->hasCollection();
         $this->page['deliveryTime'] = $currentLocation->deliveryMinutes();
         $this->page['collectionTime'] = $currentLocation->collectionMinutes();
-//        $this->page['deliveryHour'] = Location::openTime('delivery');
-//        $this->page['collectionHour'] = Location::openTime('collection');
 
         $this->page['localPayments'] = $currentLocation->listAvailablePayments();
         $this->page['localHours'] = $currentLocation->listWorkingHours()->groupBy('day');
@@ -34,8 +32,8 @@ class Info extends \System\Classes\BaseComponent
 
         $this->page['openingType'] = $currentLocation->workingHourType('opening');
         $this->page['workingTypes'] = $currentLocation->availableWorkingTypes();
-        $this->page['deliveryStatus'] = Location::workingStatus('delivery');
-        $this->page['collectionStatus'] = Location::workingStatus('collection');
+        $this->page['deliverySchedule'] = Location::deliverySchedule();
+        $this->page['collectionSchedule'] = Location::collectionSchedule();
         $this->page['lastOrderTime'] = Location::lastOrderTime();
 
         $userPosition = Location::userPosition();

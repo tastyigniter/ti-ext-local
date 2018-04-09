@@ -15,8 +15,8 @@
                         <div class="col-xs-4"><?= $area['name']; ?></div>
                         <div class="col-xs-8 wrap-none">
                             <?php foreach ($area->listConditions() as $id => $condition) {
-                                $condition['amount'] = !empty($condition['amount']) ? currency_format($condition['amount']) : lang('main::default.local.text_free');
-                                $condition['total'] = !empty($condition['total']) ? currency_format($condition['total']) : lang('main::default.local.text_delivery_all_orders');
+                                $condition['amount'] = !empty($condition['amount']) ? currency_format($condition['amount']) : lang('sampoyigi.local::default.text_free');
+                                $condition['total'] = !empty($condition['total']) ? currency_format($condition['total']) : lang('sampoyigi.local::default.text_delivery_all_orders');
                                 ?>
                                 <?= parse_values($condition, $condition['label']); ?>
                             <?php } ?>
@@ -30,11 +30,5 @@
                 <p><?= lang('sampoyigi.local::default.text_no_delivery_areas'); ?></p>
             </div>
         <?php } ?>
-    </div>
-
-    <h4><b><?= lang('sampoyigi.local::default.text_delivery_map'); ?></b></h4>
-
-    <div id="map">
-        <div id="map-holder" style="height:300px;text-align:left;"></div>
     </div>
 <?php } ?>
