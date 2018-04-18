@@ -64,7 +64,7 @@ class Local extends \System\Classes\BaseComponent
 
         $this->page['orderType'] = Location::orderType();
         $this->page['requiresUserPosition'] = Location::requiresUserPosition();
-        $this->page['userPositionIsCovered'] = Location::checkDeliveryCoverage();
+        $this->page['userPositionIsCovered'] = Location::checkDeliveryCoverage() != 'outside';
 
         $this->page['deliveryConditionText'] = $this->translateConditionSummary();
 

@@ -243,10 +243,10 @@ class Location extends Manager
     {
         list ($areaId, $locationId) = $this->getSession('area', [null, null]);
 
-        if ($locationId !== $this->getId())
-            return null;
+        if ($areaId AND $locationId == $this->getId())
+            return $areaId;
 
-        return $areaId;
+        return null;
     }
 
     public function setCoveredArea(Area $areaModel)
@@ -279,7 +279,7 @@ class Location extends Manager
      */
     public function coveredArea()
     {
-        return $this->getModel()->findDeliveryArea($this->getAreaId());
+        return $this->getModel()->findOrNewDeliveryArea($this->getAreaId());
     }
 
     public function deliveryAreas()

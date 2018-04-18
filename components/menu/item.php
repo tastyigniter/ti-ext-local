@@ -1,7 +1,7 @@
 <?php
 $mealtime = $menuItem->mealtime;
 $special = $menuItem->special;
-$mealtimeNotAvailable = ($mealtime AND !$mealtime->availableNow());
+$mealtimeNotAvailable = ($mealtime AND !$mealtime->isAvailableNow());
 $specialActive = ($special AND $special->active());
 $menuHasOptions = $menuItem->hasOptions();
 $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
