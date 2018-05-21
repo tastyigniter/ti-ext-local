@@ -1,6 +1,7 @@
 <?php namespace SamPoyigi\Local\Components;
 
 use Admin\Models\Categories_model;
+use Main\Template\Page;
 
 class Categories extends \System\Classes\BaseComponent
 {
@@ -8,11 +9,16 @@ class Categories extends \System\Classes\BaseComponent
     {
         return [
             'menusPage' => [
-                'label' => 'lang:sampoyigi.local::default.label_menus_page',
-                'type'  => 'text',
-                'default'  => 'local/menus',
+                'label'   => 'Menu Page',
+                'type'    => 'text',
+                'default' => 'local/menus',
             ],
         ];
+    }
+
+    public static function getMenusPageOptions()
+    {
+        return Page::lists('baseFileName', 'baseFileName');
     }
 
     public function onRun()

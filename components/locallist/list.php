@@ -21,9 +21,9 @@
                             <span class="text-muted"><?= format_address($location->getAddress()); ?></span>
                         </dd>
                         <?php if ($distance) { ?>
-                        <dd>
-                            <span class="text-muted"><?= $distance; ?> <?= $distanceUnit; ?></span>
-                        </dd>
+                            <dd>
+                                <span class="text-muted"><?= $distance; ?> <?= $distanceUnit; ?></span>
+                            </dd>
                         <?php } ?>
                     </dl>
                 </div>

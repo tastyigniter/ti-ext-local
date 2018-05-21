@@ -28,25 +28,13 @@ class Location extends Manager
     //	BOOT METHODS
     //
 
-    public function searchNearby(GeoPosition $position, $update = TRUE)
+    public function updateNearby(GeoPosition $position, $area)
     {
-        $coordinates = [
-            'latitude'  => $position->latitude,
-            'longitude' => $position->longitude,
-        ];
+        $this->updateUserPosition($position);
 
-        $locationModel = $this->searchByCoordinates($coordinates);
+        $this->setCurrent($area->location);
 
-        if (!is_null($locationModel)) {
-            $this->updateUserPosition($position);
-
-            if ($update)
-                $this->setCurrent($locationModel);
-
-            return TRUE;
-        }
-
-        return FALSE;
+        $this->setCoveredArea($area);
     }
 
     public function updateOrderType($orderType = null)

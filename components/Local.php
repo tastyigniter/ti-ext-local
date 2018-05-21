@@ -1,7 +1,7 @@
 <?php namespace SamPoyigi\Local\Components;
 
-use Cart;
 use Location;
+use Main\Template\Page;
 
 class Local extends \System\Classes\BaseComponent
 {
@@ -19,13 +19,13 @@ class Local extends \System\Classes\BaseComponent
                 'default' => 'location',
             ],
             'showLocalThumb' => [
-                'label'   => 'lang:sampoyigi.local::default.label_show_menu_button',
+                'label'   => 'lang:sampoyigi.local::default.label_show_menu_image',
                 'type'    => 'switch',
                 'default' => FALSE,
             ],
             'menusPage'      => [
-                'label'   => 'lang:sampoyigi.local::default.label_menus_page',
-                'type'    => 'text',
+                'label'   => 'lang:sampoyigi.local::default.label_menu_page_limit',
+                'type'    => 'select',
                 'default' => 'local/menus',
             ],
             'timeFormat'     => [
@@ -34,6 +34,11 @@ class Local extends \System\Classes\BaseComponent
                 'default' => 'H:i a',
             ],
         ];
+    }
+
+    public static function getMenusPageOptions()
+    {
+        return Page::lists('baseFileName', 'baseFileName');
     }
 
     public function onRun()
@@ -47,7 +52,7 @@ class Local extends \System\Classes\BaseComponent
 
         $this->page['userPosition'] = $this->userPosition = Location::userPosition();
         $this->page['currentLocation'] = $this->currentLocation = Location::current();
-        if ($this->currentLocation AND $this->userPosition) {
+        if ($this->currentLocation AND $this->userPosition AND !Location::getAreaId()) {
             if ($area = $this->currentLocation->findOrFirstDeliveryArea($this->userPosition))
                 Location::setCoveredArea($area);
         }

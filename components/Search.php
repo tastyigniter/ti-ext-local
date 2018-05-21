@@ -6,20 +6,18 @@ class Search extends \System\Classes\BaseComponent
 {
     use \SamPoyigi\Local\Traits\SearchesNearby;
 
-    public $hideSearch;
-
     public function defineProperties()
     {
         return [
             'hideSearch' => [
-                'label' => 'lang:sampoyigi.local::default.label_location_search_mode',
-                'type'  => 'switch',
-                'comment'  => 'lang:sampoyigi.local::default.help_location_search_mode',
+                'label'   => 'lang:sampoyigi.local::default.label_location_search_mode',
+                'type'    => 'switch',
+                'comment' => 'lang:sampoyigi.local::default.help_location_search_mode',
             ],
-            'menusPage' => [
-                'label' => 'lang:sampoyigi.local::default.label_menus_page',
-                'type'  => 'text',
-                'default'  => 'local/menus',
+            'menusPage'  => [
+                'label'   => 'Menu Page',
+                'type'    => 'text',
+                'default' => 'local/menus',
             ],
         ];
     }
@@ -35,7 +33,7 @@ class Search extends \System\Classes\BaseComponent
     protected function prepareVars()
     {
         $this->page['menusPage'] = $this->property('menusPage');
-        $this->page['hideSearch'] = $this->property('hideSearch', false);
+        $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
 
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['currentLocation'] = Location::current();

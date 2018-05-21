@@ -1,7 +1,7 @@
 <?php if (count($locationsList)) { ?>
     <?= partial('@list', [
-        'locationsList'    => $locationsList,
-        'distanceUnit' => $distanceUnit,
+        'locationsList' => $locationsList,
+        'distanceUnit'  => $distanceUnit,
     ]); ?>
 
     <div class="pagination-bar text-right">

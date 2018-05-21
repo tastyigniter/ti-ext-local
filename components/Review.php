@@ -2,8 +2,8 @@
 
 namespace SamPoyigi\Local\Components;
 
-use Location;
 use Admin\Models\Reviews_model;
+use Location;
 
 class Review extends \System\Classes\BaseComponent
 {

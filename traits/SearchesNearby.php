@@ -1,10 +1,9 @@
 <?php namespace SamPoyigi\Local\Traits;
 
-use AjaxException;
+use ApplicationException;
 use Exception;
 use Igniter\Flame\Location\GeoPosition;
 use Location;
-use ApplicationException;
 use Redirect;
 use Request;
 
@@ -16,10 +15,23 @@ trait SearchesNearby
             if (!strlen($searchQuery = post('search_query')))
                 throw new ApplicationException(lang('sampoyigi.local::default.alert_no_search_query'));
 
-            $position = $this->geocodeSearch($searchQuery);
+            $position = $this->geocodeSearchQuery($searchQuery);
 
-            if (!Location::searchNearby($position)) {
-                throw new ApplicationException(lang('sampoyigi.local::default.alert_no_found_restaurant'));    // display error: no available restaurant
+            $nearByLocations = Location::searchByCoordinates([
+                'latitude'  => $position->latitude,
+                'longitude' => $position->longitude,
+            ]);
+
+            $nearByLocation = $nearByLocations->first(function ($location) use ($position) {
+                if ($area = $location->filterDeliveryArea($position)) {
+                    Location::updateNearby($position, $area);
+                }
+
+                return $area;
+            });
+
+            if (!$nearByLocation) {
+                throw new ApplicationException(lang('sampoyigi.local::default.alert_no_found_restaurant'));
             }
 
             return Redirect::to(restaurant_url($this->property('menusPage')));
@@ -29,10 +41,10 @@ trait SearchesNearby
         }
     }
 
-    protected function geocodeSearch($searchQuery)
+    protected function geocodeSearchQuery($searchQuery)
     {
         $userPosition = app('geocoder')->geocode([
-            'address' => $searchQuery
+            'address' => $searchQuery,
         ]);
 
         if (!$userPosition OR !$userPosition instanceof GeoPosition)

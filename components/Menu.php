@@ -14,38 +14,30 @@ class Menu extends \System\Classes\BaseComponent
     public function defineProperties()
     {
         return [
-            'isGrouped' => [
+            'isGrouped'       => [
                 'label' => 'Group Menu Items',
                 'type'  => 'switch',
             ],
-            'menusPerPage' => [
-                'label' => 'Menus Per Page',
-                'type'  => 'number',
-                'default'  => 20,
+            'menusPerPage'    => [
+                'label'   => 'Menus Per Page',
+                'type'    => 'number',
+                'default' => 20,
             ],
-            'showMenuImages' => [
+            'showMenuImages'  => [
                 'label' => 'Show Menu Item Images',
                 'type'  => 'switch',
             ],
-            'menuImageWidth'              => [
+            'menuImageWidth'  => [
                 'label'   => 'lang:sampoyigi.local::default.label_menu_image_height',
                 'type'    => 'number',
-                'default'    => 95,
-                'trigger' => [
-                    'action'    => 'show',
-                    'field'     => 'showMenuImages',
-                    'condition' => 'checked',
-                ],
+                'span'    => 'left',
+                'default' => 95,
             ],
-            'menuImageHeight'              => [
+            'menuImageHeight' => [
                 'label'   => 'lang:sampoyigi.local::default.label_menu_image_width',
                 'type'    => 'number',
-                'default'    => 80,
-                'trigger' => [
-                    'action'    => 'show',
-                    'field'     => 'showMenuImages',
-                    'condition' => 'checked',
-                ],
+                'span'    => 'right',
+                'default' => 80,
             ],
         ];
     }

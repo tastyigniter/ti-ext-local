@@ -46,9 +46,9 @@ return [
     'text_condition_all_orders'  => '%s on all orders',
     'text_condition_above_total' => '%s above %s',
     'text_condition_below_total' => '%s below %s',
-    'text_delivery_areas'               => 'Delivery Areas',
-    'text_delivery_map'                 => 'Delivery Map',
-    'text_working_hour'                 => '(%s - %s)',
+    'text_delivery_areas'        => 'Delivery Areas',
+    'text_delivery_map'          => 'Delivery Map',
+    'text_working_hour'          => '(%s - %s)',
 
     'text_categories'      => 'Categories',
     'text_view_categories' => 'View categories',
@@ -104,8 +104,8 @@ return [
     'alert_invalid_search_query' => '<p class="alert-danger">We couldn\'t locate the entered address/postcode, please enter a valid address/postcode.</p>',
     'alert_no_found_restaurant'  => '<p class="alert-danger">We do not have any local restaurant near you.</p>',
 
-    'component_title' => 'Local Component',
-    'component_desc'  => 'Displays local information box',
+    'component_title'                   => 'Local Component',
+    'component_desc'                    => 'Displays local information box',
     'text_heading'                      => 'Restaurants',
     'text_local_heading'                => '%s - Restaurant',
     'text_hours'                        => 'Working Hours',
@@ -160,7 +160,6 @@ return [
     'text_end_today'     => 'Ends today',
     'text_end_elapsed'   => 'Ends in %s',
     'text_mealtime'      => '%s only (%s - %s)',
-
 
     'search' => [
         'component_title' => 'Local Search Component',

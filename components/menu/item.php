@@ -14,14 +14,14 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
                     class="img-responsive img-thumbnail"
                     alt="<?= $menuItem->menu_name; ?>"
                     src="<?= $menuItem->getThumb([
-                        'width' => $menuThumWidth,
+                        'width'  => $menuThumWidth,
                         'height' => $menuThumHeight,
                     ]); ?>"
                 >
             </div>
         <?php } ?>
 
-        <div class="menu-content center-vertical">
+        <div class="menu-content">
             <span class="menu-name">
                 <b><?= str_limit($menuItem->menu_name, 80); ?></b>
             </span>
