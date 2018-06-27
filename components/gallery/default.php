@@ -1,13 +1,20 @@
 <?php if (isset($gallery['images']) AND count($gallery['images'])) { ?>
-    <h5><b><?= $gallery['title']; ?></b></h5>
+    <h1 class="h4"><b><?= $gallery['title']; ?></b></h1>
     <p><?= $gallery['description']; ?></p><br/>
-    <ul class="gallery">
+    <div class="row gallery">
         <?php foreach ($gallery['images'] as $image) { ?>
-            <li>
-                <a href="<?= $image['link']; ?>" target="_blank"><img src="<?= $image['thumb']; ?>"></a>
-            </li>
+            <div class="col-sm-4">
+                <img
+                    class="img-responsive img-rounded"
+                    src="<?= $image['thumb']; ?>">
+                <div class="overlay">
+                    <a href="<?= $image['link']; ?>" target="_blank">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </div>
+            </div>
         <?php } ?>
-    </ul>
+    </div>
 <?php } else { ?>
     <p><?= lang('sampoyigi.local::default.text_empty_gallery'); ?></p>
 <?php } ?>

@@ -5,19 +5,15 @@
             <tr>
                 <th></th>
                 <th><?= lang('sampoyigi.local::default.text_opening'); ?></th>
-                <?php if ($hasDelivery) { ?>
-                    <th><?= lang('sampoyigi.local::default.text_delivery'); ?></th>
-                <?php } ?>
-                <?php if ($hasCollection) { ?>
-                    <th><?= lang('sampoyigi.local::default.text_collection'); ?></th>
-                <?php } ?>
+                <th><?= lang('sampoyigi.local::default.text_delivery'); ?></th>
+                <th><?= lang('sampoyigi.local::default.text_collection'); ?></th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($localHours as $day => $hours) { ?>
                 <tr>
                     <td><?= $day; ?></td>
-                    <?php foreach ($hours as $hour) { ?>
+                    <?php foreach ($hours->sortByDesc('type') as $hour) { ?>
                         <?php if ($hour->type == 'delivery' AND !$hasDelivery) { ?>
                             <td><?= lang('sampoyigi.local::default.text_closed'); ?></td>
                         <?php } else if ($hour->type == 'collection' AND !$hasCollection) { ?>

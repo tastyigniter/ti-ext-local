@@ -28,7 +28,7 @@ class Gallery extends \System\Classes\BaseComponent
                 if (strlen($image) > 0) {
                     $images[] = [
                         'link'  => image_url('data'.$image),
-                        'thumb' => Image_tool_model::resize($image, ['height' => 200]),
+                        'thumb' => Image_tool_model::resize($image),
                     ];
                 }
             }

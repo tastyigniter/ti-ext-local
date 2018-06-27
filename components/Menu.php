@@ -9,8 +9,6 @@ class Menu extends \System\Classes\BaseComponent
 {
     protected $location;
 
-    protected $list = [];
-
     public function defineProperties()
     {
         return [
@@ -44,9 +42,10 @@ class Menu extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $isGrouped = $this->property('isGrouped');
-        $this->page['menuIsGrouped'] = $isGrouped;
+        $this->page['menuIsGrouped'] = $isGrouped = $this->property('isGrouped');
         $this->page['showMenuImages'] = $this->property('showMenuImages');
+        $this->page['menuImageWidth'] = $this->property('menuImageWidth');
+        $this->page['menuImageHeight'] = $this->property('menuImageHeight');
 
         $this->page['menuList'] = $isGrouped ?
             $this->loadGroupedList() : $this->loadList();
@@ -54,7 +53,7 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $list = Menus_model::with(['mealtime', 'menu_options'])->listFrontEnd([
+        $list = Menus_model::with(['mealtime', 'menu_options', 'special'])->listFrontEnd([
             'page'      => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort'      => $this->property('sort', 'menu_priority asc'),
@@ -69,16 +68,16 @@ class Menu extends \System\Classes\BaseComponent
         $query = Categories_model::with([
             'menus' => function ($menusQuery) {
                 $menusQuery->listFrontEnd([
-                    'page'      => $this->param('page'),
-                    'pageLimit' => $this->property('menusPerPage'),
+                    'pageLimit' => null,
                     'sort'      => $this->property('sort', 'menu_priority asc'),
-                    'group'     => null, //$this->property('group', 'categories.category_id'),
-                    'category'  => null, //$this->param('category'),
                 ]);
             },
+            'menus.special',
+            'menus.mealtime',
+            'menus.menu_options',
         ]);
 
-//        $query->whereHasMenus();
+        $query->whereHasMenus();
 
         if ($this->param('category'))
             $query->whereSlug($this->param('category'));

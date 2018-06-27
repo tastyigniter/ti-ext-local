@@ -39,11 +39,11 @@ class Location extends Manager
 
     public function updateOrderType($orderType = null)
     {
+        if (is_null($orderType))
+            $this->forgetSession('orderType');
+
         if (strlen($orderType)) {
             $this->putSession('orderType', $orderType);
-        }
-        else {
-            $this->forgetSession('orderType');
         }
     }
 
@@ -52,6 +52,23 @@ class Location extends Manager
         $this->putSession('position', $position);
 
         $this->fireEvent('position.updated', $position);
+    }
+
+    public function updateOrderTimeSlot($type = null, $dateTime = null)
+    {
+        if (is_null($type))
+            $this->forgetSession('orderTimeSlot');
+
+        if ($type) {
+            if ($dateTime) {
+                $dateTime = make_carbon($dateTime, FALSE);
+            }
+
+            $this->putSession('orderTimeSlot', [
+                'type'     => $type,
+                'dateTime' => $dateTime,
+            ]);
+        }
     }
 
     //
@@ -76,6 +93,11 @@ class Location extends Manager
     public function orderType()
     {
         return $this->getSession('orderType', 'delivery');
+    }
+
+    public function orderTimeSlotType()
+    {
+        return $this->getSession('orderTimeSlot.type', 'asap');
     }
 
     public function userPosition()
@@ -173,6 +195,23 @@ class Location extends Manager
         return $this->workingSchedule($type)->getStatus($timestamp);
     }
 
+    public function orderDateTime()
+    {
+        $orderType = $this->orderType();
+        $orderTimeSlot = $this->getSession('orderTimeSlot');
+        $timeType = $this->orderTimeSlotType();
+        $dateTime = array_get($orderTimeSlot, 'dateTime');
+
+        if ($timeType == 'asap') {
+            $timeInterval = $this->orderTimeInterval();
+            $schedule = $this->workingSchedule($orderType);
+
+            return $schedule->getTimeSlotStartTime($timeInterval);
+        }
+
+        return make_carbon($dateTime, FALSE);
+    }
+
     public function orderTimeInterval()
     {
         return $this->getModel()->getOrderTimeInterval($this->orderType());
@@ -180,7 +219,7 @@ class Location extends Manager
 
     public function orderTimePeriods()
     {
-        $dateTime = Carbon::now();
+        $dateTime = Carbon::now()->startOfDay();
         $orderType = $this->orderType();
 
         $schedule = $this->workingSchedule($orderType);
@@ -215,6 +254,9 @@ class Location extends Manager
 
     public function checkOrderTime($timestamp, $orderType = null)
     {
+        if (is_null($orderType))
+            $orderType = $this->orderType();
+
         $status = $this->workingSchedule($orderType)->getStatus($timestamp);
 
         if ($this->getModel()->hasFutureOrder() AND $status != static::CLOSED)

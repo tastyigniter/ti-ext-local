@@ -1,8 +1,10 @@
 <?php if (count($locationsList)) { ?>
-    <?= partial('@list', [
-        'locationsList' => $locationsList,
-        'distanceUnit'  => $distanceUnit,
-    ]); ?>
+    <div class="local-group card-group flex-column">
+        <?= partial('@list', [
+            'locationsList' => $locationsList,
+            'distanceUnit'  => $distanceUnit,
+        ]); ?>
+    </div>
 
     <div class="pagination-bar text-right">
         <div class="links"><?= $locationsList->links(); ?></div>

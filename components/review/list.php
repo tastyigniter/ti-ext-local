@@ -1,14 +1,12 @@
-<!--        <h4>--><?php //echo sprintf(lang('sampoyigi.local::default.text_review_heading'), $reviewList['location_name']); ?><!--</h4>-->
-
 <?php if (count($reviewList)) { ?>
-    <ul class="list-group">
+    <ul class="list-group list-group-flush">
         <?php foreach ($reviewList as $review) { ?>
             <li class="list-group-item review-item">
                 <?= partial('@item', ['review' => $review]); ?>
             </li>
         <?php } ?>
 
-        <li class="list-group-item review-item">
+        <li class="list-group-item">
             <div class="pagination-bar text-right">
                 <div class="links"><?= $reviewList->links(); ?></div>
             </div>

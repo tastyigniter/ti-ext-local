@@ -2,8 +2,8 @@
     <img class="img-responsive pull-left" src="<?= $currentLocation->getThumb(['width' => 80, 'height' => 80]); ?>">
 <?php } ?>
 <dl <?= $showLocalThumb ? 'class="box-image"' : ''; ?>>
-    <dd><h4><?= $currentLocation->getName(); ?></h4></dd>
-    <?php if (setting('allow_reviews') != '1') { ?>
+    <dd><h1 class="h4"><?= $currentLocation->getName(); ?></h1></dd>
+    <?php if (setting('allow_reviews', 1)) { ?>
         <dd class="text-muted">
             <div class="rating rating-sm">
                 <span class="fa fa-star"></span>

@@ -15,7 +15,7 @@
             <span><?= lang('sampoyigi.local::default.text_24_7_hour'); ?></span>
         <?php }
         else { ?>
-            <span class="fa fa-clock-o"></span>&nbsp;&nbsp;
+            <span class="fa fa-clock-o"></span>&nbsp;
             <span>
                 <?= $openingSchedule->getOpenTime($openingTimeFormat); ?>
                 -

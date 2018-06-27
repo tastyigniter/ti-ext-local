@@ -1,7 +1,4 @@
-<div class="panel panel-default panel-locations-filter">
-    <div class="panel-heading">
-        <h3 class="panel-title"><?= lang('sampoyigi.local::default.text_locations_filter_title'); ?></h3>
-    </div>
+<div class="panel">
     <div class="panel-body">
         <form
             method="GET"
@@ -18,8 +15,8 @@
                     placeholder="<?= lang('sampoyigi.local::default.text_filter_search'); ?>"
                 />
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                    <a class="btn btn-danger" href="<?= current_url(); ?>"><i class="fa fa-times"></i></a>
+                    <button class="btn btn-outline-default" type="submit"><i class="fa fa-search"></i></button>
+                    <a class="btn btn-outline-danger" href="<?= current_url(); ?>"><i class="fa fa-times"></i></a>
                 </span>
             </div>
         </form>

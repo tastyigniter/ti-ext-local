@@ -1,6 +1,6 @@
-<div class="list-group">
+<div class="list-group list-group-flush">
     <?php if (!count($menuList)) { ?>
-        <div class="list-group-item">
+        <div class="menu-group-item">
             <p><?= lang('sampoyigi.local::default.text_no_category'); ?></p>
         </div>
     <?php }
@@ -12,24 +12,22 @@
             $menuCategoryAlias = strtolower(str_slug($menuCategory->name));
             ?>
 
-            <div class="list-group-item">
+            <div class="menu-group-item">
                 <div id="<?= $menuCategoryAlias; ?>-heading" role="tab">
-                    <h4
+                    <h5
                         class="category-title"
-                        role="button"
                         data-toggle="collapse"
-                        href="#<?= $menuCategoryAlias; ?>-collapse"
+                        data-target="#<?= $menuCategoryAlias; ?>-collapse"
                         aria-expanded="false"
                         aria-controls="<?= $menuCategoryAlias; ?>-heading"
                     >
                         <?= $menuCategory->name; ?>
-                        <i class="fa fa-pull-right"></i>
-                    </h4>
+                    </h5>
                 </div>
 
                 <div
                     id="<?= $menuCategoryAlias; ?>-collapse"
-                    class="collapse in"
+                    class="collapse <?= $index < 5 ? 'show' : ''; ?>"
                     role="tabpanel" aria-labelledby="<?= $menuCategoryAlias; ?>"
                 >
                     <div class="menu-category">

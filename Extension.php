@@ -1,5 +1,6 @@
 <?php namespace SamPoyigi\Local;
 
+use SamPoyigi\Cart\Models\CartSettings;
 use SamPoyigi\Local\Classes\Location as LocationManager;
 
 class Extension extends \System\Classes\BaseExtension
@@ -12,6 +13,19 @@ class Extension extends \System\Classes\BaseExtension
             $location->setDefaultLocation(params('default_location_id'));
 
             return $location;
+        });
+
+        $this->registerCartConditions();
+    }
+
+    public function registerCartConditions()
+    {
+        CartSettings::registerConditions(function (CartSettings $settingsModel) {
+            $settingsModel->registerCondition('SamPoyigi\Local\Conditions\Delivery', [
+                'name'        => 'delivery',
+                'label'       => 'lang:sampoyigi.local::default.text_delivery',
+                'description' => 'lang:sampoyigi.local::default.help_delivery_condition',
+            ]);
         });
     }
 

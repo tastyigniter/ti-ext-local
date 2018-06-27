@@ -24,8 +24,8 @@ class Search extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->addCss('stylesheet.css', 'local-module-css');
-        $this->addJs('local.js', 'local-module-js');
+        $this->addCss('css/local.css', 'local-css');
+        $this->addJs('js/local.js', 'local-module-js');
 
         $this->prepareVars();
     }

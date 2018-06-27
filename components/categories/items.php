@@ -1,21 +1,16 @@
 <?php foreach ($categories as $category) { ?>
     <?php
-    $isActive = ($category->permalink_slug == $selectedCategory);
+    $isActive = ($selectedCategory AND $category->permalink_slug == $selectedCategory->permalink_slug);
     $children = $category->children;
     ?>
     <a
-        class="list-group-item<?= $isActive ? ' active' : ''; ?>"
+        class="nav-link<?= $isActive ? ' active' : ''; ?>"
         href="<?= page_url('local/menus', ['category' => $category->permalink_slug]) ?>"
-    >
-        <?= $category->name ?>
-        <?php if (count($children)) { ?>
-            <i class="fa fa-plus-square fa-pull-right" data-toggle="collapse"></i>
-        <?php } ?>
-    </a>
+    ><?= $category->name ?></a>
 
     <?php if (count($children)) { ?>
-        <div class="list-group collapse<?= $category->isRoot() ? ' in' : '' ?>">
+        <nav class="nav nav-categories flex-column ml-3 my-1">
             <?= partial('@items', ['categories' => $children]); ?>
-        </div>
+        </nav>
     <?php } ?>
 <?php } ?>

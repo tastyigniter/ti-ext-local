@@ -1,24 +1,33 @@
 <?php if ($hasDelivery) { ?>
-    <h4><b><?= lang('sampoyigi.local::default.text_delivery_areas'); ?></b></h4>
-    <div class="list-group">
+    <h4 class="panel-title p-3"><b><?= lang('sampoyigi.local::default.text_delivery_areas'); ?></b></h4>
+    <div class="list-group list-group-flush">
         <?php if (count($deliveryAreas)) { ?>
             <div class="list-group-item">
                 <div class="row">
-                    <div class="col-xs-4"><b><?= lang('sampoyigi.local::default.column_area_name'); ?></b></div>
-                    <div class="col-xs-8 wrap-none"><b><?= lang('sampoyigi.local::default.column_area_charge'); ?></b>
+                    <div class="col-sm-4"><b><?= lang('sampoyigi.local::default.column_area_name'); ?></b></div>
+                    <div class="col-sm-8"><b><?= lang('sampoyigi.local::default.column_area_charge'); ?></b>
                     </div>
                 </div>
             </div>
             <?php foreach ($deliveryAreas as $key => $area) { ?>
                 <div class="list-group-item">
                     <div class="row">
-                        <div class="col-xs-4"><?= $area['name']; ?></div>
-                        <div class="col-xs-8 wrap-none">
+                        <div class="col-sm-4"><?= $area['name']; ?></div>
+                        <div class="col-sm-8">
                             <?php foreach ($area->listConditions() as $id => $condition) {
-                                $condition['amount'] = !empty($condition['amount']) ? currency_format($condition['amount']) : lang('sampoyigi.local::default.text_free');
+                                if (empty($condition['amount'])) {
+                                    $condition['amount'] = lang('sampoyigi.local::default.text_free');
+                                }
+                                else if ($condition['amount'] < 0) {
+                                    $condition['amount'] = lang('sampoyigi.local::default.text_delivery_not_available');
+                                }
+                                else {
+                                    $condition['amount'] = currency_format($condition['amount']);
+                                }
+
                                 $condition['total'] = !empty($condition['total']) ? currency_format($condition['total']) : lang('sampoyigi.local::default.text_delivery_all_orders');
                                 ?>
-                                <?= parse_values($condition, $condition['label']); ?>
+                                <?= ucfirst(strtolower(parse_values($condition, $condition['label']))); ?><br>
                             <?php } ?>
                         </div>
                     </div>
