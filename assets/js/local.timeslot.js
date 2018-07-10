@@ -52,7 +52,6 @@
         $('[data-timepicker-option]').removeClass('active')
         $('[data-timepicker-option="'+value+'"]').addClass('active')
 
-        console.log(this.selectedType, value)
         if (value === 'asap') {
             $container.addClass('hide')
         } else {

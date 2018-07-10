@@ -2,8 +2,8 @@
 
 namespace SamPoyigi\Local\Components;
 
-use Admin\Models\Categories_model;
 use Admin\Models\Menus_model;
+use Location;
 
 class Menu extends \System\Classes\BaseComponent
 {
@@ -12,10 +12,6 @@ class Menu extends \System\Classes\BaseComponent
     public function defineProperties()
     {
         return [
-            'isGrouped'       => [
-                'label' => 'Group Menu Items',
-                'type'  => 'switch',
-            ],
             'menusPerPage'    => [
                 'label'   => 'Menus Per Page',
                 'type'    => 'number',
@@ -42,13 +38,11 @@ class Menu extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->page['menuIsGrouped'] = $isGrouped = $this->property('isGrouped');
         $this->page['showMenuImages'] = $this->property('showMenuImages');
         $this->page['menuImageWidth'] = $this->property('menuImageWidth');
         $this->page['menuImageHeight'] = $this->property('menuImageHeight');
 
-        $this->page['menuList'] = $isGrouped ?
-            $this->loadGroupedList() : $this->loadList();
+        $this->page['menuList'] = $this->loadList();
     }
 
     protected function loadList()
@@ -57,32 +51,9 @@ class Menu extends \System\Classes\BaseComponent
             'page'      => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort'      => $this->property('sort', 'menu_priority asc'),
+            'location'  => Location::getId(),
             'category'  => $this->param('category'),
         ]);
-
-        return $list;
-    }
-
-    protected function loadGroupedList()
-    {
-        $query = Categories_model::with([
-            'menus' => function ($menusQuery) {
-                $menusQuery->listFrontEnd([
-                    'pageLimit' => null,
-                    'sort'      => $this->property('sort', 'menu_priority asc'),
-                ]);
-            },
-            'menus.special',
-            'menus.mealtime',
-            'menus.menu_options',
-        ]);
-
-        $query->whereHasMenus();
-
-        if ($this->param('category'))
-            $query->whereSlug($this->param('category'));
-
-        $list = $query->get();
 
         return $list;
     }

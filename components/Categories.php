@@ -1,6 +1,7 @@
 <?php namespace SamPoyigi\Local\Components;
 
 use Admin\Models\Categories_model;
+use Location;
 use Main\Template\Page;
 
 class Categories extends \System\Classes\BaseComponent
@@ -24,26 +25,25 @@ class Categories extends \System\Classes\BaseComponent
     public function onRun()
     {
         $this->page['menusPage'] = $this->property('menusPage');
-        $this->page['selectedCategory'] = $this->getSelectedCategory();
-        $this->page['categories'] = $this->loadCategories();
+        $this->page['categories'] = $categories = $this->loadCategories();
+        $this->page['selectedCategory'] = $this->findSelectedCategory($categories);
     }
 
     protected function loadCategories()
     {
         $query = Categories_model::orderBy('name');
 
-        // category must have at least one menu
-//        $query->whereHasMenus();
+        $query->whereHasOrDoesntHaveLocation(Location::getId());
 
         return $query->get()->toTree();
     }
 
-    protected function getSelectedCategory()
+    protected function findSelectedCategory($categories)
     {
         $slug = $this->param('category');
         if (!strlen($slug))
             return null;
 
-        return Categories_model::whereSlug($slug)->first();
+        return $categories->where('permalink_slug', $slug)->first();
     }
 }
