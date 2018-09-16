@@ -39,11 +39,11 @@
         </div>
     </div>
     <small>
-        <?= $review->customer->full_name; ?><?= lang('sampoyigi.local::default.text_from'); ?>
-        <cite title="<?= lang('sampoyigi.local::default.text_source'); ?>">
+        <?= $review->customer->full_name; ?><?= lang('igniter.local::default.text_from'); ?>
+        <cite title="<?= lang('igniter.local::default.text_source'); ?>">
             <?= $review->customer->address ? $review->customer->address->city : ''; ?>
         </cite>
-        <?= lang('sampoyigi.local::default.text_on'); ?>
+        <?= lang('igniter.local::default.text_on'); ?>
         <?= $review->date_added->format($reviewDateFormat); ?>
     </small>
 </blockquote>

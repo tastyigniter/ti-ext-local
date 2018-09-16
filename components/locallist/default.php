@@ -13,7 +13,7 @@
 else { ?>
     <div class="panel panel-local">
         <div class="panel-body">
-            <p><?= lang('sampoyigi.local::default.text_filter_no_match'); ?></p>
+            <p><?= lang('igniter.local::default.text_filter_no_match'); ?></p>
         </div>
     </div>
 <?php } ?>

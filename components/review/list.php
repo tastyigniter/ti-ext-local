@@ -15,5 +15,5 @@
     </ul>
 <?php }
 else { ?>
-    <p><?= lang('sampoyigi.local::default.text_no_review'); ?></p>
+    <p><?= lang('igniter.local::default.text_no_review'); ?></p>
 <?php } ?>

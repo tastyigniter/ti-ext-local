@@ -16,5 +16,5 @@
         <?php } ?>
     </div>
 <?php } else { ?>
-    <p><?= lang('sampoyigi.local::default.text_empty_gallery'); ?></p>
+    <p><?= lang('igniter.local::default.text_empty_gallery'); ?></p>
 <?php } ?>

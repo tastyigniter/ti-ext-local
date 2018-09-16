@@ -1,6 +1,6 @@
 <?php
 
-namespace SamPoyigi\Local\Components;
+namespace Igniter\Local\Components;
 
 use Location;
 

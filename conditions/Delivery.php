@@ -1,6 +1,6 @@
 <?php
 
-namespace SamPoyigi\Local\Conditions;
+namespace Igniter\Local\Conditions;
 
 use Cart;
 use Igniter\Flame\Cart\CartCondition;
@@ -41,7 +41,7 @@ class Delivery extends CartCondition
     public function whenInValid()
     {
         flash()->warning(sprintf(
-            lang('sampoyigi.cart::default.alert_min_delivery_order_total'),
+            lang('igniter.cart::default.alert_min_delivery_order_total'),
             currency_format($this->minimumOrder)
         ))->now();
     }

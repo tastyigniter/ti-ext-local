@@ -1,4 +1,4 @@
-<?php namespace SamPoyigi\Local\Traits;
+<?php namespace Igniter\Local\Traits;
 
 use ApplicationException;
 use Exception;
@@ -13,12 +13,12 @@ trait SearchesNearby
     {
         try {
             if (!strlen($searchQuery = post('search_query')))
-                throw new ApplicationException(lang('sampoyigi.local::default.alert_no_search_query'));
+                throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
 
             $position = $this->geocodeSearchQuery($searchQuery);
 
             $nearByLocations = Location::searchByCoordinates([
-                'latitude'  => $position->latitude,
+                'latitude' => $position->latitude,
                 'longitude' => $position->longitude,
             ]);
 
@@ -31,11 +31,12 @@ trait SearchesNearby
             });
 
             if (!$nearByLocation) {
-                throw new ApplicationException(lang('sampoyigi.local::default.alert_no_found_restaurant'));
+                throw new ApplicationException(lang('igniter.local::default.alert_no_found_restaurant'));
             }
 
             return Redirect::to(restaurant_url($this->property('menusPage')));
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             if (Request::ajax()) throw $ex;
             else flash()->danger($ex->getMessage());
         }
@@ -48,7 +49,7 @@ trait SearchesNearby
         ]);
 
         if (!$userPosition OR !$userPosition instanceof GeoPosition)
-            throw new ApplicationException(lang('sampoyigi.local::default.alert_unknown_error'));
+            throw new ApplicationException(lang('igniter.local::default.alert_unknown_error'));
 
         switch ($userPosition->status) {
             case 'ZERO_RESULTS':
@@ -56,12 +57,12 @@ trait SearchesNearby
             case 'UNKNOWN_ERROR':
                 throw new ApplicationException($userPosition->errorMessage
                     ? $userPosition->errorMessage
-                    : lang('sampoyigi.local::default.alert_invalid_search_query'));
+                    : lang('igniter.local::default.alert_invalid_search_query'));
             case 'REQUEST_DENIED':
             case 'OVER_QUERY_LIMIT':
                 throw new ApplicationException($userPosition->errorMessage
                     ? $userPosition->errorMessage
-                    : lang('sampoyigi.local::default.alert_unknown_error'));
+                    : lang('igniter.local::default.alert_unknown_error'));
         }
 
         return $userPosition;

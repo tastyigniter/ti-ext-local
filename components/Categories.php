@@ -1,4 +1,4 @@
-<?php namespace SamPoyigi\Local\Components;
+<?php namespace Igniter\Local\Components;
 
 use Admin\Models\Categories_model;
 use Location;
@@ -10,8 +10,8 @@ class Categories extends \System\Classes\BaseComponent
     {
         return [
             'menusPage' => [
-                'label'   => 'Menu Page',
-                'type'    => 'text',
+                'label' => 'Menu Page',
+                'type' => 'text',
                 'default' => 'local/menus',
             ],
         ];

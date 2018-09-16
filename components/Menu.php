@@ -1,6 +1,6 @@
 <?php
 
-namespace SamPoyigi\Local\Components;
+namespace Igniter\Local\Components;
 
 use Admin\Models\Menus_model;
 use Location;
@@ -12,25 +12,25 @@ class Menu extends \System\Classes\BaseComponent
     public function defineProperties()
     {
         return [
-            'menusPerPage'    => [
-                'label'   => 'Menus Per Page',
-                'type'    => 'number',
+            'menusPerPage' => [
+                'label' => 'Menus Per Page',
+                'type' => 'number',
                 'default' => 20,
             ],
-            'showMenuImages'  => [
+            'showMenuImages' => [
                 'label' => 'Show Menu Item Images',
-                'type'  => 'switch',
+                'type' => 'switch',
             ],
-            'menuImageWidth'  => [
-                'label'   => 'lang:sampoyigi.local::default.label_menu_image_height',
-                'type'    => 'number',
-                'span'    => 'left',
+            'menuImageWidth' => [
+                'label' => 'lang:igniter.local::default.label_menu_image_height',
+                'type' => 'number',
+                'span' => 'left',
                 'default' => 95,
             ],
             'menuImageHeight' => [
-                'label'   => 'lang:sampoyigi.local::default.label_menu_image_width',
-                'type'    => 'number',
-                'span'    => 'right',
+                'label' => 'lang:igniter.local::default.label_menu_image_width',
+                'type' => 'number',
+                'span' => 'right',
                 'default' => 80,
             ],
         ];
@@ -48,11 +48,11 @@ class Menu extends \System\Classes\BaseComponent
     protected function loadList()
     {
         $list = Menus_model::with(['mealtime', 'menu_options', 'special'])->listFrontEnd([
-            'page'      => $this->param('page'),
+            'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
-            'sort'      => $this->property('sort', 'menu_priority asc'),
-            'location'  => Location::getId(),
-            'category'  => $this->param('category'),
+            'sort' => $this->property('sort', 'menu_priority asc'),
+            'location' => Location::getId(),
+            'category' => $this->param('category'),
         ]);
 
         return $list;

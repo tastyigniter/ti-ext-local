@@ -1,4 +1,4 @@
-<?php namespace SamPoyigi\Local\Classes;
+<?php namespace Igniter\Local\Classes;
 
 use Carbon\Carbon;
 use Igniter\Flame\Location\GeoPosition;
@@ -65,7 +65,7 @@ class Location extends Manager
             }
 
             $this->putSession('orderTimeSlot', [
-                'type'     => $type,
+                'type' => $type,
                 'dateTime' => $dateTime,
             ]);
         }

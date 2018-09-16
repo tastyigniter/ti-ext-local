@@ -12,7 +12,7 @@
                     class="form-control"
                     name="search"
                     value="<?= $filterSearch; ?>"
-                    placeholder="<?= lang('sampoyigi.local::default.text_filter_search'); ?>"
+                    placeholder="<?= lang('igniter.local::default.text_filter_search'); ?>"
                 />
                 <span class="input-group-btn">
                     <button class="btn btn-outline-default" type="submit"><i class="fa fa-search"></i></button>

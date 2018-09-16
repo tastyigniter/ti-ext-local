@@ -17,7 +17,7 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
                     class="img-responsive img-rounded"
                     alt="<?= $menuItem->menu_name; ?>"
                     src="<?= $menuItem->getThumb([
-                        'width'  => $menuImageWidth,
+                        'width' => $menuImageWidth,
                         'height' => $menuImageHeight,
                     ]); ?>"
                 >
@@ -37,7 +37,7 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
                 <?php if ($specialActive) { ?>
                     <?php
                     $specialDaysRemaining = $special->daysRemaining();
-                    $specialDaysText = sprintf(lang('sampoyigi.local::default.text_end_elapsed'),
+                    $specialDaysText = sprintf(lang('igniter.local::default.text_end_elapsed'),
                         $special->end_date->diffForHumans());
                     ?>
                     <i class="fa fa-star text-warning pr-sm-1" title="<?= $specialDaysText; ?>"></i>
@@ -45,7 +45,7 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
             </span>
 
             <span class="menu-price pr-sm-2">
-                <b><?= $menuPrice > 0 ? currency_format($menuPrice) : lang('sampoyigi.local::default.text_free'); ?></b>
+                <b><?= $menuPrice > 0 ? currency_format($menuPrice) : lang('igniter.local::default.text_free'); ?></b>
             </span>
 
             <span class="menu-button">
@@ -57,7 +57,7 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
                         data-menu-id="<?= $menuItem->menu_id; ?>"
                         data-quantity="<?= $menuItem->minimum_qty; ?>"
                     <?php } else { ?>
-                        title="<?= sprintf(lang('sampoyigi.local::default.text_mealtime'),
+                        title="<?= sprintf(lang('igniter.local::default.text_mealtime'),
                             $mealtime->mealtime_name, $mealtime->start_time, $mealtime->end_time
                         ); ?>"
                     <?php } ?>

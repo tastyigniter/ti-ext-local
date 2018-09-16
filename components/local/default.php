@@ -16,7 +16,7 @@
                 </div>
             </div>
             <?php if ($requiresUserPosition AND $userPosition->isValid() AND !$userPositionIsCovered) { ?>
-                <span class="help-block"><?= lang('sampoyigi.local::default.text_delivery_coverage'); ?></span>
+                <span class="help-block"><?= lang('igniter.local::default.text_delivery_coverage'); ?></span>
             <?php } ?>
         </div>
     </div>

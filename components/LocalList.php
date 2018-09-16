@@ -1,10 +1,10 @@
 <?php
 
-namespace SamPoyigi\Local\Components;
+namespace Igniter\Local\Components;
 
 use Admin\Models\Locations_model;
+use Igniter\Local\Traits\SearchesNearby;
 use Location;
-use SamPoyigi\Local\Traits\SearchesNearby;
 
 class LocalList extends \System\Classes\BaseComponent
 {
@@ -54,10 +54,10 @@ class LocalList extends \System\Classes\BaseComponent
         }
 
         $options = [
-            'page'      => $this->param('page'),
+            'page' => $this->param('page'),
             'pageLimit' => $this->property('pageLimit'),
-            'search'    => $this->param('search'),
-            'sort'      => $sortBy,
+            'search' => $this->param('search'),
+            'sort' => $sortBy,
         ];
 
         if ($searchQuery = input('search')) {
@@ -84,19 +84,19 @@ class LocalList extends \System\Classes\BaseComponent
 
         $filters = [
             'distance' => [
-                'name' => lang('sampoyigi.local::default.text_filter_distance'),
+                'name' => lang('igniter.local::default.text_filter_distance'),
                 'href' => $url.'sort_by=distance',
             ],
-            'newest'   => [
-                'name' => lang('sampoyigi.local::default.text_filter_newest'),
+            'newest' => [
+                'name' => lang('igniter.local::default.text_filter_newest'),
                 'href' => $url.'sort_by=newest',
             ],
-            'rating'   => [
-                'name' => lang('sampoyigi.local::default.text_filter_rating'),
+            'rating' => [
+                'name' => lang('igniter.local::default.text_filter_rating'),
                 'href' => $url.'sort_by=rating',
             ],
-            'name'     => [
-                'name' => lang('sampoyigi.local::default.text_filter_name'),
+            'name' => [
+                'name' => lang('igniter.local::default.text_filter_name'),
                 'href' => $url.'sort_by=name',
             ],
         ];

@@ -1,4 +1,4 @@
-<?php namespace SamPoyigi\Local\Components;
+<?php namespace Igniter\Local\Components;
 
 use ApplicationException;
 use Carbon\Carbon;
@@ -9,7 +9,7 @@ use Request;
 
 class Local extends \System\Classes\BaseComponent
 {
-    use \SamPoyigi\Local\Traits\SearchesNearby;
+    use \Igniter\Local\Traits\SearchesNearby;
 
     protected $userPosition;
 
@@ -18,37 +18,37 @@ class Local extends \System\Classes\BaseComponent
     public function defineProperties()
     {
         return [
-            'paramFrom'                => [
-                'type'    => 'text',
+            'paramFrom' => [
+                'type' => 'text',
                 'default' => 'location',
             ],
-            'showLocalThumb'           => [
-                'label'   => 'lang:sampoyigi.local::default.label_show_menu_image',
-                'type'    => 'switch',
+            'showLocalThumb' => [
+                'label' => 'lang:igniter.local::default.label_show_menu_image',
+                'type' => 'switch',
                 'default' => FALSE,
             ],
-            'menusPage'                => [
-                'label'   => 'lang:sampoyigi.local::default.label_menu_page_limit',
-                'type'    => 'select',
+            'menusPage' => [
+                'label' => 'lang:igniter.local::default.label_menu_page_limit',
+                'type' => 'select',
                 'default' => 'local/menus',
             ],
-            'openTimeFormat'           => [
+            'openTimeFormat' => [
                 'label' => 'Time format for the opening time',
-                'type'  => 'text',
+                'type' => 'text',
             ],
-            'timePickerDateFormat'     => [
-                'label'   => 'Date format for the timepicker',
-                'type'    => 'text',
+            'timePickerDateFormat' => [
+                'label' => 'Date format for the timepicker',
+                'type' => 'text',
                 'default' => 'D d',
             ],
-            'timePickerTimeFormat'     => [
-                'label'   => 'Time format for the timepicker',
-                'type'    => 'text',
+            'timePickerTimeFormat' => [
+                'label' => 'Time format for the timepicker',
+                'type' => 'text',
                 'default' => 'H:i',
             ],
             'timePickerDateTimeFormat' => [
                 'label' => 'DateTime format for the timepicker',
-                'type'  => 'text',
+                'type' => 'text',
             ],
         ];
     }
@@ -92,7 +92,7 @@ class Local extends \System\Classes\BaseComponent
                 throw new ApplicationException('Please select a slot time.');
 
             if (!$location = Location::current())
-                throw new ApplicationException(lang('sampoyigi.cart::default.alert_location_required'));
+                throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
             $timeSlotDateTime = $timeSlotDate.' '.$timeSlotTime;
             if ($timeSlotType == 'asap') {
@@ -103,17 +103,18 @@ class Local extends \System\Classes\BaseComponent
             $timeSlotDateTime = make_carbon($timeSlotDateTime);
 
             if (!Location::checkOrderTime($timeSlotDateTime))
-                throw new ApplicationException(lang('sampoyigi.cart::default.alert_'.Location::orderType().'_unavailable'));
+                throw new ApplicationException(lang('igniter.local::default.alert_'.Location::orderType().'_unavailable'));
 
             Location::updateOrderTimeSlot($timeSlotType, $timeSlotDateTime);
 
             $this->pageCycle();
 
             return [
-                '#notification'   => $this->renderPartial('flash'),
+                '#notification' => $this->renderPartial('flash'),
                 '#local-timeslot' => $this->renderPartial('@timeslot'),
             ];
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             if (Request::ajax()) throw $ex;
             else flash()->danger($ex->getMessage())->now();
         }
@@ -192,10 +193,10 @@ class Local extends \System\Classes\BaseComponent
         $summary = [];
         foreach (Location::getDeliveryChargeConditions() as $condition) {
             if (empty($condition['amount'])) {
-                $condition['amount'] = lang('sampoyigi.local::default.text_free');
+                $condition['amount'] = lang('igniter.local::default.text_free');
             }
             else if ($condition['amount'] < 0) {
-                $condition['amount'] = lang('sampoyigi.local::default.text_delivery_not_available');
+                $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
             }
             else {
                 $condition['amount'] = currency_format($condition['amount']);
@@ -203,7 +204,7 @@ class Local extends \System\Classes\BaseComponent
 
             $condition['total'] = !empty($condition['total'])
                 ? currency_format($condition['total'])
-                : lang('sampoyigi.local::default.text_delivery_all_orders');
+                : lang('igniter.local::default.text_delivery_all_orders');
 
             $summary[] = ucfirst(strtolower(parse_values($condition, $condition['label'])));
         }

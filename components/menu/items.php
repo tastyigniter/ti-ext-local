@@ -5,6 +5,6 @@
         <?php } ?>
     <?php }
     else { ?>
-        <p><?= lang('sampoyigi.local::default.text_empty'); ?></p>
+        <p><?= lang('igniter.local::default.text_empty'); ?></p>
     <?php } ?>
 </div>

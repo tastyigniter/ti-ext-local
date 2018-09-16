@@ -1,6 +1,6 @@
 <?php
 
-namespace SamPoyigi\Local\Components;
+namespace Igniter\Local\Components;
 
 use Admin\Models\Reviews_model;
 use Location;
@@ -14,24 +14,24 @@ class Review extends \System\Classes\BaseComponent
     public function defineProperties()
     {
         return [
-            'pageLimit'    => [
-                'label'   => 'Reviews Per Page',
-                'type'    => 'number',
+            'pageLimit' => [
+                'label' => 'Reviews Per Page',
+                'type' => 'number',
                 'default' => 20,
             ],
-            'sort'         => [
-                'label'   => 'Sort reviews list by',
-                'type'    => 'text',
+            'sort' => [
+                'label' => 'Sort reviews list by',
+                'type' => 'text',
                 'default' => 'date_added asc',
             ],
-            'dateFormat'   => [
-                'label'   => 'Review date format',
-                'type'    => 'text',
+            'dateFormat' => [
+                'label' => 'Review date format',
+                'type' => 'text',
                 'default' => 'd M y H:i',
             ],
             'redirectPage' => [
-                'label'   => 'Page to redirect to when reviews is disabled',
-                'type'    => 'string',
+                'label' => 'Page to redirect to when reviews is disabled',
+                'type' => 'string',
                 'default' => 'local/menus',
             ],
         ];
@@ -49,7 +49,7 @@ class Review extends \System\Classes\BaseComponent
     public function onRun()
     {
         if (!setting('allow_reviews')) {
-            flash()->error(lang('sampoyigi.account::default.reviews.alert_review_disabled'))->now();
+            flash()->error(lang('igniter.local::default.review.alert_review_disabled'))->now();
 
             return Redirect::to($this->pageUrl($this->property('redirectPage')));
         }
@@ -66,10 +66,10 @@ class Review extends \System\Classes\BaseComponent
             return null;
 
         $list = Reviews_model::with(['customer', 'customer.address'])->listFrontEnd([
-            'page'      => $this->param('page'),
+            'page' => $this->param('page'),
             'pageLimit' => $this->property('pageLimit'),
-            'sort'      => $this->property('sort', 'date_added asc'),
-            'location'  => $location->getKey(),
+            'sort' => $this->property('sort', 'date_added asc'),
+            'location' => $location->getKey(),
         ]);
 
         return $list;

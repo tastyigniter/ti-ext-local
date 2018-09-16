@@ -10,7 +10,7 @@
             id="search-query"
             class="form-control text-center"
             name="search_query"
-            placeholder="<?= lang('sampoyigi.local::default.label_search_query'); ?>"
+            placeholder="<?= lang('igniter.local::default.label_search_query'); ?>"
             value="<?= $userPosition->formattedAddress; ?>"
         >
         <div class="input-group-prepend">
@@ -18,7 +18,7 @@
                 type="button"
                 class="btn btn-light"
                 data-control="search-local"
-            ><?= lang('sampoyigi.local::default.button_search_location'); ?></button>
+            ><?= lang('igniter.local::default.button_search_location'); ?></button>
         </div>
     </div>
 </form>
