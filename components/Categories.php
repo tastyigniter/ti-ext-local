@@ -33,7 +33,8 @@ class Categories extends \System\Classes\BaseComponent
     {
         $query = Categories_model::orderBy('name');
 
-        $query->whereHasOrDoesntHaveLocation(Location::getId());
+        if (!$location = Location::current())
+            $query->whereHasOrDoesntHaveLocation($location->getKey());
 
         return $query->get()->toTree();
     }

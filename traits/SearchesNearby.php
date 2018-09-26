@@ -20,7 +20,7 @@ trait SearchesNearby
             $nearByLocations = Location::searchByCoordinates([
                 'latitude' => $position->latitude,
                 'longitude' => $position->longitude,
-            ]);
+            ])->take(10);
 
             $nearByLocation = $nearByLocations->first(function ($location) use ($position) {
                 if ($area = $location->filterDeliveryArea($position)) {
@@ -33,6 +33,9 @@ trait SearchesNearby
             if (!$nearByLocation) {
                 throw new ApplicationException(lang('igniter.local::default.alert_no_found_restaurant'));
             }
+
+            if ($redirectPage = post('redirect'))
+                return Redirect::to($this->controller->pageUrl($redirectPage));
 
             return Redirect::to(restaurant_url($this->property('menusPage')));
         }

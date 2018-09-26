@@ -2,15 +2,16 @@
 
 namespace Igniter\Local\Conditions;
 
+use Admin\Models\Locations_model;
 use Cart;
 use Igniter\Flame\Cart\CartCondition;
 use Location;
 
 class Delivery extends CartCondition
 {
-    protected $deliveryCharge;
+    protected $deliveryCharge = 0;
 
-    protected $minimumOrder;
+    protected $minimumOrder = 0;
 
     public function onLoad()
     {
@@ -22,7 +23,7 @@ class Delivery extends CartCondition
     public function beforeApply()
     {
         // Do not apply condition when orderType is not delivery
-        if (Location::orderType() != 'delivery')
+        if (Location::orderType() != Locations_model::DELIVERY)
             return FALSE;
     }
 

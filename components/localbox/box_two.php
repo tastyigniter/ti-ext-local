@@ -1,3 +1,8 @@
+<?php
+$hasDelivery = $locationCurrent->hasDelivery();
+$hasCollection = $location->current()->hasCollection();
+$openingSchedule = $location->workingSchedule('opening');
+?>
 <dl>
     <?php if ($openingSchedule->isOpen()) { ?>
         <dt><?= lang('igniter.local::default.text_is_opened'); ?></dt>
@@ -10,7 +15,7 @@
     <?php } ?>
 
     <dd>
-        <?php if (!empty($openingType) AND $openingType == '24_7') { ?>
+        <?php if ($openingType = $location->current()->workingHourType('opening') AND $openingType == '24_7') { ?>
             <span class="fa fa-clock-o"></span>&nbsp;&nbsp;
             <span><?= lang('igniter.local::default.text_24_7_hour'); ?></span>
         <?php }
@@ -39,6 +44,6 @@
         <?php } ?>
     </dd>
     <dd class="text-muted">
-        <?= $deliveryConditionText; ?>
+        <?= $__SELF__->deliveryConditionText(); ?>
     </dd>
 </dl>

@@ -51,7 +51,7 @@ class Review extends \System\Classes\BaseComponent
         if (!setting('allow_reviews')) {
             flash()->error(lang('igniter.local::default.review.alert_review_disabled'))->now();
 
-            return Redirect::to($this->pageUrl($this->property('redirectPage')));
+            return Redirect::to($this->controller->pageUrl($this->property('redirectPage')));
         }
 
         $this->id = uniqid($this->alias);

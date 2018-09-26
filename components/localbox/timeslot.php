@@ -1,3 +1,7 @@
+<?php
+$orderDateTime = $location->orderDateTime();
+$orderTimeSlotType = $location->orderTimeSlotType();
+?>
 <div
     class="dropdown"
 >
@@ -51,7 +55,7 @@
                 ></select>
             </div>
             <button type="button" class="btn btn-primary" data-timepicker-submit>
-                <?= sprintf(lang('igniter.local::default.label_choose_order_time'), $orderType == 'delivery'
+                <?= sprintf(lang('igniter.local::default.label_choose_order_time'), $location->orderTypeIsDelivery()
                     ? lang('igniter.local::default.text_delivery')
                     : lang('igniter.local::default.text_collection'));
                 ?>

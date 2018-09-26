@@ -11,8 +11,8 @@ class Gallery extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $currentLocation = Location::current();
-        $gallery = $currentLocation->getGallery();
+        $locationCurrent = Location::current();
+        $gallery = $locationCurrent->getGallery();
 
         $gallery = $this->processImages($gallery);
 
@@ -27,7 +27,7 @@ class Gallery extends \System\Classes\BaseComponent
             foreach ($gallery['images'] as $image) {
                 if (strlen($image) > 0) {
                     $images[] = [
-                        'link'  => image_url('data'.$image),
+                        'link' => image_url('data'.$image),
                         'thumb' => Image_tool_model::resize($image),
                     ];
                 }

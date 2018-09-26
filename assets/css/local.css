@@ -1,13 +1,13 @@
 .local-box-fluid {
-  position: relative;
-  z-index: 999;
+  /*position: relative;*/
+  /*z-index: 999;*/
 }
 .local-box-fluid .panel {
   background-color: #FFF;
-  position: absolute;
-  bottom: 70px;
-  left: 0;
-  right: 0;
+  /*position: absolute;*/
+  /*bottom: 70px;*/
+  /*left: 0;*/
+  /*right: 0;*/
   width: 50%;
   margin: 0 auto;
 }

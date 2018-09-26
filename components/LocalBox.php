@@ -5,15 +5,16 @@ use Carbon\Carbon;
 use Exception;
 use Location;
 use Main\Template\Page;
+use Redirect;
 use Request;
 
-class Local extends \System\Classes\BaseComponent
+class LocalBox extends \System\Classes\BaseComponent
 {
     use \Igniter\Local\Traits\SearchesNearby;
 
     protected $userPosition;
 
-    protected $currentLocation;
+    protected $locationCurrent;
 
     public function defineProperties()
     {
@@ -21,6 +22,11 @@ class Local extends \System\Classes\BaseComponent
             'paramFrom' => [
                 'type' => 'text',
                 'default' => 'location',
+            ],
+            'redirect' => [
+                'label' => 'lang:igniter.local::default.label_redirect',
+                'type' => 'text',
+                'default' => 'home',
             ],
             'showLocalThumb' => [
                 'label' => 'lang:igniter.local::default.label_show_menu_image',
@@ -64,18 +70,63 @@ class Local extends \System\Classes\BaseComponent
         $this->addJs('js/local.js', 'local-js');
         $this->addJs('js/local.timeslot.js', 'local-timeslot-js');
 
-        if (strlen($paramFrom = $this->property('paramFrom'))) {
-            $this->overrideLocalFromParam($paramFrom);
-        }
+        $this->loadLocation();
 
-        $this->page['userPosition'] = $this->userPosition = Location::userPosition();
-        $this->page['currentLocation'] = $this->currentLocation = Location::current();
-        if ($this->currentLocation AND $this->userPosition AND !Location::getAreaId()) {
-            if ($area = $this->currentLocation->findOrFirstDeliveryArea($this->userPosition))
-                Location::setCoveredArea($area);
+        if ($redirect = $this->redirectForceCurrent()) {
+            flash()->error(lang('igniter.local::default.alert_location_required'));
+            return $redirect;
         }
 
         $this->prepareVars();
+    }
+
+    public function getOrderTimeSlot()
+    {
+        $generated = [];
+        $timeInterval = Location::orderTimeInterval();
+        $periods = Location::orderTimePeriods();
+        if (!$periods)
+            $periods = [];
+
+        foreach ($periods as $date => $workingHours) {
+            $weekDate = $workingHours->getWeekDate();
+
+            $weekDateString = $weekDate->format('Y-m-d');
+            $generated['dates'][$weekDateString] = $weekDate->format($this->property('timePickerDateFormat'));
+            foreach ($workingHours->generateTimes($timeInterval) as $dateTime) {
+                if ($workingHours->open->isToday() AND !Carbon::now()->addMinutes($timeInterval)->lte($dateTime))
+                    continue;
+
+                $key = $dateTime->format('H:i');
+                $generated['hours'][$weekDateString][$key] = $dateTime->format($this->property('timePickerTimeFormat'));
+            }
+        }
+
+        return $generated;
+    }
+
+    public function deliveryConditionText()
+    {
+        $summary = [];
+        foreach (Location::getDeliveryChargeConditions() as $condition) {
+            if (empty($condition['amount'])) {
+                $condition['amount'] = lang('igniter.local::default.text_free');
+            }
+            else if ($condition['amount'] < 0) {
+                $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
+            }
+            else {
+                $condition['amount'] = currency_format($condition['amount']);
+            }
+
+            $condition['total'] = !empty($condition['total'])
+                ? currency_format($condition['total'])
+                : lang('igniter.local::default.text_delivery_all_orders');
+
+            $summary[] = ucfirst(strtolower(parse_values($condition, $condition['label'])));
+        }
+
+        return implode(" - ", $summary);
     }
 
     public function onSetOrderTime()
@@ -133,49 +184,8 @@ class Local extends \System\Classes\BaseComponent
             setting('date_format').' '.setting('time_format')
         );
 
-        $this->page['orderType'] = Location::orderType();
-        $this->page['requiresUserPosition'] = Location::requiresUserPosition();
-        $this->page['userPositionIsCovered'] = Location::checkDeliveryCoverage() != 'outside';
-
-        $this->page['orderDateTime'] = Location::orderDateTime();
-        $this->page['orderTimeSlot'] = $this->getOrderTimeSlot();
-        $this->page['orderTimeSlotType'] = Location::orderTimeSlotType();
-
-        $this->page['deliveryConditionText'] = $this->translateConditionSummary();
-
-        $this->page['hasDelivery'] = $this->currentLocation->hasDelivery();
-        $this->page['hasCollection'] = $this->currentLocation->hasCollection();
-
-        $this->page['isOpened'] = Location::isOpened();
-        $this->page['isClosed'] = Location::isClosed();
-        $this->page['openingType'] = $this->currentLocation->workingHourType('opening');
-        $this->page['openingSchedule'] = Location::workingSchedule('opening');
-    }
-
-    protected function getOrderTimeSlot()
-    {
-        $generated = [];
-        $timeInterval = Location::orderTimeInterval();
-        $periods = Location::orderTimePeriods();
-        if (!$periods)
-            $periods = [];
-
-        foreach ($periods as $date => $workingHours) {
-            $weekDate = $workingHours->getWeekDate();
-
-            $weekDateString = $weekDate->format('Y-m-d');
-            $generated['dates'][$weekDateString] = $weekDate->format($this->property('timePickerDateFormat'));
-
-            foreach ($workingHours->generateTimes($timeInterval) as $dateTime) {
-                if ($workingHours->open->isToday() AND !Carbon::now()->addMinutes($timeInterval)->lte($dateTime))
-                    continue;
-
-                $key = $dateTime->format('H:i');
-                $generated['hours'][$weekDateString][$key] = $dateTime->format($this->property('timePickerTimeFormat'));
-            }
-        }
-
-        return $generated;
+        $this->page['location'] = Location::instance();
+        $this->page['locationCurrent'] = Location::current();
     }
 
     protected function overrideLocalFromParam($paramFrom)
@@ -188,27 +198,37 @@ class Local extends \System\Classes\BaseComponent
         Location::setModel($model);
     }
 
-    protected function translateConditionSummary()
+    protected function redirectForceCurrent()
     {
-        $summary = [];
-        foreach (Location::getDeliveryChargeConditions() as $condition) {
-            if (empty($condition['amount'])) {
-                $condition['amount'] = lang('igniter.local::default.text_free');
-            }
-            else if ($condition['amount'] < 0) {
-                $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
-            }
-            else {
-                $condition['amount'] = currency_format($condition['amount']);
-            }
+        if (Location::current())
+            return;
 
-            $condition['total'] = !empty($condition['total'])
-                ? currency_format($condition['total'])
-                : lang('igniter.local::default.text_delivery_all_orders');
+        return Redirect::to($this->controller->pageUrl($this->property('redirect')));
+    }
 
-            $summary[] = ucfirst(strtolower(parse_values($condition, $condition['label'])));
+    protected function loadLocation()
+    {
+        if (strlen($paramFrom = $this->property('paramFrom'))) {
+            $this->overrideLocalFromParam($paramFrom);
         }
 
-        return implode(" - ", $summary);
+        if (
+            $locationCurrent = Location::current()
+            AND $userPosition = Location::userPosition()
+            AND !Location::getAreaId()
+        ) {
+            Location::setCoveredArea(
+                $locationCurrent->findOrFirstDeliveryArea($userPosition)
+            );
+        }
+
+        // Makes sure the current active order type is offered by the location.
+        if (in_array(Location::orderType(), $locationCurrent->availableOrderTypes()))
+            return;
+
+        Location::updateOrderType($locationCurrent->hasDelivery()
+            ? $locationCurrent::DELIVERY
+            : $locationCurrent::COLLECTION
+        );
     }
 }

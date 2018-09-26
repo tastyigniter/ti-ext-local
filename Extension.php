@@ -1,20 +1,21 @@
 <?php namespace Igniter\Local;
 
 use Igniter\Cart\Models\CartSettings;
-use Igniter\Local\Classes\Location as LocationManager;
+use Igniter\Local\Classes\Location;
+use Illuminate\Foundation\AliasLoader;
 
 class Extension extends \System\Classes\BaseExtension
 {
-    public $require = ['igniter.cart'];
-
     public function register()
     {
-        $this->app->singleton('location', function ($app) {
-            $location = new LocationManager($app['session.store'], $app['events']);
+        $this->app->register(\Igniter\Flame\Location\LocationServiceProvider::class);
 
-            $location->setDefaultLocation(params('default_location_id'));
+        AliasLoader::getInstance()->alias('Location', \Igniter\Flame\Location\Facades\Location::class);
 
-            return $location;
+        $this->app->singleton('location', Location::class);
+
+        $this->app->resolving('location', function (Location $manager, $container) {
+            $manager->setDefaultLocation(params('default_location_id'));
         });
 
         $this->registerCartConditions();
@@ -34,8 +35,8 @@ class Extension extends \System\Classes\BaseExtension
     public function registerComponents()
     {
         return [
-            'Igniter\Local\Components\Local' => [
-                'code' => 'local',
+            'Igniter\Local\Components\LocalBox' => [
+                'code' => 'localBox',
                 'name' => 'lang:igniter.local::default.component_title',
                 'description' => 'lang:igniter.local::default.component_desc',
             ],

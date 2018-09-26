@@ -1,5 +1,6 @@
 <?php namespace Igniter\Local\Classes;
 
+use Admin\Models\Locations_model;
 use Carbon\Carbon;
 use Igniter\Flame\Location\GeoPosition;
 use Igniter\Flame\Location\Manager;
@@ -129,6 +130,11 @@ class Location extends Manager
         );
 
         return ($isOpen OR $isOpening);
+    }
+
+    public function orderTypeIsDelivery()
+    {
+        return $this->orderType() == Locations_model::DELIVERY;
     }
 
     //

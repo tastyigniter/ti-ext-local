@@ -1,4 +1,4 @@
-<?php if ($hasDelivery) { ?>
+<?php if ($locationCurrent->hasDelivery()) { ?>
     <h4 class="panel-title p-3"><b><?= lang('igniter.local::default.text_delivery_areas'); ?></b></h4>
     <div class="list-group list-group-flush">
         <?php if (count($deliveryAreas)) { ?>

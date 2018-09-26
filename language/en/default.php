@@ -87,6 +87,7 @@ return [
     'label_lang' => 'Language Line',
     'label_status' => 'Status',
     'label_search_query' => 'Enter your address/postcode to order',
+    'label_redirect' => 'Page to redirect to when no location is selected',
     'label_menu_page_limit' => 'Menus Per Page',
     'label_show_menu_image' => 'Show Menu Images',
     'label_menu_image' => 'Menu Images Dimension',

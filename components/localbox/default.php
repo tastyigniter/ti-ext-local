@@ -6,7 +6,7 @@
                     <div
                         id="local-timeslot"
                         data-control="timepicker"
-                        data-time-slot="<?= e(json_encode($orderTimeSlot)); ?>"
+                        data-time-slot="<?= e(json_encode($__SELF__->getOrderTimeSlot())); ?>"
                     >
                         <?= partial('@timeslot'); ?>
                     </div>
@@ -15,13 +15,17 @@
                     <?= partial('@searchbar'); ?>
                 </div>
             </div>
-            <?php if ($requiresUserPosition AND $userPosition->isValid() AND !$userPositionIsCovered) { ?>
+            <?php if (
+                $location->requiresUserPosition()
+                AND $location->userPosition()->isValid()
+                AND $location->checkDeliveryCoverage() == 'outside'
+            ) { ?>
                 <span class="help-block"><?= lang('igniter.local::default.text_delivery_coverage'); ?></span>
             <?php } ?>
         </div>
     </div>
 
-    <?php if ($currentLocation) { ?>
+    <?php if ($location->current()) { ?>
         <div class="panel panel-local">
             <div class="panel-body">
                 <div class="row boxes">

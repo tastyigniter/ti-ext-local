@@ -14,9 +14,9 @@
                 <tr>
                     <td><?= $day; ?></td>
                     <?php foreach ($hours->sortByDesc('type') as $hour) { ?>
-                        <?php if ($hour->type == 'delivery' AND !$hasDelivery) { ?>
+                        <?php if ($hour->type == 'delivery' AND !$locationCurrent->hasDelivery()) { ?>
                             <td><?= lang('igniter.local::default.text_closed'); ?></td>
-                        <?php } else if ($hour->type == 'collection' AND !$hasCollection) { ?>
+                        <?php } else if ($hour->type == 'collection' AND !$locationCurrent->hasCollection()) { ?>
                             <td><?= lang('igniter.local::default.text_closed'); ?></td>
                         <?php } else if (!$hour->isEnabled()) { ?>
                             <td><?= lang('igniter.local::default.text_closed'); ?></td>

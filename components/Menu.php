@@ -51,10 +51,18 @@ class Menu extends \System\Classes\BaseComponent
             'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort' => $this->property('sort', 'menu_priority asc'),
-            'location' => Location::getId(),
+            'location' => $this->getLocation(),
             'category' => $this->param('category'),
         ]);
 
         return $list;
+    }
+
+    protected function getLocation()
+    {
+        if (!$location = Location::current())
+            return null;
+
+        return $location->getKey();
     }
 }

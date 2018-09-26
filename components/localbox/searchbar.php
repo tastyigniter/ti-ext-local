@@ -4,6 +4,7 @@
     role="form"
     data-request="<?= $searchEventHandler; ?>"
 >
+    <input type="hidden" name="redirect" value="<?= current_url() ?>">
     <div class="input-group">
         <input
             type="text"
@@ -11,7 +12,7 @@
             class="form-control text-center"
             name="search_query"
             placeholder="<?= lang('igniter.local::default.label_search_query'); ?>"
-            value="<?= $userPosition->formattedAddress; ?>"
+            value="<?= $location->userPosition()->formattedAddress; ?>"
         >
         <div class="input-group-prepend">
             <button

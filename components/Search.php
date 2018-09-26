@@ -28,6 +28,7 @@ class Search extends \System\Classes\BaseComponent
         $this->addJs('js/local.js', 'local-module-js');
 
         $this->prepareVars();
+
     }
 
     protected function prepareVars()
@@ -36,7 +37,7 @@ class Search extends \System\Classes\BaseComponent
         $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
 
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
-        $this->page['currentLocation'] = Location::current();
-        $this->page['userPosition'] = Location::userPosition();
+
+        $this->page['location'] = Location::instance();
     }
 }
