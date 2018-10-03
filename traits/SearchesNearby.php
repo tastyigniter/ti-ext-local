@@ -59,13 +59,11 @@ trait SearchesNearby
             case 'INVALID_REQUEST':
             case 'UNKNOWN_ERROR':
                 throw new ApplicationException($userPosition->errorMessage
-                    ? $userPosition->errorMessage
-                    : lang('igniter.local::default.alert_invalid_search_query'));
+                    ?? lang('igniter.local::default.alert_invalid_search_query'));
             case 'REQUEST_DENIED':
             case 'OVER_QUERY_LIMIT':
                 throw new ApplicationException($userPosition->errorMessage
-                    ? $userPosition->errorMessage
-                    : lang('igniter.local::default.alert_unknown_error'));
+                    ?? lang('igniter.local::default.alert_unknown_error'));
         }
 
         return $userPosition;

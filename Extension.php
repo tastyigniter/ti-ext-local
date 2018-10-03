@@ -1,6 +1,5 @@
 <?php namespace Igniter\Local;
 
-use Igniter\Cart\Models\CartSettings;
 use Igniter\Local\Classes\Location;
 use Illuminate\Foundation\AliasLoader;
 
@@ -17,19 +16,17 @@ class Extension extends \System\Classes\BaseExtension
         $this->app->resolving('location', function (Location $manager, $container) {
             $manager->setDefaultLocation(params('default_location_id'));
         });
-
-        $this->registerCartConditions();
     }
 
     public function registerCartConditions()
     {
-        CartSettings::registerConditions(function (CartSettings $settingsModel) {
-            $settingsModel->registerCondition('Igniter\Local\Conditions\Delivery', [
+        return [
+            'Igniter\Local\Conditions\Delivery' => [
                 'name' => 'delivery',
                 'label' => 'lang:igniter.local::default.text_delivery',
                 'description' => 'lang:igniter.local::default.help_delivery_condition',
-            ]);
-        });
+            ]
+        ];
     }
 
     public function registerComponents()
