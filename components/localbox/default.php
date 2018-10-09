@@ -6,7 +6,7 @@
                     <div
                         id="local-timeslot"
                         data-control="timepicker"
-                        data-time-slot="<?= e(json_encode($__SELF__->getOrderTimeSlot())); ?>"
+                        data-time-slot="<?= e(json_encode($locationTimeslot)); ?>"
                     >
                         <?= partial('@timeslot'); ?>
                     </div>

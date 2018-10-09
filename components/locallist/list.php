@@ -1,8 +1,8 @@
 <?php foreach ($locationsList as $location) { ?>
     <?php
-    $openingSchedule = $location->workingSchedule('opening');
-    $deliverySchedule = $location->workingSchedule('delivery');
-    $collectionSchedule = $location->workingSchedule('collection');
+    $openingSchedule = $location->newWorkingSchedule('opening');
+    $deliverySchedule = $location->newWorkingSchedule('delivery');
+    $collectionSchedule = $location->newWorkingSchedule('collection');
     $hasDelivery = $location->hasDelivery();
     $hasCollection = $location->hasCollection();
     $distance = $location->calculateDistance($userPosition);
@@ -40,7 +40,7 @@
                     </dd>
                     <?php if ($distance) { ?>
                         <dd>
-                            <span class="text-muted"><?= $distance; ?> <?= $distanceUnit; ?></span>
+                            <span class="text-muted"><?= number_format($distance, 1); ?> <?= $distanceUnit; ?></span>
                         </dd>
                     <?php } ?>
                 </dl>

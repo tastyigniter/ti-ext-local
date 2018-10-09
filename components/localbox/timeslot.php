@@ -1,6 +1,6 @@
 <?php
 $orderDateTime = $location->orderDateTime();
-$orderTimeSlotType = $location->orderTimeSlotType();
+$orderTimeIsAsap = $location->orderTimeIsAsap();
 ?>
 <div
     class="dropdown"
@@ -14,7 +14,7 @@ $orderTimeSlotType = $location->orderTimeSlotType();
         aria-expanded="false"
     >
         <b><?=
-            ($orderTimeSlotType == 'asap')
+            ($orderTimeIsAsap)
                 ? lang('igniter.local::default.text_asap')
                 : $orderDateTime->format($orderDateTimeFormat);
             ?></b>
@@ -37,7 +37,7 @@ $orderTimeSlotType = $location->orderTimeSlotType();
             role="form"
             data-request="<?= $timeSlotEventHandler; ?>"
         >
-            <input type="hidden" data-timepicker-control="type" value="<?= $orderTimeSlotType ?>">
+            <input type="hidden" data-timepicker-control="type" value="<?= $orderTimeIsAsap ? 'asap' : 'later' ?>">
             <div class="form-group">
                 <select
                     class="form-control"

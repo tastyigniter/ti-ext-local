@@ -1,9 +1,11 @@
 <?php namespace Igniter\Local\Components;
 
+use App;
 use ApplicationException;
 use Carbon\Carbon;
 use Exception;
-use Location;
+use Igniter\Local\Classes\Location;
+use Illuminate\Support\Collection;
 use Main\Template\Page;
 use Redirect;
 use Request;
@@ -12,9 +14,21 @@ class LocalBox extends \System\Classes\BaseComponent
 {
     use \Igniter\Local\Traits\SearchesNearby;
 
+    /**
+     * @var \Igniter\Local\Classes\Location
+     */
+    protected $location;
+
     protected $userPosition;
 
+    protected $asapOrderTime;
+
     protected $locationCurrent;
+
+    public function initialize()
+    {
+        $this->location = App::make(Location::class);
+    }
 
     public function defineProperties()
     {
@@ -70,7 +84,11 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->addJs('js/local.js', 'local-js');
         $this->addJs('js/local.timeslot.js', 'local-timeslot-js');
 
-        $this->loadLocation();
+        if (strlen($paramFrom = $this->property('paramFrom'))) {
+            $this->overrideLocalFromParam($paramFrom);
+        }
+
+        $this->bootLocation();
 
         if ($redirect = $this->redirectForceCurrent()) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
@@ -80,35 +98,10 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->prepareVars();
     }
 
-    public function getOrderTimeSlot()
-    {
-        $generated = [];
-        $timeInterval = Location::orderTimeInterval();
-        $periods = Location::orderTimePeriods();
-        if (!$periods)
-            $periods = [];
-
-        foreach ($periods as $date => $workingHours) {
-            $weekDate = $workingHours->getWeekDate();
-
-            $weekDateString = $weekDate->format('Y-m-d');
-            $generated['dates'][$weekDateString] = $weekDate->format($this->property('timePickerDateFormat'));
-            foreach ($workingHours->generateTimes($timeInterval) as $dateTime) {
-                if ($workingHours->open->isToday() AND !Carbon::now()->addMinutes($timeInterval)->lte($dateTime))
-                    continue;
-
-                $key = $dateTime->format('H:i');
-                $generated['hours'][$weekDateString][$key] = $dateTime->format($this->property('timePickerTimeFormat'));
-            }
-        }
-
-        return $generated;
-    }
-
     public function deliveryConditionText()
     {
         $summary = [];
-        foreach (Location::getDeliveryChargeConditions() as $condition) {
+        foreach ($this->location->getDeliveryChargeConditions() as $condition) {
             if (empty($condition['amount'])) {
                 $condition['amount'] = lang('igniter.local::default.text_free');
             }
@@ -132,33 +125,29 @@ class LocalBox extends \System\Classes\BaseComponent
     public function onSetOrderTime()
     {
         try {
-            if (!strlen($timeSlotType = post('type')))
+            if (!is_numeric($timeIsAsap = post('asap')))
                 throw new ApplicationException('Please select a slot type.');
 
             if (!strlen($timeSlotDate = post('date')))
                 throw new ApplicationException('Please select a slot date.');
 
             $timeSlotTime = null;
-            if ($timeSlotType != 'asap' AND !strlen($timeSlotTime = post('time')))
+            if (!$timeIsAsap AND !strlen($timeSlotTime = post('time')))
                 throw new ApplicationException('Please select a slot time.');
 
-            if (!$location = Location::current())
+            if (!$location = $this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
-            $timeSlotDateTime = $timeSlotDate.' '.$timeSlotTime;
-            if ($timeSlotType == 'asap') {
-                $timeSlot = array_get($this->getOrderTimeSlot(), 'hours.'.$timeSlotDate);
-                $timeSlotDateTime = $timeSlotDate.' '.key(array_slice($timeSlot, 0, 1));
-            }
+            $timeSlotDateTime = make_carbon($timeSlotDate.' '.$timeSlotTime);
+            if ($timeIsAsap)
+                $timeSlotDateTime = $this->location->scheduleTimeslot()->first();
 
-            $timeSlotDateTime = make_carbon($timeSlotDateTime);
+            if (!$this->location->checkOrderTime($timeSlotDateTime))
+                throw new ApplicationException(lang('igniter.local::default.alert_'.$this->location->orderType().'_unavailable'));
 
-            if (!Location::checkOrderTime($timeSlotDateTime))
-                throw new ApplicationException(lang('igniter.local::default.alert_'.Location::orderType().'_unavailable'));
+            $this->location->updateScheduleTimeSlot($timeSlotDateTime, $timeIsAsap);
 
-            Location::updateOrderTimeSlot($timeSlotType, $timeSlotDateTime);
-
-            $this->pageCycle();
+            $this->controller->pageCycle();
 
             return [
                 '#notification' => $this->renderPartial('flash'),
@@ -184,49 +173,63 @@ class LocalBox extends \System\Classes\BaseComponent
             setting('date_format').' '.setting('time_format')
         );
 
-        $this->page['location'] = Location::instance();
-        $this->page['locationCurrent'] = Location::current();
+        $this->page['location'] = $this->location;
+        $this->page['locationCurrent'] = $this->location->current();
+        $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());
+    }
+
+    protected function parseTimeslot(Collection $timeslot)
+    {
+        $parsed = ['dates' => [], 'hours' => []];
+
+        $timeslot->each(function (Carbon $slot) use (&$parsed) {
+            $dateKey = $slot->format('Y-m-d');
+            $hourKey = $slot->format('H:i');
+            $dateValue = $slot->format($this->property('timePickerDateFormat'));
+            $hourValue = $slot->format($this->property('timePickerTimeFormat'));
+
+            $parsed['dates'][$dateKey] = $dateValue;
+            $parsed['hours'][$dateKey][$hourKey] = $hourValue;
+        });
+
+        return $parsed;
     }
 
     protected function overrideLocalFromParam($paramFrom)
     {
         $param = $this->param($paramFrom);
 
-        if (!$model = Location::getBySlug($param))
+        if (!$model = $this->location->getBySlug($param))
             return;
 
-        Location::setModel($model);
+        $this->location->setModel($model);
     }
 
     protected function redirectForceCurrent()
     {
-        if (Location::current())
+        if ($this->location->current())
             return;
 
         return Redirect::to($this->controller->pageUrl($this->property('redirect')));
     }
 
-    protected function loadLocation()
+    protected function bootLocation()
     {
-        if (strlen($paramFrom = $this->property('paramFrom'))) {
-            $this->overrideLocalFromParam($paramFrom);
-        }
-
         if (
-            $locationCurrent = Location::current()
-            AND $userPosition = Location::userPosition()
-            AND !Location::getAreaId()
+            $locationCurrent = $this->location->current()
+            AND $userPosition = $this->location->userPosition()
+            AND !$this->location->getAreaId()
         ) {
-            Location::setCoveredArea(
+            $this->location->setCoveredArea(
                 $locationCurrent->findOrFirstDeliveryArea($userPosition)
             );
         }
 
         // Makes sure the current active order type is offered by the location.
-        if (in_array(Location::orderType(), $locationCurrent->availableOrderTypes()))
+        if (in_array($this->location->orderType(), $locationCurrent->availableOrderTypes()))
             return;
 
-        Location::updateOrderType($locationCurrent->hasDelivery()
+        $this->location->updateOrderType($locationCurrent->hasDelivery()
             ? $locationCurrent::DELIVERY
             : $locationCurrent::COLLECTION
         );

@@ -131,7 +131,7 @@
 
         $('[data-timepicker-submit]').closest('form').request(null, {
             data: {
-              type: this.$el.find(this.typeSelector).val(),
+              asap: this.$el.find(this.typeSelector).val() === 'asap' ? 1 : 0,
               date: this.$el.find(this.dateSelector).val(),
               time: this.$el.find(this.timeSelector).val()
             }

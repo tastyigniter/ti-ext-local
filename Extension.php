@@ -13,7 +13,7 @@ class Extension extends \System\Classes\BaseExtension
 
         $this->app->singleton('location', Location::class);
 
-        $this->app->resolving('location', function (Location $manager, $container) {
+        $this->app->resolving('location', function (Location $manager) {
             $manager->setDefaultLocation(params('default_location_id'));
         });
     }

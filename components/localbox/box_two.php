@@ -1,13 +1,13 @@
 <?php
 $hasDelivery = $locationCurrent->hasDelivery();
 $hasCollection = $location->current()->hasCollection();
-$openingSchedule = $location->workingSchedule('opening');
+$schedule = $location->workingSchedule($location->orderType());
 ?>
 <dl>
-    <?php if ($openingSchedule->isOpen()) { ?>
+    <?php if ($schedule->isOpen()) { ?>
         <dt><?= lang('igniter.local::default.text_is_opened'); ?></dt>
     <?php }
-    else if ($openingSchedule->isOpening()) { ?>
+    else if ($schedule->isOpening()) { ?>
         <dt class="text-muted"><?= sprintf(lang('igniter.local::default.text_opening_time'), $openingSchedule->getOpenTime('D '.$openingTimeFormat)); ?></dt>
     <?php }
     else { ?>
@@ -15,16 +15,16 @@ $openingSchedule = $location->workingSchedule('opening');
     <?php } ?>
 
     <dd>
-        <?php if ($openingType = $location->current()->workingHourType('opening') AND $openingType == '24_7') { ?>
+        <?php if ($schedule->getPeriod()->openAllDay()) { ?>
             <span class="fa fa-clock-o"></span>&nbsp;&nbsp;
             <span><?= lang('igniter.local::default.text_24_7_hour'); ?></span>
         <?php }
         else { ?>
             <span class="fa fa-clock-o"></span>&nbsp;
             <span>
-                <?= $openingSchedule->getOpenTime($openingTimeFormat); ?>
+                <?= $schedule->getOpenTime($openingTimeFormat); ?>
                 -
-                <?= $openingSchedule->getCloseTime($openingTimeFormat); ?>
+                <?= $schedule->getCloseTime($openingTimeFormat); ?>
                 </span>
         <?php } ?>
     </dd>
