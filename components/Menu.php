@@ -20,6 +20,7 @@ class Menu extends \System\Classes\BaseComponent
             'showMenuImages' => [
                 'label' => 'Show Menu Item Images',
                 'type' => 'switch',
+                'default' => FALSE,
             ],
             'menuImageWidth' => [
                 'label' => 'lang:igniter.local::default.label_menu_image_height',

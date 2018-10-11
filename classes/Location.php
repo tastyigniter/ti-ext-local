@@ -1,6 +1,7 @@
 <?php namespace Igniter\Local\Classes;
 
 use Admin\Models\Locations_model;
+use Carbon\Carbon;
 use Igniter\Flame\Location\GeoPosition;
 use Igniter\Flame\Location\Manager;
 use Igniter\Flame\Location\Models\Area;
@@ -210,8 +211,11 @@ class Location extends Manager
     public function orderDateTime()
     {
         $dateTime = $this->scheduleTimeslot()->first();
-        if (!$this->orderTimeIsAsap())
-            $dateTime = array_get($this->getSession('order.timeslot'), 'dateTime', $dateTime);
+        if (!$this->orderTimeIsAsap()) {
+            $sessionDateTime = array_get($this->getSession('order.timeslot'), 'dateTime');
+            if ($sessionDateTime AND Carbon::now()->lt($sessionDateTime))
+                $dateTime = $sessionDateTime;
+        }
 
         return make_carbon($dateTime)->copy();
     }
@@ -317,9 +321,6 @@ class Location extends Manager
         if (is_null($userPosition))
             $userPosition = $this->userPosition();
 
-        if (!$area = $this->coveredArea())
-            return null;
-
-        return $area->checkBoundary($userPosition);
+        return $this->coveredArea()->checkBoundary($userPosition);
     }
 }

@@ -119,7 +119,7 @@ class LocalBox extends \System\Classes\BaseComponent
             $summary[] = ucfirst(strtolower(parse_values($condition, $condition['label'])));
         }
 
-        return implode(" - ", $summary);
+        return implode(', ', $summary);
     }
 
     public function onSetOrderTime()

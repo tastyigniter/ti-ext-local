@@ -4,7 +4,6 @@
     role="form"
     data-request="<?= $searchEventHandler; ?>"
 >
-    <input type="hidden" name="redirect" value="<?= current_url() ?>">
     <div class="input-group">
         <input
             type="text"
