@@ -2,7 +2,7 @@
     <div class="panel local-search">
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-<?= ($hideSearch) ? '12' : '4' ?>">
                     <div
                         id="local-timeslot"
                         data-control="timepicker"
@@ -11,9 +11,11 @@
                         <?= partial('@timeslot'); ?>
                     </div>
                 </div>
-                <div class="col-sm-8">
-                    <?= partial('@searchbar'); ?>
-                </div>
+                <?php if (!$hideSearch) { ?>
+                    <div class="col-sm-8">
+                        <?= partial('@searchbar'); ?>
+                    </div>
+                <?php } ?>
             </div>
             <?php if (
                 $location->requiresUserPosition()

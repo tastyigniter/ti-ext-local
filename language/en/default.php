@@ -102,7 +102,7 @@ return [
     'label_time' => 'Select a time',
     'label_minute' => 'Minute',
 
-    'help_location_search_mode' => 'When enabled the local search component displays a \'View Menu\' button instead of the search form.',
+    'help_location_search_mode' => 'Hides the local search form. To disable the local search feature entirely on the storefront, disable <b>Require Location To Order</b> on the Order & Reservation Settings page.',
     'help_menu_page_limit' => 'Limit how many menus are shown per page',
     'help_show_menu_image' => 'Show or hide menu images on view menu page',
 
@@ -116,7 +116,7 @@ return [
     'alert_delivery_unavailable' => 'This restaurant is unavailable to take delivery orders at the moment.',
     'alert_collection_unavailable' => 'This restaurant is unavailable to take pick-up orders at the moment.',
 
-    'component_title' => 'Local Component',
+    'component_title' => 'Local Box Component',
     'component_desc' => 'Displays local information box',
     'text_heading' => 'Restaurants',
     'text_local_heading' => '%s - Restaurant',
@@ -175,7 +175,7 @@ return [
 
     'search' => [
         'component_title' => 'Local Search Component',
-        'component_desc' => 'Displays local search box',
+        'component_desc' => 'Displays a standalone local search form',
     ],
 
     'menu' => [

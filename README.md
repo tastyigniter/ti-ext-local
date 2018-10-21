@@ -58,6 +58,7 @@ permalink: /
 ### LocalBox Component
 
 **Properties**
+
 | Property                 | Description              | Example Value | Default Value |
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | paramFrom                     | URL routing code used for determining the location slug           | location        | location         |
@@ -159,6 +160,7 @@ permalink: '/locations'
 ### LocalMenu Component
 
 **Properties**
+
 | Property                 | Description              | Example Value | Default Value |
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | $menusPerPage                     | Number of menu items per page           | 50        | 20         |
@@ -197,6 +199,7 @@ permalink: '/:location?local/menus/:category?'
 ### Categories Component
 
 **Properties**
+
 | Property                 | Description              | Example Value | Default Value |
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | $menusPage | Page name of the menus page         |            |       |
@@ -228,6 +231,7 @@ permalink: '/:location?local/menus/:category?'
 ### LocalReviews Component
 
 **Properties**
+
 | Property                 | Description              | Example Value | Default Value |
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | $pageLimit | Number of reviews per page       |   20    |     20      |

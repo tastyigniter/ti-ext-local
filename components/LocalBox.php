@@ -42,6 +42,11 @@ class LocalBox extends \System\Classes\BaseComponent
                 'type' => 'text',
                 'default' => 'home',
             ],
+            'hideSearch' => [
+                'label' => 'lang:igniter.local::default.label_location_search_mode',
+                'type' => 'switch',
+                'comment' => 'lang:igniter.local::default.help_location_search_mode',
+            ],
             'showLocalThumb' => [
                 'label' => 'lang:igniter.local::default.label_show_menu_image',
                 'type' => 'switch',
@@ -162,6 +167,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
     protected function prepareVars()
     {
+        $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
         $this->page['menusPage'] = $this->property('menusPage');
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
