@@ -29,6 +29,33 @@ class Extension extends \System\Classes\BaseExtension
         ];
     }
 
+    public function registerApiResources()
+    {
+        return [
+            'menus' => [
+                'name' => 'Menus',
+                'description' => 'An API resource for menus',
+                'model' => \Admin\Models\Menus_model::class,
+                'controller' => \Igniter\Local\Resources\Menus::class,
+                'transformer' => \Igniter\Local\Resources\Transformers\MenuTransformer::class,
+            ],
+            'categories' => [
+                'name' => 'Categories',
+                'description' => 'An API resource for categories',
+                'model' => \Admin\Models\Categories_model::class,
+                'controller' => \Igniter\Local\Resources\Categories::class,
+                'transformer' => \Igniter\Local\Resources\Transformers\CategoryTransformer::class,
+            ],
+            'locations' => [
+                'name' => 'Locations',
+                'description' => 'An API resource for locations',
+                'model' => \Admin\Models\Locations_model::class,
+                'controller' => \Igniter\Local\Resources\Locations::class,
+                'transformer' => \Igniter\Local\Resources\Transformers\LocationTransformer::class,
+            ],
+        ];
+    }
+
     public function registerComponents()
     {
         return [
