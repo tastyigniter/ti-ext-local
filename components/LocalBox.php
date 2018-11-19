@@ -48,9 +48,21 @@ class LocalBox extends \System\Classes\BaseComponent
                 'comment' => 'lang:igniter.local::default.help_location_search_mode',
             ],
             'showLocalThumb' => [
-                'label' => 'lang:igniter.local::default.label_show_menu_image',
+                'label' => 'lang:igniter.local::default.label_show_local_image',
                 'type' => 'switch',
                 'default' => FALSE,
+            ],
+            'localThumbWidth' => [
+                'label' => 'lang:igniter.local::default.label_local_image_width',
+                'type' => 'number',
+                'span' => 'left',
+                'default' => 80,
+            ],
+            'localThumbHeight' => [
+                'label' => 'lang:igniter.local::default.label_local_image_height',
+                'type' => 'number',
+                'span' => 'right',
+                'default' => 80,
             ],
             'menusPage' => [
                 'label' => 'lang:igniter.local::default.label_menu_page_limit',
@@ -169,6 +181,8 @@ class LocalBox extends \System\Classes\BaseComponent
     {
         $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
+        $this->page['localThumbWidth'] = $this->property('localThumbWidth');
+        $this->page['localThumbHeight'] = $this->property('localThumbHeight');
         $this->page['menusPage'] = $this->property('menusPage');
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['timeSlotEventHandler'] = $this->getEventHandler('onSetOrderTime');

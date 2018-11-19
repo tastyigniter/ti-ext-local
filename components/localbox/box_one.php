@@ -1,5 +1,6 @@
 <?php if ($showLocalThumb) { ?>
-    <img class="img-responsive pull-left" src="<?= $locationCurrent->getThumb(['width' => 80, 'height' => 80]); ?>">
+    <img class="img-responsive pull-left"
+         src="<?= $locationCurrent->getThumb(['width' => $localThumbWidth, 'height' => $localThumbHeight]); ?>">
 <?php } ?>
 <dl <?= $showLocalThumb ? 'class="box-image"' : ''; ?>>
     <dd><h1 class="h4"><?= $locationCurrent->getName(); ?></h1></dd>

@@ -2,13 +2,13 @@
     <h1 class="h4"><b><?= $gallery['title']; ?></b></h1>
     <p><?= $gallery['description']; ?></p><br/>
     <div class="row gallery">
-        <?php foreach ($gallery['images'] as $image) { ?>
+        <?php foreach ($gallery['images'] as $media) { ?>
             <div class="col-sm-4">
                 <img
                     class="img-responsive img-rounded"
-                    src="<?= $image['thumb']; ?>">
+                    src="<?= $media->getThumb(); ?>">
                 <div class="overlay">
-                    <a href="<?= $image['link']; ?>" target="_blank">
+                    <a href="<?= $media->getPath(); ?>" target="_blank">
                         <i class="fa fa-eye"></i>
                     </a>
                 </div>

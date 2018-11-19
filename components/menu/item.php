@@ -8,7 +8,7 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
 ?>
 <div id="menu<?= $menuItem->menu_id; ?>" class="menu-item mb-3">
     <div class="d-flex flex-row">
-        <?php if ($showMenuImages == 1 AND !empty($menuItem->menu_photo)) { ?>
+        <?php if ($showMenuImages == 1 AND $menuItem->hasMedia('thumb')) { ?>
             <div
                 class="menu-thumb align-self-center mr-3"
                 style="width: <?= $menuImageWidth ?>px"
