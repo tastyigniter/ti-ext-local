@@ -1,6 +1,7 @@
 <?php namespace Igniter\Local\Classes;
 
 use Admin\Models\Locations_model;
+use ApplicationException;
 use Carbon\Carbon;
 use Igniter\Flame\Location\GeoPosition;
 use Igniter\Flame\Location\Manager;
@@ -21,9 +22,9 @@ class Location extends Manager
     protected $locationModel = 'Admin\Models\Locations_model';
 
     /**
-     * @var GeoPosition
+     * @var \Igniter\Flame\Location\Models\Area
      */
-    protected $userPosition;
+    protected $coveredArea;
 
     //
     //	BOOT METHODS
@@ -251,14 +252,16 @@ class Location extends Manager
         return null;
     }
 
-    public function setCoveredArea(Area $areaModel)
+    public function setCoveredArea(Area $coveredArea)
     {
-        if ($this->getId() != $areaModel->getLocationId()) {
+        $this->coveredArea = $coveredArea;
+
+        if ($this->getId() != $coveredArea->getLocationId()) {
             $this->clearCoveredArea();
         }
         else {
-            $areaId = $areaModel->getKey();
-            $locationId = $areaModel->getLocationId();
+            $areaId = $coveredArea->getKey();
+            $locationId = $coveredArea->getLocationId();
 
             $this->putSession('area', [$areaId, $locationId]);
         }
@@ -273,15 +276,24 @@ class Location extends Manager
 
     public function clearCoveredArea()
     {
+        $this->coveredArea = null;
         $this->forgetSession('area');
     }
 
-    /**
-     * @return \Igniter\Flame\Location\Models\Area
-     */
     public function coveredArea()
     {
-        return $this->getModel()->findOrNewDeliveryArea($this->getAreaId());
+        if (!is_null($this->coveredArea))
+            return $this->coveredArea;
+
+        if (!$coveredArea = $this->getModel()->findDeliveryArea($this->getAreaId()))
+            $coveredArea = $this->getModel()->searchOrFirstDeliveryArea($this->userPosition());
+
+        if (!$coveredArea)
+            throw new ApplicationException(sprintf('Missing delivery area for location %s', $this->getModel()->getName()));
+
+        $this->setCoveredArea($coveredArea);
+
+        return $coveredArea;
     }
 
     public function deliveryAreas()

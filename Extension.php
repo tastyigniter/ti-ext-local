@@ -15,6 +15,10 @@ class Extension extends \System\Classes\BaseExtension
 
         $this->app->resolving('location', function (Location $manager) {
             $manager->setDefaultLocation(params('default_location_id'));
+
+            $manager->locationSlugResolver(function () {
+                return controller()->param('location');
+            });
         });
     }
 

@@ -4,15 +4,14 @@ use App;
 use ApplicationException;
 use Carbon\Carbon;
 use Exception;
-use Igniter\Local\Classes\Location;
 use Illuminate\Support\Collection;
-use Main\Template\Page;
 use Redirect;
 use Request;
 
 class LocalBox extends \System\Classes\BaseComponent
 {
     use \Igniter\Local\Traits\SearchesNearby;
+    use \Main\Traits\HasPageOptions;
 
     /**
      * @var \Igniter\Local\Classes\Location
@@ -27,7 +26,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
     public function initialize()
     {
-        $this->location = App::make(Location::class);
+        $this->location = App::make('location');
     }
 
     public function defineProperties()
@@ -39,7 +38,8 @@ class LocalBox extends \System\Classes\BaseComponent
             ],
             'redirect' => [
                 'label' => 'lang:igniter.local::default.label_redirect',
-                'type' => 'text',
+                'type' => 'select',
+                'options' => [static::class, 'getPageOptions'],
                 'default' => 'home',
             ],
             'hideSearch' => [
@@ -65,34 +65,34 @@ class LocalBox extends \System\Classes\BaseComponent
                 'default' => 80,
             ],
             'menusPage' => [
-                'label' => 'lang:igniter.local::default.label_menu_page_limit',
+                'label' => 'lang:igniter.local::default.label_menu_page',
                 'type' => 'select',
+                'options' => [static::class, 'getPageOptions'],
                 'default' => 'local/menus',
             ],
             'openTimeFormat' => [
                 'label' => 'Time format for the opening time',
                 'type' => 'text',
+                'span' => 'left',
             ],
             'timePickerDateFormat' => [
                 'label' => 'Date format for the timepicker',
                 'type' => 'text',
+                'span' => 'right',
                 'default' => 'D d',
             ],
             'timePickerTimeFormat' => [
                 'label' => 'Time format for the timepicker',
                 'type' => 'text',
+                'span' => 'left',
                 'default' => 'H:i',
             ],
             'timePickerDateTimeFormat' => [
                 'label' => 'DateTime format for the timepicker',
                 'type' => 'text',
+                'span' => 'right',
             ],
         ];
-    }
-
-    public static function getMenusPageOptions()
-    {
-        return Page::lists('baseFileName', 'baseFileName');
     }
 
     public function onRun()
@@ -101,11 +101,7 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->addJs('js/local.js', 'local-js');
         $this->addJs('js/local.timeslot.js', 'local-timeslot-js');
 
-        if (strlen($paramFrom = $this->property('paramFrom'))) {
-            $this->overrideLocalFromParam($paramFrom);
-        }
-
-        $this->bootLocation();
+        $this->updateCurrentOrderType();
 
         if ($redirect = $this->redirectForceCurrent()) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
@@ -215,16 +211,6 @@ class LocalBox extends \System\Classes\BaseComponent
         return $parsed;
     }
 
-    protected function overrideLocalFromParam($paramFrom)
-    {
-        $param = $this->param($paramFrom);
-
-        if (!$model = $this->location->getBySlug($param))
-            return;
-
-        $this->location->setModel($model);
-    }
-
     protected function redirectForceCurrent()
     {
         if ($this->location->current())
@@ -233,17 +219,9 @@ class LocalBox extends \System\Classes\BaseComponent
         return Redirect::to($this->controller->pageUrl($this->property('redirect')));
     }
 
-    protected function bootLocation()
+    protected function updateCurrentOrderType()
     {
-        if (
-            $locationCurrent = $this->location->current()
-            AND $userPosition = $this->location->userPosition()
-            AND !$this->location->getAreaId()
-        ) {
-            $this->location->setCoveredArea(
-                $locationCurrent->findOrFirstDeliveryArea($userPosition)
-            );
-        }
+        $locationCurrent = $this->location->current();
 
         // Makes sure the current active order type is offered by the location.
         if (in_array($this->location->orderType(), $locationCurrent->availableOrderTypes()))

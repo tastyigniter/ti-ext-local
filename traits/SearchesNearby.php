@@ -23,7 +23,7 @@ trait SearchesNearby
             ])->take(10);
 
             $nearByLocation = $nearByLocations->first(function ($location) use ($position) {
-                if ($area = $location->filterDeliveryArea($position)) {
+                if ($area = $location->searchDeliveryArea($position)) {
                     Location::updateNearby($position, $area);
                 }
 

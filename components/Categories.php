@@ -25,26 +25,26 @@ class Categories extends \System\Classes\BaseComponent
     public function onRun()
     {
         $this->page['menusPage'] = $this->property('menusPage');
-        $this->page['categories'] = $categories = $this->loadCategories();
-        $this->page['selectedCategory'] = $this->findSelectedCategory($categories);
+        $this->page['categories'] = $this->loadCategories();
+        $this->page['selectedCategory'] = $this->findSelectedCategory();
     }
 
     protected function loadCategories()
     {
-        $query = Categories_model::orderBy('name');
+        $query = Categories_model::with(['children', 'children.children'])->orderBy('name');
 
-        if (!$location = Location::current())
+        if ($location = Location::current())
             $query->whereHasOrDoesntHaveLocation($location->getKey());
 
-        return $query->get()->toTree();
+        return $query->get();
     }
 
-    protected function findSelectedCategory($categories)
+    protected function findSelectedCategory()
     {
         $slug = $this->param('category');
         if (!strlen($slug))
             return null;
 
-        return $categories->where('permalink_slug', $slug)->first();
+        return Categories_model::isEnabled()->where('permalink_slug', $slug)->first();
     }
 }
