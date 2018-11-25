@@ -10,7 +10,7 @@
         $(this).closest('form').submit()
     })
 
-    $(document).ready(function () {
+    $(document).render(function () {
         var $affixEl = $('.affix-categories'),
             offsetTop = $('.navbar-top').height(),
             offsetBottom = $('footer.footer').outerHeight(true),

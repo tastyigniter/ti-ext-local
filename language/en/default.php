@@ -112,8 +112,8 @@ return [
     'alert_no_found_restaurant' => 'We do not have any local restaurant near you.',
     'alert_location_required' => 'No location found or selected',
     'alert_order_unavailable' => 'This restaurant is unavailable to take orders at the moment.',
-    'alert_delivery_unavailable' => 'This restaurant is unavailable to take delivery orders at the moment.',
-    'alert_collection_unavailable' => 'This restaurant is unavailable to take pick-up orders at the moment.',
+    'alert_delivery_unavailable' => 'This restaurant is unavailable to take delivery orders at the selected time.',
+    'alert_collection_unavailable' => 'This restaurant is unavailable to take pick-up orders at the selected time.',
 
     'component_title' => 'Local Box Component',
     'component_desc' => 'Displays local information box',
