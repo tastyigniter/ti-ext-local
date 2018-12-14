@@ -21,7 +21,7 @@
                             class="form-control text-center postcode-control"
                             name="search_query"
                             placeholder="<?= lang('igniter.local::default.label_search_query'); ?>"
-                            value="<?= $location->userPosition()->formattedAddress; ?>"
+                            value="<?= $location->userPosition()->format(); ?>"
                         >
                         <div class="input-group-btn">
                             <button

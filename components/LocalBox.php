@@ -2,7 +2,7 @@
 
 use App;
 use ApplicationException;
-use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Support\Collection;
 use Redirect;
@@ -105,6 +105,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
         if ($redirect = $this->redirectForceCurrent()) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
+
             return $redirect;
         }
 
@@ -153,7 +154,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
             $timeSlotDateTime = make_carbon($timeSlotDate.' '.$timeSlotTime);
             if ($timeIsAsap)
-                $timeSlotDateTime = $this->location->scheduleTimeslot()->first();
+                $timeSlotDateTime = $this->location->firstScheduleTimeslot();
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
                 throw new ApplicationException(lang('igniter.local::default.alert_'.$this->location->orderType().'_unavailable'));
@@ -189,6 +190,7 @@ class LocalBox extends \System\Classes\BaseComponent
             setting('date_format').' '.setting('time_format')
         );
 
+        $this->location->workingSchedule('delivery')->isOpening();
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
         $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());
@@ -198,7 +200,7 @@ class LocalBox extends \System\Classes\BaseComponent
     {
         $parsed = ['dates' => [], 'hours' => []];
 
-        $timeslot->each(function (Carbon $slot) use (&$parsed) {
+        $timeslot->collapse()->each(function (DateTime $slot) use (&$parsed) {
             $dateKey = $slot->format('Y-m-d');
             $hourKey = $slot->format('H:i');
             $dateValue = $slot->format($this->property('timePickerDateFormat'));
@@ -207,6 +209,9 @@ class LocalBox extends \System\Classes\BaseComponent
             $parsed['dates'][$dateKey] = $dateValue;
             $parsed['hours'][$dateKey][$hourKey] = $hourValue;
         });
+
+        ksort($parsed['dates']);
+        ksort($parsed['hours']);
 
         return $parsed;
     }
@@ -221,7 +226,8 @@ class LocalBox extends \System\Classes\BaseComponent
 
     protected function updateCurrentOrderType()
     {
-        $locationCurrent = $this->location->current();
+        if (!$locationCurrent = $this->location->current())
+            return;
 
         // Makes sure the current active order type is offered by the location.
         if (in_array($this->location->orderType(), $locationCurrent->availableOrderTypes()))

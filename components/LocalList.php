@@ -61,9 +61,9 @@ class LocalList extends \System\Classes\BaseComponent
         ];
 
         if ($searchQuery = input('search')) {
-            $position = $this->geocodeSearchQuery($searchQuery);
-            $options['latitude'] = $position->latitude;
-            $options['longitude'] = $position->longitude;
+            $userLocation = $this->geocodeSearchQuery($searchQuery);
+            $options['latitude'] = $userLocation->getCoordinates()->getLatitude();
+            $options['longitude'] = $userLocation->getCoordinates()->getLongitude();
         }
 
         $list = Locations_model::withCount([

@@ -2,7 +2,7 @@
 
 use ApplicationException;
 use Exception;
-use Igniter\Flame\Location\GeoPosition;
+use Geocoder;
 use Location;
 use Redirect;
 use Request;
@@ -15,19 +15,19 @@ trait SearchesNearby
             if (!strlen($searchQuery = post('search_query')))
                 throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
 
-            $position = $this->geocodeSearchQuery($searchQuery);
+            $userLocation = $this->geocodeSearchQuery($searchQuery);
+            Location::updateUserPosition($userLocation);
 
-            $nearByLocations = Location::searchByCoordinates([
-                'latitude' => $position->latitude,
-                'longitude' => $position->longitude,
-            ])->take(10);
+            $nearByLocations = Location::searchByCoordinates(
+                $userLocation->getCoordinates()
+            );
 
-            $nearByLocation = $nearByLocations->first(function ($location) use ($position) {
-                if ($area = $location->searchDeliveryArea($position)) {
-                    Location::updateNearby($position, $area);
+            $nearByLocation = $nearByLocations->first(function ($location) use ($userLocation) {
+                if ($area = $location->searchDeliveryArea($userLocation->getCoordinates())) {
+                    Location::updateNearbyArea($area);
+
+                    return $area;
                 }
-
-                return $area;
             });
 
             if (!$nearByLocation) {
@@ -45,27 +45,22 @@ trait SearchesNearby
         }
     }
 
+    /**
+     * @param $searchQuery
+     * @return \Igniter\Flame\Geolite\Model\Location
+     * @throws \ApplicationException
+     */
     protected function geocodeSearchQuery($searchQuery)
     {
-        $userPosition = app('geocoder')->geocode([
-            'address' => $searchQuery,
-        ]);
+        $collection = Geocoder::geocode($searchQuery);
 
-        if (!$userPosition OR !$userPosition instanceof GeoPosition)
-            throw new ApplicationException(lang('igniter.local::default.alert_unknown_error'));
+        if (!$collection OR $collection->isEmpty())
+            throw new ApplicationException(implode(PHP_EOL, Geocoder::getLogs()));
 
-        switch ($userPosition->status) {
-            case 'ZERO_RESULTS':
-            case 'INVALID_REQUEST':
-            case 'UNKNOWN_ERROR':
-                throw new ApplicationException($userPosition->errorMessage
-                    ?? lang('igniter.local::default.alert_invalid_search_query'));
-            case 'REQUEST_DENIED':
-            case 'OVER_QUERY_LIMIT':
-                throw new ApplicationException($userPosition->errorMessage
-                    ?? lang('igniter.local::default.alert_unknown_error'));
-        }
+        $userLocation = $collection->first();
+        if (!$userLocation->hasCoordinates())
+            throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
 
-        return $userPosition;
+        return $userLocation;
     }
 }

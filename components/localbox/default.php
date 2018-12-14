@@ -19,8 +19,8 @@
             </div>
             <?php if (
                 $location->requiresUserPosition()
-                AND $location->userPosition()->isValid()
-                AND $location->checkDeliveryCoverage() == 'outside'
+                AND $location->userPosition()->hasCoordinates()
+                AND !$location->checkDeliveryCoverage()
             ) { ?>
                 <span class="help-block"><?= lang('igniter.local::default.text_delivery_coverage'); ?></span>
             <?php } ?>

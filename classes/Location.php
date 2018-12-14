@@ -3,9 +3,9 @@
 use Admin\Models\Locations_model;
 use ApplicationException;
 use Carbon\Carbon;
-use Igniter\Flame\Location\GeoPosition;
+use Igniter\Flame\Geolite\Model\Location as UserLocation;
+use Igniter\Flame\Location\Contracts\AreaInterface;
 use Igniter\Flame\Location\Manager;
-use Igniter\Flame\Location\Models\Area;
 
 /**
  * Location Class
@@ -22,42 +22,58 @@ class Location extends Manager
     protected $locationModel = 'Admin\Models\Locations_model';
 
     /**
-     * @var \Igniter\Flame\Location\Models\Area
+     * @var \Igniter\Local\Classes\CoveredArea
      */
     protected $coveredArea;
+
+    public function __construct()
+    {
+        $this->setDefaultLocation(params('default_location_id'));
+
+        $this->locationSlugResolver(function () {
+            return controller()->param('location');
+        });
+    }
 
     //
     //	BOOT METHODS
     //
 
-    public function updateNearby(GeoPosition $position, $area)
+    public function updateNearbyArea(AreaInterface $area)
     {
-        $this->updateUserPosition($position);
-
         $this->setCurrent($area->location);
 
-        $this->setCoveredArea($area);
+        $this->setCoveredArea(new CoveredArea($area));
     }
 
     public function updateOrderType($orderType = null)
     {
+        $oldOrderType = $this->getSession('orderType');
+
         if (is_null($orderType))
             $this->forgetSession('orderType');
 
         if (strlen($orderType)) {
             $this->putSession('orderType', $orderType);
+            $this->fireSystemEvent('location.orderType.updated', [$orderType, $oldOrderType]);
         }
     }
 
-    public function updateUserPosition(GeoPosition $position)
+    public function updateUserPosition(UserLocation $position)
     {
+        $oldPosition = $this->getSession('position');
+
         $this->putSession('position', $position);
 
-        $this->fireEvent('position.updated', $position);
+        $this->clearCoveredArea();
+
+        $this->fireSystemEvent('location.position.updated', [$position, $oldPosition]);
     }
 
     public function updateScheduleTimeSlot($dateTime = null, $type = null)
     {
+        $oldSlot = $this->getSession('order-timeslot');
+
         $slot = [];
         if (!is_null($dateTime))
             $slot['dateTime'] = make_carbon($dateTime, FALSE);
@@ -66,11 +82,13 @@ class Location extends Manager
             $slot['type'] = $type;
 
         if (!$slot) {
-            $this->forgetSession('order.timeslot');
+            $this->forgetSession('order-timeslot');
         }
         else {
-            $this->putSession('order.timeslot', $slot);
+            $this->putSession('order-timeslot', $slot);
         }
+
+        $this->fireSystemEvent('location.timeslot.updated', [$slot, $oldSlot]);
     }
 
     //
@@ -87,9 +105,12 @@ class Location extends Manager
         return $this->getSession('orderType', 'delivery');
     }
 
+    /**
+     * @return UserLocation
+     */
     public function userPosition()
     {
-        return $this->getSession('position', new GeoPosition);
+        return $this->getSession('position', UserLocation::createFromArray([]));
     }
 
     public function requiresUserPosition()
@@ -101,18 +122,18 @@ class Location extends Manager
     {
         $orderType = !is_null($orderType) ? $orderType : $this->orderType();
 
-        $workingStatus = $this->workingStatus($orderType);
+        $workingSchedule = $this->workingSchedule($orderType);
         $model = $this->getModel();
         $method = 'has'.ucfirst($orderType);
 
         $isOpen = !(
-            $workingStatus == static::CLOSED
+            $workingSchedule->isClosed()
             OR ($model->methodExists($method) AND !$model->$method())
         );
 
         $isOpening = (
             !$this->getModel()->hasFutureOrder()
-            AND $workingStatus == static::OPENING
+            AND $workingSchedule->isOpening()
         );
 
         return ($isOpen OR $isOpening);
@@ -174,7 +195,7 @@ class Location extends Manager
         return $this->workingSchedule($type)->getCloseTime($format);
     }
 
-    public function workingStatus($type = null, $timestamp = null)
+    protected function workingStatus($type = null, $timestamp = null)
     {
         if (is_null($type))
             $type = $this->orderType();
@@ -193,17 +214,15 @@ class Location extends Manager
 
     public function lastOrderTime($timeFormat = null)
     {
-        $lastOrderMinutes = $this->getModel()->lastOrderMinutes();
+        $lastOrderMinutes = $this->getModel()->lastOrderMinutes() ?? 0;
         $closeTime = $this->closeTime($this->orderType(), $timeFormat);
 
-        return (is_numeric($lastOrderMinutes) AND $lastOrderMinutes > 0)
-            ? $closeTime->subMinutes($lastOrderMinutes)
-            : $closeTime;
+        return Carbon::parse($closeTime)->subMinutes($lastOrderMinutes);
     }
 
     public function orderTimeIsAsap()
     {
-        return array_get($this->getSession('order.timeslot'), 'type', 1);
+        return $this->getSession('order-timeslot.type', 1);
     }
 
     /**
@@ -211,11 +230,13 @@ class Location extends Manager
      */
     public function orderDateTime()
     {
-        $dateTime = $this->scheduleTimeslot()->first();
-        if (!$this->orderTimeIsAsap()) {
-            $sessionDateTime = array_get($this->getSession('order.timeslot'), 'dateTime');
-            if ($sessionDateTime AND Carbon::now()->lt($sessionDateTime))
-                $dateTime = $sessionDateTime;
+        $dateTime = $this->firstScheduleTimeslot();
+        $sessionDateTime = $this->getSession('order-timeslot.dateTime');
+        if (!$this->orderTimeIsAsap()
+            AND $sessionDateTime
+            AND Carbon::now()->lt($sessionDateTime)
+        ) {
+            $dateTime = $sessionDateTime;
         }
 
         return make_carbon($dateTime)->copy();
@@ -223,7 +244,13 @@ class Location extends Manager
 
     public function scheduleTimeslot()
     {
-        return $this->workingSchedule($this->orderType())->getTimeslot();
+        return $this->workingSchedule($this->orderType())
+                    ->getTimeslot($this->orderTimeInterval());
+    }
+
+    public function firstScheduleTimeslot()
+    {
+        return $this->scheduleTimeslot()->collapse()->first();
     }
 
     public function checkOrderTime($timestamp, $orderType = null)
@@ -231,11 +258,16 @@ class Location extends Manager
         if (is_null($orderType))
             $orderType = $this->orderType();
 
-        $status = $this->workingSchedule($orderType)->checkStatus($timestamp);
-        if ($this->getModel()->hasFutureOrder() AND $status != static::CLOSED)
-            return TRUE;
+        if (!$timestamp instanceof \DateTime)
+            $timestamp = new \DateTime($timestamp);
 
-        return ($status == static::OPEN);
+        $days = $this->getModel()->hasFutureOrder()
+            ? $this->getModel()->futureOrderDays() : 0;
+
+        if ($days < Carbon::now()->diffInDays($timestamp))
+            return FALSE;
+
+        return $this->workingSchedule($orderType)->isOpenAt($timestamp);
     }
 
     //
@@ -244,26 +276,17 @@ class Location extends Manager
 
     public function getAreaId()
     {
-        list ($areaId, $locationId) = $this->getSession('area', [null, null]);
-
-        if ($areaId AND $locationId == $this->getId())
-            return $areaId;
-
-        return null;
+        return $this->coveredArea()->getKey();
     }
 
-    public function setCoveredArea(Area $coveredArea)
+    public function setCoveredArea(CoveredArea $coveredArea)
     {
         $this->coveredArea = $coveredArea;
 
-        if ($this->getId() != $coveredArea->getLocationId()) {
-            $this->clearCoveredArea();
-        }
-        else {
-            $areaId = $coveredArea->getKey();
-            $locationId = $coveredArea->getLocationId();
-
-            $this->putSession('area', [$areaId, $locationId]);
+        $areaId = $this->getSession('area');
+        if ($areaId !== $coveredArea->getKey()) {
+            $this->putSession('area', $coveredArea->getKey());
+            $this->fireSystemEvent('location.area.updated', [$coveredArea]);
         }
 
         return $this;
@@ -280,17 +303,34 @@ class Location extends Manager
         $this->forgetSession('area');
     }
 
+    /**
+     * @return \Igniter\Local\Classes\CoveredArea
+     * @throws \ApplicationException
+     */
     public function coveredArea()
     {
         if (!is_null($this->coveredArea))
             return $this->coveredArea;
 
-        if (!$coveredArea = $this->getModel()->findDeliveryArea($this->getAreaId()))
-            $coveredArea = $this->getModel()->searchOrFirstDeliveryArea($this->userPosition());
+        $area = null;
+        if (!is_array($areaId = $this->getSession('area')))
+            $area = $this->getModel()->findDeliveryArea($areaId);
 
-        if (!$coveredArea)
+        if ($area AND $this->getId() !== $area->getLocationId()) {
+            $area = null;
+            $this->clearCoveredArea();
+        }
+
+        if (is_null($area)) {
+            $area = $this->getModel()->searchOrFirstDeliveryArea(
+                $this->userPosition()->getCoordinates()
+            );
+        }
+
+        if (!$area OR !$area instanceof AreaInterface)
             throw new ApplicationException(sprintf('Missing delivery area for location %s', $this->getModel()->getName()));
 
+        $coveredArea = new CoveredArea($area);
         $this->setCoveredArea($coveredArea);
 
         return $coveredArea;
@@ -323,16 +363,17 @@ class Location extends Manager
 
     public function checkDistance($decimalPoint)
     {
-        $distance = $this->getModel()->calculateDistance($this->userPosition());
+        $coordinates = $this->userPosition()->getCoordinates();
+        $distance = $this->getModel()->calculateDistance($coordinates);
 
         return round($distance, $decimalPoint);
     }
 
-    public function checkDeliveryCoverage(GeoPosition $userPosition = null)
+    public function checkDeliveryCoverage(UserLocation $userPosition = null)
     {
         if (is_null($userPosition))
             $userPosition = $this->userPosition();
 
-        return $this->coveredArea()->checkBoundary($userPosition);
+        return $this->coveredArea()->checkBoundary($userPosition->getCoordinates());
     }
 }

@@ -11,7 +11,7 @@
             class="form-control text-center"
             name="search_query"
             placeholder="<?= lang('igniter.local::default.label_search_query'); ?>"
-            value="<?= $location->userPosition()->formattedAddress; ?>"
+            value="<?= $location->userPosition()->isValid() ? $location->userPosition()->format() : ''; ?>"
         >
         <div class="input-group-prepend">
             <button

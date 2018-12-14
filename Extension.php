@@ -7,19 +7,10 @@ class Extension extends \System\Classes\BaseExtension
 {
     public function register()
     {
-        $this->app->register(\Igniter\Flame\Location\LocationServiceProvider::class);
-
-        AliasLoader::getInstance()->alias('Location', \Igniter\Flame\Location\Facades\Location::class);
-
         $this->app->singleton('location', Location::class);
 
-        $this->app->resolving('location', function (Location $manager) {
-            $manager->setDefaultLocation(params('default_location_id'));
-
-            $manager->locationSlugResolver(function () {
-                return controller()->param('location');
-            });
-        });
+        $aliasLoader = AliasLoader::getInstance();
+        $aliasLoader->alias('Location', Facades\Location::class);
     }
 
     public function registerCartConditions()
