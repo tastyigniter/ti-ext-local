@@ -18,11 +18,9 @@ trait SearchesNearby
             $userLocation = $this->geocodeSearchQuery($searchQuery);
             Location::updateUserPosition($userLocation);
 
-            $nearByLocations = Location::searchByCoordinates(
+            $nearByLocation = Location::searchByCoordinates(
                 $userLocation->getCoordinates()
-            );
-
-            $nearByLocation = $nearByLocations->first(function ($location) use ($userLocation) {
+            )->first(function ($location) use ($userLocation) {
                 if ($area = $location->searchDeliveryArea($userLocation->getCoordinates())) {
                     Location::updateNearbyArea($area);
 

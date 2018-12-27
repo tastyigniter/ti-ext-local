@@ -322,7 +322,7 @@ class Location extends Manager
         }
 
         if (is_null($area)) {
-            $area = $this->getModel()->searchOrFirstDeliveryArea(
+            $area = $this->getModel()->searchOrDefaultDeliveryArea(
                 $this->userPosition()->getCoordinates()
             );
         }
