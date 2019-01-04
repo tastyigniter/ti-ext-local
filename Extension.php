@@ -20,7 +20,7 @@ class Extension extends \System\Classes\BaseExtension
                 'name' => 'delivery',
                 'label' => 'lang:igniter.local::default.text_delivery',
                 'description' => 'lang:igniter.local::default.help_delivery_condition',
-            ]
+            ],
         ];
     }
 
@@ -101,7 +101,7 @@ class Extension extends \System\Classes\BaseExtension
     {
         return [
             'Module.LocalModule' => [
-                'action' => ['manage'],
+                'group' => 'module',
                 'description' => 'Ability to manage local extension settings',
             ],
         ];

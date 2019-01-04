@@ -66,7 +66,7 @@ return [
     'text_filter_name' => 'Name',
     'text_filter_delivery' => 'Delivery',
     'text_filter_collection' => 'Collection',
-    'text_filter_search' => 'Search by name, city or state',
+    'text_filter_search' => 'Search by name or city',
     'text_filter_no_match' => 'No location found',
 
     'column_area_charge' => 'Delivery Charge',
@@ -131,7 +131,6 @@ return [
     'text_starts' => '<b class="text-close text-danger">starts %s</b>',
     'text_delivery_time_info' => 'Delivery %s',
     'text_collection_time_info' => 'Pick-up %s',
-    'text_opening_time' => '<b class="text-close text-danger">Opening %s</b>',
     'text_delivery_time' => 'Delivery Time',
     'text_from' => ' from ',
     'text_on' => ' on ',

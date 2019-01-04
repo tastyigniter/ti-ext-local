@@ -10,16 +10,16 @@ class LocalList extends \System\Classes\BaseComponent
 {
     use SearchesNearby;
 
-    protected $userGeoLocation;
+    protected $userPosition;
 
     public function onRun()
     {
         $this->addCss('css/local.css', 'local-css');
 
         $this->id = uniqid($this->alias);
-        $this->page['distanceUnit'] = setting('distance_unit');
-        $this->page['showReviews'] = setting('allow_reviews');
-        $this->page['timeFormat'] = setting('time_format');
+        $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
+        $this->page['showReviews'] = $this->property('showReviews', setting('allow_reviews'));
+        $this->page['timeFormat'] = $this->property('timeFormat', 'D '.setting('time_format'));
         $this->page['filterSearch'] = input('search');
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();
@@ -33,7 +33,7 @@ class LocalList extends \System\Classes\BaseComponent
     {
         $sortBy = $this->param('sort_by');
 
-        if ($sortBy == 'distance' AND !input('search')) {
+        if ($sortBy == 'distance' AND !$this->userPosition->isValid()) {
             flash()->warning('Could not determine user location')->now();
             $sortBy = null;
         }
@@ -60,10 +60,9 @@ class LocalList extends \System\Classes\BaseComponent
             'sort' => $sortBy,
         ];
 
-        if ($searchQuery = input('search')) {
-            $userLocation = $this->geocodeSearchQuery($searchQuery);
-            $options['latitude'] = $userLocation->getCoordinates()->getLatitude();
-            $options['longitude'] = $userLocation->getCoordinates()->getLongitude();
+        if ($coordinates = $this->userPosition->getCoordinates()) {
+            $options['latitude'] = $coordinates->getLatitude();
+            $options['longitude'] = $coordinates->getLongitude();
         }
 
         $list = Locations_model::withCount([
@@ -77,7 +76,7 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function loadFilters()
     {
-        $url = current_url().'?';
+        $url = page_url().'?';
         if ($filterSearch = input('search')) {
             $url .= 'search='.$filterSearch.'&';
         }

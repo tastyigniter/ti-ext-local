@@ -16,7 +16,6 @@ trait SearchesNearby
                 throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
 
             $userLocation = $this->geocodeSearchQuery($searchQuery);
-            Location::updateUserPosition($userLocation);
 
             $nearByLocation = Location::searchByCoordinates(
                 $userLocation->getCoordinates()
@@ -58,6 +57,8 @@ trait SearchesNearby
         $userLocation = $collection->first();
         if (!$userLocation->hasCoordinates())
             throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
+
+        Location::updateUserPosition($userLocation);
 
         return $userLocation;
     }

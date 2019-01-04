@@ -6,13 +6,16 @@ use Main\Template\Page;
 
 class Categories extends \System\Classes\BaseComponent
 {
+    use \Main\Traits\HasPageOptions;
+
     public function defineProperties()
     {
         return [
             'menusPage' => [
                 'label' => 'Menu Page',
-                'type' => 'text',
+                'type' => 'select',
                 'default' => 'local/menus',
+                'options' => [static::class, 'getPageOptions'],
             ],
         ];
     }

@@ -9,6 +9,8 @@ use Location;
 
 class Delivery extends CartCondition
 {
+    public $priority = 100;
+
     protected $deliveryCharge = 0;
 
     protected $minimumOrder = 0;

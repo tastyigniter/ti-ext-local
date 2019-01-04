@@ -5,7 +5,8 @@
     $collectionSchedule = $location->newWorkingSchedule('collection');
     $hasDelivery = $location->hasDelivery();
     $hasCollection = $location->hasCollection();
-    $distance = $location->calculateDistance($userPosition->getCoordinates());
+    $distance = ($coordinates = $userPosition->getCoordinates())
+        ? $location->calculateDistance($coordinates) : null;
     $deliveryMinutes = $location->deliveryMinutes();
     $collectionMinutes = $location->collectionMinutes();
     ?>

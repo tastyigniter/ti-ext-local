@@ -1,7 +1,7 @@
 <?php namespace Igniter\Local\Classes;
 
+use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
-use ApplicationException;
 use Carbon\Carbon;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Flame\Location\Contracts\AreaInterface;
@@ -328,7 +328,7 @@ class Location extends Manager
         }
 
         if (!$area OR !$area instanceof AreaInterface)
-            throw new ApplicationException(sprintf('Missing delivery area for location %s', $this->getModel()->getName()));
+            return new CoveredArea(new Location_areas_model());
 
         $coveredArea = new CoveredArea($area);
         $this->setCoveredArea($coveredArea);
