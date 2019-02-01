@@ -313,7 +313,7 @@ class Location extends Manager
             return $this->coveredArea;
 
         $area = null;
-        if (!is_array($areaId = $this->getSession('area')))
+        if ($areaId = (int)$this->getSession('area'))
             $area = $this->getModel()->findDeliveryArea($areaId);
 
         if ($area AND $this->getId() !== $area->getLocationId()) {
