@@ -16,10 +16,6 @@ class Delivery extends CartCondition
 
     public function onLoad()
     {
-        $coveredArea = Location::coveredArea();
-        $cartSubtotal = $this->getCartContent()->subtotal();
-        $this->deliveryCharge = $coveredArea->deliveryAmount($cartSubtotal);
-        $this->minimumOrder = (float)$coveredArea->minimumOrderTotal($cartSubtotal);
     }
 
     public function beforeApply()
@@ -27,6 +23,11 @@ class Delivery extends CartCondition
         // Do not apply condition when orderType is not delivery
         if (Location::orderType() != Locations_model::DELIVERY)
             return FALSE;
+
+        $coveredArea = Location::coveredArea();
+        $cartSubtotal = $this->getCartContent()->subtotal();
+        $this->deliveryCharge = $coveredArea->deliveryAmount($cartSubtotal);
+        $this->minimumOrder = (float)$coveredArea->minimumOrderTotal($cartSubtotal);
     }
 
     public function getRules()
@@ -39,6 +40,11 @@ class Delivery extends CartCondition
         return [
             ['value' => "+{$this->deliveryCharge}"],
         ];
+    }
+
+    public function getValue()
+    {
+        return $this->calculatedValue > 0 ?: lang('main::lang.text_free');
     }
 
     public function whenInValid()
