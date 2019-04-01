@@ -14,10 +14,6 @@ class Delivery extends CartCondition
 
     protected $minimumOrder = 0;
 
-    public function onLoad()
-    {
-    }
-
     public function beforeApply()
     {
         // Do not apply condition when orderType is not delivery
@@ -49,6 +45,9 @@ class Delivery extends CartCondition
 
     public function whenInValid()
     {
+        if (!$this->getCartContent()->subtotal())
+            return;
+
         flash()->warning(sprintf(
             lang('igniter.cart::default.alert_min_delivery_order_total'),
             currency_format($this->minimumOrder)
