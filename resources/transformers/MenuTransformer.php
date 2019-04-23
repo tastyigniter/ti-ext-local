@@ -1,15 +1,9 @@
 <?php namespace Igniter\Local\Resources\Transformers;
 
-use Admin\Models\Menus_model;
-
-class MenuTransformer extends \League\Fractal\TransformerAbstract
+class MenuTransformer extends \Illuminate\Http\Resources\Json\Resource
 {
-    protected $availableIncludes = [
-
-    ];
-
-    public function transform(Menus_model $model)
+    public function toArray($request)
     {
-        return $model->toArray();
+        return parent::toArray($request);
     }
 }

@@ -1,11 +1,9 @@
 <?php namespace Igniter\Local\Resources\Transformers;
 
-use Admin\Models\Categories_model;
-
-class CategoryTransformer extends \League\Fractal\TransformerAbstract
+class CategoryTransformer extends \Illuminate\Http\Resources\Json\Resource
 {
-    public function transform(Categories_model $model)
+    public function toArray($request)
     {
-        return $model->toArray();
+        return parent::toArray($request);
     }
 }

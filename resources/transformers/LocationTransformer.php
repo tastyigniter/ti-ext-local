@@ -1,11 +1,9 @@
 <?php namespace Igniter\Local\Resources\Transformers;
 
-use Admin\Models\Locations_model;
-
-class LocationTransformer extends \League\Fractal\TransformerAbstract
+class LocationTransformer extends \Illuminate\Http\Resources\Json\Resource
 {
-    public function transform(Locations_model $model)
+    public function toArray($request)
     {
-        return $model->toArray();
+        return parent::toArray($request);
     }
 }
