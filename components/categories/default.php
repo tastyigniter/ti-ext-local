@@ -22,6 +22,6 @@
             </a>
         <?php } ?>
 
-        <?= partial('@items', ['categories' => $categories]); ?>
+        <?= partial('@items', ['categories' => $categories->toTree()]); ?>
     </nav>
 </div>

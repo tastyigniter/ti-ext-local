@@ -34,7 +34,7 @@ class Categories extends \System\Classes\BaseComponent
 
     protected function loadCategories()
     {
-        $query = Categories_model::with(['children', 'children.children'])->orderBy('name');
+        $query = Categories_model::with(['children', 'children.children'])->isEnabled()->sorted();
 
         if ($location = Location::current())
             $query->whereHasOrDoesntHaveLocation($location->getKey());
