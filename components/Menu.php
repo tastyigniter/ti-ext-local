@@ -40,11 +40,25 @@ class Menu extends \System\Classes\BaseComponent
                 'span' => 'right',
                 'default' => 80,
             ],
+            'defaultLocationParam' => [
+                'label' => 'The default location route parameter (used internally when no location is selected)',
+                'type' => 'text',
+                'default' => 'local',
+            ],
+            'localNotFoundPage' => [
+                'label' => 'lang:igniter.local::default.label_redirect',
+                'type' => 'select',
+                'options' => [static::class, 'getPageOptions'],
+                'default' => 'home',
+            ],
         ];
     }
 
     public function onRun()
     {
+        if ($redirect = $this->checkLocationParam())
+            return $redirect;
+
         $this->page['menuIsGrouped'] = $this->property('isGrouped');
         $this->page['showMenuImages'] = $this->property('showMenuImages');
         $this->page['menuImageWidth'] = $this->property('menuImageWidth');
@@ -98,5 +112,17 @@ class Menu extends \System\Classes\BaseComponent
         });
 
         $list->setCollection($collection);
+    }
+
+    protected function checkLocationParam()
+    {
+        $param = $this->param('location');
+        if (is_single_location() AND $param === $this->property('defaultLocationParam', 'local'))
+            return;
+
+        if (Location::getBySlug($param))
+            return;
+
+        return \Redirect::to($this->pageUrl($this->property('localNotFoundPage')));
     }
 }
