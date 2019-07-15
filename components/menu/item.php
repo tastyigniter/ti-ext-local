@@ -37,8 +37,7 @@ $menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
                 <?php if ($specialActive) { ?>
                     <?php
                     $specialDaysRemaining = $special->daysRemaining();
-                    $specialDaysText = sprintf(lang('igniter.local::default.text_end_elapsed'),
-                        $special->end_date->diffForHumans());
+                    $specialDaysText = sprintf(lang('igniter.local::default.text_end_elapsed'), $specialDaysRemaining);
                     ?>
                     <i class="fa fa-star text-warning pr-sm-1" title="<?= $specialDaysText; ?>"></i>
                 <?php } ?>

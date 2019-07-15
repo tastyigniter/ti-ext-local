@@ -69,7 +69,7 @@ class LocalList extends \System\Classes\BaseComponent
             'reviews' => function ($q) {
                 $q->isApproved();
             },
-        ])->listFrontEnd($options);
+        ])->isEnabled()->listFrontEnd($options);
 
         return $list;
     }
