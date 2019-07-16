@@ -4,7 +4,7 @@ $special = $menuItem->special;
 $mealtimeNotAvailable = ($mealtime AND !$mealtime->isAvailableNow());
 $specialActive = ($special AND $special->active());
 $menuHasOptions = $menuItem->hasOptions();
-$menuPrice = $specialActive ? $special->special_price : $menuItem->menu_price;
+$menuPrice = $specialActive ? $special->getMenuPrice($menuItem->menu_price) : $menuItem->menu_price;
 ?>
 <div id="menu<?= $menuItem->menu_id; ?>" class="menu-item mb-3">
     <div class="d-flex flex-row">
