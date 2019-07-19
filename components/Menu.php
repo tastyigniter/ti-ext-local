@@ -7,6 +7,8 @@ use Location;
 
 class Menu extends \System\Classes\BaseComponent
 {
+    use \Main\Traits\HasPageOptions;
+
     protected $location;
 
     protected $menuListCategories = [];
