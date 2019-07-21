@@ -5,7 +5,6 @@ namespace Igniter\Local\Components;
 use Admin\Models\Reviews_model;
 use Location;
 use Redirect;
-use System\Models\Settings_model;
 
 class Review extends \System\Classes\BaseComponent
 {
@@ -80,8 +79,6 @@ class Review extends \System\Classes\BaseComponent
      */
     protected function getHints()
     {
-        $result = Settings_model::where('sort', 'ratings')->first();
-
-        return array_get($result->value, 'ratings', []);
+        return array_get(setting('ratings'), 'ratings', []);
     }
 }
