@@ -126,15 +126,11 @@ class Location extends Manager
         $model = $this->getModel();
         $method = 'has'.ucfirst($orderType);
 
-        $isOpen = !(
-            $workingSchedule->isClosed()
-            OR ($model->methodExists($method) AND !$model->$method())
-        );
+        if ($model->methodExists($method) AND !$model->$method())
+            return FALSE;
 
-        $isOpening = (
-            !$this->getModel()->hasFutureOrder()
-            AND $workingSchedule->isOpening()
-        );
+        $isOpen = $workingSchedule->isOpen();
+        $isOpening = ($workingSchedule->isOpening() AND $this->getModel()->hasFutureOrder());
 
         return ($isOpen OR $isOpening);
     }
