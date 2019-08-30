@@ -145,16 +145,15 @@ class LocalBox extends \System\Classes\BaseComponent
             if (!strlen($timeSlotDate = post('date')))
                 throw new ApplicationException('Please select a slot date.');
 
-            $timeSlotTime = null;
-            if (!$timeIsAsap AND !strlen($timeSlotTime = post('time')))
+            if (!strlen($timeSlotTime = post('time')) AND !$timeIsAsap)
                 throw new ApplicationException('Please select a slot time.');
 
             if (!$location = $this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
-            $timeSlotDateTime = make_carbon($timeSlotDate.' '.$timeSlotTime);
-            if ($timeIsAsap)
-                $timeSlotDateTime = $this->location->firstScheduleTimeslot();
+            $timeSlotDateTime = $timeIsAsap
+                ? $this->location->asapScheduleTimeslot()
+                : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
                 throw new ApplicationException(lang('igniter.local::default.alert_'.$this->location->orderType().'_unavailable'));

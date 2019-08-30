@@ -226,7 +226,7 @@ class Location extends Manager
      */
     public function orderDateTime()
     {
-        $dateTime = $this->firstScheduleTimeslot();
+        $dateTime = $this->asapScheduleTimeslot();
         $sessionDateTime = $this->getSession('order-timeslot.dateTime');
         if (!$this->orderTimeIsAsap()
             AND $sessionDateTime
@@ -247,6 +247,14 @@ class Location extends Manager
     public function firstScheduleTimeslot()
     {
         return $this->scheduleTimeslot()->collapse()->first();
+    }
+
+    public function asapScheduleTimeslot()
+    {
+        if ($this->isClosed())
+            return $this->firstScheduleTimeslot();
+
+        return Carbon::now()->addMinutes($this->orderTimeInterval() * 60);
     }
 
     public function checkOrderTime($timestamp, $orderType = null)
