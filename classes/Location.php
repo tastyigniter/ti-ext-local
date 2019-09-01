@@ -254,7 +254,7 @@ class Location extends Manager
         if ($this->isClosed())
             return $this->firstScheduleTimeslot();
 
-        return Carbon::now()->addMinutes($this->orderTimeInterval() * 60);
+        return Carbon::now()->addMinutes($this->orderTimeInterval());
     }
 
     public function checkOrderTime($timestamp, $orderType = null)
