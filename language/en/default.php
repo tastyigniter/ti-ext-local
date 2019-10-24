@@ -63,15 +63,11 @@ return [
     'text_filter_distance' => 'Distance',
     'text_filter_newest' => 'Newest',
     'text_filter_rating' => 'Rating',
-    'text_filter_name' => 'Name',
-    'text_filter_delivery' => 'Delivery',
-    'text_filter_collection' => 'Collection',
     'text_filter_search' => 'Search by name or city',
     'text_filter_no_match' => 'No location found',
 
     'column_area_charge' => 'Delivery Charge',
     'column_area_min_total' => 'Min Total',
-    'column_area_name' => 'Name',
 
     'column_language' => 'Language',
     'column_replace' => 'Replace with',

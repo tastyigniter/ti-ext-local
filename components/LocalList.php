@@ -95,7 +95,7 @@ class LocalList extends \System\Classes\BaseComponent
                 'href' => $url.'sort_by=rating',
             ],
             'name' => [
-                'name' => lang('igniter.local::default.text_filter_name'),
+                'name' => lang('admin::lang.label_name'),
                 'href' => $url.'sort_by=name',
             ],
         ];

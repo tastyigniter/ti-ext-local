@@ -4,7 +4,7 @@
         <?php if (count($deliveryAreas)) { ?>
             <div class="list-group-item">
                 <div class="row">
-                    <div class="col-sm-4"><b><?= lang('igniter.local::default.column_area_name'); ?></b></div>
+                    <div class="col-sm-4"><b><?= lang('admin::lang.label_name'); ?></b></div>
                     <div class="col-sm-8"><b><?= lang('igniter.local::default.column_area_charge'); ?></b>
                     </div>
                 </div>
