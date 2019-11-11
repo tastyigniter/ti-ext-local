@@ -4,7 +4,7 @@
             <h1
                 class="h4 wrap-bottom border-bottom"
             ><?= sprintf(lang('igniter.local::default.text_info_heading'), $locationCurrent->getName()); ?></h1>
-            <p class="m-0"><?= $description; ?></p>
+            <p class="m-0"><?= nl2br($description); ?></p>
         </div>
     <?php } ?>
 

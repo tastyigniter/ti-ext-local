@@ -34,7 +34,7 @@
                     >
                         <div class="menu-category">
                             <?php if (strlen($menuCategory->description)) { ?>
-                                <p><?= $menuCategory->description; ?></p>
+                                <p><?= nl2br($menuCategory->description); ?></p>
                             <?php } ?>
 
                             <?php if ($menuCategory->hasMedia('thumb')) { ?>

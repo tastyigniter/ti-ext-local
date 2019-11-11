@@ -29,7 +29,7 @@ $menuPrice = $specialActive ? $special->getMenuPrice($menuItem->menu_price) : $m
                 <b><?= str_limit($menuItem->menu_name, 80); ?></b>
             </span>
             <p class="menu-desc text-muted mb-0">
-                <?= str_limit($menuItem->menu_description, 120); ?>
+                <?= nl2br($menuItem->menu_description); ?>
             </p>
         </div>
         <div class="menu-detail align-self-center col-3 text-right p-0">

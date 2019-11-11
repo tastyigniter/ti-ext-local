@@ -1,6 +1,6 @@
 <?php if (isset($gallery['images']) AND count($gallery['images'])) { ?>
     <h1 class="h4"><b><?= $gallery['title']; ?></b></h1>
-    <p><?= $gallery['description']; ?></p><br/>
+    <p><?= nl2br($gallery['description']); ?></p><br/>
     <div class="row gallery">
         <?php foreach ($gallery['images'] as $media) { ?>
             <div class="col-sm-4">
