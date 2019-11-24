@@ -14,8 +14,6 @@ class LocalList extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->addCss('css/local.css', 'local-css');
-
         $this->id = uniqid($this->alias);
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
         $this->page['showReviews'] = $this->property('showReviews', setting('allow_reviews'));

@@ -97,7 +97,6 @@ class LocalBox extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->addCss('css/local.css', 'local-css');
         $this->addJs('js/local.js', 'local-js');
         $this->addJs('js/local.timeslot.js', 'local-timeslot-js');
 
