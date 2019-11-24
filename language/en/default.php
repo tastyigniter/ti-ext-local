@@ -5,7 +5,6 @@ return [
     'text_tab_general' => 'General',
     'text_tab_texts' => 'Text',
     'text_info_heading' => 'More info about %s local restaurant',
-    'text_review_heading' => 'Customer Reviews of %s',
     'text_gallery_heading' => 'Gallery of %s',
 
     'text_find' => 'Find Menu',
@@ -158,7 +157,25 @@ return [
     'review' => [
         'component_title' => 'Local Review Component',
         'component_desc' => 'Displays a list of local reviews',
+        'text_review_heading' => 'Customer Reviews of %s',
+        'text_total_review' => '(%s)',
+        'text_no_review' => 'There are no reviews yet.',
+        'text_your_review' => 'Your review',
+        'text_write_review' => 'Did you enjoy your meal?',
+
+        'label_quality' => 'Quality',
+        'label_delivery' => 'Delivery',
+        'label_service' => 'Service',
+        'label_review' => 'Review',
+        'label_date' => 'Review Date',
+
+        'button_review' => 'Send Review',
+
         'alert_review_disabled' => 'Reviews has been disabled, please contact site administrator.',
+        'alert_review_success' => 'Review sent successfully, it will be visible once approved.',
+        'alert_review_error' => 'An error has occurred, please try again.',
+        'alert_review_duplicate' => 'Sorry. Either you\'ve already left a review for this order, or an error has occurred.',
+        'alert_review_status_history' => 'Review can not be added because order/reservation is not completed',
     ],
 
     'info' => [
