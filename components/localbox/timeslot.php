@@ -10,13 +10,15 @@ $orderTimeIsAsap = $location->orderTimeIsAsap();
         type="button"
         id="orderTimePicker"
         data-toggle="dropdown"
+        data-boundary="viewport"
         aria-haspopup="true"
         aria-expanded="false"
     >
+        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;
         <b><?=
             ($orderTimeIsAsap)
                 ? lang('igniter.local::default.text_asap')
-                : $orderDateTime->format($orderDateTimeFormat);
+                : $orderDateTime->format($timePickerDateTimeFormat);
             ?></b>
     </button>
 
@@ -54,7 +56,12 @@ $orderTimeIsAsap = $location->orderTimeIsAsap();
                     data-timepicker-selected="<?= $orderDateTime ? $orderDateTime->format('H:i') : '' ?>"
                 ></select>
             </div>
-            <button type="button" class="btn btn-primary" data-timepicker-submit>
+            <button
+                type="button"
+                class="btn btn-primary text-nowrap"
+                data-timepicker-submit
+                data-attach-loading
+            >
                 <?= sprintf(lang('igniter.local::default.label_choose_order_time'), $location->orderTypeIsDelivery()
                     ? lang('igniter.local::default.text_delivery')
                     : lang('igniter.local::default.text_collection'));

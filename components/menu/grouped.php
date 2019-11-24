@@ -1,4 +1,4 @@
-<div class="list-group list-group-flush">
+<div class="menu-group">
     <?php if (!count($groupedMenuItems)) { ?>
         <div class="menu-group-item">
             <p><?= lang('igniter.local::default.text_no_category'); ?></p>
@@ -17,15 +17,13 @@
                     $menuCategoryAlias = strtolower(str_slug($menuCategory->name));
                     ?>
                     <div id="<?= $menuCategoryAlias; ?>-heading" role="tab">
-                        <h5
-                            class="category-title"
+                        <h4
+                            class="category-title cursor-pointer"
                             data-toggle="collapse"
                             data-target="#<?= $menuCategoryAlias; ?>-collapse"
                             aria-expanded="false"
                             aria-controls="<?= $menuCategoryAlias; ?>-heading"
-                        >
-                            <?= $menuCategory->name; ?>
-                        </h5>
+                        ><?= e($menuCategory->name); ?><span class="collapse-toggle text-muted pull-right"></span></h4>
                     </div>
                     <div
                         id="<?= $menuCategoryAlias; ?>-collapse"

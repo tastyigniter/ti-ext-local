@@ -7,7 +7,7 @@ return [
     'text_info_heading' => 'More info about %s local restaurant',
     'text_gallery_heading' => 'Gallery of %s',
 
-    'text_find' => 'Find Menu',
+    'text_find' => 'Find',
     'text_order_summary' => 'Order delicious food online',
     'text_goto_menus' => 'Go to Menu',
     'text_location_summary' => 'We can deliver to you %s',

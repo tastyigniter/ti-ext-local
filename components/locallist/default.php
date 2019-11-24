@@ -1,8 +1,8 @@
 <?php if (count($locationsList)) { ?>
-    <div class="local-group card-group flex-column">
+    <div class="local-group">
         <?= partial('@list', [
             'locationsList' => $locationsList,
-            'distanceUnit'  => $distanceUnit,
+            'distanceUnit' => $distanceUnit,
         ]); ?>
     </div>
 

@@ -11,19 +11,19 @@
     $collectionMinutes = $location->collectionMinutes();
     ?>
     <a
-        class="card w-100 p-3 mb-1"
+        class="card w-100 p-3 mb-2"
         href="<?= page_url('local/menus', ['location' => $location->permalink_slug]); ?>"
     >
-        <div class="row boxes">
-            <?php if (!empty($location->location_image)) { ?>
+        <div class="boxes d-sm-flex no-gutters">
+            <?php if ($location->hasMedia('thumb')) { ?>
                 <div class="col-12 col-sm-3">
                     <img class="img-responsive pull-left"
-                         src="<?= $location->getThumb(['height' => 90, 'width' => 90]); ?>">
+                         src="<?= $location->getThumb(); ?>">
                 </div>
             <?php } ?>
             <div class="col-12 col-sm-5">
-                <dl>
-                    <dd><h2 class="h6 mb-0 text-body"><?= $location->location_name; ?></h2></dd>
+                <dl class="no-spacing">
+                    <dd><h2 class="h5 mb-0 text-body"><?= $location->location_name; ?></h2></dd>
                     <?php if ($showReviews) { ?>
                         <dd>
                             <div class="rating rating-sm text-muted">
@@ -32,22 +32,25 @@
                                 <span class="fa fa-star"></span>
                                 <span class="fa fa-star-half-o"></span>
                                 <span class="fa fa-star-o"></span>
-                                <span><?= sprintf(lang('igniter.local::default.text_total_review'), $location->reviews_count); ?></span>
+                                <span><?= sprintf(lang('igniter.local::default.review.text_total_review'), $location->reviews_count); ?></span>
                             </div>
                         </dd>
                     <?php } ?>
-                    <dd>
-                        <span class="text-muted text-truncate"><?= format_address($location->getAddress()); ?></span>
+                    <dd class="d-none">
+                        <span
+                            class="text-muted text-truncate"><?= format_address($location->getAddress()); ?></span>
                     </dd>
                     <?php if ($distance) { ?>
                         <dd>
-                            <span class="text-muted"><?= number_format($distance, 1); ?> <?= $distanceUnit; ?></span>
+                            <span
+                                class="text-muted small"
+                            ><i class="fa fa-map-marker"></i>&nbsp;&nbsp;<?= number_format($distance, 1); ?> <?= $distanceUnit; ?></span>
                         </dd>
                     <?php } ?>
                 </dl>
             </div>
             <div class="col-12 col-sm-4">
-                <dl>
+                <dl class="no-spacing">
                     <?php if ($openingSchedule->isOpen()) { ?>
                         <dt><?= lang('igniter.local::default.text_is_opened'); ?></dt>
                     <?php }

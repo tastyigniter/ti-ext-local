@@ -4,7 +4,7 @@ $hasCollection = $location->current()->hasCollection();
 $schedule = $location->workingSchedule($location->orderType());
 $openingTime = $schedule->getOpenTime();
 ?>
-<dl>
+<dl class="no-spacing">
     <?php if ($schedule->isOpen()) { ?>
         <dt><?= lang('igniter.local::default.text_is_opened'); ?></dt>
     <?php }
