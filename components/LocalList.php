@@ -16,7 +16,7 @@ class LocalList extends \System\Classes\BaseComponent
     {
         $this->id = uniqid($this->alias);
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
-        $this->page['showReviews'] = $this->property('showReviews', setting('allow_reviews'));
+        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['timeFormat'] = $this->property('timeFormat', 'D '.setting('time_format'));
         $this->page['filterSearch'] = input('search');
         $this->page['filterSorted'] = input('sort_by');

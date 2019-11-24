@@ -91,6 +91,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 'label' => 'DateTime format for the timepicker',
                 'type' => 'text',
                 'span' => 'right',
+                'default' => 'D d H:i',
             ],
         ];
     }
@@ -175,6 +176,7 @@ class LocalBox extends \System\Classes\BaseComponent
     protected function prepareVars()
     {
         $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
+        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
         $this->page['localThumbWidth'] = $this->property('localThumbWidth');
         $this->page['localThumbHeight'] = $this->property('localThumbHeight');
@@ -184,9 +186,7 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['openingTimeFormat'] = $this->property('openTimeFormat', setting('time_format'));
         $this->page['timePickerDateFormat'] = $this->property('timePickerDateFormat');
         $this->page['timePickerTimeFormat'] = $this->property('timePickerTimeFormat');
-        $this->page['orderDateTimeFormat'] = $this->property('timePickerDateTimeFormat',
-            setting('date_format').' '.setting('time_format')
-        );
+        $this->page['timePickerDateTimeFormat'] = $this->property('timePickerDateTimeFormat');
 
         $this->location->workingSchedule('delivery')->isOpening();
         $this->page['location'] = $this->location;
