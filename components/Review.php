@@ -30,10 +30,10 @@ class Review extends \System\Classes\BaseComponent
                 'type' => 'text',
                 'default' => 'date_added asc',
             ],
-            'dateFormat' => [
-                'label' => 'Review date format',
+            'reviewDateFormat' => [
+                'label' => 'Date format to display the review date ',
                 'type' => 'text',
-                'default' => 'd M y H:i',
+                'default' => 'DD MMM YY',
             ],
             'reviewableType' => [
                 'label' => 'Whether the review form is loaded on an order or reservation page, use by the review form',
@@ -68,7 +68,7 @@ class Review extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->page['reviewDateFormat'] = $this->property('dateFormat');
+        $this->page['reviewDateFormat'] = $this->property('reviewDateFormat');
         $this->page['reviewRatingHints'] = $this->getHints();
         $this->page['reviewList'] = $this->loadReviewList();
         $this->page['reviewable'] = $reviewable = $this->loadReviewable();

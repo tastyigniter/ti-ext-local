@@ -174,9 +174,6 @@ class Location extends Manager
         if (is_null($type))
             $type = $this->orderType();
 
-        if (is_null($format))
-            $format = setting('time_format');
-
         return $this->workingSchedule($type)->getOpenTime($format);
     }
 
@@ -184,9 +181,6 @@ class Location extends Manager
     {
         if (is_null($type))
             $type = $this->orderType();
-
-        if (is_null($format))
-            $format = setting('time_format');
 
         return $this->workingSchedule($type)->getCloseTime($format);
     }

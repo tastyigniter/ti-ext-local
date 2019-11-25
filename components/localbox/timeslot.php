@@ -18,7 +18,7 @@ $orderTimeIsAsap = $location->orderTimeIsAsap();
         <b><?=
             ($orderTimeIsAsap)
                 ? lang('igniter.local::default.text_asap')
-                : $orderDateTime->format($timePickerDateTimeFormat);
+                : $orderDateTime->isoFormat($timePickerDateTimeFormat);
             ?></b>
     </button>
 

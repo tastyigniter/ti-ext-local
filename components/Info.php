@@ -8,17 +8,31 @@ use Location;
 
 class Info extends \System\Classes\BaseComponent
 {
-    public $isHidden = TRUE;
-
-    protected $list = [];
+    public function defineProperties()
+    {
+        return [
+            'openingTimeFormat' => [
+                'label' => 'Date format for the opening hours',
+                'type' => 'text',
+                'default' => 'HH:mm',
+            ],
+            'lastOrderTimeFormat' => [
+                'label' => 'Date format for the last order time',
+                'type' => 'text',
+                'default' => 'ddd DD HH:mm',
+            ],
+        ];
+    }
 
     public function onRun()
     {
+        $this->page['lastOrderTimeFormat'] = $this->property('lastOrderTimeFormat');
+
         $this->page['location'] = Location::instance();
         $this->page['locationCurrent'] = $locationCurrent = Location::current();
 
         $this->page['localPayments'] = $locationCurrent->listAvailablePayments();
-        $this->page['localHours'] = $locationCurrent->listWorkingHours()->groupBy('day');
+        $this->page['localHours'] = $this->listWorkingHours($locationCurrent);
         $this->page['deliveryAreas'] = $this->mapIntoCoveredArea($locationCurrent);
     }
 
@@ -32,5 +46,12 @@ class Info extends \System\Classes\BaseComponent
     protected function mapIntoCoveredArea($locationCurrent)
     {
         return $locationCurrent->listDeliveryAreas()->mapInto(CoveredArea::class);
+    }
+
+    protected function listWorkingHours($locationCurrent)
+    {
+        return $locationCurrent->listWorkingHours()->groupBy(function ($model) {
+            return $model->day->isoFormat('dddd');
+        });
     }
 }

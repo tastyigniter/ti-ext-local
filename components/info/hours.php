@@ -25,8 +25,8 @@
                         <?php } else { ?>
                             <td><?= sprintf(
                                     lang('igniter.local::default.text_working_hour'),
-                                    $hour->open->format('H:i a'),
-                                    $hour->close->format('H:i a')
+                                    $hour->open->isoFormat($openingTimeFormat),
+                                    $hour->close->isoFormat($openingTimeFormat)
                                 ); ?></td>
                         <?php } ?>
                     <?php } ?>

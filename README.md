@@ -65,10 +65,9 @@ permalink: /
 | redirect                     | Page name to redirect to when location is not loaded            | home        | home         |
 | showLocalThumb                     | Show/hide the current location's thumb            | true/false        | false         |
 | menusPage                     | Page name to the menus page           |    local/menus     |     local/menus     |
-| openTimeFormat                     | Time format to use to display the opening time |    H:i     |      system default    |
-| timePickerDateFormat                     | Date format to use for the order timepicker |    D d    |    D d      |
-| timePickerTimeFormat                     | Time format to use for the order timepicker    |    H:i     |     H:i     |
-| timePickerDateTimeFormat                     | Date time format to use for the order timepicker   |    D d H:i     |     system default     |
+| openTimeFormat                     | Time format for the opening time and timepicker |    HH:mm     |      HH:mm    |
+| timePickerDateFormat                     | Date format for the order timepicker |    ddd DD    |    ddd DD      |
+| timePickerDateTimeFormat                     | Date time format for the order timepicker   |    ddd DD HH:mm     |     HH:mm     |
 
 **Variables available in templates**
 
@@ -90,10 +89,9 @@ permalink: '/:location?local/menus/:category?'
     paramFrom: location
     showLocalThumb: 0
     menusPage: local/menus
-    openTimeFormat: 'H:i'
-    timePickerDateFormat: 'D d'
-    timePickerTimeFormat: 'H:i'
-    timePickerDateTimeFormat: 'D d H:i'
+    openTimeFormat: 'HH:mm'
+    timePickerDateFormat: 'ddd DD'
+    timePickerDateTimeFormat: 'ddd DD HH:mm'
 ---
 ...
 <?= component('localBox') ?>
@@ -236,7 +234,7 @@ permalink: '/:location?local/menus/:category?'
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | $pageLimit | Number of reviews per page       |   20    |     20      |
 | $sort | Sort the review list             |    date_added asc    |     date_added asc      |
-| $dateFormat | Date format to display the review date            |   d M y H:i  |     d M y H:i      |
+| $reviwDateFormat | Date format to display the review date            |   DD MMM YY  |     DD MMM YY      |
 | $redirectPage | Page name to redirect to when reviews is disabled       |   local/menus  |     local/menus      |
 
 **Variables available in templates**

@@ -9,7 +9,7 @@ $openingTime = $schedule->getOpenTime();
         <dt><?= lang('igniter.local::default.text_is_opened'); ?></dt>
     <?php }
     else if ($schedule->isOpening()) { ?>
-        <dt class="text-muted"><?= sprintf(lang('igniter.local::default.text_opening_time'), $openingTime->format('D '.$openingTimeFormat)); ?></dt>
+        <dt class="text-muted"><?= sprintf(lang('igniter.local::default.text_opening_time'), $openingTime->format('ddd '.$openingTimeFormat)); ?></dt>
     <?php }
     else { ?>
         <dt class="text-muted"><?= lang('igniter.local::default.text_closed'); ?></dt>

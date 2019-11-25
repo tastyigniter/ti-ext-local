@@ -75,24 +75,19 @@ class LocalBox extends \System\Classes\BaseComponent
                 'label' => 'Time format for the opening time',
                 'type' => 'text',
                 'span' => 'left',
+                'default' => 'HH:mm',
             ],
             'timePickerDateFormat' => [
                 'label' => 'Date format for the timepicker',
                 'type' => 'text',
-                'span' => 'right',
-                'default' => 'D d',
-            ],
-            'timePickerTimeFormat' => [
-                'label' => 'Time format for the timepicker',
-                'type' => 'text',
                 'span' => 'left',
-                'default' => 'H:i',
+                'default' => 'ddd DD',
             ],
             'timePickerDateTimeFormat' => [
                 'label' => 'DateTime format for the timepicker',
                 'type' => 'text',
-                'span' => 'right',
-                'default' => 'D d H:i',
+                'span' => 'left',
+                'default' => 'ddd DD HH:mm',
             ],
         ];
     }
@@ -167,9 +162,8 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['menusPage'] = $this->property('menusPage');
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['timeSlotEventHandler'] = $this->getEventHandler('onSetOrderTime');
-        $this->page['openingTimeFormat'] = $this->property('openTimeFormat', setting('time_format'));
+        $this->page['openingTimeFormat'] = $this->property('openTimeFormat');
         $this->page['timePickerDateFormat'] = $this->property('timePickerDateFormat');
-        $this->page['timePickerTimeFormat'] = $this->property('timePickerTimeFormat');
         $this->page['timePickerDateTimeFormat'] = $this->property('timePickerDateTimeFormat');
 
         $this->location->workingSchedule('delivery')->isOpening();
@@ -185,8 +179,8 @@ class LocalBox extends \System\Classes\BaseComponent
         $timeslot->collapse()->each(function (DateTime $slot) use (&$parsed) {
             $dateKey = $slot->format('Y-m-d');
             $hourKey = $slot->format('H:i');
-            $dateValue = $slot->format($this->property('timePickerDateFormat'));
-            $hourValue = $slot->format($this->property('timePickerTimeFormat'));
+            $dateValue = make_carbon($slot)->isoFormat($this->property('timePickerDateFormat'));
+            $hourValue = make_carbon($slot)->isoFormat($this->property('openTimeFormat'));
 
             $parsed['dates'][$dateKey] = $dateValue;
             $parsed['hours'][$dateKey][$hourKey] = $hourValue;
