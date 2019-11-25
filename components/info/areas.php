@@ -12,23 +12,9 @@
             <?php foreach ($deliveryAreas as $key => $area) { ?>
                 <div class="list-group-item">
                     <div class="row">
-                        <div class="col-sm-4"><?= $area['name']; ?></div>
+                        <div class="col-sm-4"><?= $area->name; ?></div>
                         <div class="col-sm-8">
-                            <?php foreach ($area->listConditions() as $id => $condition) {
-                                if (empty($condition['amount'])) {
-                                    $condition['amount'] = lang('igniter.local::default.text_free');
-                                }
-                                else if ($condition['amount'] < 0) {
-                                    $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
-                                }
-                                else {
-                                    $condition['amount'] = currency_format($condition['amount']);
-                                }
-
-                                $condition['total'] = !empty($condition['total']) ? currency_format($condition['total']) : lang('igniter.local::default.text_delivery_all_orders');
-                                ?>
-                                <?= ucfirst(strtolower(parse_values($condition, $condition['label']))); ?><br>
-                            <?php } ?>
+                            <?= implode('<br>', $__SELF__->getAreaConditionLabels($area)); ?>
                         </div>
                     </div>
                 </div>

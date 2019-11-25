@@ -4,6 +4,7 @@ use App;
 use ApplicationException;
 use DateTime;
 use Exception;
+use Igniter\Local\Classes\CoveredAreaCondition;
 use Illuminate\Support\Collection;
 use Redirect;
 use Request;
@@ -112,28 +113,11 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->prepareVars();
     }
 
-    public function deliveryConditionText()
+    public function getAreaConditionLabels()
     {
-        $summary = [];
-        foreach ($this->location->getDeliveryChargeConditions() as $condition) {
-            if (empty($condition['amount'])) {
-                $condition['amount'] = lang('igniter.local::default.text_free');
-            }
-            else if ($condition['amount'] < 0) {
-                $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
-            }
-            else {
-                $condition['amount'] = currency_format($condition['amount']);
-            }
-
-            $condition['total'] = !empty($condition['total'])
-                ? currency_format($condition['total'])
-                : lang('igniter.local::default.text_delivery_all_orders');
-
-            $summary[] = ucfirst(strtolower(parse_values($condition, $condition['label'])));
-        }
-
-        return implode(', ', $summary);
+        return $this->location->coveredArea()->listConditions()->map(function (CoveredAreaCondition $condition) {
+            return ucfirst(strtolower($condition->getLabel()));
+        })->all();
     }
 
     public function onSetOrderTime()

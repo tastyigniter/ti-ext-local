@@ -45,6 +45,6 @@ $openingTime = $schedule->getOpenTime();
         <?php } ?>
     </dd>
     <dd class="text-muted">
-        <?= $__SELF__->deliveryConditionText(); ?>
+        <?= implode(', ', $__SELF__->getAreaConditionLabels()); ?>
     </dd>
 </dl>

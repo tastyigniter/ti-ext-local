@@ -9,21 +9,33 @@ use Igniter\Flame\Location\Contracts\AreaInterface;
  * @method getKey()
  * @method deliveryAmount($cartTotal)
  * @method minimumOrderTotal($cartTotal)
- * @method listConditions()
  * @method checkBoundary(\Igniter\Flame\Geolite\Contracts\CoordinatesInterface $userPosition)
  */
 class CoveredArea
 {
-    protected $area;
+    protected $model;
 
-    public function __construct(AreaInterface $area)
+    public function __construct(AreaInterface $model)
     {
-        $this->area = $area;
+        $this->model = $model;
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function listConditions()
+    {
+        return collect($this->model->conditions ?? [])->mapInto(CoveredAreaCondition::class);
+    }
+
+    public function __get($key)
+    {
+        return $this->model->getAttribute($key);
     }
 
     public function __call($method, $parameters)
     {
-        if (method_exists($this->area, $method))
-            return call_user_func_array([$this->area, $method], $parameters);
+        if (method_exists($this->model, $method))
+            return call_user_func_array([$this->model, $method], $parameters);
     }
 }
