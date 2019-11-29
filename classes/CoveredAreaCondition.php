@@ -24,7 +24,7 @@ class CoveredAreaCondition
     {
         $condition['amount'] = $this->amount
             ? currency_format($this->amount)
-            : lang('igniter.local::default.'.($this->amount < 0 ? 'text_delivery_not_available' : 'text_free'));
+            : lang($this->amount < 0 ? 'igniter.local::default.text_delivery_not_available' : 'main::lang.text_free');
 
         $condition['total'] = $this->total
             ? currency_format($this->total)
