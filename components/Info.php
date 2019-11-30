@@ -11,8 +11,8 @@ class Info extends \System\Classes\BaseComponent
     public function defineProperties()
     {
         return [
-            'openingTimeFormat' => [
-                'label' => 'Date format for the opening hours',
+            'infoTimeFormat' => [
+                'label' => 'Date format for the open and close hours',
                 'type' => 'text',
                 'default' => 'HH:mm',
             ],
@@ -26,6 +26,7 @@ class Info extends \System\Classes\BaseComponent
 
     public function onRun()
     {
+        $this->page['infoTimeFormat'] = $this->property('infoTimeFormat');
         $this->page['lastOrderTimeFormat'] = $this->property('lastOrderTimeFormat');
 
         $this->page['location'] = Location::instance();

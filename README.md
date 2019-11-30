@@ -65,7 +65,8 @@ permalink: /
 | redirect                     | Page name to redirect to when location is not loaded            | home        | home         |
 | showLocalThumb                     | Show/hide the current location's thumb            | true/false        | false         |
 | menusPage                     | Page name to the menus page           |    local/menus     |     local/menus     |
-| openTimeFormat                     | Time format for the opening time and timepicker |    HH:mm     |      HH:mm    |
+| localBoxTimeFormat                     | Time format for the open and close time |    HH:mm     |      HH:mm    |
+| openingTimeFormat                     | Time format for the opening later time |    ddd HH:mm     |      ddd HH:mm    |
 | timePickerDateFormat                     | Date format for the order timepicker |    ddd DD    |    ddd DD      |
 | timePickerDateTimeFormat                     | Date time format for the order timepicker   |    ddd DD HH:mm     |     HH:mm     |
 
@@ -133,7 +134,8 @@ permalink: '/:location?local/info'
 | ------------------------- | ------------------------------------------------------------ |
 | $distanceUnit | Unit of length to use for the distance. Uses system settings value                                               |
 | $showReviews | Value determines whether to show reviews                                                |
-| $timeFormat | Time format to use for location opening time                                                |
+| localListTimeFormat                     | Time format for the open and close time |    HH:mm     |      HH:mm    |
+| openingTimeFormat                     | Time format for the opening later time |    ddd HH:mm     |      ddd HH:mm    |
 | $filterSearch | The user's search query                                                |
 | $filterSorted | The user's selected filter                                                |
 | $filterSorters | Array of available filters                                                |

@@ -2,14 +2,15 @@
 $hasDelivery = $locationCurrent->hasDelivery();
 $hasCollection = $location->current()->hasCollection();
 $schedule = $location->workingSchedule($location->orderType());
-$openingTime = $schedule->getOpenTime();
+$openingTime = Carbon\Carbon::parse($schedule->getOpenTime());
+$closingTime = Carbon\Carbon::parse($schedule->getCloseTime());
 ?>
 <dl class="no-spacing">
     <?php if ($schedule->isOpen()) { ?>
         <dt><?= lang('igniter.local::default.text_is_opened'); ?></dt>
     <?php }
     else if ($schedule->isOpening()) { ?>
-        <dt class="text-muted"><?= sprintf(lang('igniter.local::default.text_opening_time'), $openingTime->format('ddd '.$openingTimeFormat)); ?></dt>
+        <dt class="text-muted"><?= sprintf(lang('igniter.local::default.text_opening_time'), $openingTime->isoFormat($openingTimeFormat)); ?></dt>
     <?php }
     else { ?>
         <dt class="text-muted"><?= lang('igniter.local::default.text_closed'); ?></dt>
@@ -23,9 +24,9 @@ $openingTime = $schedule->getOpenTime();
         else { ?>
             <span class="fa fa-clock-o"></span>&nbsp;
             <span>
-                <?= $schedule->getOpenTime($openingTimeFormat); ?>
+                <?= $openingTime->isoFormat($localBoxTimeFormat); ?>
                 -
-                <?= $schedule->getCloseTime($openingTimeFormat); ?>
+                <?= $closingTime->isoFormat($localBoxTimeFormat); ?>
                 </span>
         <?php } ?>
     </dd>

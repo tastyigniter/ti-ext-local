@@ -71,11 +71,17 @@ class LocalBox extends \System\Classes\BaseComponent
                 'options' => [static::class, 'getPageOptions'],
                 'default' => 'local/menus',
             ],
-            'openTimeFormat' => [
-                'label' => 'Time format for the opening time',
+            'localBoxTimeFormat' => [
+                'label' => 'Time format for the open and close time',
                 'type' => 'text',
                 'span' => 'left',
                 'default' => 'HH:mm',
+            ],
+            'openingTimeFormat' => [
+                'label' => 'Time format for the opening later time',
+                'type' => 'text',
+                'span' => 'left',
+                'default' => 'ddd HH:mm',
             ],
             'timePickerDateFormat' => [
                 'label' => 'Date format for the timepicker',
@@ -162,7 +168,8 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['menusPage'] = $this->property('menusPage');
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['timeSlotEventHandler'] = $this->getEventHandler('onSetOrderTime');
-        $this->page['openingTimeFormat'] = $this->property('openTimeFormat');
+        $this->page['localBoxTimeFormat'] = $this->property('localBoxTimeFormat');
+        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat');
         $this->page['timePickerDateFormat'] = $this->property('timePickerDateFormat');
         $this->page['timePickerDateTimeFormat'] = $this->property('timePickerDateTimeFormat');
 
@@ -180,7 +187,7 @@ class LocalBox extends \System\Classes\BaseComponent
             $dateKey = $slot->format('Y-m-d');
             $hourKey = $slot->format('H:i');
             $dateValue = make_carbon($slot)->isoFormat($this->property('timePickerDateFormat'));
-            $hourValue = make_carbon($slot)->isoFormat($this->property('openTimeFormat'));
+            $hourValue = make_carbon($slot)->isoFormat($this->property('openingTimeFormat'));
 
             $parsed['dates'][$dateKey] = $dateValue;
             $parsed['hours'][$dateKey][$hourKey] = $hourValue;
