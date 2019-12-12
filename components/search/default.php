@@ -1,7 +1,7 @@
 <div id="local-box" class="local-box-fluid">
     <div class="panel panel-local local-search">
         <div class="panel-body">
-            <h2 class="text-center"><?= lang('igniter.local::default.text_order_summary'); ?></h2>
+            <h2 class="text-center text-primary"><?= lang('igniter.local::default.text_order_summary'); ?></h2>
             <span class="search-label sr-only"><?= lang('igniter.local::default.label_search_query'); ?></span>
             <?php if ($hideSearch) { ?>
                 <a class="btn btn-block btn-primary"

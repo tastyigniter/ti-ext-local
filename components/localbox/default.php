@@ -2,7 +2,7 @@
     <div class="panel local-search">
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-<?= ($hideSearch) ? '12' : '4' ?>">
+                <div class="col-sm-<?= ($hideSearch) ? '12' : '4' ?> mb-3 mb-sm-0">
                     <div
                         id="local-timeslot"
                         data-control="timepicker"
