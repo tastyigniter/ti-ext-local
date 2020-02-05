@@ -2,8 +2,12 @@
   "code": "igniter.local",
   "name": "Local",
   "description": "This extension allows your customers to find the nearest location.",
-  "version": "v1.3.1",
+  "version": "v1.3.2",
   "author": "SamPoyigi",
-  "icon": "fa-map-marker",
+  "icon": {
+    "class": "fa fa-map-marker",
+    "backgroundColor": "#CD4341",
+    "color": "#fff"
+  },
   "homepage": "https://github.com/tastyigniter/ti-ext-local"
 }

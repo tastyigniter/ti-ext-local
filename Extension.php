@@ -96,14 +96,4 @@ class Extension extends \System\Classes\BaseExtension
             ],
         ];
     }
-
-    public function registerPermissions()
-    {
-        return [
-            'Module.LocalModule' => [
-                'group' => 'module',
-                'description' => 'Ability to manage local extension settings',
-            ],
-        ];
-    }
 }
