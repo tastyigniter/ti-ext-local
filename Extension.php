@@ -96,4 +96,24 @@ class Extension extends \System\Classes\BaseExtension
             ],
         ];
     }
+
+    public function registerImportExport()
+    {
+        return [
+            'import' => [
+                'menus' => [
+                    'label' => 'Import Menu Items',
+                    'model' => 'Igniter\Local\Models\MenuImport',
+                    'configFile' => '$/igniter/local/models/config/menuimport',
+                ],
+            ],
+            'export' => [
+                'menus' => [
+                    'label' => 'Export Menu Items',
+                    'model' => 'Igniter\Local\Models\MenuExport',
+                    'configFile' => '$/igniter/local/models/config/menuexport',
+                ],
+            ],
+        ];
+    }
 }
