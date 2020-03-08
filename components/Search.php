@@ -5,6 +5,7 @@ use Location;
 class Search extends \System\Classes\BaseComponent
 {
     use \Igniter\Local\Traits\SearchesNearby;
+    use \Main\Traits\UsesPage;
 
     public function defineProperties()
     {
@@ -16,8 +17,9 @@ class Search extends \System\Classes\BaseComponent
             ],
             'menusPage' => [
                 'label' => 'Menu Page',
-                'type' => 'text',
+                'type' => 'select',
                 'default' => 'local/menus',
+                'options' => [static::class, 'getThemePageOptions'],
             ],
         ];
     }
