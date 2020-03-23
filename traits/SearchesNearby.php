@@ -3,6 +3,7 @@
 use ApplicationException;
 use Exception;
 use Geocoder;
+use Illuminate\Support\Facades\Log;
 use Location;
 use Redirect;
 use Request;
@@ -51,8 +52,10 @@ trait SearchesNearby
     {
         $collection = Geocoder::geocode($searchQuery);
 
-        if (!$collection OR $collection->isEmpty())
-            throw new ApplicationException(implode(PHP_EOL, Geocoder::getLogs()));
+        if (!$collection OR $collection->isEmpty()) {
+            Log::error(implode(PHP_EOL, Geocoder::getLogs()));
+            throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
+        }
 
         $userLocation = $collection->first();
         if (!$userLocation->hasCoordinates())
