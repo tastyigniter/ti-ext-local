@@ -111,6 +111,11 @@ class Menu extends \System\Classes\BaseComponent
                 $categories[] = $menu;
 
             return $categories;
+        })->sortBy(function ($menu, $categoryId) {
+            if (isset($this->menuListCategories[$categoryId]))
+                return $this->menuListCategories[$categoryId]->priority;
+
+            return $categoryId;
         });
 
         $list->setCollection($collection);
