@@ -12,7 +12,7 @@ use Request;
 class LocalBox extends \System\Classes\BaseComponent
 {
     use \Igniter\Local\Traits\SearchesNearby;
-    use \Main\Traits\HasPageOptions;
+    use \Main\Traits\UsesPage;
 
     /**
      * @var \Igniter\Local\Classes\Location
@@ -40,7 +40,7 @@ class LocalBox extends \System\Classes\BaseComponent
             'redirect' => [
                 'label' => 'lang:igniter.local::default.label_redirect',
                 'type' => 'select',
-                'options' => [static::class, 'getPageOptions'],
+                'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'home',
             ],
             'hideSearch' => [
@@ -68,7 +68,7 @@ class LocalBox extends \System\Classes\BaseComponent
             'menusPage' => [
                 'label' => 'lang:igniter.local::default.label_menu_page',
                 'type' => 'select',
-                'options' => [static::class, 'getPageOptions'],
+                'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'local/menus',
             ],
             'localBoxTimeFormat' => [

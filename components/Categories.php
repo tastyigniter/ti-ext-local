@@ -6,7 +6,7 @@ use Main\Template\Page;
 
 class Categories extends \System\Classes\BaseComponent
 {
-    use \Main\Traits\HasPageOptions;
+    use \Main\Traits\UsesPage;
 
     public function defineProperties()
     {
@@ -15,7 +15,7 @@ class Categories extends \System\Classes\BaseComponent
                 'label' => 'Menu Page',
                 'type' => 'select',
                 'default' => 'local/menus',
-                'options' => [static::class, 'getPageOptions'],
+                'options' => [static::class, 'getThemePageOptions'],
             ],
         ];
     }
