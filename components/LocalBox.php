@@ -75,13 +75,13 @@ class LocalBox extends \System\Classes\BaseComponent
                 'label' => 'Time format for the open and close time',
                 'type' => 'text',
                 'span' => 'left',
-                'default' => 'HH:mm',
+                'default' => 'hh:mm a',
             ],
             'openingTimeFormat' => [
                 'label' => 'Time format for the opening later time',
                 'type' => 'text',
                 'span' => 'left',
-                'default' => 'ddd HH:mm',
+                'default' => 'ddd hh:mm a',
             ],
             'timePickerDateFormat' => [
                 'label' => 'Date format for the timepicker',
@@ -93,7 +93,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 'label' => 'DateTime format for the timepicker',
                 'type' => 'text',
                 'span' => 'left',
-                'default' => 'ddd DD HH:mm',
+                'default' => 'ddd DD hh:mm a',
             ],
         ];
     }
