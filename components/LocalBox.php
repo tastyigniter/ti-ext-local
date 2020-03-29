@@ -173,7 +173,6 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['timePickerDateFormat'] = $this->property('timePickerDateFormat');
         $this->page['timePickerDateTimeFormat'] = $this->property('timePickerDateTimeFormat');
 
-        $this->location->workingSchedule('delivery')->isOpening();
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
         $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());

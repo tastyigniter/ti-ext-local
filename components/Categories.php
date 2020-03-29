@@ -2,7 +2,6 @@
 
 use Admin\Models\Categories_model;
 use Location;
-use Main\Template\Page;
 
 class Categories extends \System\Classes\BaseComponent
 {
@@ -17,17 +16,20 @@ class Categories extends \System\Classes\BaseComponent
                 'default' => 'local/menus',
                 'options' => [static::class, 'getThemePageOptions'],
             ],
+            'hiddenCategories' => [
+                'label' => 'Categories to hide from the list',
+                'type' => 'selectlist',
+                'options' => [Categories_model::class, 'getDropdownOptions'],
+                'placeholder' => 'lang:admin::lang.text_please_select',
+            ],
         ];
-    }
-
-    public static function getMenusPageOptions()
-    {
-        return Page::lists('baseFileName', 'baseFileName');
     }
 
     public function onRun()
     {
         $this->page['menusPage'] = $this->property('menusPage');
+        $this->page['hiddenCategories'] = $this->property('hiddenCategories') ?? [];
+
         $this->page['categories'] = $this->loadCategories();
         $this->page['selectedCategory'] = $this->findSelectedCategory();
     }

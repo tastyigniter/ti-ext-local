@@ -1,5 +1,6 @@
 <?php foreach ($categories as $category) { ?>
     <?php
+    if (in_array($category->getKey(), $hiddenCategories)) continue;
     $isActive = ($selectedCategory AND $category->permalink_slug == $selectedCategory->permalink_slug);
     $children = $category->children;
     ?>
