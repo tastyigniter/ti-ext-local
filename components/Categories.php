@@ -16,6 +16,11 @@ class Categories extends \System\Classes\BaseComponent
                 'default' => 'local/menus',
                 'options' => [static::class, 'getThemePageOptions'],
             ],
+            'hideEmptyCategory' => [
+                'label' => 'Hide categories with no items from the list',
+                'type' => 'switch',
+                'default' => FALSE,
+            ],
             'hiddenCategories' => [
                 'label' => 'Categories to hide from the list',
                 'type' => 'selectlist',
@@ -28,6 +33,7 @@ class Categories extends \System\Classes\BaseComponent
     public function onRun()
     {
         $this->page['menusPage'] = $this->property('menusPage');
+        $this->page['hideEmptyCategory'] = (bool)$this->property('hideEmptyCategory', FALSE);
         $this->page['hiddenCategories'] = $this->property('hiddenCategories') ?? [];
 
         $this->page['categories'] = $this->loadCategories();
