@@ -1,6 +1,6 @@
 <?php
 
-namespace Igniter\Local\Conditions;
+namespace Igniter\Local\CartConditions;
 
 use Admin\Models\Locations_model;
 use Igniter\Flame\Cart\CartCondition;

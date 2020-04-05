@@ -16,7 +16,7 @@ class Extension extends \System\Classes\BaseExtension
     public function registerCartConditions()
     {
         return [
-            'Igniter\Local\Conditions\Delivery' => [
+            'Igniter\Local\CartConditions\Delivery' => [
                 'name' => 'delivery',
                 'label' => 'lang:igniter.local::default.text_delivery',
                 'description' => 'lang:igniter.local::default.help_delivery_condition',
