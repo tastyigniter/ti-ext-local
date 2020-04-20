@@ -212,7 +212,7 @@ class Location extends Manager
 
     public function orderTimeIsAsap()
     {
-        return $this->getSession('order-timeslot.type', 1);
+        return (bool)$this->getSession('order-timeslot.type', 1);
     }
 
     /**

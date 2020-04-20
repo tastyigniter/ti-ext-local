@@ -1,8 +1,8 @@
 <?php if (isset($gallery['images']) AND count($gallery['images'])) { ?>
-    <h1 class="h4"><b><?= $gallery['title']; ?></b></h1>
-    <p><?= nl2br($gallery['description']); ?></p><br/>
+    <h1 class="h4"><b><?= array_get($gallery, 'title'); ?></b></h1>
+    <p><?= nl2br(array_get($gallery, 'description', '')); ?></p><br/>
     <div class="row gallery">
-        <?php foreach ($gallery['images'] as $media) { ?>
+        <?php foreach (array_get($gallery, 'images') as $media) { ?>
             <div class="col-sm-4">
                 <img
                     class="img-responsive img-rounded"
