@@ -104,7 +104,7 @@
         event.stopPropagation()
 
         this.selectedType = optionValue
-        this.$el.find(this.typeSelector).trigger('change')
+	this.togglePicker()
 
         if (this.selectedType === 'asap')
             this.onSubmitForm()
