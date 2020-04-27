@@ -31,22 +31,22 @@ class Extension extends \System\Classes\BaseExtension
                 'name' => 'Menus',
                 'description' => 'An API resource for menus',
                 'model' => \Admin\Models\Menus_model::class,
-                'controller' => \Igniter\Local\Resources\Menus::class,
-                'transformer' => \Igniter\Local\Resources\Transformers\MenuTransformer::class,
+                'controller' => \Igniter\Local\ApiResources\Menus::class,
+                'transformer' => \Igniter\Local\ApiResources\Transformers\MenuTransformer::class,
             ],
             'categories' => [
                 'name' => 'Categories',
                 'description' => 'An API resource for categories',
                 'model' => \Admin\Models\Categories_model::class,
-                'controller' => \Igniter\Local\Resources\Categories::class,
-                'transformer' => \Igniter\Local\Resources\Transformers\CategoryTransformer::class,
+                'controller' => \Igniter\Local\ApiResources\Categories::class,
+                'transformer' => \Igniter\Local\ApiResources\Transformers\CategoryTransformer::class,
             ],
             'locations' => [
                 'name' => 'Locations',
                 'description' => 'An API resource for locations',
                 'model' => \Admin\Models\Locations_model::class,
-                'controller' => \Igniter\Local\Resources\Locations::class,
-                'transformer' => \Igniter\Local\Resources\Transformers\LocationTransformer::class,
+                'controller' => \Igniter\Local\ApiResources\Locations::class,
+                'transformer' => \Igniter\Local\ApiResources\Transformers\LocationTransformer::class,
             ],
         ];
     }

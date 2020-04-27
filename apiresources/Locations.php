@@ -1,4 +1,4 @@
-<?php namespace Igniter\Local\Resources;
+<?php namespace Igniter\Local\ApiResources;
 
 use Igniter\Api\Classes\ApiController;
 

@@ -1,4 +1,4 @@
-<?php namespace Igniter\Local\Resources\Transformers;
+<?php namespace Igniter\Local\ApiResources\Transformers;
 
 class MenuTransformer extends \Illuminate\Http\Resources\Json\Resource
 {
