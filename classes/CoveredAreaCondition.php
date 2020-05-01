@@ -4,13 +4,13 @@ namespace Igniter\Local\Classes;
 
 class CoveredAreaCondition
 {
-    protected $type;
+    public $type;
 
-    protected $amount;
+    public $amount;
 
-    protected $total;
+    public $total;
 
-    protected $priority;
+    public $priority;
 
     public function __construct(array $condition = [])
     {
@@ -22,9 +22,13 @@ class CoveredAreaCondition
 
     public function getLabel()
     {
-        $condition['amount'] = $this->amount
-            ? currency_format($this->amount)
-            : lang($this->amount < 0 ? 'igniter.local::default.text_delivery_not_available' : 'main::lang.text_free');
+        $condition['amount'] = lang('main::lang.text_free');
+        if ($this->amount < 0) {
+            $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
+        }
+        elseif ($this->amount > 0) {
+            $condition['amount'] = currency_format($this->amount);
+        }
 
         $condition['total'] = $this->total
             ? currency_format($this->total)
@@ -34,5 +38,26 @@ class CoveredAreaCondition
         $label = lang('igniter.local::default.text_condition_'.$type);
 
         return parse_values($condition, $label);
+    }
+
+    public function getCharge()
+    {
+        return ($this->amount < 0) ? null : $this->amount;
+    }
+
+    public function getMinTotal()
+    {
+        return $this->amount;
+    }
+
+    public function isValid($cartTotal)
+    {
+        if ($this->type === 'below')
+            return $cartTotal < $this->total;
+
+        if ($this->type === 'above')
+            return $cartTotal > $this->total;
+
+        return TRUE;
     }
 }

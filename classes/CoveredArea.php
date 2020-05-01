@@ -7,8 +7,6 @@ use Igniter\Flame\Location\Contracts\AreaInterface;
 /**
  * @method getLocationId()
  * @method getKey()
- * @method deliveryAmount($cartTotal)
- * @method minimumOrderTotal($cartTotal)
  * @method checkBoundary(\Igniter\Flame\Geolite\Contracts\CoordinatesInterface $userPosition)
  */
 class CoveredArea
@@ -20,12 +18,47 @@ class CoveredArea
         $this->model = $model;
     }
 
+    public function deliveryAmount($cartTotal)
+    {
+        return $this->getConditionValue('amount', $cartTotal);
+    }
+
+    public function minimumOrderTotal($cartTotal)
+    {
+        return $this->getConditionValue('total', $cartTotal);
+    }
+
     /**
      * @return \Illuminate\Support\Collection
      */
     public function listConditions()
     {
-        return collect($this->model->conditions ?? [])->mapInto(CoveredAreaCondition::class);
+        return collect($this->model->conditions ?? [])
+            ->sortBy('priority')
+            ->mapInto(CoveredAreaCondition::class);
+    }
+
+    protected function getConditionValue($type, $cartTotal)
+    {
+        if (!$condition = $this->checkConditions($cartTotal, $type))
+            return null;
+
+        // Delivery is unavailable when delivery charge from the matched rule is -1
+        if ($condition->amount < 0)
+            return $type == 'total' ? $condition->total : null;
+
+        // At this stage, minimum total is 0 when the matched condition is a below rule
+        if ($type == 'total' AND $condition->type == 'below')
+            return 0;
+
+        return $condition->{$type};
+    }
+
+    protected function checkConditions($cartTotal, $value = 'total')
+    {
+        return $this->listConditions()->first(function (CoveredAreaCondition $condition) use ($cartTotal) {
+            return $condition->isValid($cartTotal);
+        });
     }
 
     public function __get($key)
