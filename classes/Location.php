@@ -140,6 +140,11 @@ class Location extends Manager
         return $this->orderType() == Locations_model::DELIVERY;
     }
 
+    public function orderTypeIsCollection()
+    {
+        return $this->orderType() == Locations_model::COLLECTION;
+    }
+
     //
     //	HOURS
     //
