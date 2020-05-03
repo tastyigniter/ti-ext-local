@@ -147,10 +147,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
             $this->controller->pageCycle();
 
-            return [
-                '#notification' => $this->renderPartial('flash'),
-                '#local-timeslot' => $this->renderPartial('@timeslot'),
-            ];
+            return $this->fetchPartials();
         }
         catch (Exception $ex) {
             if (Request::ajax()) throw $ex;
@@ -176,6 +173,18 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
         $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());
+    }
+
+    public function fetchPartials()
+    {
+        $this->prepareVars();
+
+        return [
+            '#notification' => $this->renderPartial('flash'),
+            '#local-timeslot' => $this->renderPartial('@timeslot'),
+            '#local-control' => $this->renderPartial('@control'),
+            '#local-box-two' => $this->renderPartial('@box_two'),
+        ];
     }
 
     protected function parseTimeslot(Collection $timeslot)
