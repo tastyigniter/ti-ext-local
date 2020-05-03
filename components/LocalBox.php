@@ -95,6 +95,11 @@ class LocalBox extends \System\Classes\BaseComponent
                 'span' => 'left',
                 'default' => 'ddd DD hh:mm a',
             ],
+            'cartBoxAlias' => [
+                'label' => 'Specify the CartBox component alias used to reload the cart contents after the order type changes',
+                'type' => 'text',
+                'default' => 'cartBox',
+            ],
         ];
     }
 
@@ -119,6 +124,32 @@ class LocalBox extends \System\Classes\BaseComponent
         return $this->location->coveredArea()->listConditions()->map(function (CoveredAreaCondition $condition) {
             return ucfirst(strtolower($condition->getLabel()));
         })->all();
+    }
+
+    public function onChangeOrderType()
+    {
+        try {
+            if (!$location = $this->location->current())
+                throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
+
+            if (!$this->location->checkOrderType($orderType = post('type')))
+                throw new ApplicationException(lang('igniter.local::default.alert_'.$orderType.'_unavailable'));
+
+            $this->location->updateOrderType($orderType);
+
+            $this->controller->pageCycle();
+
+            $cartBox = $this->controller->findComponentByAlias($this->property('cartBoxAlias'));
+
+            if ($cartBox AND $cartBox->property('pageIsCheckout'))
+                return Redirect::to($this->controller->pageUrl($this->property('checkoutPage')));
+
+            return array_merge($cartBox->fetchPartials(), $this->fetchPartials());
+        }
+        catch (Exception $ex) {
+            if (Request::ajax()) throw $ex;
+            else flash()->danger($ex->getMessage())->now();
+        }
     }
 
     public function onSetOrderTime()
@@ -165,6 +196,7 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['menusPage'] = $this->property('menusPage');
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['timeSlotEventHandler'] = $this->getEventHandler('onSetOrderTime');
+        $this->page['orderTypeEventHandler'] = $this->getEventHandler('onChangeOrderType');
         $this->page['localBoxTimeFormat'] = $this->property('localBoxTimeFormat');
         $this->page['openingTimeFormat'] = $this->property('openingTimeFormat');
         $this->page['timePickerDateFormat'] = $this->property('timePickerDateFormat');
