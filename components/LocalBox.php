@@ -1,5 +1,6 @@
 <?php namespace Igniter\Local\Components;
 
+use Admin\Models\Locations_model;
 use App;
 use ApplicationException;
 use DateTime;
@@ -42,6 +43,15 @@ class LocalBox extends \System\Classes\BaseComponent
                 'type' => 'select',
                 'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'home',
+            ],
+            'defaultOrderType' => [
+                'label' => 'lang:igniter.local::default.label_default_order_type',
+                'type' => 'select',
+                'default' => Locations_model::DELIVERY,
+                'options' => [
+                    Locations_model::DELIVERY => 'lang:igniter.local::default.text_delivery',
+                    Locations_model::COLLECTION => 'lang:igniter.local::default.text_collection',
+                ],
             ],
             'hideSearch' => [
                 'label' => 'lang:igniter.local::default.label_location_search_mode',
@@ -256,9 +266,8 @@ class LocalBox extends \System\Classes\BaseComponent
         if (in_array($this->location->orderType(), $locationCurrent->availableOrderTypes()))
             return;
 
-        $this->location->updateOrderType($locationCurrent->hasDelivery()
-            ? $locationCurrent::DELIVERY
-            : $locationCurrent::COLLECTION
+        $this->location->updateOrderType(
+            $this->property('defaultOrderType', Locations_model::DELIVERY)
         );
     }
 }
