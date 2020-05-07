@@ -15,5 +15,7 @@
     </ul>
 <?php }
 else { ?>
-    <p><?= lang('igniter.local::default.review.text_no_review'); ?></p>
+	<div class="panel-body">
+	    <p><?= lang('igniter.local::default.review.text_no_review'); ?></p>
+	</div>
 <?php } ?>
