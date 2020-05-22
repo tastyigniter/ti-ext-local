@@ -1,7 +1,6 @@
 <?php
 
 return [
-    '_text_title' => 'Local',
     'text_tab_general' => 'General',
     'text_tab_texts' => 'Text',
     'text_info_heading' => 'More info about %s local restaurant',
