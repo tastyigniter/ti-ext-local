@@ -256,8 +256,8 @@ class Location extends Manager
         if (!$timestamp instanceof \DateTime)
             $timestamp = new \DateTime($timestamp);
 
-        $days = $this->getModel()->hasFutureOrder()
-            ? $this->getModel()->futureOrderDays() : 0;
+        $days = $this->getModel()->hasFutureOrder($orderType)
+            ? $this->getModel()->futureOrderDays($orderType) : 0;
 
         if ($days < Carbon::now()->diffInDays($timestamp))
             return FALSE;
