@@ -207,14 +207,6 @@ class Location extends Manager
         return $this->getModel()->getOrderTimeInterval($this->orderType());
     }
 
-    public function lastOrderTime()
-    {
-        $lastOrderMinutes = $this->getModel()->lastOrderMinutes() ?? 0;
-        $closeTime = $this->closeTime($this->orderType());
-
-        return Carbon::parse($closeTime)->subMinutes($lastOrderMinutes);
-    }
-
     public function orderTimeIsAsap()
     {
         return (bool)$this->getSession('order-timeslot.type', 1);
@@ -240,7 +232,7 @@ class Location extends Manager
     public function scheduleTimeslot()
     {
         return $this->workingSchedule($this->orderType())
-                    ->getTimeslot($this->orderTimeInterval());
+            ->getTimeslot($this->orderTimeInterval());
     }
 
     public function firstScheduleTimeslot()
