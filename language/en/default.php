@@ -138,7 +138,7 @@ return [
     'text_end_days' => 'Ends %s in %s days',
     'text_end_today' => 'Ends today',
     'text_end_elapsed' => 'Ends in %s',
-    'text_mealtime' => '%s only (%s - %s)',
+    'text_mealtime' => 'Available during %s (%s - %s)',
 
     'search' => [
         'component_title' => 'Local Search Component',
