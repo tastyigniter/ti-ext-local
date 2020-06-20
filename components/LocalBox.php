@@ -166,13 +166,13 @@ class LocalBox extends \System\Classes\BaseComponent
     {
         try {
             if (!is_numeric($timeIsAsap = post('asap')))
-                throw new ApplicationException('Please select a slot type.');
+                throw new ApplicationException(lang('igniter.local::default.alert_slot_type_required'));
 
             if (!strlen($timeSlotDate = post('date')))
-                throw new ApplicationException('Please select a slot date.');
+                throw new ApplicationException(lang('igniter.local::default.alert_slot_date_required'));
 
             if (!strlen($timeSlotTime = post('time')) AND !$timeIsAsap)
-                throw new ApplicationException('Please select a slot time.');
+                throw new ApplicationException(lang('igniter.local::default.alert_slot_time_required'));
 
             if (!$location = $this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
