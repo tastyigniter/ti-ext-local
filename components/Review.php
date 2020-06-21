@@ -121,8 +121,8 @@ class Review extends \System\Classes\BaseComponent
             return Redirect::back();
         }
         catch (Exception $ex) {
-            if (Request::ajax()) throw $ex;
-            else flash()->alert($ex->getMessage())->important();
+            flash()->warning($ex->getMessage());
+            return Redirect::back()->withInput();
         }
     }
 
