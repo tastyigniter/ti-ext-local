@@ -140,6 +140,11 @@ class Location extends Manager
         return $this->orderType() == Locations_model::DELIVERY;
     }
 
+    public function orderTypeIsCollection()
+    {
+        return $this->orderType() == Locations_model::COLLECTION;
+    }
+
     //
     //	HOURS
     //
@@ -174,9 +179,6 @@ class Location extends Manager
         if (is_null($type))
             $type = $this->orderType();
 
-        if (is_null($format))
-            $format = setting('time_format');
-
         return $this->workingSchedule($type)->getOpenTime($format);
     }
 
@@ -184,9 +186,6 @@ class Location extends Manager
     {
         if (is_null($type))
             $type = $this->orderType();
-
-        if (is_null($format))
-            $format = setting('time_format');
 
         return $this->workingSchedule($type)->getCloseTime($format);
     }
@@ -208,17 +207,9 @@ class Location extends Manager
         return $this->getModel()->getOrderTimeInterval($this->orderType());
     }
 
-    public function lastOrderTime($timeFormat = null)
-    {
-        $lastOrderMinutes = $this->getModel()->lastOrderMinutes() ?? 0;
-        $closeTime = $this->closeTime($this->orderType(), $timeFormat);
-
-        return Carbon::parse($closeTime)->subMinutes($lastOrderMinutes);
-    }
-
     public function orderTimeIsAsap()
     {
-        return $this->getSession('order-timeslot.type', 1);
+        return (bool)$this->getSession('order-timeslot.type', 1);
     }
 
     /**
@@ -226,7 +217,7 @@ class Location extends Manager
      */
     public function orderDateTime()
     {
-        $dateTime = $this->firstScheduleTimeslot();
+        $dateTime = $this->asapScheduleTimeslot();
         $sessionDateTime = $this->getSession('order-timeslot.dateTime');
         if (!$this->orderTimeIsAsap()
             AND $sessionDateTime
@@ -241,12 +232,20 @@ class Location extends Manager
     public function scheduleTimeslot()
     {
         return $this->workingSchedule($this->orderType())
-                    ->getTimeslot($this->orderTimeInterval());
+            ->getTimeslot($this->orderTimeInterval());
     }
 
     public function firstScheduleTimeslot()
     {
         return $this->scheduleTimeslot()->collapse()->first();
+    }
+
+    public function asapScheduleTimeslot()
+    {
+        if ($this->isClosed())
+            return $this->firstScheduleTimeslot();
+
+        return Carbon::now()->addMinutes($this->orderTimeInterval());
     }
 
     public function checkOrderTime($timestamp, $orderType = null)
@@ -257,8 +256,8 @@ class Location extends Manager
         if (!$timestamp instanceof \DateTime)
             $timestamp = new \DateTime($timestamp);
 
-        $days = $this->getModel()->hasFutureOrder()
-            ? $this->getModel()->futureOrderDays() : 0;
+        $days = $this->getModel()->hasFutureOrder($orderType)
+            ? $this->getModel()->futureOrderDays($orderType) : 0;
 
         if ($days < Carbon::now()->diffInDays($timestamp))
             return FALSE;

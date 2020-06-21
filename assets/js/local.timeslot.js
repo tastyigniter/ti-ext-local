@@ -50,7 +50,7 @@
             $container = this.$el.find('.dropdown-content')
 
         $('[data-timepicker-option]').removeClass('active')
-        $('[data-timepicker-option="'+value+'"]').addClass('active')
+        $('[data-timepicker-option="' + value + '"]').addClass('active')
 
         if (value === 'asap') {
             $container.addClass('hide')
@@ -67,9 +67,9 @@
             return
 
         $.each(this.options.timeSlot.dates, function (index, date) {
-            self.$el.find(self.dateSelector).append('<option value="' + index + '"'+ (
+            self.$el.find(self.dateSelector).append('<option value="' + index + '"' + (
                 selectedDate === date ? 'selected="selected"' : ''
-            ) +'>' + date + '</option>')
+            ) + '>' + date + '</option>')
         });
 
         this.$el.find(this.dateSelector).change()
@@ -86,9 +86,9 @@
 
         this.$el.find(this.timeSelector).html('<option value="">' + controlLabel + '</option>')
         $.each(this.options.timeSlot.hours[selectedDate], function (index, hour) {
-            self.$el.find(self.timeSelector).append('<option value="' + index + '"'+ (
+            self.$el.find(self.timeSelector).append('<option value="' + index + '"' + (
                 selectedHour === hour ? 'selected="selected"' : ''
-            ) +'>' + hour + '</option>')
+            ) + '>' + hour + '</option>')
         });
 
         this.$el.find(this.timeSelector).change()
@@ -104,7 +104,7 @@
         event.stopPropagation()
 
         this.selectedType = optionValue
-        this.$el.find(this.typeSelector).trigger('change')
+        this.togglePicker()
 
         if (this.selectedType === 'asap')
             this.onSubmitForm()
@@ -131,9 +131,9 @@
 
         $('[data-timepicker-submit]').closest('form').request(null, {
             data: {
-              asap: this.$el.find(this.typeSelector).val() === 'asap' ? 1 : 0,
-              date: this.$el.find(this.dateSelector).val(),
-              time: this.$el.find(this.timeSelector).val()
+                asap: this.$el.find(this.typeSelector).val() === 'asap' ? 1 : 0,
+                date: this.$el.find(this.dateSelector).val(),
+                time: this.$el.find(this.timeSelector).val()
             }
         }).done(function () {
             self.fillDates()

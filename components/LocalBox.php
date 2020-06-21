@@ -1,9 +1,11 @@
 <?php namespace Igniter\Local\Components;
 
+use Admin\Models\Locations_model;
 use App;
 use ApplicationException;
 use DateTime;
 use Exception;
+use Igniter\Local\Classes\CoveredAreaCondition;
 use Illuminate\Support\Collection;
 use Redirect;
 use Request;
@@ -11,7 +13,7 @@ use Request;
 class LocalBox extends \System\Classes\BaseComponent
 {
     use \Igniter\Local\Traits\SearchesNearby;
-    use \Main\Traits\HasPageOptions;
+    use \Main\Traits\UsesPage;
 
     /**
      * @var \Igniter\Local\Classes\Location
@@ -39,8 +41,17 @@ class LocalBox extends \System\Classes\BaseComponent
             'redirect' => [
                 'label' => 'lang:igniter.local::default.label_redirect',
                 'type' => 'select',
-                'options' => [static::class, 'getPageOptions'],
+                'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'home',
+            ],
+            'defaultOrderType' => [
+                'label' => 'lang:igniter.local::default.label_default_order_type',
+                'type' => 'select',
+                'default' => Locations_model::DELIVERY,
+                'options' => [
+                    Locations_model::DELIVERY => 'lang:igniter.local::default.text_delivery',
+                    Locations_model::COLLECTION => 'lang:igniter.local::default.text_collection',
+                ],
             ],
             'hideSearch' => [
                 'label' => 'lang:igniter.local::default.label_location_search_mode',
@@ -67,37 +78,43 @@ class LocalBox extends \System\Classes\BaseComponent
             'menusPage' => [
                 'label' => 'lang:igniter.local::default.label_menu_page',
                 'type' => 'select',
-                'options' => [static::class, 'getPageOptions'],
+                'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'local/menus',
             ],
-            'openTimeFormat' => [
-                'label' => 'Time format for the opening time',
+            'localBoxTimeFormat' => [
+                'label' => 'Time format for the open and close time',
                 'type' => 'text',
                 'span' => 'left',
+                'default' => 'hh:mm a',
+            ],
+            'openingTimeFormat' => [
+                'label' => 'Time format for the opening later time',
+                'type' => 'text',
+                'span' => 'left',
+                'default' => 'ddd hh:mm a',
             ],
             'timePickerDateFormat' => [
                 'label' => 'Date format for the timepicker',
                 'type' => 'text',
-                'span' => 'right',
-                'default' => 'D d',
-            ],
-            'timePickerTimeFormat' => [
-                'label' => 'Time format for the timepicker',
-                'type' => 'text',
                 'span' => 'left',
-                'default' => 'H:i',
+                'default' => 'ddd DD',
             ],
             'timePickerDateTimeFormat' => [
                 'label' => 'DateTime format for the timepicker',
                 'type' => 'text',
-                'span' => 'right',
+                'span' => 'left',
+                'default' => 'ddd DD hh:mm a',
+            ],
+            'cartBoxAlias' => [
+                'label' => 'Specify the CartBox component alias used to reload the cart contents after the order type changes',
+                'type' => 'text',
+                'default' => 'cartBox',
             ],
         ];
     }
 
     public function onRun()
     {
-        $this->addCss('css/local.css', 'local-css');
         $this->addJs('js/local.js', 'local-js');
         $this->addJs('js/local.timeslot.js', 'local-timeslot-js');
 
@@ -112,28 +129,37 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->prepareVars();
     }
 
-    public function deliveryConditionText()
+    public function getAreaConditionLabels()
     {
-        $summary = [];
-        foreach ($this->location->getDeliveryChargeConditions() as $condition) {
-            if (empty($condition['amount'])) {
-                $condition['amount'] = lang('igniter.local::default.text_free');
-            }
-            else if ($condition['amount'] < 0) {
-                $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
-            }
-            else {
-                $condition['amount'] = currency_format($condition['amount']);
-            }
+        return $this->location->coveredArea()->listConditions()->map(function (CoveredAreaCondition $condition) {
+            return ucfirst(strtolower($condition->getLabel()));
+        })->all();
+    }
 
-            $condition['total'] = !empty($condition['total'])
-                ? currency_format($condition['total'])
-                : lang('igniter.local::default.text_delivery_all_orders');
+    public function onChangeOrderType()
+    {
+        try {
+            if (!$location = $this->location->current())
+                throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
-            $summary[] = ucfirst(strtolower(parse_values($condition, $condition['label'])));
+            if (!$this->location->checkOrderType($orderType = post('type')))
+                throw new ApplicationException(lang('igniter.local::default.alert_'.$orderType.'_unavailable'));
+
+            $this->location->updateOrderType($orderType);
+
+            $this->controller->pageCycle();
+
+            $cartBox = $this->controller->findComponentByAlias($this->property('cartBoxAlias'));
+
+            if ($cartBox AND $cartBox->property('pageIsCheckout'))
+                return Redirect::to($this->controller->pageUrl($this->property('checkoutPage')));
+
+            return array_merge($cartBox->fetchPartials(), $this->fetchPartials());
         }
-
-        return implode(', ', $summary);
+        catch (Exception $ex) {
+            if (Request::ajax()) throw $ex;
+            else flash()->danger($ex->getMessage())->now();
+        }
     }
 
     public function onSetOrderTime()
@@ -145,16 +171,15 @@ class LocalBox extends \System\Classes\BaseComponent
             if (!strlen($timeSlotDate = post('date')))
                 throw new ApplicationException('Please select a slot date.');
 
-            $timeSlotTime = null;
-            if (!$timeIsAsap AND !strlen($timeSlotTime = post('time')))
+            if (!strlen($timeSlotTime = post('time')) AND !$timeIsAsap)
                 throw new ApplicationException('Please select a slot time.');
 
             if (!$location = $this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
-            $timeSlotDateTime = make_carbon($timeSlotDate.' '.$timeSlotTime);
-            if ($timeIsAsap)
-                $timeSlotDateTime = $this->location->firstScheduleTimeslot();
+            $timeSlotDateTime = $timeIsAsap
+                ? $this->location->asapScheduleTimeslot()
+                : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
                 throw new ApplicationException(lang('igniter.local::default.alert_'.$this->location->orderType().'_unavailable'));
@@ -163,10 +188,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
             $this->controller->pageCycle();
 
-            return [
-                '#notification' => $this->renderPartial('flash'),
-                '#local-timeslot' => $this->renderPartial('@timeslot'),
-            ];
+            return $this->fetchPartials();
         }
         catch (Exception $ex) {
             if (Request::ajax()) throw $ex;
@@ -177,23 +199,34 @@ class LocalBox extends \System\Classes\BaseComponent
     protected function prepareVars()
     {
         $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
+        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
         $this->page['localThumbWidth'] = $this->property('localThumbWidth');
         $this->page['localThumbHeight'] = $this->property('localThumbHeight');
         $this->page['menusPage'] = $this->property('menusPage');
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['timeSlotEventHandler'] = $this->getEventHandler('onSetOrderTime');
-        $this->page['openingTimeFormat'] = $this->property('openTimeFormat', setting('time_format'));
+        $this->page['orderTypeEventHandler'] = $this->getEventHandler('onChangeOrderType');
+        $this->page['localBoxTimeFormat'] = $this->property('localBoxTimeFormat');
+        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat');
         $this->page['timePickerDateFormat'] = $this->property('timePickerDateFormat');
-        $this->page['timePickerTimeFormat'] = $this->property('timePickerTimeFormat');
-        $this->page['orderDateTimeFormat'] = $this->property('timePickerDateTimeFormat',
-            setting('date_format').' '.setting('time_format')
-        );
+        $this->page['timePickerDateTimeFormat'] = $this->property('timePickerDateTimeFormat');
 
-        $this->location->workingSchedule('delivery')->isOpening();
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
         $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());
+    }
+
+    public function fetchPartials()
+    {
+        $this->prepareVars();
+
+        return [
+            '#notification' => $this->renderPartial('flash'),
+            '#local-timeslot' => $this->renderPartial('@timeslot'),
+            '#local-control' => $this->renderPartial('@control'),
+            '#local-box-two' => $this->renderPartial('@box_two'),
+        ];
     }
 
     protected function parseTimeslot(Collection $timeslot)
@@ -203,8 +236,8 @@ class LocalBox extends \System\Classes\BaseComponent
         $timeslot->collapse()->each(function (DateTime $slot) use (&$parsed) {
             $dateKey = $slot->format('Y-m-d');
             $hourKey = $slot->format('H:i');
-            $dateValue = $slot->format($this->property('timePickerDateFormat'));
-            $hourValue = $slot->format($this->property('timePickerTimeFormat'));
+            $dateValue = make_carbon($slot)->isoFormat($this->property('timePickerDateFormat'));
+            $hourValue = make_carbon($slot)->isoFormat($this->property('openingTimeFormat'));
 
             $parsed['dates'][$dateKey] = $dateValue;
             $parsed['hours'][$dateKey][$hourKey] = $hourValue;
@@ -233,9 +266,8 @@ class LocalBox extends \System\Classes\BaseComponent
         if (in_array($this->location->orderType(), $locationCurrent->availableOrderTypes()))
             return;
 
-        $this->location->updateOrderType($locationCurrent->hasDelivery()
-            ? $locationCurrent::DELIVERY
-            : $locationCurrent::COLLECTION
+        $this->location->updateOrderType(
+            $this->property('defaultOrderType', Locations_model::DELIVERY)
         );
     }
 }

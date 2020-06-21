@@ -10,21 +10,34 @@ class LocalList extends \System\Classes\BaseComponent
 {
     use SearchesNearby;
 
-    protected $userPosition;
+    public function defineProperties()
+    {
+        return [
+            'distanceUnit' => [
+                'label' => 'Distance unit to use, mi or km',
+                'type' => 'text',
+                'default' => 'mi',
+            ],
+            'openingTimeFormat' => [
+                'label' => 'Time format for the opening later time',
+                'type' => 'text',
+                'span' => 'left',
+                'default' => 'ddd HH:mm',
+            ],
+        ];
+    }
 
     public function onRun()
     {
-        $this->addCss('css/local.css', 'local-css');
-
         $this->id = uniqid($this->alias);
+        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
-        $this->page['showReviews'] = $this->property('showReviews', setting('allow_reviews'));
-        $this->page['timeFormat'] = $this->property('timeFormat', 'D '.setting('time_format'));
+        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat', 'D '.setting('time_format'));
         $this->page['filterSearch'] = input('search');
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();
 
-        $this->page['userPosition'] = $this->userPosition = Location::userPosition();
+        $this->page['userPosition'] = Location::userPosition();
 
         $this->page['locationsList'] = $this->loadList();
     }
@@ -33,7 +46,7 @@ class LocalList extends \System\Classes\BaseComponent
     {
         $sortBy = $this->param('sort_by');
 
-        if ($sortBy == 'distance' AND !$this->userPosition->isValid()) {
+        if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();
             $sortBy = null;
         }
@@ -60,7 +73,7 @@ class LocalList extends \System\Classes\BaseComponent
             'sort' => $sortBy,
         ];
 
-        if ($coordinates = $this->userPosition->getCoordinates()) {
+        if ($coordinates = Location::userPosition()->getCoordinates()) {
             $options['latitude'] = $coordinates->getLatitude();
             $options['longitude'] = $coordinates->getLongitude();
         }
@@ -95,7 +108,7 @@ class LocalList extends \System\Classes\BaseComponent
                 'href' => $url.'sort_by=rating',
             ],
             'name' => [
-                'name' => lang('igniter.local::default.text_filter_name'),
+                'name' => lang('admin::lang.label_name'),
                 'href' => $url.'sort_by=name',
             ],
         ];

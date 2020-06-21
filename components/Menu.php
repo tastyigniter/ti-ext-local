@@ -7,7 +7,7 @@ use Location;
 
 class Menu extends \System\Classes\BaseComponent
 {
-    use \Main\Traits\HasPageOptions;
+    use \Main\Traits\UsesPage;
 
     protected $location;
 
@@ -50,7 +50,7 @@ class Menu extends \System\Classes\BaseComponent
             'localNotFoundPage' => [
                 'label' => 'lang:igniter.local::default.label_redirect',
                 'type' => 'select',
-                'options' => [static::class, 'getPageOptions'],
+                'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'home',
             ],
         ];
@@ -111,6 +111,11 @@ class Menu extends \System\Classes\BaseComponent
                 $categories[] = $menu;
 
             return $categories;
+        })->sortBy(function ($menu, $categoryId) {
+            if (isset($this->menuListCategories[$categoryId]))
+                return $this->menuListCategories[$categoryId]->priority;
+
+            return $categoryId;
         });
 
         $list->setCollection($collection);

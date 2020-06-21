@@ -16,37 +16,10 @@ class Extension extends \System\Classes\BaseExtension
     public function registerCartConditions()
     {
         return [
-            'Igniter\Local\Conditions\Delivery' => [
+            'Igniter\Local\CartConditions\Delivery' => [
                 'name' => 'delivery',
                 'label' => 'lang:igniter.local::default.text_delivery',
                 'description' => 'lang:igniter.local::default.help_delivery_condition',
-            ],
-        ];
-    }
-
-    public function registerApiResources()
-    {
-        return [
-            'menus' => [
-                'name' => 'Menus',
-                'description' => 'An API resource for menus',
-                'model' => \Admin\Models\Menus_model::class,
-                'controller' => \Igniter\Local\Resources\Menus::class,
-                'transformer' => \Igniter\Local\Resources\Transformers\MenuTransformer::class,
-            ],
-            'categories' => [
-                'name' => 'Categories',
-                'description' => 'An API resource for categories',
-                'model' => \Admin\Models\Categories_model::class,
-                'controller' => \Igniter\Local\Resources\Categories::class,
-                'transformer' => \Igniter\Local\Resources\Transformers\CategoryTransformer::class,
-            ],
-            'locations' => [
-                'name' => 'Locations',
-                'description' => 'An API resource for locations',
-                'model' => \Admin\Models\Locations_model::class,
-                'controller' => \Igniter\Local\Resources\Locations::class,
-                'transformer' => \Igniter\Local\Resources\Transformers\LocationTransformer::class,
             ],
         ];
     }
@@ -97,12 +70,22 @@ class Extension extends \System\Classes\BaseExtension
         ];
     }
 
-    public function registerPermissions()
+    public function registerImportExport()
     {
         return [
-            'Module.LocalModule' => [
-                'group' => 'module',
-                'description' => 'Ability to manage local extension settings',
+            'import' => [
+                'menus' => [
+                    'label' => 'Import Menu Items',
+                    'model' => 'Igniter\Local\Models\MenuImport',
+                    'configFile' => '$/igniter/local/models/config/menuimport',
+                ],
+            ],
+            'export' => [
+                'menus' => [
+                    'label' => 'Export Menu Items',
+                    'model' => 'Igniter\Local\Models\MenuExport',
+                    'configFile' => '$/igniter/local/models/config/menuexport',
+                ],
             ],
         ];
     }
