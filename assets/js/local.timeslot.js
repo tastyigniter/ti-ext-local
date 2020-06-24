@@ -87,7 +87,7 @@
         this.$el.find(this.timeSelector).html('<option value="">' + controlLabel + '</option>')
         $.each(this.options.timeSlot.hours[selectedDate], function (index, hour) {
             self.$el.find(self.timeSelector).append('<option value="' + index + '"' + (
-                selectedHour === hour ? 'selected="selected"' : ''
+                selectedHour === index ? 'selected="selected"' : ''
             ) + '>' + hour + '</option>')
         });
 
