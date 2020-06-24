@@ -136,8 +136,7 @@
                 time: this.$el.find(this.timeSelector).val()
             }
         }).done(function () {
-            self.fillDates()
-            self.togglePicker()
+            location.refresh();
         })
     }
 
