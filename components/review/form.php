@@ -19,7 +19,7 @@
                     class="h4"
                     data-control="star-rating"
                     data-score="<?= $customerReview ? $customerReview->quality : set_radio('rating[quality]') ?>"
-                    data-hints="<?= e(json_encode($reviewRatingHints)); ?>"
+                    data-hints="<?= e(json_encode(array_values($reviewRatingHints))); ?>"
                     data-score-name="rating[quality]"
                     <?= $customerReview ? 'data-read-only="true"' : ''; ?>
                 >
@@ -34,7 +34,7 @@
                     class="h4"
                     data-control="star-rating"
                     data-score="<?= $customerReview ? $customerReview->delivery : set_radio('rating[quality]') ?>"
-                    data-hints="<?= e(json_encode($reviewRatingHints)); ?>"
+                    data-hints="<?= e(json_encode(array_values($reviewRatingHints))); ?>"
                     data-score-name="rating[delivery]"
                     <?= $customerReview ? 'data-read-only="true"' : ''; ?>
                 >
@@ -49,7 +49,7 @@
                     class="h4"
                     data-control="star-rating"
                     data-score="<?= $customerReview ? $customerReview->service : set_radio('rating[quality]') ?>"
-                    data-hints="<?= e(json_encode($reviewRatingHints)); ?>"
+                    data-hints="<?= e(json_encode(array_values($reviewRatingHints))); ?>"
                     data-score-name="rating[service]"
                     <?= $customerReview ? 'data-read-only="true"' : ''; ?>
                 >
