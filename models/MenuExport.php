@@ -31,7 +31,7 @@ class MenuExport extends ExportModel
     protected $appends = [
         'categories',
         'thumb_url',
-        'mealtime',
+        'mealtimes',
     ];
 
     public function exportData($columns)

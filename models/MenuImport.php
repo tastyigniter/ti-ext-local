@@ -31,7 +31,7 @@ class MenuImport extends ImportModel
                 if ($this->update_existing)
                     $menuItem = $this->findDuplicateMenuItem($data) ?: $menuItem;
 
-                $except = ['menu_id', 'categories', 'mealtime'];
+                $except = ['menu_id', 'categories', 'mealtimes'];
                 foreach (array_except($data, $except) as $attribute => $value) {
                     $menuItem->{$attribute} = $value ?: null;
                 }
@@ -67,7 +67,7 @@ class MenuImport extends ImportModel
 
     protected function findMealtimeFromName($data)
     {
-        if (!$name = array_get($data, 'mealtime')) {
+        if (!$name = array_get($data, 'mealtimes')) {
             return null;
         }
 

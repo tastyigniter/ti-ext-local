@@ -11,6 +11,6 @@ return [
         'subtract_stock' => 'lang:admin::lang.menus.label_subtract_stock',
         'categories' => 'lang:admin::lang.menus.label_category',
         'menu_status' => 'lang:admin::lang.label_status',
-        'mealtime' => 'lang:admin::lang.menus.label_mealtime',
+        'mealtimes' => 'lang:admin::lang.menus.label_mealtime',
     ],
 ];
