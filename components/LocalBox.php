@@ -168,7 +168,7 @@ class LocalBox extends \System\Classes\BaseComponent
             if (!is_numeric($timeIsAsap = post('asap')))
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_type_required'));
 
-            if (!strlen($timeSlotDate = post('date')))
+            if (!strlen($timeSlotDate = post('date')) AND !$timeIsAsap)
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_date_required'));
 
             if (!strlen($timeSlotTime = post('time')) AND !$timeIsAsap)
