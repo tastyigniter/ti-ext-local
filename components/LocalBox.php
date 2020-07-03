@@ -251,7 +251,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
     protected function redirectForceCurrent()
     {
-        if ($this->location->current())
+        if ($this->location->current() && $this->location->current()->location_status == 1)
             return;
 
         return Redirect::to($this->controller->pageUrl($this->property('redirect')));
