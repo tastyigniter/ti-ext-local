@@ -136,7 +136,7 @@
                 time: this.$el.find(this.timeSelector).val()
             }
         }).done(function () {
-            location.reload(true);
+            location.reload();
         })
     }
 
