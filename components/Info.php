@@ -16,12 +16,18 @@ class Info extends \System\Classes\BaseComponent
                 'type' => 'text',
                 'default' => 'HH:mm',
             ],
+            'lastOrderTimeFormat' => [
+                'label' => 'Date format for the last order time',
+                'type' => 'text',
+                'default' => 'ddd DD HH:mm',
+            ],
         ];
     }
 
     public function onRun()
     {
         $this->page['infoTimeFormat'] = $this->property('infoTimeFormat');
+        $this->page['lastOrderTimeFormat'] = $this->property('lastOrderTimeFormat');
 
         $this->page['location'] = Location::instance();
         $this->page['locationCurrent'] = $locationCurrent = Location::current();

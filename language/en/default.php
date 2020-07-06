@@ -23,6 +23,7 @@ return [
     'text_delivery_time_info' => 'Delivery %s',
     'text_collection_time_info' => 'Pick-up %s',
     'text_collection_time' => 'Pick-up Time',
+    'text_last_order_time' => 'Last Order Time',
     'text_payments' => 'Payments',
     'text_offer' => 'Service Offered',
     'text_delivery_only' => 'Delivery only',
@@ -106,8 +107,7 @@ return [
     'alert_slot_time_required' => 'Please select a slot time.',
     'alert_slot_date_required' => 'Please select a slot date.',
     'alert_slot_type_required' => 'Please select a slot type.',
-    
-    
+
     'component_title' => 'Local Box Component',
     'component_desc' => 'Displays local information box',
     'text_heading' => 'Restaurants',

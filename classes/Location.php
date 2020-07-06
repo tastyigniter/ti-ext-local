@@ -207,6 +207,13 @@ class Location extends Manager
         return $this->getModel()->getOrderTimeInterval($this->orderType());
     }
 
+    public function lastOrderTime()
+    {
+        return Carbon::parse(
+            $this->closeTime($this->orderType())
+        )->subMinutes($this->orderLeadTime());
+    }
+
     public function orderLeadTime()
     {
         return $this->getModel()->getOrderLeadTime($this->orderType());
