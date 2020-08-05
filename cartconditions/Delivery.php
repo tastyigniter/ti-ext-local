@@ -28,7 +28,7 @@ class Delivery extends CartCondition
 
     public function getRules()
     {
-        return ["subtotal > {$this->minimumOrder}"];
+        return ["subtotal >= {$this->minimumOrder}"];
     }
 
     public function getActions()
