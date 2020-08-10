@@ -122,17 +122,10 @@ class Location extends Manager
     {
         $orderType = !is_null($orderType) ? $orderType : $this->orderType();
 
-        $workingSchedule = $this->workingSchedule($orderType);
         $model = $this->getModel();
         $method = 'has'.ucfirst($orderType);
 
-        if ($model->methodExists($method) AND !$model->$method())
-            return FALSE;
-
-        $isOpen = $workingSchedule->isOpen();
-        $isOpening = ($workingSchedule->isOpening() AND $this->getModel()->hasFutureOrder());
-
-        return ($isOpen OR $isOpening);
+        return $model->methodExists($method) AND !$model->$method();
     }
 
     public function orderTypeIsDelivery()
@@ -263,8 +256,11 @@ class Location extends Manager
         return Carbon::now()->addMinutes($this->orderLeadTime());
     }
 
-    public function checkOrderTime($timestamp, $orderType = null)
+    public function checkOrderTime($timestamp = null, $orderType = null)
     {
+        if (is_null($timestamp))
+            $timestamp = $this->orderDateTime();
+
         if (is_null($orderType))
             $orderType = $this->orderType();
 
