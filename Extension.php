@@ -1,7 +1,9 @@
 <?php namespace Igniter\Local;
 
 use Igniter\Local\Classes\Location;
+use Igniter\Local\Listeners\FilterTimeslot;
 use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\Facades\Event;
 
 class Extension extends \System\Classes\BaseExtension
 {
@@ -11,6 +13,11 @@ class Extension extends \System\Classes\BaseExtension
 
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Location', Facades\Location::class);
+    }
+
+    public function boot()
+    {
+        Event::subscribe(FilterTimeslot::class);
     }
 
     public function registerCartConditions()
