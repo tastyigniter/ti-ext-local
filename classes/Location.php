@@ -125,7 +125,7 @@ class Location extends Manager
         $model = $this->getModel();
         $method = 'has'.ucfirst($orderType);
 
-        return $model->methodExists($method) AND !$model->$method();
+        return $model->methodExists($method) AND $model->$method();
     }
 
     public function orderTypeIsDelivery()
