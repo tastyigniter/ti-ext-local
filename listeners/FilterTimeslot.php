@@ -76,10 +76,10 @@ class FilterTimeslot
     {
         if (array_has(self::$ordersCache, $date))
             return self::$ordersCache[$date];
-
+            
         $result = Orders_model::where('order_date', $date)
             ->where('location_id', LocationFacade::getId())
-            ->whereIn('status_id', setting('processing_order_status', []))
+            ->whereIn('status_id', array_merge(setting('processing_order_status', []), setting('completed_order_status', [])))
             ->select(['order_time', 'order_date'])
             ->pluck('order_time', 'order_date');
 
