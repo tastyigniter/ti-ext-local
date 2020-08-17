@@ -39,33 +39,23 @@ class FilterTimeslot
         $ordersOnThisDay = $this->getOrders($dateString);
                 
         $location = new Location(LocationFacade::getId());
-        $limitTimeslots = $this->getSchedule($location, $dateString);
 
-        foreach ($limitTimeslots as $limitDate => $limitHoursArray)
+        $datetime = Carbon::parse($timeslot);
+        $startTime = Carbon::parse($timeslot)->addMinutes();
+        $endTime = Carbon::parse($timeslot)->addMinutes($location->getModel()->getOption($workingSchedule->getType().'_time_interval'));
+        
+        if ($datetime->between($startTime, $endTime))
         {
-            if ($limitDate == $dateString)
-            {
-                foreach ($limitHoursArray as $limitHours)
-                {
-                    $datetime = Carbon::parse($timeslot);
-                    $startTime = Carbon::parse($limitHours);
-                    $endTime = Carbon::parse($limitHours)->addMinutes($location->getModel()->getOption('limit_orders_interval'));
+            $orderCount = $ordersOnThisDay->filter(function ($order) use ($startTime, $endTime) {
+                $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $order->order_date->format('Y-m-d').' '.$order->order_time);
 
-                    if ($datetime->between($startTime, $endTime))
-                    {
-                        $orderCount = $ordersOnThisDay->filter(function ($order) use ($startTime, $endTime) {
-                            $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $order->order_date->format('Y-m-d').' '.$order->order_time);
+                return $orderTime->between(
+                    $startTime,
+                    $endTime
+                );
+            });
 
-                            return $orderTime->between(
-                                $startTime,
-                                $endTime
-                            );
-                        });
-
-                        return $orderCount->count() < $location->getModel()->getOption('limit_orders_count');
-                    }
-                }
-            }
+            return $orderCount->count() < $location->getModel()->getOption('limit_orders_count');
         }
         
         return false;
@@ -84,17 +74,5 @@ class FilterTimeslot
             ->pluck('order_time', 'order_date');
 
         return self::$ordersCache[$date] = $result;
-    }
-    
-    protected function getSchedule($location, $date)
-    {
-        if (array_has(self::$scheduleCache, $date))
-            return self::$scheduleCache[$date];
-
-        $schedule = $location->getModel()->getOption('limit_orders') ? $location->workingSchedule($location::OPENING)->getTimeslot(
-            $location->getModel()->getOption('limit_orders_interval'), new DateTime($date), 0
-        )->toArray() : [];
-        
-        return self::$scheduleCache[$date] = $schedule;
     }
 }
