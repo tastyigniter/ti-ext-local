@@ -20,10 +20,10 @@ class FilterTimeslot
 
     public function subscribe(Dispatcher $dispatcher)
     {
-        $dispatcher->listen('igniter.workingSchedule.timeslotFilter', __CLASS__.'@filterTimeslot');
+        $dispatcher->listen('igniter.workingSchedule.timeslotValid', __CLASS__.'@timeslotValid');
     }
 
-    public function filterTimeslot($workingSchedule, $timeslot)
+    public function timeslotValid($workingSchedule, $timeslot)
     {
         // Skip if the working schedule is not for delivery or pickup
         if ($workingSchedule->getType() == AbstractLocation::OPENING)
@@ -50,10 +50,11 @@ class FilterTimeslot
                 );
             });
 
-            return $orderCount->count() < $location->getModel()->getOption('limit_orders_count');
+            if ($orderCount->count() >= $location->getModel()->getOption('limit_orders_count'))
+                return false;
         }
         
-        return false;
+        return;
 
     }
 
