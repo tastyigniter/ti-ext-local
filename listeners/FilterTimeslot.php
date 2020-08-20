@@ -29,11 +29,6 @@ class FilterTimeslot
         if ($workingSchedule->getType() == AbstractLocation::OPENING)
             return;
             
-        // allow the timeslot selection logic to be overwritten by extensions
-        if ($event = $this->fireSystemEvent('igniter.local.timeslotValid', [$timeslot])) {
-            return $event;
-        }
-            
         $dateString = Carbon::parse($timeslot)->toDateString();
             
         $ordersOnThisDay = $this->getOrders($dateString);
