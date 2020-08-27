@@ -4,19 +4,16 @@ namespace Igniter\Local\Listeners;
 
 use Admin\Models\Orders_model;
 use Carbon\Carbon;
-use DateTime;
 use Igniter\Flame\Location\Models\AbstractLocation;
-use Igniter\Local\Classes\Location;
-use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Flame\Traits\EventEmitter;
+use Igniter\Local\Facades\Location as LocationFacade;
 use Illuminate\Contracts\Events\Dispatcher;
 
-class FilterTimeslot
+class MaxOrderPerTimeslotReached
 {
     use EventEmitter;
 
     protected static $ordersCache = [];
-    protected static $scheduleCache = [];
 
     public function subscribe(Dispatcher $dispatcher)
     {
@@ -28,19 +25,18 @@ class FilterTimeslot
         // Skip if the working schedule is not for delivery or pickup
         if ($workingSchedule->getType() == AbstractLocation::OPENING)
             return;
-            
+
         $dateString = Carbon::parse($timeslot)->toDateString();
-            
+
         $ordersOnThisDay = $this->getOrders($dateString);
-                
-        $location = new Location(LocationFacade::getId());
+
+        $locationModel = LocationFacade::current();
 
         $datetime = Carbon::parse($timeslot);
         $startTime = Carbon::parse($timeslot)->addMinutes();
-        $endTime = Carbon::parse($timeslot)->addMinutes($location->getModel()->getOption($workingSchedule->getType().'_time_interval'));
-        
-        if ($datetime->between($startTime, $endTime))
-        {
+        $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($workingSchedule->getType()));
+
+        if ($datetime->between($startTime, $endTime)) {
             $orderCount = $ordersOnThisDay->filter(function ($order) use ($startTime, $endTime) {
                 $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $order->order_date->format('Y-m-d').' '.$order->order_time);
 
@@ -50,19 +46,16 @@ class FilterTimeslot
                 );
             });
 
-            if ($orderCount->count() >= $location->getModel()->getOption('limit_orders_count'))
-                return false;
+            if ($orderCount->count() >= $locationModel->getOption('limit_orders_count'))
+                return FALSE;
         }
-        
-        return;
-
     }
 
     protected function getOrders($date)
     {
         if (array_has(self::$ordersCache, $date))
             return self::$ordersCache[$date];
-            
+
         $result = Orders_model::where('order_date', $date)
             ->where('location_id', LocationFacade::getId())
             ->whereIn('status_id', array_merge(setting('processing_order_status', []), setting('completed_order_status', [])))

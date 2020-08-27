@@ -1,7 +1,7 @@
 <?php namespace Igniter\Local;
 
 use Igniter\Local\Classes\Location;
-use Igniter\Local\Listeners\FilterTimeslot;
+use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
 
@@ -17,7 +17,7 @@ class Extension extends \System\Classes\BaseExtension
 
     public function boot()
     {
-        Event::subscribe(FilterTimeslot::class);
+        Event::subscribe(MaxOrderPerTimeslotReached::class);
     }
 
     public function registerCartConditions()
