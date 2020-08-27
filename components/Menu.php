@@ -123,7 +123,7 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function checkLocationParam()
     {
-        $param = $this->param('location');
+        $param = $this->param('location', 'local');
         if (is_single_location() AND $param === $this->property('defaultLocationParam', 'local'))
             return;
 
