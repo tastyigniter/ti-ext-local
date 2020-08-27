@@ -9,7 +9,6 @@ use Exception;
 use Igniter\Cart\Classes\OrderManager;
 use Igniter\Reservation\Classes\BookingManager;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
 use Location;
 use Main\Facades\Auth;
 
@@ -122,6 +121,7 @@ class Review extends \System\Classes\BaseComponent
         }
         catch (Exception $ex) {
             flash()->warning($ex->getMessage());
+
             return Redirect::back()->withInput();
         }
     }
@@ -175,7 +175,7 @@ class Review extends \System\Classes\BaseComponent
         if ($this->property('reviewableType') == 'reservation') {
             $reviewable = BookingManager::instance()->getReservationByHash($reviewableHash, Auth::customer());
         }
-        else if ($this->property('reviewableType') == 'order') {
+        elseif ($this->property('reviewableType') == 'order') {
             $reviewable = OrderManager::instance()->getOrderByHash($reviewableHash, Auth::customer());
         }
 

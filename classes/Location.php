@@ -1,4 +1,6 @@
-<?php namespace Igniter\Local\Classes;
+<?php
+
+namespace Igniter\Local\Classes;
 
 use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
@@ -9,7 +11,6 @@ use Igniter\Flame\Location\Manager;
 
 /**
  * Location Class
- * @package System
  */
 class Location extends Manager
 {
@@ -367,7 +368,7 @@ class Location extends Manager
 
     public function checkMinimumOrder($cartTotal)
     {
-        return ($cartTotal >= $this->minimumOrder($cartTotal));
+        return $cartTotal >= $this->minimumOrder($cartTotal);
     }
 
     public function checkDistance($decimalPoint)

@@ -1,4 +1,6 @@
-<?php namespace Igniter\Local\Components;
+<?php
+
+namespace Igniter\Local\Components;
 
 use Location;
 

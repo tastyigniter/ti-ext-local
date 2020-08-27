@@ -1,4 +1,6 @@
-<?php namespace Igniter\Local;
+<?php
+
+namespace Igniter\Local;
 
 use Igniter\Local\Classes\Location;
 use Illuminate\Foundation\AliasLoader;
