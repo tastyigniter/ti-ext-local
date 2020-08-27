@@ -1,4 +1,6 @@
-<?php namespace Igniter\Local\Traits;
+<?php
+
+namespace Igniter\Local\Traits;
 
 use ApplicationException;
 use Exception;
