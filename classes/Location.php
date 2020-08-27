@@ -27,6 +27,8 @@ class Location extends Manager
      */
     protected $coveredArea;
 
+    protected $scheduleCache = [];
+
     public function __construct()
     {
         $this->setDefaultLocation(params('default_location_id'));
@@ -37,7 +39,7 @@ class Location extends Manager
     }
 
     //
-    //	BOOT METHODS
+    // BOOT METHODS
     //
 
     public function updateNearbyArea(AreaInterface $area)
@@ -93,7 +95,7 @@ class Location extends Manager
     }
 
     //
-    //	HELPER METHODS
+    // HELPER METHODS
     //
 
     public function getId()
@@ -140,7 +142,7 @@ class Location extends Manager
     }
 
     //
-    //	HOURS
+    // HOURS
     //
 
     public function openingSchedule()
@@ -239,9 +241,15 @@ class Location extends Manager
 
     public function scheduleTimeslot()
     {
-        return $this->workingSchedule($this->orderType())->getTimeslot(
+        $orderType = $this->orderType();
+        if (array_key_exists($orderType, $this->scheduleCache))
+            return $this->scheduleCache[$orderType];
+
+        $result = $this->workingSchedule($orderType)->getTimeslot(
             $this->orderTimeInterval(), null, $this->orderLeadTime()
         );
+
+        return $this->scheduleCache[$orderType] = $result;
     }
 
     public function firstScheduleTimeslot()
@@ -251,7 +259,7 @@ class Location extends Manager
 
     public function asapScheduleTimeslot()
     {
-        if ($this->isClosed())
+        if ($this->isClosed() || $this->getModel()->getOption('limit_orders'))
             return $this->firstScheduleTimeslot();
 
         return Carbon::now()->addMinutes($this->orderLeadTime());
@@ -281,7 +289,7 @@ class Location extends Manager
     }
 
     //
-    //	DELIVERY AREA
+    // DELIVERY AREA
     //
 
     public function getAreaId()
