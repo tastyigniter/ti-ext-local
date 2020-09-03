@@ -67,6 +67,8 @@ class Menu extends \System\Classes\BaseComponent
         $this->page['menuImageHeight'] = $this->property('menuImageHeight');
         $this->page['menuCategoryWidth'] = $this->property('menuCategoryWidth', 1240);
         $this->page['menuCategoryHeight'] = $this->property('menuCategoryHeight', 256);
+        $this->page['menuAllergenImageWidth'] = $this->property('menuAllergenImageWidth', 28);
+        $this->page['menuAllergenImageHeight'] = $this->property('menuAllergenImageHeight', 28);
 
         $this->page['menuList'] = $this->loadList();
         $this->page['menuListCategories'] = $this->menuListCategories;
@@ -74,7 +76,11 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $list = Menus_model::with(['mealtimes', 'menu_options', 'categories', 'categories.media', 'special'])->listFrontEnd([
+        $list = Menus_model::with([
+            'mealtimes', 'menu_options',
+            'categories', 'categories.media',
+            'special', 'allergens',
+        ])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort' => $this->property('sort', 'menu_priority asc'),
