@@ -22,35 +22,36 @@ class MaxOrderPerTimeslotReached
 
     public function timeslotValid($workingSchedule, $timeslot)
     {
+        $locationModel = LocationFacade::current();
+
+        if (!(bool)$locationModel->getOption('limit_orders'))
+            return;
+
         // Skip if the working schedule is not for delivery or pickup
         if ($workingSchedule->getType() == AbstractLocation::OPENING)
             return;
 
-        $dateString = Carbon::parse($timeslot)->toDateString();
+        $ordersOnThisDay = $this->getOrders($timeslot);
+        if ($ordersOnThisDay->isEmpty())
+            return;
 
-        $ordersOnThisDay = $this->getOrders($dateString);
-
-        $locationModel = LocationFacade::current();
-
-        $startTime = Carbon::parse($timeslot);
+        $startTime = Carbon::parse($timeslot)->subMinute();
         $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($workingSchedule->getType()));
 
         $orderCount = $ordersOnThisDay->filter(function ($order) use ($startTime, $endTime) {
             $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $order->order_date->format('Y-m-d').' '.$order->order_time);
 
-            return $orderTime->between(
-                $startTime,
-                $endTime
-            );
-        });
+            return $orderTime->between($startTime, $endTime);
+        })->count();
 
-        if ($orderCount->count() >= $locationModel->getOption('limit_orders_count'))
+        if ($orderCount >= (int)$locationModel->getOption('limit_orders_count', 50))
             return FALSE;
-
     }
 
-    protected function getOrders($date)
+    protected function getOrders($timeslot)
     {
+        $date = Carbon::parse($timeslot)->toDateString();
+
         if (array_has(self::$ordersCache, $date))
             return self::$ordersCache[$date];
 

@@ -109,7 +109,7 @@ class Location extends Manager
     }
 
     /**
-     * @return UserLocation
+     * @return \Igniter\Flame\Geolite\Model\Location
      */
     public function userPosition()
     {
