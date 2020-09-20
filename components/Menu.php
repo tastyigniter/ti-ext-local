@@ -3,6 +3,7 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Menus_model;
+use Illuminate\Support\Facades\Request;
 use Location;
 
 class Menu extends \System\Classes\BaseComponent
@@ -53,6 +54,11 @@ class Menu extends \System\Classes\BaseComponent
                 'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'home',
             ],
+            'hideMenuSearch' => [
+                'label' => 'Hide the menu item search form',
+                'type' => 'switch',
+                'default' => TRUE,
+            ],
         ];
     }
 
@@ -70,6 +76,9 @@ class Menu extends \System\Classes\BaseComponent
         $this->page['menuAllergenImageWidth'] = $this->property('menuAllergenImageWidth', 28);
         $this->page['menuAllergenImageHeight'] = $this->property('menuAllergenImageHeight', 28);
 
+        $this->page['hideMenuSearch'] = $this->property('hideMenuSearch');
+        $this->page['menuSearchTerm'] = $this->getSearchTerm();
+
         $this->page['menuList'] = $this->loadList();
         $this->page['menuListCategories'] = $this->menuListCategories;
     }
@@ -86,6 +95,7 @@ class Menu extends \System\Classes\BaseComponent
             'sort' => $this->property('sort', 'menu_priority asc'),
             'location' => $this->getLocation(),
             'category' => $this->param('category'),
+            'search' => $this->getSearchTerm(),
         ]);
 
         if ($this->property('isGrouped'))
@@ -137,5 +147,13 @@ class Menu extends \System\Classes\BaseComponent
             return;
 
         return \Redirect::to($this->pageUrl($this->property('localNotFoundPage')));
+    }
+
+    public function getSearchTerm()
+    {
+        if ($this->property('hideMenuSearch'))
+            return '';
+
+        return Request::query('q');
     }
 }
