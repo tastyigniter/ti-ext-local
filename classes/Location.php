@@ -95,7 +95,7 @@ class Location extends Manager
     }
 
     //
-    // HELPER METHODS
+    //	HELPER METHODS
     //
 
     public function getId()
@@ -113,7 +113,29 @@ class Location extends Manager
      */
     public function userPosition()
     {
-        return $this->getSession('position', UserLocation::createFromArray([]));
+        $coords = [];
+        $latitude = 0;
+        $longitude = 0;
+
+        $position = $this->getSession('position');
+
+        if (!$position || !$position->isValid()) {
+
+            if (app('auth')->customer()) {
+
+                $defaultAddress = app('auth')->customer()->getDefaultAddress();
+                $results = app('geocoder')->geocode($defaultAddress);
+
+                if ($results[0]) {
+                    $this->updateUserPosition($results[0]);
+                    $latitude = $results[0]->getCoordinates()->getLatitude();
+                    $longitude = $results[0]->getCoordinates()->getLongitude();
+                }
+            }
+
+            $coords = ["latitude" => $latitude, "longitude" => $longitude];
+        }
+        return = $this->getSession('position', UserLocation::createFromArray($coords));
     }
 
     public function requiresUserPosition()
@@ -394,4 +416,31 @@ class Location extends Manager
 
         return $this->coveredArea()->checkBoundary($userPosition->getCoordinates());
     }
+
+//smoova added functionality
+    public function getReviewScore()
+    {
+        $reviewScore = 0;
+        $reviews_count = count($this->getModel()->reviews);
+        if ($reviews_count > 0) {
+            $reviews = $this->getModel()->reviews;
+
+
+            foreach ($reviews as $review) {
+                $reviewScore = $reviewScore + (($review->service + $review->delivery + $review->quality) / 3);
+            }
+            $reviewScore = $reviewScore / $reviews_count;
+        }
+
+        return round($reviewScore, 1);
+    }
+
+    public function getDeliveryConditions()
+    {
+        return $this->coveredArea()->listConditions()->map(function (CoveredAreaCondition $condition) {
+            return ucfirst(strtolower($condition->getLabel()));
+        })->all();
+    }
+
+
 }
