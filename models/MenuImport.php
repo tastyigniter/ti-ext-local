@@ -6,7 +6,7 @@ use Admin\Models\Categories_model;
 use Admin\Models\Mealtimes_model;
 use Admin\Models\Menus_model;
 use Exception;
-use Igniter\ImportExport\Models\ImportModel;
+use IgniterLabs\ImportExport\Models\ImportModel;
 
 class MenuImport extends ImportModel
 {

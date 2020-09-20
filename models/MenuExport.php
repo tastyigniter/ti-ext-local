@@ -3,7 +3,7 @@
 namespace Igniter\Local\Models;
 
 use Igniter\Flame\Database\Attach\HasMedia;
-use Igniter\ImportExport\Models\ExportModel;
+use IgniterLabs\ImportExport\Models\ExportModel;
 
 class MenuExport extends ExportModel
 {
@@ -14,11 +14,9 @@ class MenuExport extends ExportModel
     protected $primaryKey = 'menu_id';
 
     public $relation = [
-        'belongsTo' => [
-            'menu_mealtime' => ['Admin\Models\Mealtimes_model', 'foreignKey' => 'menu_id'],
-        ],
         'belongsToMany' => [
             'menu_categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories', 'foreignKey' => 'menu_id'],
+            'menu_mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes', 'foreignKey' => 'menu_id'],
         ],
     ];
 
@@ -37,7 +35,7 @@ class MenuExport extends ExportModel
     public function exportData($columns)
     {
         return self::make()->with([
-            'menu_mealtime',
+            'menu_mealtimes',
             'menu_categories',
             'media',
         ])->get()->toArray();
@@ -61,12 +59,12 @@ class MenuExport extends ExportModel
         return $this->getFirstMedia('thumb')->getPath();
     }
 
-    public function getMealtimeAttribute()
+    public function getMealtimesAttribute()
     {
-        if (!$this->menu_mealtime) {
+        if (!$this->menu_mealtimes) {
             return '';
         }
 
-        return $this->menu_mealtime->mealtime_name;
+        return $this->encodeArrayValue($this->menu_mealtimes->pluck('mealtime_name')->all());
     }
 }
