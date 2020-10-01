@@ -38,8 +38,8 @@ class MaxOrderPerTimeslotReached
         $startTime = Carbon::parse($timeslot)->subMinute();
         $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($workingSchedule->getType()));
 
-        $orderCount = $ordersOnThisDay->filter(function ($order) use ($startTime, $endTime) {
-            $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $order->order_date->format('Y-m-d').' '.$order->order_time);
+        $orderCount = $ordersOnThisDay->filter(function ($time) use ($startTime, $endTime) {
+            $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $startTime->format('Y-m-d').' '.$time);
 
             return $orderTime->between($startTime, $endTime);
         })->count();
@@ -58,8 +58,8 @@ class MaxOrderPerTimeslotReached
         $result = Orders_model::where('order_date', $date)
             ->where('location_id', LocationFacade::getId())
             ->whereIn('status_id', array_merge(setting('processing_order_status', []), setting('completed_order_status', [])))
-            ->select(['order_time', 'order_date'])
-            ->pluck('order_time', 'order_date');
+            ->select('order_time')
+            ->pluck('order_time');
 
         return self::$ordersCache[$date] = $result;
     }
