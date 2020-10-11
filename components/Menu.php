@@ -32,13 +32,13 @@ class Menu extends \System\Classes\BaseComponent
                 'default' => FALSE,
             ],
             'menuImageWidth' => [
-                'label' => 'lang:igniter.local::default.label_local_image_width',
+                'label' => 'Menu Thumb Width',
                 'type' => 'number',
                 'span' => 'left',
                 'default' => 95,
             ],
             'menuImageHeight' => [
-                'label' => 'lang:igniter.local::default.label_local_image_height',
+                'label' => 'Menu Thumb Height',
                 'type' => 'number',
                 'span' => 'right',
                 'default' => 80,
