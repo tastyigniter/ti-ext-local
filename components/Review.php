@@ -69,6 +69,7 @@ class Review extends \System\Classes\BaseComponent
     {
         $this->page['reviewDateFormat'] = $this->property('reviewDateFormat');
         $this->page['reviewRatingHints'] = $this->getHints();
+
         $this->page['reviewList'] = $this->loadReviewList();
         $this->page['reviewable'] = $reviewable = $this->loadReviewable();
         $this->page['customerReview'] = $this->loadReview($reviewable);

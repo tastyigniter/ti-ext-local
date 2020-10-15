@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\Components;
 
-use Location;
+use Igniter\Local\Facades\Location;
 
 class Search extends \System\Classes\BaseComponent
 {
@@ -31,16 +31,14 @@ class Search extends \System\Classes\BaseComponent
         $this->addJs('js/local.js', 'local-module-js');
 
         $this->prepareVars();
-
     }
 
     protected function prepareVars()
     {
         $this->page['menusPage'] = $this->property('menusPage');
         $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
-
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
 
-        $this->page['location'] = Location::instance();
+        $this->page['searchQueryPosition'] = Location::instance()->userPosition();
     }
 }

@@ -3,14 +3,13 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Menus_model;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Location;
 
 class Menu extends \System\Classes\BaseComponent
 {
     use \Main\Traits\UsesPage;
-
-    protected $location;
 
     protected $menuListCategories = [];
 
@@ -59,6 +58,11 @@ class Menu extends \System\Classes\BaseComponent
                 'type' => 'switch',
                 'default' => TRUE,
             ],
+            'forceRedirect' => [
+                'label' => 'Whether to force a page redirect when no location param is present in the request URI.',
+                'type' => 'switch',
+                'default' => TRUE,
+            ],
         ];
     }
 
@@ -98,8 +102,21 @@ class Menu extends \System\Classes\BaseComponent
             'search' => $this->getSearchTerm(),
         ]);
 
+        $this->mapIntoObjects($list);
+
         if ($this->property('isGrouped'))
             $this->groupListByCategory($list);
+
+        return $list;
+    }
+
+    protected function mapIntoObjects($list)
+    {
+        $collection = $list->getCollection()->map(function ($menuItem) {
+            return $this->createMenuItemObject($menuItem);
+        });
+
+        $list->setCollection($collection);
 
         return $list;
     }
@@ -116,18 +133,18 @@ class Menu extends \System\Classes\BaseComponent
     {
         $this->menuListCategories = [];
 
-        $collection = $list->getCollection()->mapToGroups(function ($menu) {
+        $collection = $list->getCollection()->mapToGroups(function ($menuItemObject) {
             $categories = [];
-            foreach ($menu->categories as $category) {
+            foreach ($menuItemObject->model->categories as $category) {
                 $this->menuListCategories[$category->getKey()] = $category;
-                $categories[$category->getKey()] = $menu;
+                $categories[$category->getKey()] = $menuItemObject;
             }
 
             if (!$categories)
-                $categories[] = $menu;
+                $categories[] = $menuItemObject;
 
             return $categories;
-        })->sortBy(function ($menu, $categoryId) {
+        })->sortBy(function ($menuItems, $categoryId) {
             if (isset($this->menuListCategories[$categoryId]))
                 return $this->menuListCategories[$categoryId]->priority;
 
@@ -139,6 +156,9 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function checkLocationParam()
     {
+        if (!$this->property('forceRedirect', TRUE))
+            return;
+
         $param = $this->param('location', 'local');
         if (is_single_location() AND $param === $this->property('defaultLocationParam', 'local'))
             return;
@@ -146,7 +166,7 @@ class Menu extends \System\Classes\BaseComponent
         if (Location::getBySlug($param))
             return;
 
-        return \Redirect::to($this->pageUrl($this->property('localNotFoundPage')));
+        return Redirect::to($this->controller->pageUrl($this->property('localNotFoundPage')));
     }
 
     public function getSearchTerm()
@@ -155,5 +175,38 @@ class Menu extends \System\Classes\BaseComponent
             return '';
 
         return Request::query('q');
+    }
+
+    public function createMenuItemObject($menuItem)
+    {
+        $object = new \stdClass();
+
+        $object->specialIsActive = ($menuItem->special AND $menuItem->special->active());
+        $object->specialDaysRemaining = optional($menuItem->special)->daysRemaining();
+
+        $object->menuPrice = $object->specialIsActive
+            ? $menuItem->special->getMenuPrice($menuItem->menu_price)
+            : $menuItem->menu_price;
+
+        $object->hasThumb = $menuItem->hasMedia('thumb');
+        $object->hasOptions = $menuItem->hasOptions();
+
+        $mealtimes = optional($menuItem->mealtimes)->where('mealtime_status', 1);
+        $object->hasMealtime = count($mealtimes);
+        $object->mealtimeIsNotAvailable = !$menuItem->isAvailable(Location::instance()->orderDateTime());
+
+        $object->mealtimeTitles = [];
+        foreach ($mealtimes ?? [] as $mealtime) {
+            $object->mealtimeTitles[] = sprintf(
+                lang('igniter.local::default.text_mealtime'),
+                $mealtime->mealtime_name,
+                $mealtime->start_time,
+                $mealtime->end_time
+            );
+        }
+
+        $object->model = $menuItem;
+
+        return $object;
     }
 }

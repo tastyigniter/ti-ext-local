@@ -14,7 +14,7 @@ return [
     'text_hours' => 'Working Hours',
     'text_opening' => 'Opening',
     'text_opens_24_7' => '<strong>Opens:</strong> 24 hours a day & 7 days a week',
-    'text_24h' => 'Open all day',
+    'text_24h' => 'All day',
     'text_delivery_coverage' => '<span class="text-danger">Sorry, but this restaurant does not deliver to your location</span>',
     'text_is_opened' => '<span class="text-success">We are open</span>',
     'text_closed' => '<span class="text-close text-danger">CLOSED</span>',

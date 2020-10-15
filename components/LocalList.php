@@ -84,6 +84,8 @@ class LocalList extends \System\Classes\BaseComponent
             },
         ])->isEnabled()->listFrontEnd($options);
 
+        $this->mapIntoObjects($list);
+
         return $list;
     }
 
@@ -114,5 +116,49 @@ class LocalList extends \System\Classes\BaseComponent
         ];
 
         return $filters;
+    }
+
+    protected function mapIntoObjects($list)
+    {
+        $collection = $list->getCollection()->map(function ($location) {
+            return $this->createLocationObject($location);
+        });
+
+        $list->setCollection($collection);
+
+        return $list;
+    }
+
+    protected function createLocationObject($location)
+    {
+        $object = new \stdClass();
+
+        $object->name = $location->location_name;
+        $object->permalink = $location->permalink_slug;
+        $object->address = $location->getAddress();
+        $object->reviewsCount = $location->reviews_count;
+
+        $object->distance = ($coordinates = Location::userPosition()->getCoordinates())
+            ? $location->calculateDistance($coordinates)
+            : null;
+
+        $object->thumb = ($object->hasThumb = $location->hasMedia('thumb'))
+            ? $location->getThumb()
+            : null;
+
+        $object->openingSchedule = $location->newWorkingSchedule('opening');
+        $object->deliverySchedule = $location->newWorkingSchedule('delivery');
+        $object->collectionSchedule = $location->newWorkingSchedule('collection');
+        $object->hasDelivery = $location->hasDelivery();
+        $object->hasCollection = $location->hasCollection();
+        $object->deliveryMinutes = $location->deliveryMinutes();
+        $object->collectionMinutes = $location->collectionMinutes();
+        $object->openingTime = make_carbon($object->openingSchedule->getOpenTime());
+        $object->collectionTime = make_carbon($object->deliverySchedule->getOpenTime());
+        $object->collectionTime = make_carbon($object->collectionSchedule->getOpenTime());
+
+        $object->model = $location;
+
+        return $object;
     }
 }

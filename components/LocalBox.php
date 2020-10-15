@@ -22,11 +22,9 @@ class LocalBox extends \System\Classes\BaseComponent
      */
     protected $location;
 
-    protected $userPosition;
-
-    protected $asapOrderTime;
-
     protected $locationCurrent;
+
+    protected $currentSchedule;
 
     public function initialize()
     {
@@ -217,6 +215,7 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
         $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());
+        $this->page['locationCurrentSchedule'] = $this->location->workingSchedule($this->location->orderType());
     }
 
     public function fetchPartials()
