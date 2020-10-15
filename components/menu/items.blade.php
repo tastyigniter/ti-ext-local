@@ -1,10 +1,10 @@
 <div class="menu-items">
-    <?php if (count($menuItems)) { ?>
-        <?php foreach ($menuItems as $menuItem) { ?>
-            <?= partial('@item', ['menuItem' => $menuItem]); ?>
-        <?php } ?>
-    <?php }
-    else { ?>
-        <p><?= lang('igniter.local::default.text_empty'); ?></p>
-    <?php } ?>
+        @forelse ($menuItems as $menuItemObject)
+                @partial('@item', [
+                'menuItem' => $menuItemObject->model,
+                'menuItemObject' => $menuItemObject
+                ])
+        @empty
+                <p>@lang('igniter.local::default.text_empty')</p>
+        @endforelse
 </div>

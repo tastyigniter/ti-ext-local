@@ -22,7 +22,7 @@
                     @if ($location->deliverySchedule()->isOpen())
                         {!! sprintf(lang('igniter.local::default.text_in_min'), $locationCurrent->deliveryMinutes()) !!}
                     @elseif ($location->deliverySchedule()->isOpening())
-                        {!! sprintf(lang('igniter.local::default.text_starts'), $deliveryTime->isoFormat($cartBoxTimeFormat)) !!}
+                        {!! sprintf(lang('igniter.local::default.text_starts'), $deliveryTime->isoFormat($openingTimeFormat)) !!}
                     @else
                         @lang('igniter.cart::default.text_is_closed')
                     @endif
@@ -43,7 +43,7 @@
                         @if ($location->collectionSchedule()->isOpen())
                         {!! sprintf(lang('igniter.local::default.text_in_min'), $locationCurrent->collectionMinutes()) !!}
                     @elseif ($location->collectionSchedule()->isOpening())
-                        {!! sprintf(lang('igniter.local::default.text_starts'), $collectionTime->isoFormat($cartBoxTimeFormat)) !!}
+                        {!! sprintf(lang('igniter.local::default.text_starts'), $collectionTime->isoFormat($openingTimeFormat)) !!}
                     @else
                         @lang('igniter.cart::default.text_is_closed')
                     @endif

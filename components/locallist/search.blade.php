@@ -15,7 +15,10 @@
                     placeholder="@lang('igniter.local::default.text_filter_search')"
                 />
                 <span class="input-group-append">
-                    <button class="btn btn-light" type="submit"><i class="fa fa-search"></i></button>
+                    <button
+                        class="btn btn-light"
+                        type="submit"
+                    ><i class="fa fa-search"></i></button>
                 </span>
             </div>
         </form>

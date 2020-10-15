@@ -1,4 +1,4 @@
-@if (count($localHours))
+@if (count($locationInfo->schedules))
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -10,13 +10,13 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($localHours as $day => $hours)
+            @foreach ($locationInfo->schedules as $day => $hours)
                 <tr>
                     <td>{{ $day }}</td>
                     @foreach ($hours->sortByDesc('type') as $hour)
-                        @if ($hour->type == 'delivery' AND !$locationCurrent->hasDelivery())
+                        @if ($hour->type == 'delivery' AND !$locationInfo->hasDelivery)
                             <td>@lang('igniter.local::default.text_closed')</td>
-                        @elseif ($hour->type == 'collection' AND !$locationCurrent->hasCollection())
+                        @elseif ($hour->type == 'collection' AND !$locationInfo->hasCollection)
                             <td>@lang('igniter.local::default.text_closed')</td>
                         @elseif (!$hour->isEnabled())
                             <td>@lang('igniter.local::default.text_closed')</td>

@@ -3,25 +3,25 @@
         id="menu-search"
         method="GET"
         role="form"
-        action="<?= current_url() ?>"
+        action="{{ current_url() }}"
     >
         <div class="input-group">
             <div class="input-group-prepend">
-                <?php if (strlen($menuSearchTerm)) { ?>
+                @if (strlen($menuSearchTerm))
                     <a
                         class="btn btn-light"
-                        href="<?= current_url() ?>"
+                        href="{{ current_url() }}"
                     ><i class="fa fa-times"></i></a>
-                <?php } else { ?>
+                @else
                     <span class="input-group-text"><i class="fa fa-search"></i></span>
-                <?php } ?>
+                @endif
             </div>
             <input
                 type="search"
                 class="form-control"
                 name="q"
-                placeholder="<?= lang('igniter.local::default.label_menu_search'); ?>"
-                value="<?= $menuSearchTerm; ?>"
+                placeholder="@lang('igniter.local::default.label_menu_search')"
+                value="{{ $menuSearchTerm }}"
                 autocomplete="off"
             >
         </div>

@@ -1,7 +1,7 @@
-@if ($infoLocation->current()->hasDelivery())
+@if ($locationInfo->hasDelivery)
     <h4 class="panel-title p-3"><b>@lang('igniter.local::default.text_delivery_areas')</b></h4>
     <div class="list-group list-group-flush">
-        @if (count($deliveryAreas))
+        @if (count($locationInfo->deliveryAreas))
             <div class="list-group-item">
                 <div class="row">
                     <div class="col-sm-4"><b>@lang('admin::lang.label_name')</b></div>
@@ -9,7 +9,7 @@
                     </div>
                 </div>
             </div>
-            @foreach ($deliveryAreas as $key => $area)
+            @foreach ($locationInfo->deliveryAreas as $key => $area)
                 <div class="list-group-item">
                     <div class="row">
                         <div class="col-sm-4">{{ $area->name }}</div>
