@@ -17,12 +17,14 @@ class LocalList extends \System\Classes\BaseComponent
                 'label' => 'Distance unit to use, mi or km',
                 'type' => 'text',
                 'default' => 'mi',
+                'validationRule' => 'required|in:km,mi',
             ],
             'openingTimeFormat' => [
                 'label' => 'Time format for the opening later time',
                 'type' => 'text',
                 'span' => 'left',
                 'default' => 'ddd HH:mm',
+                'validationRule' => 'required|string',
             ],
         ];
     }

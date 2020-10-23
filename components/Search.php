@@ -16,12 +16,14 @@ class Search extends \System\Classes\BaseComponent
                 'label' => 'lang:igniter.local::default.label_location_search_mode',
                 'type' => 'switch',
                 'comment' => 'lang:igniter.local::default.help_location_search_mode',
+                'validationRule' => 'required|boolean',
             ],
             'menusPage' => [
                 'label' => 'Menu Page',
                 'type' => 'select',
                 'default' => 'local/menus',
                 'options' => [static::class, 'getThemePageOptions'],
+                'validationRule' => 'required|regex:/^[a-z0-9\-_\/]+$/i',
             ],
         ];
     }

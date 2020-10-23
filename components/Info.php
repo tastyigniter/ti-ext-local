@@ -15,17 +15,20 @@ class Info extends \System\Classes\BaseComponent
                 'label' => 'Date format for the open and close hours',
                 'type' => 'text',
                 'default' => 'HH:mm',
+                'validationRule' => 'required|string',
             ],
             'openingTimeFormat' => [
                 'label' => 'Time format for the opening later time',
                 'type' => 'text',
                 'span' => 'left',
                 'default' => 'ddd hh:mm a',
+                'validationRule' => 'required|string',
             ],
             'lastOrderTimeFormat' => [
                 'label' => 'Date format for the last order time',
                 'type' => 'text',
                 'default' => 'ddd DD HH:mm',
+                'validationRule' => 'required|string',
             ],
         ];
     }

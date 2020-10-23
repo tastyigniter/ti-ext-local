@@ -19,49 +19,58 @@ class Menu extends \System\Classes\BaseComponent
             'isGrouped' => [
                 'label' => 'Group menu items list by category',
                 'type' => 'switch',
+                'validationRule' => 'required|boolean',
             ],
             'menusPerPage' => [
                 'label' => 'Menus Per Page',
                 'type' => 'number',
                 'default' => 20,
+                'validationRule' => 'required|integer',
             ],
             'showMenuImages' => [
                 'label' => 'Show Menu Item Images',
                 'type' => 'switch',
                 'default' => FALSE,
+                'validationRule' => 'required|boolean',
             ],
             'menuImageWidth' => [
                 'label' => 'Menu Thumb Width',
                 'type' => 'number',
                 'span' => 'left',
                 'default' => 95,
+                'validationRule' => 'required|integer',
             ],
             'menuImageHeight' => [
                 'label' => 'Menu Thumb Height',
                 'type' => 'number',
                 'span' => 'right',
                 'default' => 80,
+                'validationRule' => 'required|integer',
             ],
             'defaultLocationParam' => [
                 'label' => 'The default location route parameter (used internally when no location is selected)',
                 'type' => 'text',
                 'default' => 'local',
+                'validationRule' => 'required|string',
             ],
             'localNotFoundPage' => [
                 'label' => 'lang:igniter.local::default.label_redirect',
                 'type' => 'select',
                 'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'home',
+                'validationRule' => 'required|regex:/^[a-z0-9\-_\/]+$/i',
             ],
             'hideMenuSearch' => [
                 'label' => 'Hide the menu item search form',
                 'type' => 'switch',
                 'default' => TRUE,
+                'validationRule' => 'required|boolean',
             ],
             'forceRedirect' => [
                 'label' => 'Whether to force a page redirect when no location param is present in the request URI.',
                 'type' => 'switch',
                 'default' => TRUE,
+                'validationRule' => 'required|boolean',
             ],
         ];
     }

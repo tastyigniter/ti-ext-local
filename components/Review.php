@@ -23,16 +23,19 @@ class Review extends \System\Classes\BaseComponent
                 'label' => 'Reviews Per Page',
                 'type' => 'number',
                 'default' => 20,
+                'validationRule' => 'required|integer',
             ],
             'sort' => [
                 'label' => 'Sort reviews list by',
                 'type' => 'text',
                 'default' => 'date_added asc',
+                'validationRule' => 'required|string',
             ],
             'reviewDateFormat' => [
                 'label' => 'Date format to display the review date ',
                 'type' => 'text',
                 'default' => 'DD MMM YY',
+                'validationRule' => 'required|string',
             ],
             'reviewableType' => [
                 'label' => 'Whether the review form is loaded on an order or reservation page, use by the review form',
@@ -42,16 +45,20 @@ class Review extends \System\Classes\BaseComponent
                     'order' => 'Leave order reviews',
                     'reservation' => 'Leave reservation reviews',
                 ],
+                'validationRule' => 'required|in:order,reservation',
             ],
             'reviewableHash' => [
                 'label' => 'Review sale identifier(hash), use by the review form',
                 'type' => 'text',
                 'default' => '{{ :hash }}',
+                'validationRule' => 'required',
             ],
             'redirectPage' => [
                 'label' => 'Page to redirect to when reviews is disabled',
-                'type' => 'string',
+                'type' => 'select',
                 'default' => 'local/menus',
+                'options' => [static::class, 'getThemePageOptions'],
+                'validationRule' => 'required|regex:/^[a-z0-9\-_\/]+$/i',
             ],
         ];
     }
