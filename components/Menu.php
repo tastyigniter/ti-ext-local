@@ -47,6 +47,20 @@ class Menu extends \System\Classes\BaseComponent
                 'default' => 80,
                 'validationRule' => 'required|integer',
             ],
+            'menuCategoryWidth' => [
+                'label' => 'Category Thumb Width',
+                'type' => 'number',
+                'span' => 'left',
+                'default' => 1240,
+                'validationRule' => 'required|integer',
+            ],
+            'menuCategoryHeight' => [
+                'label' => 'Category Thumb Height',
+                'type' => 'number',
+                'span' => 'right',
+                'default' => 256,
+                'validationRule' => 'required|integer',
+            ],
             'defaultLocationParam' => [
                 'label' => 'The default location route parameter (used internally when no location is selected)',
                 'type' => 'text',
