@@ -57,7 +57,7 @@ class MaxOrderPerTimeslotReached
 
         $result = Orders_model::where('order_date', $date)
             ->where('location_id', LocationFacade::getId())
-            ->whereIn('status_id', array_merge([setting('default_order_status')], setting('processing_order_status', []), setting('completed_order_status', [])))
+            ->whereIn('status_id', array_merge([setting('default_order_status', -1)], setting('processing_order_status', []), setting('completed_order_status', [])))
             ->select('order_time')
             ->pluck('order_time');
 
