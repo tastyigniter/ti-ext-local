@@ -1,6 +1,5 @@
 @php
     $openingTime = make_carbon($locationCurrentSchedule->getOpenTime());
-    $closingTime = make_carbon($locationCurrentSchedule->getCloseTime());
 @endphp
 <dl class="no-spacing">
     @if ($locationCurrentSchedule->isOpen())
@@ -17,11 +16,7 @@
             <span>@lang('igniter.local::default.text_24_7_hour')</span>
         @else
             <span class="fa fa-clock-o"></span>&nbsp;
-            <span>
-                {{ $openingTime->isoFormat($localBoxTimeFormat) }}
-                -
-                {{ $closingTime->isoFormat($localBoxTimeFormat) }}
-            </span>
+            {!! implode(', ', $__SELF__->getOpeningHours($localBoxTimeFormat)) !!}
         @endif
     </dd>
 
