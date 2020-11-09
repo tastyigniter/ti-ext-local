@@ -58,7 +58,7 @@ class Review extends \System\Classes\BaseComponent
                 'type' => 'select',
                 'default' => 'local/menus',
                 'options' => [static::class, 'getThemePageOptions'],
-                'validationRule' => 'required|regex:/^[a-z0-9\-_\/]+$/i',
+                'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
             ],
         ];
     }
