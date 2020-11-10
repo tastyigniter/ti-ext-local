@@ -9,7 +9,7 @@
 
     @if (count($category->children))
         <nav class="nav nav-categories flex-column ml-3 my-1">
-            @partial('@items', ['categories' => $children])
+            @partial('@items', ['categories' => $category->children])
         </nav>
     @endif
 @endforeach
