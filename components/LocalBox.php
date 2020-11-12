@@ -166,7 +166,7 @@ class LocalBox extends \System\Classes\BaseComponent
             if ($cartBox AND $cartBox->property('pageIsCheckout'))
                 return Redirect::to($this->controller->pageUrl($this->property('checkoutPage')));
 
-            return array_merge($cartBox->fetchPartials(), $this->fetchPartials());
+            return Redirect::to($this->controller->pageUrl($this->property('menusPage')));
         }
         catch (Exception $ex) {
             if (Request::ajax()) throw $ex;
