@@ -116,12 +116,6 @@ class LocalBox extends \System\Classes\BaseComponent
                 'default' => 'ddd DD hh:mm a',
                 'validationRule' => 'required|string',
             ],
-            'cartBoxAlias' => [
-                'label' => 'Specify the CartBox component alias used to reload the cart contents after the order type changes',
-                'type' => 'text',
-                'default' => 'cartBox',
-                'validationRule' => 'required|regex:/^[a-z0-9\-_]+$/i',
-            ],
         ];
     }
 
@@ -161,12 +155,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
             $this->controller->pageCycle();
 
-            $cartBox = $this->controller->findComponentByAlias($this->property('cartBoxAlias'));
-
-            if ($cartBox AND $cartBox->property('pageIsCheckout'))
-                return Redirect::to($this->controller->pageUrl($this->property('checkoutPage')));
-
-            return Redirect::to($this->controller->pageUrl($this->property('menusPage')));
+            return Redirect::back();
         }
         catch (Exception $ex) {
             if (Request::ajax()) throw $ex;
