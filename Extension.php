@@ -2,6 +2,8 @@
 
 namespace Igniter\Local;
 
+use Admin\Models\Locations_model;
+use Admin\Models\Orders_model;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Illuminate\Foundation\AliasLoader;
@@ -15,6 +17,19 @@ class Extension extends \System\Classes\BaseExtension
 
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Location', Facades\Location::class);
+        
+        Relation::morphMap([
+            'reviews' => 'Igniter\Local\Models\Reviews_model',
+        ]);
+        
+        Orders_model::extend(function ($model) {
+            $model->relation['morphMany']['review'] = ['Igniter\Local\Models\Reviews_model'];
+        });
+        
+        Locations_model::extend(function ($model) {
+            $model->relation['hasMany']['reviews'] = ['Igniter\Local\Models\Reviews_model'];
+            $model->allowedSortingColumns = array_merge($model->allowedSortingColumns, ['reviews_count asc', 'reviews_count desc',]);
+        });  
     }
 
     public function boot()
@@ -95,6 +110,31 @@ class Extension extends \System\Classes\BaseExtension
                     'model' => 'Igniter\Local\Models\MenuExport',
                     'configFile' => '$/igniter/local/models/config/menuexport',
                 ],
+            ],
+        ];
+    }
+
+    public function registerNavigation()
+    {
+        return [
+            'sales' => [    
+                'reviews' => [
+                    'priority' => 30,
+                    'class' => 'reviews',
+                    'href' => admin_url('igniter/local/reviews'),
+                    'title' => lang('lang:igniter.local::default.reviews.side_menu'),
+                    'permission' => 'Admin.Reviews',
+                ],
+            ]
+        ];
+    }
+
+    public function registerPermissions()
+    {
+        return [
+            'Igniter.Local.Reviews' => [
+                'description' => 'lang:igniter.local::default.reviews.permissions',
+                'group' => 'module',
             ],
         ];
     }
