@@ -6,6 +6,7 @@ use Admin\Models\Locations_model;
 use Admin\Models\Orders_model;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
 
@@ -117,13 +118,15 @@ class Extension extends \System\Classes\BaseExtension
     public function registerNavigation()
     {
         return [
-            'sales' => [    
-                'reviews' => [
-                    'priority' => 30,
-                    'class' => 'reviews',
-                    'href' => admin_url('igniter/local/reviews'),
-                    'title' => lang('lang:igniter.local::default.reviews.side_menu'),
-                    'permission' => 'Admin.Reviews',
+            'sales' => [   
+                'child' => [ 
+                    'reviews' => [
+                        'priority' => 30,
+                        'class' => 'reviews',
+                        'href' => admin_url('igniter/local/reviews'),
+                        'title' => lang('lang:igniter.local::default.reviews.side_menu'),
+                        'permission' => 'Admin.Reviews',
+                    ],
                 ],
             ]
         ];
