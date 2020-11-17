@@ -2,11 +2,11 @@
 
 namespace Igniter\Local\Components;
 
-use Admin\Models\Reviews_model;
 use Admin\Traits\ValidatesForm;
 use ApplicationException;
 use Exception;
 use Igniter\Cart\Classes\OrderManager;
+use Igniter\Local\Models\Reviews_model;
 use Igniter\Reservation\Classes\BookingManager;
 use Illuminate\Support\Facades\Redirect;
 use Location;
