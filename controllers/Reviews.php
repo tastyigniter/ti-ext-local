@@ -46,7 +46,7 @@ class Reviews extends \Admin\Classes\AdminController
         'configFile' => 'reviews_model',
     ];
 
-    protected $requiredPermissions = 'Igniter.Local.Reviews';
+    protected $requiredPermissions = 'Admin.Reviews';
 
     public function __construct()
     {

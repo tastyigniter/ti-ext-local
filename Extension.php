@@ -132,7 +132,7 @@ class Extension extends \System\Classes\BaseExtension
     public function registerPermissions()
     {
         return [
-            'Igniter.Local.Reviews' => [
+            'Admin.Reviews' => [
                 'description' => 'lang:igniter.local::default.reviews.permissions',
                 'group' => 'module',
             ],
