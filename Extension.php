@@ -18,18 +18,18 @@ class Extension extends \System\Classes\BaseExtension
 
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Location', Facades\Location::class);
-        
+
         Relation::morphMap([
             'reviews' => 'Igniter\Local\Models\Reviews_model',
         ]);
-        
+
         Orders_model::extend(function ($model) {
             $model->relation['morphMany']['review'] = ['Igniter\Local\Models\Reviews_model'];
         });
-        
+
         Locations_model::extend(function ($model) {
             $model->relation['hasMany']['reviews'] = ['Igniter\Local\Models\Reviews_model'];
-            $model->allowedSortingColumns = array_merge($model->allowedSortingColumns, ['reviews_count asc', 'reviews_count desc',]);
+            $model->allowedSortingColumns = array_merge($model->allowedSortingColumns, ['reviews_count asc', 'reviews_count desc']);
         });  
     }
 
@@ -118,7 +118,7 @@ class Extension extends \System\Classes\BaseExtension
     public function registerNavigation()
     {
         return [
-            'sales' => [   
+            'sales' => [
                 'child' => [ 
                     'reviews' => [
                         'priority' => 30,
@@ -128,7 +128,7 @@ class Extension extends \System\Classes\BaseExtension
                         'permission' => 'Admin.Reviews',
                     ],
                 ],
-            ]
+            ],
         ];
     }
 
