@@ -6,6 +6,7 @@ use Admin\Traits\ValidatesForm;
 use ApplicationException;
 use Exception;
 use Igniter\Cart\Classes\OrderManager;
+use Igniter\Local\Models\LocalSettings;
 use Igniter\Local\Models\Reviews_model;
 use Igniter\Reservation\Classes\BookingManager;
 use Illuminate\Support\Facades\Redirect;
@@ -85,7 +86,7 @@ class Review extends \System\Classes\BaseComponent
     public function onLeaveReview()
     {
         try {
-            if (!(bool)setting('allow_reviews'))
+            if (!(bool)LocalSettings::get('allow_reviews', false))
                 throw new ApplicationException(lang('igniter.local::default.review.alert_review_disabled'));
 
             if (!$customer = Auth::customer())
@@ -119,7 +120,7 @@ class Review extends \System\Classes\BaseComponent
             $model->delivery = array_get($data, 'rating.delivery');
             $model->service = array_get($data, 'rating.service');
             $model->review_text = array_get($data, 'review_text');
-            $model->review_status = (setting('approve_reviews') === 1) ? 1 : 0;
+            $model->review_status = !(bool)LocalSettings::get('approve_reviews', false) ? 1 : 0;
 
             $model->save();
 

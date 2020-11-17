@@ -3,6 +3,7 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Locations_model;
+use Igniter\Local\Models\LocalSettings;
 use Igniter\Local\Traits\SearchesNearby;
 use Location;
 
@@ -32,7 +33,7 @@ class LocalList extends \System\Classes\BaseComponent
     public function onRun()
     {
         $this->id = uniqid($this->alias);
-        $this->page['showReviews'] = setting('allow_reviews') == 1;
+        $this->page['showReviews'] = LocalSettings::get('allow_reviews', false) == true;
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
         $this->page['openingTimeFormat'] = $this->property('openingTimeFormat', 'D '.setting('time_format'));
         $this->page['filterSearch'] = input('search');
