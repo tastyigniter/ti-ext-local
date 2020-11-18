@@ -6,9 +6,11 @@ use Admin\Models\Locations_model;
 use Admin\Models\Orders_model;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
+use Igniter\Local\Models\ReviewSettings;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\View;
 
 class Extension extends \System\Classes\BaseExtension
 {
@@ -37,6 +39,14 @@ class Extension extends \System\Classes\BaseExtension
         });
 
         Locations_model::$allowedSortingColumns = array_merge(Locations_model::$allowedSortingColumns, ['reviews_count asc', 'reviews_count desc']);
+        
+        View::share('showReviews', ReviewSettings::get('allow_reviews', false) == true);
+        
+        Event::listen('admin.form.extendFieldsBefore', function($controller){
+            $controller->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js', 'sortable-js'); 
+            $controller->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js'); 
+            $controller->addJs('~/app/admin/assets/js/ratings.js', 'ratings-js');             
+        });
     }
 
     public function registerCartConditions()
@@ -152,9 +162,9 @@ class Extension extends \System\Classes\BaseExtension
 	    return [
 	        'settings' => [
 	            'label' => lang('lang:igniter.local::default.text_settings'),
-                'icon' => 'fa fa-map-marker',
+	            'icon' => 'fa fa-map-marker',
 	            'description' => lang('lang:igniter.local::default.text_settings_description'),
-                'model' => 'Igniter\Local\Models\LocalSettings',
+	            'model' => 'Igniter\Local\Models\ReviewSettings',
 	            'permissions' => ['Igniter.Local.Manage'],
 	        ],
 	    ];

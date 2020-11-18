@@ -8,7 +8,6 @@ use ApplicationException;
 use DateTime;
 use Exception;
 use Igniter\Local\Classes\CoveredAreaCondition;
-use Igniter\Local\Models\ReviewSettings;
 use Illuminate\Support\Collection;
 use Redirect;
 use Request;
@@ -212,7 +211,6 @@ class LocalBox extends \System\Classes\BaseComponent
     protected function prepareVars()
     {
         $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
-        $this->page['showReviews'] = ReviewSettings::get('allow_reviews', false) == true;
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
         $this->page['localThumbWidth'] = $this->property('localThumbWidth');
         $this->page['localThumbHeight'] = $this->property('localThumbHeight');
