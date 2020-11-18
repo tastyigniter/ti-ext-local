@@ -42,7 +42,7 @@ class Extension extends \System\Classes\BaseExtension
 
         View::share('showReviews', ReviewSettings::get('allow_reviews', false) == true);
 
-        Event::listen('admin.form.extendFieldsBefore', function($controller) {
+        Event::listen('admin.form.extendFieldsBefore', function ($controller) {
             $controller->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js', 'sortable-js');
             $controller->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js');
             $controller->addJs('~/app/admin/assets/js/ratings.js', 'ratings-js');
