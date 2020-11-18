@@ -198,11 +198,11 @@ return [
         'component_title' => 'Local List Component',
         'component_desc' => 'Displays a list of locations',
     ],
-    
+
     'reviews' => [
         'side_menu' => 'Reviews',
         'permissions' => 'Manage user reviews',
-        
+
         'text_title' => 'Reviews',
         'text_form_name' => 'Review',
         'text_empty' => 'There are no reviews available.',
@@ -229,5 +229,5 @@ return [
 
         'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
         'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
-    ],    
+    ],
 ];

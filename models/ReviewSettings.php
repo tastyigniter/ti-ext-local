@@ -12,5 +12,5 @@ class ReviewSettings extends Model
     public $settingsCode = 'igniter_review_settings';
 
     // Reference to field configuration
-    public $settingsFieldsConfig = 'reviewsettings';    
+    public $settingsFieldsConfig = 'reviewsettings';
 }

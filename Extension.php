@@ -29,8 +29,8 @@ class Extension extends \System\Classes\BaseExtension
 
         Locations_model::extend(function ($model) {
             $model->relation['hasMany']['reviews'] = ['Igniter\Local\Models\Reviews_model'];
-        });  
-        
+        });
+
         Locations_model::$allowedSortingColumns = array_merge(Locations_model::$allowedSortingColumns, ['reviews_count asc', 'reviews_count desc']);
     }
 
@@ -120,7 +120,7 @@ class Extension extends \System\Classes\BaseExtension
     {
         return [
             'sales' => [
-                'child' => [ 
+                'child' => [
                     'reviews' => [
                         'priority' => 30,
                         'class' => 'reviews',
@@ -143,7 +143,7 @@ class Extension extends \System\Classes\BaseExtension
             'Igniter.Local.Manage' => [
                 'description' => 'lang:igniter.local::default.text_permissions',
                 'group' => 'module',
-            ],            
+            ],
         ];
     }
 
