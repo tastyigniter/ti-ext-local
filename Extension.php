@@ -29,8 +29,9 @@ class Extension extends \System\Classes\BaseExtension
 
         Locations_model::extend(function ($model) {
             $model->relation['hasMany']['reviews'] = ['Igniter\Local\Models\Reviews_model'];
-            $model->allowedSortingColumns = array_merge($model->allowedSortingColumns, ['reviews_count asc', 'reviews_count desc']);
         });  
+        
+        Locations_model::$allowedSortingColumns = array_merge(Locations_model::$allowedSortingColumns, ['reviews_count asc', 'reviews_count desc']);
     }
 
     public function boot()
@@ -139,6 +140,23 @@ class Extension extends \System\Classes\BaseExtension
                 'description' => 'lang:igniter.local::default.reviews.permissions',
                 'group' => 'module',
             ],
+            'Igniter.Local.Manage' => [
+                'description' => 'lang:igniter.local::default.text_permissions',
+                'group' => 'module',
+            ],            
         ];
     }
+
+	public function registerSettings()
+	{
+	    return [
+	        'settings' => [
+	            'label' => lang('lang:igniter.local::default.text_settings'),
+                'icon' => 'fa fa-map-marker',
+	            'description' => lang('lang:igniter.local::default.text_settings_description'),
+                'model' => 'Igniter\Local\Models\LocalSettings',
+	            'permissions' => ['Igniter.Local.Manage'],
+	        ],
+	    ];
+	}
 }

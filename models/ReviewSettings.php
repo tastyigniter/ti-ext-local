@@ -4,13 +4,13 @@ namespace Igniter\Local\Models;
 
 use Model;
 
-class LocalSettings extends Model
+class ReviewSettings extends Model
 {
     public $implement = ['System\Actions\SettingsModel'];
 
     // A unique code
-    public $settingsCode = 'igniter_local_settings';
+    public $settingsCode = 'igniter_review_settings';
 
     // Reference to field configuration
-    public $settingsFieldsConfig = 'localsettings';    
+    public $settingsFieldsConfig = 'reviewsettings';    
 }
