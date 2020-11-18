@@ -51,8 +51,8 @@ return [
             ],
         ],
         'rules' => [
-            ['allow_reviews', 'lang:system::lang.settings.label_allow_reviews', 'required|integer'],
-            ['approve_reviews', 'lang:system::lang.settings.label_approve_reviews', 'required|integer'],
+            ['allow_reviews', 'lang:igniter.local::default.reviews.label_allow_reviews', 'required|integer'],
+            ['approve_reviews', 'lang:igniter.local::default.reviews.label_approve_reviews', 'required|integer'],
             ['ratings.*', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
         ],
     ],

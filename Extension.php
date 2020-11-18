@@ -18,7 +18,12 @@ class Extension extends \System\Classes\BaseExtension
 
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Location', Facades\Location::class);
+    }
 
+    public function boot()
+    {
+        Event::subscribe(MaxOrderPerTimeslotReached::class);
+        
         Relation::morphMap([
             'reviews' => 'Igniter\Local\Models\Reviews_model',
         ]);
@@ -32,11 +37,6 @@ class Extension extends \System\Classes\BaseExtension
         });
 
         Locations_model::$allowedSortingColumns = array_merge(Locations_model::$allowedSortingColumns, ['reviews_count asc', 'reviews_count desc']);
-    }
-
-    public function boot()
-    {
-        Event::subscribe(MaxOrderPerTimeslotReached::class);
     }
 
     public function registerCartConditions()

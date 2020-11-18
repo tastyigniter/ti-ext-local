@@ -9,14 +9,14 @@ class Review extends FormRequest
     public function rules()
     {
         return [
-            ['sale_type', 'admin::lang.reviews.label_sale_type', 'required'],
-            ['sale_id', 'admin::lang.reviews.label_sale_id', 'required|integer|saleIdExists'],
-            ['location_id', 'admin::lang.reviews.label_location', 'required|integer'],
-            ['customer_id', 'admin::lang.reviews.label_customer', 'required|integer'],
-            ['quality', 'admin::lang.reviews.label_quality', 'required|integer|min:1'],
-            ['delivery', 'admin::lang.reviews.label_delivery', 'required|integer|min:1'],
-            ['service', 'admin::lang.reviews.label_service', 'required|integer|min:1'],
-            ['review_text', 'admin::lang.reviews.label_text', 'required|between:2,1028'],
+            ['sale_type', 'igniter.local::default.reviews.label_sale_type', 'required'],
+            ['sale_id', 'igniter.local::default.reviews.label_sale_id', 'required|integer|saleIdExists'],
+            ['location_id', 'igniter.local::default.reviews.label_location', 'required|integer'],
+            ['customer_id', 'igniter.local::default.reviews.label_customer', 'required|integer'],
+            ['quality', 'igniter.local::default.reviews.label_quality', 'required|integer|min:1'],
+            ['delivery', 'igniter.local::default.reviews.label_delivery', 'required|integer|min:1'],
+            ['service', 'igniter.local::default.reviews.label_service', 'required|integer|min:1'],
+            ['review_text', 'igniter.local::default.reviews.label_text', 'required|between:2,1028'],
             ['review_status', 'admin::lang.label_status', 'required|boolean'],
         ];
     }
