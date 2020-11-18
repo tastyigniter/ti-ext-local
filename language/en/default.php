@@ -144,7 +144,7 @@ return [
     'text_end_today' => 'Ends today',
     'text_end_elapsed' => 'Ends in %s',
     'text_mealtime' => 'Available during %s (%s - %s)',
-    
+
     'text_settings' => 'Review Settings',
     'text_settings_description' => 'Manage local review settings',
 
