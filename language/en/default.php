@@ -215,6 +215,9 @@ return [
         'text_order' => 'Order',
         'text_reservation' => 'Reservation',
 
+        'text_settings' => 'Review Settings',
+        'text_settings_description' => 'Enable/disable and configure reviews settings',
+
         'column_location' => 'Location',
         'column_author' => 'Author',
         'column_sale_id' => 'Sale ID',

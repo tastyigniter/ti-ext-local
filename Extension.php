@@ -160,10 +160,10 @@ class Extension extends \System\Classes\BaseExtension
     public function registerSettings()
     {
         return [
-            'settings' => [
-                'label' => lang('lang:igniter.local::default.text_settings'),
+            'reviewsettings' => [
+                'label' => 'lang:igniter.local::default.reviews.text_settings',
                 'icon' => 'fa fa-map-marker',
-                'description' => lang('lang:igniter.local::default.text_settings_description'),
+                'description' => 'lang:igniter.local::default.reviews.text_settings_description',
                 'model' => 'Igniter\Local\Models\ReviewSettings',
                 'permissions' => ['Igniter.Local.Manage'],
             ],
