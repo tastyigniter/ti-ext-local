@@ -84,7 +84,7 @@ class Info extends \System\Classes\BaseComponent
         $object->schedules = $this->listWorkingHours($current);
         $object->deliveryAreas = $this->mapIntoCoveredArea($current);
 
-        $object->model = $location;
+        $object->model = $current;
 
         return $object;
     }

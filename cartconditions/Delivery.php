@@ -3,6 +3,7 @@
 namespace Igniter\Local\CartConditions;
 
 use Admin\Models\Locations_model;
+use Cart;
 use Igniter\Flame\Cart\CartCondition;
 use Location;
 
@@ -21,7 +22,7 @@ class Delivery extends CartCondition
             return FALSE;
 
         $coveredArea = Location::coveredArea();
-        $cartSubtotal = $this->getCartContent()->subtotal();
+        $cartSubtotal = Cart::subtotal();
         $this->deliveryCharge = $coveredArea->deliveryAmount($cartSubtotal);
         $this->minimumOrder = (float)$coveredArea->minimumOrderTotal($cartSubtotal);
     }
@@ -45,7 +46,7 @@ class Delivery extends CartCondition
 
     public function whenInValid()
     {
-        if (!$this->getCartContent()->subtotal())
+        if (!Cart::subtotal())
             return;
 
         flash()->warning(sprintf(

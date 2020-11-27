@@ -7,7 +7,7 @@
         aria-controls="collapseCategories"
     ><i class="fa fa-bars"></i>&nbsp;&nbsp;
         @if ($selectedCategory)
-            $selectedCategory->name
+            {{ $selectedCategory->name }}
         @else
             @lang('igniter.local::default.text_categories')
         @endif

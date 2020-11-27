@@ -8,30 +8,7 @@
                     class="btn btn-block btn-primary"
                     href="{{ restaurant_url($menusPage) }}">@lang('igniter.local::default.text_find')</a>
             @else
-                <form
-                    id="location-search"
-                    method="POST"
-                    role="form"
-                    data-request="{{ $searchEventHandler }}"
-                >
-                    <div class="input-group postcode-group">
-                        <input
-                            type="text"
-                            id="search-query"
-                            class="form-control text-center postcode-control"
-                            name="search_query"
-                            placeholder="@lang('igniter.local::default.label_search_query')"
-                            value="{{ $searchQueryPosition->isValid() ? trim($searchQueryPosition->format()) : '' }}"
-                        >
-                        <div class="input-group-append">
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                data-control="search-local"
-                            >@lang('igniter.local::default.text_find')</button>
-                        </div>
-                    </div>
-                </form>
+                @partial('@form')
             @endif
         </div>
     </div>

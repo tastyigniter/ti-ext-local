@@ -5,7 +5,7 @@
 - Component for displaying Opening Hours
 - Component for displaying Menu Items
 - Component for displaying Menu Categories
-- Component for displaying Menu Reviews
+- Component for displaying Order Reviews
 
 ### Admin Panel
 Manage locations and menu items from the admin panel.

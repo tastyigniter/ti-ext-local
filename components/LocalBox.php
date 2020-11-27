@@ -72,21 +72,21 @@ class LocalBox extends \System\Classes\BaseComponent
                 'type' => 'number',
                 'span' => 'left',
                 'default' => 80,
-                'validationRule' => 'required|integer',
+                'validationRule' => 'integer',
             ],
             'localThumbHeight' => [
                 'label' => 'lang:igniter.local::default.label_local_image_height',
                 'type' => 'number',
                 'span' => 'right',
                 'default' => 80,
-                'validationRule' => 'required|integer',
+                'validationRule' => 'integer',
             ],
             'menusPage' => [
                 'label' => 'lang:igniter.local::default.label_menu_page',
                 'type' => 'select',
                 'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'local/menus',
-                'validationRule' => 'required|regex:/^[a-z0-9\-_\/]+$/i',
+                'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
             ],
             'localBoxTimeFormat' => [
                 'label' => 'Time format for the open/close time',
@@ -115,12 +115,6 @@ class LocalBox extends \System\Classes\BaseComponent
                 'span' => 'left',
                 'default' => 'ddd DD hh:mm a',
                 'validationRule' => 'required|string',
-            ],
-            'cartBoxAlias' => [
-                'label' => 'Specify the CartBox component alias used to reload the cart contents after the order type changes',
-                'type' => 'text',
-                'default' => 'cartBox',
-                'validationRule' => 'required|regex:/^[a-z0-9\-_]+$/i',
             ],
         ];
     }
@@ -161,12 +155,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
             $this->controller->pageCycle();
 
-            $cartBox = $this->controller->findComponentByAlias($this->property('cartBoxAlias'));
-
-            if ($cartBox AND $cartBox->property('pageIsCheckout'))
-                return Redirect::to($this->controller->pageUrl($this->property('checkoutPage')));
-
-            return array_merge($cartBox->fetchPartials(), $this->fetchPartials());
+            return Redirect::back();
         }
         catch (Exception $ex) {
             if (Request::ajax()) throw $ex;

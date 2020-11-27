@@ -28,7 +28,7 @@
                 >
                     <div class="rating rating-star text-warning"></div>
                 </div>
-                {!! form_error('rating.quality', '<span class="text-danger">', '</span>'); !!}
+                {!! form_error('rating.quality', '<span class="text-danger">', '</span>') !!}
             </div>
             <div class="form-group flex-fill">
                 <label
