@@ -3,7 +3,7 @@
     @continue($hideEmptyCategory AND $category->count_menus < 1)
 
     <a
-        class="nav-link{{ $selectedCategory AND $category->permalink_slug == $selectedCategory->permalink_slug ? ' active' : '' }}"
+        class="nav-link{{ ($selectedCategory AND $category->permalink_slug == $selectedCategory->permalink_slug) ? ' active' : '' }}"
         href="{{ page_url('local/menus', ['category' => $category->permalink_slug]) }}"
     >{{ $category->name }}</a>
 
