@@ -40,7 +40,7 @@ return [
     'text_condition_below_total' => '{amount} below {total}',
     'text_delivery_areas' => 'Delivery Areas',
     'text_delivery_map' => 'Delivery Map',
-    'text_working_hour' => '(%s - %s)',
+    'text_working_hour' => '%s - %s',
     'text_min_total' => 'Min. Order Amount',
     'text_no_min_total' => 'No Min. Order Amount',
 
