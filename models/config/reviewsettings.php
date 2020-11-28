@@ -44,7 +44,7 @@ return [
                 'label' => 'lang:admin::lang.ratings.text_title',
                 'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
                 'type' => 'partial',
-                'path' => 'settings/ratings',
+                'path' => '$/igniter/local/views/reviews/ratings',
                 'commentAbove' => 'lang:admin::lang.ratings.help_hints',
             ],
         ],

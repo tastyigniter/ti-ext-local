@@ -79,7 +79,7 @@ class Reviews_model extends Model
 
     public function getRatingOptions()
     {
-        return array_get(setting('ratings'), 'ratings', []);
+        return array_get(ReviewSettings::get('ratings'), 'ratings', []);
     }
 
     //

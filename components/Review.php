@@ -140,7 +140,7 @@ class Review extends \System\Classes\BaseComponent
      */
     protected function getHints()
     {
-        return array_get(setting('ratings'), 'ratings', []);
+        return Reviews_model::make()->getRatingOptions();
     }
 
     protected function loadReviewList()
