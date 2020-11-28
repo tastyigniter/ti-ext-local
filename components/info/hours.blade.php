@@ -13,7 +13,7 @@
             @foreach ($locationInfo->schedules as $day => $schedules)
                 <tr>
                     <td>{{ $day }}</td>
-                    @foreach ($schedules->groupBy('type')->sortByDesc('type') as $type => $hours)
+                    @foreach ($schedules->sortByDesc('type')->groupBy('type') as $type => $hours)
                         <td>
                             @foreach ($hours as $hour)
                                 @if ($type == 'delivery' AND !$locationInfo->hasDelivery)
