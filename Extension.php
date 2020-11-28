@@ -38,7 +38,7 @@ class Extension extends \System\Classes\BaseExtension
             $model->relation['hasMany']['reviews'] = ['Igniter\Local\Models\Reviews_model'];
         });
 
-        Locations_model::$allowedSortingColumns = array_merge(Locations_model::$allowedSortingColumns, ['reviews_count asc', 'reviews_count desc']);
+        Locations_model::addSortingColumns(['reviews_count asc', 'reviews_count desc']);
 
         View::share('showReviews', ReviewSettings::get('allow_reviews', false) == true);
 
