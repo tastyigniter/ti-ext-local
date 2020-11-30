@@ -21,7 +21,7 @@ class Reviews_model extends Model
     /**
      * @var string The database table name
      */
-    protected $table = 'reviews';
+    protected $table = 'igniter_reviews';
 
     /**
      * @var string The database table primary key
