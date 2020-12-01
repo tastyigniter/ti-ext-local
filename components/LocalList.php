@@ -27,7 +27,7 @@ class LocalList extends \System\Classes\BaseComponent
         $this->id = uniqid($this->alias);
         $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
-        $this->page['openingTimeFormat'] = mdate_to_moment_js_format(lang('system::lang.date_time_format'));
+        $this->page['openingTimeFormat'] = convert_php_to_moment_js_format(lang('system::lang.date_time_format'));
         $this->page['filterSearch'] = input('search');
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();

@@ -15,9 +15,9 @@ class Info extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->page['infoTimeFormat'] = mdate_to_moment_js_format(lang('system::lang.time_format'));
-        $this->page['openingTimeFormat'] = mdate_to_moment_js_format(lang('system::lang.date_time_format_long'));
-        $this->page['lastOrderTimeFormat'] = mdate_to_moment_js_format(lang('system::lang.date_time_format_long'));
+        $this->page['infoTimeFormat'] = convert_php_to_moment_js_format(lang('system::lang.time_format'));
+        $this->page['openingTimeFormat'] = convert_php_to_moment_js_format(lang('system::lang.date_time_format_long'));
+        $this->page['lastOrderTimeFormat'] = convert_php_to_moment_js_format(lang('system::lang.date_time_format_long'));
 
         $this->page['locationInfo'] = $this->makeInfoObject();
     }

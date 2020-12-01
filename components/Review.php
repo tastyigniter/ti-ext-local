@@ -68,7 +68,7 @@ class Review extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->page['reviewDateFormat'] = mdate_to_moment_js_format(lang('system::lang.date_format'));
+        $this->page['reviewDateFormat'] = convert_php_to_moment_js_format(lang('system::lang.date_format'));
         $this->page['reviewRatingHints'] = $this->getHints();
 
         $this->page['reviewList'] = $this->loadReviewList();
