@@ -19,13 +19,6 @@ class LocalList extends \System\Classes\BaseComponent
                 'default' => 'mi',
                 'validationRule' => 'required|in:km,mi',
             ],
-            'openingTimeFormat' => [
-                'label' => 'Time format for the opening later time',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd HH:mm',
-                'validationRule' => 'required|string',
-            ],
         ];
     }
 
@@ -34,7 +27,7 @@ class LocalList extends \System\Classes\BaseComponent
         $this->id = uniqid($this->alias);
         $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
-        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat', 'D '.setting('time_format'));
+        $this->page['openingTimeFormat'] = mdate_to_moment_js_format(lang('system::lang.date_time_format'));
         $this->page['filterSearch'] = input('search');
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();
