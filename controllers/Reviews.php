@@ -29,19 +29,19 @@ class Reviews extends \Admin\Classes\AdminController
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'igniter/local/reviews/edit/{review_id}',
-            'redirectClose' => 'reviews',
+            'redirectClose' => 'igniter/local/reviews',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'igniter/local/reviews/edit/{review_id}',
-            'redirectClose' => 'reviews',
+            'redirectClose' => 'igniter/local/reviews',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
-            'redirect' => 'reviews',
+            'redirect' => 'igniter/local/reviews',
         ],
         'delete' => [
-            'redirect' => 'reviews',
+            'redirect' => 'igniter/local/reviews',
         ],
         'configFile' => 'reviews_model',
     ];

@@ -136,10 +136,6 @@ class Extension extends \System\Classes\BaseExtension
                 'description' => 'lang:igniter.local::default.reviews.permissions',
                 'group' => 'module',
             ],
-            'Igniter.Local.Manage' => [
-                'description' => 'lang:igniter.local::default.text_permissions',
-                'group' => 'module',
-            ],
         ];
     }
 
@@ -151,7 +147,7 @@ class Extension extends \System\Classes\BaseExtension
                 'icon' => 'fa fa-map-marker',
                 'description' => 'lang:igniter.local::default.reviews.text_settings_description',
                 'model' => 'Igniter\Local\Models\ReviewSettings',
-                'permissions' => ['Igniter.Local.Manage'],
+                'permissions' => ['Admin.Reviews'],
             ],
         ];
     }
