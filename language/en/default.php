@@ -145,6 +145,9 @@ return [
     'text_end_elapsed' => 'Ends in %s',
     'text_mealtime' => 'Available during %s (%s - %s)',
 
+    'text_settings' => 'Review Settings',
+    'text_settings_description' => 'Manage local review settings',
+
     'search' => [
         'component_title' => 'Local Search Component',
         'component_desc' => 'Displays a standalone local search form',
@@ -197,5 +200,48 @@ return [
     'list' => [
         'component_title' => 'Local List Component',
         'component_desc' => 'Displays a list of locations',
+    ],
+
+    'reviews' => [
+        'side_menu' => 'Reviews',
+        'permissions' => 'Manage user reviews',
+
+        'text_title' => 'Reviews',
+        'text_form_name' => 'Review',
+        'text_empty' => 'There are no reviews available.',
+        'text_filter_search' => 'Search by author, restaurant or sale id.',
+        'text_pending_review' => 'Pending Review',
+        'text_approved' => 'Approved',
+        'text_order' => 'Order',
+        'text_reservation' => 'Reservation',
+
+        'text_settings' => 'Review Settings',
+        'text_settings_description' => 'Enable/disable and configure reviews settings',
+
+        'column_location' => 'Location',
+        'column_author' => 'Author',
+        'column_sale_id' => 'Sale ID',
+        'column_sale_type' => 'Sale Type',
+
+        'label_sale_type' => 'Sale Type',
+        'label_sale_id' => 'Sale ID',
+        'label_location' => 'Location',
+        'label_customer' => 'Customer',
+        'label_author' => 'Author',
+        'label_quality' => 'Quality Rating',
+        'label_delivery' => 'Delivery Rating',
+        'label_service' => 'Service Rating',
+        'label_text' => 'Review Text',
+
+        'label_allow_reviews' => 'Allow Reviews',
+        'label_approve_reviews' => 'Approve Reviews',
+
+        'text_tab_title_reviews' => 'Reviews',
+
+        'help_allow_reviews' => 'Enable or disable new customer review entry and display of reviews on storefront',
+        'help_approve_reviews' => 'Approve new review entry automatically or manually',
+
+        'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
+        'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
     ],
 ];
