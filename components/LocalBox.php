@@ -179,7 +179,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
             $timeSlotDateTime = $timeIsAsap
-                ? $this->location->asapScheduleTimeslot()
+                ? $this->location->asapScheduleTimeslot(FALSE)
                 : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
