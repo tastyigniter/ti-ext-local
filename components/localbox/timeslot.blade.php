@@ -27,7 +27,7 @@
         >
             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;
             <b>
-                @if ($orderTimeIsAsap AND $locationCurrentSchedule->isOpened())
+                @if ($orderTimeIsAsap AND $locationCurrentSchedule->isOpen())
                     @lang('igniter.local::default.text_asap')
                 @else
                     {{ $orderDateTime->isoFormat($timePickerDateTimeFormat) }}
