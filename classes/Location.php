@@ -233,7 +233,7 @@ class Location extends Manager
     {
         $dateTime = $this->asapScheduleTimeslot();
         $sessionDateTime = $this->getSession('order-timeslot.dateTime');
-        if (!$this->orderTimeIsAsap() AND $this->checkOrderTime($sessionDateTime)) {
+        if (!$this->orderTimeIsAsap() AND $sessionDateTime AND $this->checkOrderTime($sessionDateTime)) {
             $dateTime = $sessionDateTime;
         }
 
