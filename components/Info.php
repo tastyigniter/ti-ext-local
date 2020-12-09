@@ -10,34 +10,14 @@ class Info extends \System\Classes\BaseComponent
 {
     public function defineProperties()
     {
-        return [
-            'infoTimeFormat' => [
-                'label' => 'Date format for the open and close hours',
-                'type' => 'text',
-                'default' => 'HH:mm',
-                'validationRule' => 'required|string',
-            ],
-            'openingTimeFormat' => [
-                'label' => 'Time format for the opening later time',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd hh:mm a',
-                'validationRule' => 'required|string',
-            ],
-            'lastOrderTimeFormat' => [
-                'label' => 'Date format for the last order time',
-                'type' => 'text',
-                'default' => 'ddd DD HH:mm',
-                'validationRule' => 'required|string',
-            ],
-        ];
+        return [];
     }
 
     public function onRun()
     {
-        $this->page['infoTimeFormat'] = $this->property('infoTimeFormat');
-        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat');
-        $this->page['lastOrderTimeFormat'] = $this->property('lastOrderTimeFormat');
+        $this->page['infoTimeFormat'] = lang('system::lang.moment.time_format');
+        $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
+        $this->page['lastOrderTimeFormat'] = lang('system::lang.moment.day_time_format');
 
         $this->page['locationInfo'] = $this->makeInfoObject();
     }

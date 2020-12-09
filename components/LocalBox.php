@@ -88,34 +88,6 @@ class LocalBox extends \System\Classes\BaseComponent
                 'default' => 'local/menus',
                 'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
             ],
-            'localBoxTimeFormat' => [
-                'label' => 'Time format for the open/close time',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'hh:mm a',
-                'validationRule' => 'required|string',
-            ],
-            'openingTimeFormat' => [
-                'label' => 'Time format for the opening later time',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd hh:mm a',
-                'validationRule' => 'required|string',
-            ],
-            'timePickerDateFormat' => [
-                'label' => 'Date format for the timepicker',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd DD',
-                'validationRule' => 'required|string',
-            ],
-            'timePickerDateTimeFormat' => [
-                'label' => 'DateTime format for the timepicker',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd DD hh:mm a',
-                'validationRule' => 'required|string',
-            ],
         ];
     }
 
@@ -207,10 +179,10 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['timeSlotEventHandler'] = $this->getEventHandler('onSetOrderTime');
         $this->page['orderTypeEventHandler'] = $this->getEventHandler('onChangeOrderType');
-        $this->page['localBoxTimeFormat'] = $this->property('localBoxTimeFormat');
-        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat');
-        $this->page['timePickerDateFormat'] = $this->property('timePickerDateFormat');
-        $this->page['timePickerDateTimeFormat'] = $this->property('timePickerDateTimeFormat');
+        $this->page['localBoxTimeFormat'] = lang('system::lang.moment.time_format');
+        $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
+        $this->page['timePickerDateFormat'] = lang('system::lang.moment.day_format');
+        $this->page['timePickerDateTimeFormat'] = lang('system::lang.moment.day_time_format');
 
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
@@ -237,8 +209,8 @@ class LocalBox extends \System\Classes\BaseComponent
         $timeslot->collapse()->each(function (DateTime $slot) use (&$parsed) {
             $dateKey = $slot->format('Y-m-d');
             $hourKey = $slot->format('H:i');
-            $dateValue = make_carbon($slot)->isoFormat($this->property('timePickerDateFormat'));
-            $hourValue = make_carbon($slot)->isoFormat($this->property('openingTimeFormat'));
+            $dateValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.day_format'));
+            $hourValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.day_time_format_short'));
 
             $parsed['dates'][$dateKey] = $dateValue;
             $parsed['hours'][$dateKey][$hourKey] = $hourValue;
