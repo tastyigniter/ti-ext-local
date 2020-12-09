@@ -179,7 +179,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
             $timeSlotDateTime = $timeIsAsap
-                ? $this->location->asapScheduleTimeslot()
+                ? $this->location->asapScheduleTimeslot(FALSE)
                 : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
@@ -200,7 +200,6 @@ class LocalBox extends \System\Classes\BaseComponent
     protected function prepareVars()
     {
         $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
-        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
         $this->page['localThumbWidth'] = $this->property('localThumbWidth');
         $this->page['localThumbHeight'] = $this->property('localThumbHeight');

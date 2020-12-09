@@ -25,7 +25,6 @@ class LocalList extends \System\Classes\BaseComponent
     public function onRun()
     {
         $this->id = uniqid($this->alias);
-        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
         $this->page['openingTimeFormat'] = lang('main::lang.date_time_format');
         $this->page['filterSearch'] = input('search');

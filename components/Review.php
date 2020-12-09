@@ -2,11 +2,12 @@
 
 namespace Igniter\Local\Components;
 
-use Admin\Models\Reviews_model;
 use Admin\Traits\ValidatesForm;
 use ApplicationException;
 use Exception;
 use Igniter\Cart\Classes\OrderManager;
+use Igniter\Local\Models\Reviews_model;
+use Igniter\Local\Models\ReviewSettings;
 use Igniter\Reservation\Classes\BookingManager;
 use Illuminate\Support\Facades\Redirect;
 use Location;
@@ -79,7 +80,7 @@ class Review extends \System\Classes\BaseComponent
     public function onLeaveReview()
     {
         try {
-            if (!(bool)setting('allow_reviews'))
+            if (!(bool)ReviewSettings::get('allow_reviews', false))
                 throw new ApplicationException(lang('igniter.local::default.review.alert_review_disabled'));
 
             if (!$customer = Auth::customer())
@@ -113,7 +114,7 @@ class Review extends \System\Classes\BaseComponent
             $model->delivery = array_get($data, 'rating.delivery');
             $model->service = array_get($data, 'rating.service');
             $model->review_text = array_get($data, 'review_text');
-            $model->review_status = (setting('approve_reviews') === 1) ? 1 : 0;
+            $model->review_status = !(bool)ReviewSettings::get('approve_reviews', false) ? 1 : 0;
 
             $model->save();
 
@@ -133,7 +134,7 @@ class Review extends \System\Classes\BaseComponent
      */
     protected function getHints()
     {
-        return array_get(setting('ratings'), 'ratings', []);
+        return Reviews_model::make()->getRatingOptions();
     }
 
     protected function loadReviewList()
