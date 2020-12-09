@@ -69,7 +69,7 @@ class Review extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->page['reviewDateFormat'] = lang('main::lang.date_format');
+        $this->page['reviewDateFormat'] = lang('system::lang.moment.date_format_short');
         $this->page['reviewRatingHints'] = $this->getHints();
 
         $this->page['reviewList'] = $this->loadReviewList();
