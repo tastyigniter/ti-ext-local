@@ -2,16 +2,21 @@
     <div class="panel local-search">
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-{{ $hideSearch ? '12' : '4' }} mb-3 mb-sm-0">
-                    <div id="local-timeslot">
-                        @partial('@timeslot')
-                    </div>
-                </div>
                 @if (!$hideSearch)
-                    <div class="col-sm-8">
+                    <div class="col-sm-12">
                         @partial('@searchbar')
                     </div>
                 @endif
+                <div class="col-sm-12{{ $hideSearch ? '' : ' mt-3 mt-sm-0' }} d-block d-sm-none">
+                    <div class="local-timeslot">
+                        @partial('@timeslot')
+                    </div>
+                </div>
+                <div class="col-sm-12 mt-3 mt-sm-0 d-block d-sm-none">
+                    <div class="local-control">
+                        @partial('@control')
+                    </div>
+                </div>
             </div>
             @if ($location->requiresUserPosition()
                 AND $location->userPosition()->hasCoordinates()
