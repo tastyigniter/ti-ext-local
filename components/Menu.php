@@ -156,18 +156,21 @@ class Menu extends \System\Classes\BaseComponent
     {
         $this->menuListCategories = [];
 
-        $collection = $list->getCollection()->mapToGroups(function ($menuItemObject) {
-            $categories = [];
+        $groupedList = [];
+        $list->getCollection()->each(function ($menuItemObject) use(&$groupedList) {
+            $found = false;
             foreach ($menuItemObject->model->categories as $category) {
                 $this->menuListCategories[$category->getKey()] = $category;
-                $categories[$category->getKey()] = $menuItemObject;
+                $groupedList[$category->getKey()][] = $menuItemObject;
+                $found = true;
             }
 
-            if (!$categories)
-                $categories[] = $menuItemObject;
+            if (!$found)
+                $groupedList[-1][] = $menuItemObject;
+        });
 
-            return $categories;
-        })->sortBy(function ($menuItems, $categoryId) {
+        $collection = collect($groupedList)
+        ->sortBy(function ($menuItems, $categoryId) {
             if (isset($this->menuListCategories[$categoryId]))
                 return $this->menuListCategories[$categoryId]->priority;
 
