@@ -28,7 +28,9 @@ class Extension extends \System\Classes\BaseExtension
     {
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
-        View::share('showReviews', ReviewSettings::get('allow_reviews', FALSE) == TRUE);
+        Event::listen('router.beforeRoute', function ($url, $router) {
+            View::share('showReviews', ReviewSettings::get('allow_reviews', FALSE) == TRUE);
+        });
 
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();

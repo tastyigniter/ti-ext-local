@@ -240,6 +240,7 @@ return [
 
         'help_allow_reviews' => 'Enable or disable new customer review entry and display of reviews on storefront',
         'help_approve_reviews' => 'Approve new review entry automatically or manually',
+        'help_hints' => 'Used when adding reviews.',
 
         'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
         'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
