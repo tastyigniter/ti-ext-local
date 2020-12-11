@@ -35,7 +35,7 @@ class Reviews_model extends Model
 
     protected $guarded = [];
 
-    public $casts = [
+    protected $casts = [
         'customer_id' => 'integer',
         'sale_id' => 'integer',
         'location_id' => 'integer',
