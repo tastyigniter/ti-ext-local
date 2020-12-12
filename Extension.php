@@ -5,6 +5,7 @@ namespace Igniter\Local;
 use Admin\DashboardWidgets\Charts;
 use Admin\Models\Locations_model;
 use Admin\Models\Orders_model;
+use Admin\Models\Reservations_model;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\Models\Reviews_model;
@@ -160,6 +161,9 @@ class Extension extends \System\Classes\BaseExtension
             if (!$widget instanceof Charts)
                 return;
 
+            if (!ReviewSettings::get('allow_reviews', FALSE))
+                return;
+
             $widget->contextDefinitions['reviews'] = [
                 'label' => 'lang:igniter.local::default.reviews.text_title',
                 'color' => '#FFB74D',
@@ -191,8 +195,16 @@ class Extension extends \System\Classes\BaseExtension
             $model->relation['morphMany']['review'] = ['Igniter\Local\Models\Reviews_model'];
         });
 
+        Reservations_model::extend(function ($model) {
+            $model->relation['morphMany']['review'] = ['Igniter\Local\Models\Reviews_model'];
+        });
+
         Locations_model::extend(function ($model) {
             $model->relation['hasMany']['reviews'] = ['Igniter\Local\Models\Reviews_model'];
+
+            $model->addDynamicMethod('reviews_score', function () use ($model) {
+                return Reviews_model::getScoreForLocation($model->getKey());
+            });
         });
 
         Locations_model::addSortingColumns(['reviews_count asc', 'reviews_count desc']);

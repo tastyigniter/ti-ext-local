@@ -5,6 +5,7 @@ namespace Igniter\Local\Models;
 use Admin\Traits\Locationable;
 use Igniter\Flame\Auth\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Model;
 
 /**
@@ -61,6 +62,8 @@ class Reviews_model extends Model
         'orders' => 'Admin\Models\Orders_model',
         'reservations' => 'Admin\Models\Reservations_model',
     ];
+
+    public static $ratingScoreCache = [];
 
     public static function getSaleTypeOptions()
     {
@@ -176,5 +179,38 @@ class Reviews_model extends Model
             ->where('customer_id', $customer->getKey());
 
         return $query->exists();
+    }
+
+    public static function getScoreForLocation($locationId)
+    {
+        if (!$locationId)
+            return null;
+
+        if (!$ratings = array_get(self::$ratingScoreCache, $locationId)) {
+            $ratings = DB::table(self::make()->getTable())
+                ->selectRaw('SUM(delivery = 1) as dr1, SUM(delivery = 2) as dr2, SUM(delivery = 3) as dr3, SUM(delivery = 4) as dr4, SUM(delivery = 5) as dr5')
+                ->selectRaw('SUM(quality = 1) as qr1, SUM(quality = 2) as qr2, SUM(quality = 3) as qr3, SUM(quality = 4) as qr4, SUM(quality = 5) as qr5')
+                ->selectRaw('SUM(service = 1) as sr1, SUM(service = 2) as sr2, SUM(service = 3) as sr3, SUM(service = 4) as sr4, SUM(service = 5) as sr5')
+                ->where('location_id', $locationId)
+                ->get()->toArray();
+
+            self::$ratingScoreCache[$locationId] = $ratings;
+        }
+
+        $ratings = (array)array_shift($ratings);
+
+        $totalWeight = 0;
+        $totalReviews = 0;
+
+        foreach ($ratings as $rating => $totalRatings) {
+            $rating = (int)substr($rating, 2);
+            $totalRatings = (int)$totalRatings;
+
+            $weight = $rating * $totalRatings;
+            $totalWeight += $weight;
+            $totalReviews += $totalRatings;
+        }
+
+        return $totalWeight / ($totalReviews + 1);
     }
 }

@@ -130,6 +130,7 @@ class LocalList extends \System\Classes\BaseComponent
         $object->name = $location->location_name;
         $object->permalink = $location->permalink_slug;
         $object->address = $location->getAddress();
+        $object->reviewsScore = $location->reviews_score();
         $object->reviewsCount = $location->reviews_count;
 
         $object->distance = ($coordinates = Location::userPosition()->getCoordinates())

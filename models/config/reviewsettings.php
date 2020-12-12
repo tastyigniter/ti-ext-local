@@ -41,7 +41,7 @@ return [
                 ],
             ],
             'ratings[ratings]' => [
-                'label' => 'lang:admin::lang.ratings.text_title',
+                'label' => 'lang:igniter.local::default.reviews.label_hints',
                 'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
                 'type' => 'partial',
                 'path' => '$/igniter/local/views/reviews/ratings',

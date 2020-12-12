@@ -9,11 +9,9 @@
     @if ($showReviews)
         <dd class="text-muted">
             <div class="rating rating-sm">
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star-half-o"></span>
-                <span class="fa fa-star-o"></span>
+                @php $reviewScore = $locationCurrent->reviews_score() @endphp @for ($value = 1; $value<6; $value++)
+                    <span class="fa fa-star{{ $value > $reviewScore ? '-o' : '' }}"></span>
+                @endfor
                 <span
                     class="small"
                 >{{ sprintf(lang('igniter.local::default.review.text_total_review'), $locationCurrent->reviews_count) }}</span>

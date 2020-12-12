@@ -232,6 +232,7 @@ return [
         'label_delivery' => 'Delivery Rating',
         'label_service' => 'Service Rating',
         'label_text' => 'Review Text',
+        'label_hints' => 'Rating Hints',
 
         'label_allow_reviews' => 'Allow Reviews',
         'label_approve_reviews' => 'Approve Reviews',
