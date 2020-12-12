@@ -115,7 +115,7 @@ class Menu extends \System\Classes\BaseComponent
         $list = Menus_model::with([
             'mealtimes', 'menu_options',
             'categories', 'categories.media',
-            'special', 'allergens',
+            'special', 'allergens', 'media', 'allergens.media',
         ])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
