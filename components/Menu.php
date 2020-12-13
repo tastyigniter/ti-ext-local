@@ -220,7 +220,7 @@ class Menu extends \System\Classes\BaseComponent
 
         $mealtimes = optional($menuItem->mealtimes)->where('mealtime_status', 1);
         $object->hasMealtime = count($mealtimes);
-        $object->mealtimeIsNotAvailable = !$menuItem->isAvailable(Location::instance()->orderDateTime());
+        $object->mealtimeIsNotAvailable = !$menuItem->isAvailable(Location::orderDateTime());
 
         $object->mealtimeTitles = [];
         foreach ($mealtimes ?? [] as $mealtime) {
