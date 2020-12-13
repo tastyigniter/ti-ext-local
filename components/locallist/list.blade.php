@@ -22,9 +22,7 @@
                                     @php $reviewScore = $locationObject->reviewsScore @endphp @for ($value = 1; $value<6; $value++)
                                         <span class="fa fa-star{{ $value > $reviewScore ? '-o' : '' }}"></span>
                                     @endfor
-                                    <span
-                                        class="small"
-                                    >{{ sprintf(lang('igniter.local::default.review.text_total_review'), $locationObject->reviewsCount) }}</span>
+                                    <span class="small">({{ $locationObject->reviewsCount ?? 0 }})</span>
                                 </div>
                             </dd>
                         @endif
@@ -34,9 +32,9 @@
                         </dd>
                         @if ($locationObject->distance)
                             <dd>
-                            <span
-                                class="text-muted small"
-                            ><i class="fa fa-map-marker"></i>&nbsp;&nbsp;{{ number_format($locationObject->distance, 1) }} {{ $distanceUnit }}</span>
+                                <span
+                                    class="text-muted small"
+                                ><i class="fa fa-map-marker"></i>&nbsp;&nbsp;{{ number_format($locationObject->distance, 1) }} {{ $distanceUnit }}</span>
                             </dd>
                         @endif
                     </dl>
@@ -56,7 +54,7 @@
                             @if ($locationObject->deliverySchedule->isOpen())
                                 {!! sprintf(lang('igniter.local::default.text_delivery_time_info'), sprintf(lang('igniter.local::default.text_in_minutes'), $locationObject->deliveryMinutes)) !!}
                             @elseif ($locationObject->deliverySchedule->isOpening())
-                                {!! sprintf(lang('igniter.local::default.text_delivery_time_info'), '<span class="text-danger">'.sprintf(lang('igniter.local::default.text_starts'), $locationObject->collectionTime->isoFormat($openingTimeFormat).'</span>')) !!}
+                                {!! sprintf(lang('igniter.local::default.text_delivery_time_info'), sprintf(lang('igniter.local::default.text_starts'), '<b>'.$locationObject->deliveryTime->isoFormat($openingTimeFormat).'</b>')) !!}
                             @else
                                 {!! sprintf(lang('igniter.local::default.text_delivery_time_info'), lang('igniter.local::default.text_is_closed')) !!}
                             @endif
@@ -67,7 +65,7 @@
                             @if ($locationObject->collectionSchedule->isOpen())
                                 {!! sprintf(lang('igniter.local::default.text_collection_time_info'), sprintf(lang('igniter.local::default.text_in_minutes'), $locationObject->collectionMinutes)) !!}
                             @elseif ($locationObject->collectionSchedule->isOpening())
-                                {!! sprintf(lang('igniter.local::default.text_collection_time_info'), '<span class="text-danger">'.sprintf(lang('igniter.local::default.text_starts'), $locationObject->collectionTime->isoFormat($openingTimeFormat).'</span>')) !!}
+                                {!! sprintf(lang('igniter.local::default.text_collection_time_info'), sprintf(lang('igniter.local::default.text_starts'), '<b>'.$locationObject->collectionTime->isoFormat($openingTimeFormat).'</b>')) !!}
                             @else
                                 {!! sprintf(lang('igniter.local::default.text_collection_time_info'), lang('igniter.local::default.text_is_closed')) !!}
                             @endif

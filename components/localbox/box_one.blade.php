@@ -12,9 +12,7 @@
                 @php $reviewScore = $locationCurrent->reviews_score() @endphp @for ($value = 1; $value<6; $value++)
                     <span class="fa fa-star{{ $value > $reviewScore ? '-o' : '' }}"></span>
                 @endfor
-                <span
-                    class="small"
-                >{{ sprintf(lang('igniter.local::default.review.text_total_review'), $locationCurrent->reviews_count) }}</span>
+                <span class="small">({{ $locationCurrent->reviews_count ?? 0 }})</span>
             </div>
         </dd>
     @endif

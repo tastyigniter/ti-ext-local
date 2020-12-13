@@ -19,7 +19,7 @@ return [
     'text_is_opened' => '<span class="text-success">We are open</span>',
     'text_closed' => '<span class="text-close text-danger">CLOSED</span>',
     'text_is_closed' => '<span class="text-close text-danger">is CLOSED</span>',
-    'text_opening_time' => '<span class="text-close text-danger">Opening %s</span>',
+    'text_opening_time' => 'Opening <b>%s</b>',
     'text_delivery_time_info' => 'Delivery %s',
     'text_collection_time_info' => 'Pick-up %s',
     'text_collection_time' => 'Pick-up Time',
