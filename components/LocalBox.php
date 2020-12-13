@@ -29,6 +29,11 @@ class LocalBox extends \System\Classes\BaseComponent
     public function initialize()
     {
         $this->location = App::make('location');
+        $this->location->current()->loadCount([
+            'reviews' => function ($q) {
+                $q->isApproved();
+            },
+        ]);
     }
 
     public function defineProperties()

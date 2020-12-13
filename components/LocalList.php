@@ -149,7 +149,7 @@ class LocalList extends \System\Classes\BaseComponent
         $object->deliveryMinutes = $location->deliveryMinutes();
         $object->collectionMinutes = $location->collectionMinutes();
         $object->openingTime = make_carbon($object->openingSchedule->getOpenTime());
-        $object->collectionTime = make_carbon($object->deliverySchedule->getOpenTime());
+        $object->deliveryTime = make_carbon($object->deliverySchedule->getOpenTime());
         $object->collectionTime = make_carbon($object->collectionSchedule->getOpenTime());
 
         $object->model = $location;
