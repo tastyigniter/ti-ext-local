@@ -137,7 +137,6 @@ permalink: '/:location?local/info'
 | Variable                  | Description                                                  |
 | ------------------------- | ------------------------------------------------------------ |
 | `{{ $distanceUnit }}` | Unit of length to use for the distance. Uses system settings value                                               |
-| `{{ $showReviews }}` | Value determines whether to show reviews                                                |
 | `{{ $filterSearch }}` | The user's search query                                                |
 | `{{ $filterSorted }}` | The user's selected filter                                                |
 | `{{ $filterSorters }}` | Array of available filters                                                |

@@ -30,7 +30,7 @@ class Extension extends \System\Classes\BaseExtension
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
         Event::listen('router.beforeRoute', function ($url, $router) {
-            View::share('showReviews', ReviewSettings::get('allow_reviews', FALSE) == TRUE);
+            View::share('showReviews', (bool)ReviewSettings::get('allow_reviews', FALSE));
         });
 
         $this->addReviewsRelationship();
