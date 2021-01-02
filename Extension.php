@@ -3,10 +3,13 @@
 namespace Igniter\Local;
 
 use Admin\DashboardWidgets\Charts;
+use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
 use Admin\Models\Orders_model;
 use Admin\Models\Reservations_model;
+use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Classes\Location;
+use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\Models\Reviews_model;
 use Igniter\Local\Models\ReviewSettings;
@@ -14,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
+use Main\Facades\Auth;
 
 class Extension extends \System\Classes\BaseExtension
 {
@@ -32,6 +36,8 @@ class Extension extends \System\Classes\BaseExtension
         Event::listen('router.beforeRoute', function ($url, $router) {
             View::share('showReviews', (bool)ReviewSettings::get('allow_reviews', FALSE));
         });
+
+        $this->bindRememberLocationAreaEvents();
 
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();
@@ -208,5 +214,54 @@ class Extension extends \System\Classes\BaseExtension
         });
 
         Locations_model::addSortingColumns(['reviews_count asc', 'reviews_count desc']);
+    }
+
+    protected function bindRememberLocationAreaEvents(): void
+    {
+        Event::listen('location.position.updated', function ($location, $position, $oldPosition) {
+            $this->updateCustomerLastArea([
+                'query' => $position->format(),
+            ]);
+        });
+
+        Event::listen('location.area.updated', function ($location, $coveredArea) {
+            $this->updateCustomerLastArea([
+                'areaId' => $coveredArea->getKey(),
+            ]);
+        });
+
+        Event::listen('igniter.user.login', function () {
+            try {
+                if (!strlen($lastArea = Auth::customer()->last_location_area))
+                    return;
+
+                $lastArea = json_decode($lastArea);
+
+                if ($searchQuery = array_get($lastArea, 'query')) {
+                    $userPosition = Geocoder::geocode($searchQuery)->first();
+                    LocationFacade::updateUserPosition($userPosition);
+                }
+
+                if ($areaId = array_get($lastArea, 'areaId')) {
+                    $area = Location_areas_model::find($areaId);
+                    LocationFacade::updateNearbyArea($area);
+                }
+            }
+            catch (\Exception $exception) {
+            }
+        });
+    }
+
+    protected function updateCustomerLastArea($value)
+    {
+        if (!$customer = Auth::customer())
+            return;
+
+        $lastArea = @json_decode($customer->last_location_area) ?: [];
+        $lastArea = array_merge($lastArea, $value);
+
+        $customer->update([
+            'last_location_area' => json_encode($lastArea),
+        ]);
     }
 }
