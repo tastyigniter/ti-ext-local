@@ -235,7 +235,7 @@ class Extension extends \System\Classes\BaseExtension
                 if (!strlen($lastArea = Auth::customer()->last_location_area))
                     return;
 
-                $lastArea = json_decode($lastArea);
+                $lastArea = json_decode($lastArea, TRUE);
 
                 if ($searchQuery = array_get($lastArea, 'query')) {
                     $userPosition = Geocoder::geocode($searchQuery)->first();
@@ -257,7 +257,7 @@ class Extension extends \System\Classes\BaseExtension
         if (!$customer = Auth::customer())
             return;
 
-        $lastArea = @json_decode($customer->last_location_area) ?: [];
+        $lastArea = @json_decode($customer->last_location_area, TRUE) ?: [];
         $lastArea = array_merge($lastArea, $value);
 
         $customer->update([
