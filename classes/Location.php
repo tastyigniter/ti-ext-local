@@ -237,7 +237,7 @@ class Location extends Manager
             $dateTime = $sessionDateTime;
         }
 
-        return make_carbon($dateTime)->copy();
+        return make_carbon($dateTime);
     }
 
     public function scheduleTimeslot()

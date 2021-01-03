@@ -240,12 +240,11 @@ class LocalBox extends \System\Classes\BaseComponent
         if (!$locationCurrent = $this->location->current())
             return;
 
-        // Makes sure the current active order type is offered by the location.
-        if (in_array($this->location->orderType(), $locationCurrent->availableOrderTypes()))
+        $defaultOrderType = $this->property('defaultOrderType', Locations_model::DELIVERY);
+        if (!in_array($defaultOrderType, $locationCurrent->availableOrderTypes()))
             return;
 
-        $this->location->updateOrderType(
-            $this->property('defaultOrderType', Locations_model::DELIVERY)
-        );
+        if (!$this->location->getSession('orderType'))
+            $this->location->updateOrderType($defaultOrderType);
     }
 }
