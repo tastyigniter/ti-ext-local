@@ -7,16 +7,6 @@
                         @partial('@searchbar')
                     </div>
                 @endif
-                <div class="col-sm-12{{ $hideSearch ? '' : ' mt-3 mt-sm-0' }} d-block d-sm-none">
-                    <div class="local-timeslot">
-                        @partial('@timeslot')
-                    </div>
-                </div>
-                <div class="col-sm-12 mt-3 mt-sm-0 d-block d-sm-none">
-                    <div class="local-control">
-                        @partial('@control')
-                    </div>
-                </div>
             </div>
             @if ($location->requiresUserPosition()
                 AND $location->userPosition()->hasCoordinates()
@@ -27,4 +17,15 @@
     </div>
 
     @partial($__SELF__.'::default')
+
+    <div class="card mt-1 d-block d-sm-none">
+        <div class="card-body">
+            <div class="local-timeslot mb-3">
+                @partial('@timeslot')
+            </div>
+            <div class="local-control">
+                @partial('@control')
+            </div>
+        </div>
+    </div>
 </div>
