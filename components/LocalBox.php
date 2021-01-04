@@ -5,6 +5,7 @@ namespace Igniter\Local\Components;
 use Admin\Models\Locations_model;
 use App;
 use ApplicationException;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Igniter\Local\Classes\CoveredAreaCondition;
@@ -156,7 +157,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
             $timeSlotDateTime = $timeIsAsap
-                ? $this->location->asapScheduleTimeslot(FALSE)
+                ? Carbon::now()
                 : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
