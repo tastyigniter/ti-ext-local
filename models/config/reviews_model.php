@@ -135,7 +135,6 @@ $config['form']['fields'] = [
         'relationFrom' => 'location',
         'nameFrom' => 'location_name',
         'span' => 'left',
-        'locationAware' => 'hide',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
     'customer_id' => [
