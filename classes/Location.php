@@ -205,9 +205,7 @@ class Location extends Manager
 
     public function lastOrderTime()
     {
-        return Carbon::parse(
-            $this->closeTime($this->orderType())
-        )->subMinutes($this->orderLeadTime());
+        return Carbon::parse($this->closeTime($this->orderType()));
     }
 
     public function orderLeadTime()
