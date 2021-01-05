@@ -216,7 +216,7 @@ class LocalBox extends \System\Classes\BaseComponent
             $dateKey = $slot->format('Y-m-d');
             $hourKey = $slot->format('H:i');
             $dateValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.day_format'));
-            $hourValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.day_time_format_short'));
+            $hourValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.time_format'));
 
             $parsed['dates'][$dateKey] = $dateValue;
             $parsed['hours'][$dateKey][$hourKey] = $hourValue;
