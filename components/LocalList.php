@@ -52,7 +52,7 @@ class LocalList extends \System\Classes\BaseComponent
                 $searchQuery .= $address->state.',';
                 $searchQuery .= $address->postcode;
 
-                $collection  = Geocoder::geocode($searchQuery);
+                $collection = Geocoder::geocode($searchQuery);
 
                 if ($collection AND !$collection->isEmpty()) {
                     $userLocation = $collection->first();
