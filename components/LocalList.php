@@ -2,8 +2,10 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Models\Addresses_model;
 use Admin\Models\Locations_model;
 use Igniter\Local\Traits\SearchesNearby;
+use Igniter\Flame\Geolite\Facades\Geocoder;
 use Location;
 
 class LocalList extends \System\Classes\BaseComponent
@@ -32,13 +34,35 @@ class LocalList extends \System\Classes\BaseComponent
         $this->page['filterSorters'] = $this->loadFilters();
 
         $this->page['userPosition'] = Location::userPosition();
-
         $this->page['locationsList'] = $this->loadList();
     }
 
     protected function loadList()
     {
         $sortBy = $this->param('sort_by');
+
+        if (!Location::userPosition()->isValid() AND \Auth::customer()) {
+            $customer = \Auth::customer();
+            if ($customer->address_id) {
+                $address = Addresses_model::find($customer->address_id);
+                $searchQuery = $address->address_1 . ",";
+                if ($address->address_2)
+                    $searchQuery .= $address->address_2 . ",";
+                $searchQuery .= $address->city . ",";
+                $searchQuery .= $address->state . ",";
+                $searchQuery .= $address->postcode;
+
+                $collection  = Geocoder::geocode($searchQuery);
+
+                if ($collection AND !$collection->isEmpty()) {
+                    $userLocation = $collection->first();
+
+                    if ($userLocation->hasCoordinates()) {
+                        Location::updateUserPosition($userLocation);
+                    }
+                }
+            }
+        }
 
         if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();
