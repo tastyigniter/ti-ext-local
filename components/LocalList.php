@@ -4,8 +4,8 @@ namespace Igniter\Local\Components;
 
 use Admin\Models\Addresses_model;
 use Admin\Models\Locations_model;
-use Igniter\Local\Traits\SearchesNearby;
 use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Local\Traits\SearchesNearby;
 use Location;
 
 class LocalList extends \System\Classes\BaseComponent
@@ -45,11 +45,11 @@ class LocalList extends \System\Classes\BaseComponent
             $customer = \Auth::customer();
             if ($customer->address_id) {
                 $address = Addresses_model::find($customer->address_id);
-                $searchQuery = $address->address_1 . ",";
+                $searchQuery = $address->address_1.",";
                 if ($address->address_2)
-                    $searchQuery .= $address->address_2 . ",";
-                $searchQuery .= $address->city . ",";
-                $searchQuery .= $address->state . ",";
+                    $searchQuery .= $address->address_2.",";
+                $searchQuery .= $address->city.",";
+                $searchQuery .= $address->state.",";
                 $searchQuery .= $address->postcode;
 
                 $collection  = Geocoder::geocode($searchQuery);
