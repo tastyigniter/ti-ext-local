@@ -58,21 +58,27 @@
                     value="{{ $orderTimeIsAsap ? 'asap' : 'later' }}"
                     autocomplete="off"
                 />
-                <div class="form-group">
-                    <select
-                        class="form-control"
-                        data-timepicker-control="date"
-                        data-timepicker-label="@lang('igniter.local::default.label_date')"
-                        data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('Y-m-d') : '' }}"
-                    ></select>
-                </div>
-                <div class="form-group">
-                    <select
-                        class="form-control"
-                        data-timepicker-control="time"
-                        data-timepicker-label="@lang('igniter.local::default.label_time')"
-                        data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('H:i') : '' }}"
-                    ></select>
+                <div class="row">
+                    <div class="col pr-0">
+                        <div class="form-group">
+                            <select
+                                class="form-control"
+                                data-timepicker-control="date"
+                                data-timepicker-label="@lang('igniter.local::default.label_date')"
+                                data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('Y-m-d') : '' }}"
+                            ></select>
+                        </div>
+                    </div>
+                    <div class="col pr-0">
+                        <div class="form-group">
+                            <select
+                                class="form-control"
+                                data-timepicker-control="time"
+                                data-timepicker-label="@lang('igniter.local::default.label_time')"
+                                data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('H:i') : '' }}"
+                            ></select>
+                        </div>
+                    </div>
                 </div>
                 <button
                     type="button"
