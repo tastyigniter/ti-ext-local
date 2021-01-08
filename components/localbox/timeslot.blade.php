@@ -58,25 +58,31 @@
                     value="{{ $orderTimeIsAsap ? 'asap' : 'later' }}"
                     autocomplete="off"
                 />
-                <div class="form-group">
-                    <select
-                        class="form-control"
-                        data-timepicker-control="date"
-                        data-timepicker-label="@lang('igniter.local::default.label_date')"
-                        data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('Y-m-d') : '' }}"
-                    ></select>
-                </div>
-                <div class="form-group">
-                    <select
-                        class="form-control"
-                        data-timepicker-control="time"
-                        data-timepicker-label="@lang('igniter.local::default.label_time')"
-                        data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('H:i') : '' }}"
-                    ></select>
+                <div class="row no-gutters">
+                    <div class="col pr-1">
+                        <div class="form-group">
+                            <select
+                                class="form-control"
+                                data-timepicker-control="date"
+                                data-timepicker-label="@lang('igniter.local::default.label_date')"
+                                data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('Y-m-d') : '' }}"
+                            ></select>
+                        </div>
+                    </div>
+                    <div class="col pl-1">
+                        <div class="form-group">
+                            <select
+                                class="form-control"
+                                data-timepicker-control="time"
+                                data-timepicker-label="@lang('igniter.local::default.label_time')"
+                                data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('H:i') : '' }}"
+                            ></select>
+                        </div>
+                    </div>
                 </div>
                 <button
                     type="button"
-                    class="btn btn-primary text-nowrap"
+                    class="btn btn-block btn-primary text-nowrap"
                     data-timepicker-submit
                     data-attach-loading
                 >
