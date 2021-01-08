@@ -242,8 +242,8 @@ class Extension extends \System\Classes\BaseExtension
                     LocationFacade::updateUserPosition($userPosition);
                 }
 
-                if ($areaId = array_get($lastArea, 'areaId')) {
-                    $area = Location_areas_model::find($areaId);
+                $areaId = array_get($lastArea, 'areaId');
+                if ($areaId AND $area = Location_areas_model::find($areaId)) {
                     LocationFacade::updateNearbyArea($area);
                 }
             }
