@@ -155,10 +155,18 @@ class Menu extends \System\Classes\BaseComponent
     protected function groupListByCategory($list)
     {
         $this->menuListCategories = [];
+        $locationId = $this->getLocation();
 
         $groupedList = [];
         foreach ($list->getCollection() as $menuItemObject) {
             $categories = $menuItemObject->model->categories;
+
+            if ($categories) {
+                $categories = $categories->filter(function ($category) use($locationId) {
+                    return $category->status AND $category->locations->contains($locationId);
+                });
+            }
+
             if (!$categories OR $categories->isEmpty()) {
                 $groupedList[0][] = $menuItemObject;
                 continue;
