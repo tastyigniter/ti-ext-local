@@ -45,10 +45,10 @@ class CoveredArea
 
         // Delivery is unavailable when delivery charge from the matched rule is -1
         if ($condition->amount < 0)
-            return $type == 'total' ? $condition->total : null;
+            return $type == 'total' ? 0 : -1;
 
-        // At this stage, minimum total is 0 when the matched condition is a below rule
-        if ($type == 'total' AND $condition->type == 'below')
+        // At this stage, minimum total is 0 when the matched condition is a below or all rule
+        if ($type == 'total' AND $condition->type != 'above')
             return 0;
 
         return $condition->{$type};
