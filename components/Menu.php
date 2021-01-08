@@ -162,7 +162,7 @@ class Menu extends \System\Classes\BaseComponent
             $categories = $menuItemObject->model->categories;
 
             if ($categories) {
-                $categories = $categories->filter(function ($category) use($locationId) {
+                $categories = $categories->filter(function ($category) use ($locationId) {
                     return $category->status AND $category->locations->contains($locationId);
                 });
             }
