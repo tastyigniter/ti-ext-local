@@ -58,8 +58,8 @@
                     value="{{ $orderTimeIsAsap ? 'asap' : 'later' }}"
                     autocomplete="off"
                 />
-                <div class="row">
-                    <div class="col pr-0">
+                <div class="row no-gutters">
+                    <div class="col pr-1">
                         <div class="form-group">
                             <select
                                 class="form-control"
@@ -69,7 +69,7 @@
                             ></select>
                         </div>
                     </div>
-                    <div class="col pr-0">
+                    <div class="col pl-1">
                         <div class="form-group">
                             <select
                                 class="form-control"
@@ -82,7 +82,7 @@
                 </div>
                 <button
                     type="button"
-                    class="btn btn-primary text-nowrap"
+                    class="btn btn-block btn-primary text-nowrap"
                     data-timepicker-submit
                     data-attach-loading
                 >
