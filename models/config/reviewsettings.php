@@ -40,6 +40,32 @@ return [
                     'condition' => 'checked',
                 ],
             ],
+            'chase_reviews' => [
+                'label' => 'lang:igniter.local::default.reviews.label_chase_reviews',
+                'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
+                'type' => 'switch',
+                'on' => 'lang:system::lang.settings.text_auto',
+                'off' => 'lang:system::lang.settings.text_manual',
+                'comment' => 'lang:igniter.local::default.reviews.help_chase_reviews',
+                'trigger' => [
+                    'action' => 'show',
+                    'field' => 'allow_reviews',
+                    'condition' => 'checked',
+                ],
+                'span' => 'left',
+            ],
+            'chase_reviews_after' => [
+                'label' => 'lang:igniter.local::default.reviews.label_chase_reviews_after',
+                'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
+                'type' => 'number',
+                'default' => 24,
+                'trigger' => [
+                    'action' => 'show',
+                    'field' => 'chase_reviews',
+                    'condition' => 'checked',
+                ],
+                'span' => 'right',
+            ],
             'ratings[ratings]' => [
                 'label' => 'lang:igniter.local::default.reviews.label_hints',
                 'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
