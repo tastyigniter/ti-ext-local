@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\AutomationRules\Conditions;
 
-use Igniter\Automation\Classes\BaseCondition;
+use Igniter\Automation\Classes\BaseModelAttributesCondition;
 use Igniter\Local\Models\Reviews_model;
 use Illuminate\Database\Eloquent\Model;
 
