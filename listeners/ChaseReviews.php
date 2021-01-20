@@ -36,6 +36,6 @@ class ChaseReviews
         if ($reviews->count() > 0)
             return;
 
-        $order->mailSend('igniter.local::mail.review_chase', 'customer');                
+        $order->mailSend('igniter.local::mail.review_chase', 'customer');
     }
 }
