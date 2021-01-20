@@ -31,6 +31,7 @@ class Extension extends \System\Classes\BaseExtension
 
     public function boot()
     {
+        Event::subscribe(ChaseReviews::class);
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
         Event::listen('router.beforeRoute', function ($url, $router) {
@@ -118,6 +119,13 @@ class Extension extends \System\Classes\BaseExtension
                     'configFile' => '$/igniter/local/models/config/menuexport',
                 ],
             ],
+        ];
+    }
+
+    public function registerMailTemplates()
+    {
+        return [
+            'igniter.local::mail.review_chase' => 'lang:igniter.local::default.reviews.text_chase_email',
         ];
     }
 
