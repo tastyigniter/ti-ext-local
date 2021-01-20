@@ -41,6 +41,9 @@ class Delivery extends CartCondition
 
     public function getValue()
     {
+        if (is_null($this->deliveryCharge))
+            return lang('igniter.local::default.text_delivery_not_available');
+
         return $this->calculatedValue > 0 ? $this->calculatedValue : lang('main::lang.text_free');
     }
 
