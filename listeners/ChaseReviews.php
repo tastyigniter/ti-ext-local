@@ -17,11 +17,11 @@ class ChaseReviews
         $dispatcher->listen('automation.order.schedule.hourly', __CLASS__.'@runChase');
     }
 
-    public function runChase($order)
+    public function runChase(Orders_model $order)
     {
         if (!(bool)ReviewSettings::get('chase_reviews', false))
             return;
-            
+
         $chaseStart = Carbon::now()->startOfHour()->subHours((int)ReviewSettings::get('chase_reviews_after', 24));
         $chaseEnd = $chaseStart->copy()->addHour();
 
