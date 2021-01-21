@@ -108,6 +108,7 @@ return [
     'alert_slot_time_required' => 'Please select a slot time.',
     'alert_slot_date_required' => 'Please select a slot date.',
     'alert_slot_type_required' => 'Please select a slot type.',
+    'alert_no_delivery_available' => 'Delivery is not available to your selected address',
 
     'component_title' => 'Local Box Component',
     'component_desc' => 'Displays local information box',
@@ -222,6 +223,7 @@ return [
         'column_author' => 'Author',
         'column_sale_id' => 'Sale ID',
         'column_sale_type' => 'Sale Type',
+        'column_text' => 'Review Text',
 
         'label_sale_type' => 'Sale Type',
         'label_sale_id' => 'Sale ID',
@@ -236,12 +238,15 @@ return [
 
         'label_allow_reviews' => 'Allow Reviews',
         'label_approve_reviews' => 'Approve Reviews',
+        'label_chase_reviews' => 'Chase Reviews',
+        'label_chase_reviews_after' => 'Chase after how many hours?',
 
         'text_tab_title_reviews' => 'Reviews',
 
         'help_allow_reviews' => 'Enable or disable new customer review entry and display of reviews on storefront',
         'help_approve_reviews' => 'Approve new review entry automatically or manually',
         'help_hints' => 'Used when adding reviews.',
+        'help_chase_reviews' => 'Send a follow up email when a review has not been submitted',
 
         'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
         'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
