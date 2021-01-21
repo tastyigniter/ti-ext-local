@@ -11,15 +11,8 @@
                         $filteredRecords = $this->records->where($ratingType, $rating); 
                         $ratingHint = $hints[$rating] ?? $rating;
                     @endphp
-                <div class="row">
-                    <div class="col-1">
-                        <label>{{ $ratingHint }}</label>
-                    </div>
-                    <div class="col-11 pt-1">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {{ 100 * $filteredRecords->count() / $recordCount }}%">{{ $filteredRecords->count() }}</div>
-                        </div>
-                    </div>
+                <div class="progress mt-1" style="height:24px;">
+                    <div class="progress-bar" role="progressbar" style="width: {{ 100 * $filteredRecords->count() / $recordCount }}%"><span class="h6 pt-2">{{ $ratingHint }} ({{ $filteredRecords->count() }})</span></div>
                 </div>
                 @endfor
             </div>
