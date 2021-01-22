@@ -37,7 +37,7 @@ class ReviewCount extends BaseModelAttributesCondition
 
         return Reviews_model::where([
             'sale_id' => $object->order_id ?? $object->reservation_id,
-            'sale_type' => $object->order_id ? 'orders': 'reservations',
+            'sale_type' => $object->order_id ? 'orders' : 'reservations',
         ])->count();
     }
 }
