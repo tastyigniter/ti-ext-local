@@ -28,13 +28,13 @@ class ReviewCount extends BaseModelAttributesCondition
             ],
         ];
     }
-    
+
     public function getReviewCountAttribute($value, $object)
     {
         $object = array_get($params, 'order', array_get($params, 'reservation'));
         if (!$object instanceof Model)
             return false;
-            
+
         return Reviews_model::where([
             'sale_id' => $object->order_id ?? $object->reservation_id,
             'sale_type' => $object->order_id ? 'orders': 'reservations',
