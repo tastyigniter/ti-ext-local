@@ -21,6 +21,12 @@ class Menu extends \System\Classes\BaseComponent
                 'type' => 'switch',
                 'validationRule' => 'required|boolean',
             ],
+            'collapseCategoriesAfter' => [
+                'label' => 'Collapse after how many categories',
+                'type' => 'number',
+                'default' => 5,
+                'validationRule' => 'required|integer',
+            ],
             'menusPerPage' => [
                 'label' => 'Menus Per Page',
                 'type' => 'number',
@@ -95,6 +101,7 @@ class Menu extends \System\Classes\BaseComponent
             return $redirect;
 
         $this->page['menuIsGrouped'] = $this->property('isGrouped');
+        $this->page['menuCollapseCategoriesAfter'] = $this->property('collapseCategoriesAfter');
         $this->page['showMenuImages'] = $this->property('showMenuImages');
         $this->page['menuImageWidth'] = $this->property('menuImageWidth');
         $this->page['menuImageHeight'] = $this->property('menuImageHeight');
