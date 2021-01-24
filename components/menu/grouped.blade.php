@@ -17,7 +17,7 @@
                 </div>
                 <div
                     id="category-{{ $menuCategoryAlias }}-collapse"
-                    class="collapse {{ $loop->iteration < 5 ? 'show' : '' }}"
+                    class="collapse {{ $loop->iteration < $menuCollapseCategoriesAfter ? 'show' : '' }}"
                     role="tabpanel" aria-labelledby="{{ $menuCategoryAlias }}"
                 >
                     <div class="menu-category">
