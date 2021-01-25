@@ -241,18 +241,16 @@ class LocalBox extends \System\Classes\BaseComponent
         if (!$locationCurrent = $this->location->current())
             return;
 
-        $locationHasOrderTypes = $locationCurrent->availableOrderTypes();
+        $locationOrderTypes = $locationCurrent->availableOrderTypes();
         $defaultOrderType = $this->property('defaultOrderType', Locations_model::DELIVERY);
-        if (!in_array($defaultOrderType, $locationHasOrderTypes))
-            return;
+        if (!in_array($defaultOrderType, $locationOrderTypes)) {
+            if (!count($locationOrderTypes))
+                return;
 
-        if (!$this->location->getSession('orderType'))
+            $defaultOrderType = $locationOrderTypes[0];
+        }
+
+        if (!$sessionOrder = $this->location->getSession('orderType') OR !in_array($sessionOrder, $locationOrderTypes))
             $this->location->updateOrderType($defaultOrderType);
-
-        // make sure location supports default
-        if (!in_array($defaultOrderType, $locationHasOrderTypes))
-            $defaultOrderType = array_shift($locationHasOrderTypes);
-
-        $this->location->updateOrderType($defaultOrderType);
     }
 }
