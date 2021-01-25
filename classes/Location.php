@@ -73,16 +73,12 @@ class Location extends Manager
         $this->fireSystemEvent('location.position.updated', [$position, $oldPosition]);
     }
 
-    public function updateScheduleTimeSlot($dateTime = null, $type = null)
+    public function updateScheduleTimeSlot($dateTime, $isAsap = TRUE)
     {
         $oldSlot = $this->getSession('order-timeslot');
 
-        $slot = [];
-        if (!is_null($dateTime))
-            $slot['dateTime'] = make_carbon($dateTime, FALSE);
-
-        if (!is_null($type))
-            $slot['type'] = $type;
+        $slot['dateTime'] = !$isAsap ? make_carbon($dateTime) : null;
+        $slot['isAsap'] = $isAsap;
 
         if (!$slot) {
             $this->forgetSession('order-timeslot');
@@ -215,12 +211,7 @@ class Location extends Manager
 
     public function orderTimeIsAsap()
     {
-        $sessionDateTime = $this->getSession('order-timeslot.dateTime');
-        $firstTimeslot = $this->firstScheduleTimeslot();
-        if ($sessionDateTime AND $firstTimeslot AND $sessionDateTime->gte($firstTimeslot))
-            return FALSE;
-
-        return $this->isOpened() AND (bool)$this->getSession('order-timeslot.type', 1);
+        return $this->isOpened() AND (bool)$this->getSession('order-timeslot.isAsap', TRUE);
     }
 
     /**
@@ -228,11 +219,9 @@ class Location extends Manager
      */
     public function orderDateTime()
     {
-        $dateTime = $this->asapScheduleTimeslot();
-        $sessionDateTime = $this->getSession('order-timeslot.dateTime');
-        if (!$this->orderTimeIsAsap() AND $sessionDateTime AND $this->checkOrderTime($sessionDateTime)) {
-            $dateTime = $sessionDateTime;
-        }
+        $dateTime = $this->getSession('order-timeslot.dateTime');
+        if ($this->orderTimeIsAsap() OR !$dateTime)
+            $dateTime = $this->asapScheduleTimeslot();
 
         return make_carbon($dateTime);
     }
