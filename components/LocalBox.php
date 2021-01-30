@@ -247,7 +247,7 @@ class LocalBox extends \System\Classes\BaseComponent
             if (!count($locationOrderTypes))
                 return;
 
-            $defaultOrderType = $locationOrderTypes[0];
+            $defaultOrderType = head($locationOrderTypes);
         }
 
         if (!$sessionOrder = $this->location->getSession('orderType') OR !in_array($sessionOrder, $locationOrderTypes))
