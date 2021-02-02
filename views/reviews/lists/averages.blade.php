@@ -6,9 +6,9 @@
         <div class="card bg-light shadow-sm">
             <div class="card-body">
                 <h5>@lang('igniter.local::default.reviews.label_'.$ratingType)</h5>
-                @for ($rating=5; $rating>0; $rating--)
+                @for ($rating = 5; $rating > 0; $rating--)
                     @php 
-                        $filteredRecords = $this->records->where($ratingType, $rating); 
+                        $filteredRecords = $this->records->where($ratingType, $rating);
                         $ratingHint = $hints[$rating] ?? $rating;
                     @endphp
                 <div class="progress mt-1" style="height:24px;">
