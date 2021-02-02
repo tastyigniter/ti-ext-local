@@ -222,6 +222,7 @@ return [
         'column_author' => 'Author',
         'column_sale_id' => 'Sale ID',
         'column_sale_type' => 'Sale Type',
+        'column_text' => 'Review Text',
 
         'label_sale_type' => 'Sale Type',
         'label_sale_id' => 'Sale ID',

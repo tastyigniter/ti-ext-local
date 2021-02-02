@@ -24,8 +24,8 @@ $config['list']['filter'] = [
         ],
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
-            'type' => 'date',
-            'conditions' => 'YEAR(date_added) = :year AND MONTH(date_added) = :month AND DAY(date_added) = :day',
+            'type' => 'daterange',
+            'conditions' => 'date_added >= CAST(:filtered_start AS DATE) AND date_added <= CAST(:filtered_end AS DATE)',
         ],
     ],
 ];
@@ -98,7 +98,10 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'review_text' => [
+        'label' => 'lang:igniter.local::default.reviews.column_text',
+        'invisible' => TRUE,
+    ],
 ];
 
 $config['form']['toolbar'] = [
