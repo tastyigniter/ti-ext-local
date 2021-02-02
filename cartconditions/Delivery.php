@@ -29,7 +29,10 @@ class Delivery extends CartCondition
 
     public function getRules()
     {
-        return ["subtotal >= {$this->minimumOrder}"];
+        return [
+            "{$this->deliveryCharge} >= 0",
+            "subtotal >= {$this->minimumOrder}",
+        ];
     }
 
     public function getActions()
@@ -49,9 +52,14 @@ class Delivery extends CartCondition
         if (!Cart::subtotal())
             return;
 
-        flash()->warning(sprintf(
-            lang('igniter.cart::default.alert_min_delivery_order_total'),
-            currency_format($this->minimumOrder)
-        ))->now();
+        $warning = lang('igniter.local::default.alert_no_delivery_available');
+        if ($this->deliveryCharge > 0) {
+            $warning = sprintf(
+                lang('igniter.cart::default.alert_min_delivery_order_total'),
+                currency_format($this->minimumOrder)
+            );
+        }
+
+        flash()->warning($warning)->now();
     }
 }
