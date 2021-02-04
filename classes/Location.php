@@ -211,7 +211,11 @@ class Location extends Manager
 
     public function orderTimeIsAsap()
     {
-        return $this->isOpened() AND (bool)$this->getSession('order-timeslot.isAsap', TRUE);
+        $dateTime = $this->getSession('order-timeslot.dateTime');
+        $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', TRUE);
+
+        return ($this->isOpened() AND $orderTimeIsAsap)
+            OR ($dateTime AND now()->isAfter($dateTime));
     }
 
     /**
