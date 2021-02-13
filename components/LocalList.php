@@ -79,7 +79,7 @@ class LocalList extends \System\Classes\BaseComponent
         ])->isEnabled()->listFrontEnd($options);
 
         $this->mapIntoObjects($list);
-        
+
         if ($sortBy) {
             $list->appends('sort_by', $sortBy);
             $list->appends('pageLimit', $this->param('pageLimit'));
