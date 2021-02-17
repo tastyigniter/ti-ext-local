@@ -58,6 +58,15 @@ class Reviews extends \Admin\Classes\AdminController
         AdminMenu::setContext('reviews', 'sales');
     }
 
+    public function index()
+    {
+        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/Chart.min.js', 'chartsjs-js');
+
+        $this->addJs('$/igniter/local/assets/js/reviewchart.js', 'reviewchart-js');
+
+        $this->asExtension('ListController')->index();
+    }
+
     public function makeAverageRatingDataset($ratingType, $records)
     {
         if (is_null(self::$reviewHints))

@@ -22,7 +22,7 @@
     reviewChart.DEFAULTS = {
         alias: undefined,
         responsive: true,
-        type: 'pie',
+        type: 'bar',
         options: {
             legend: {
                 display: false,
@@ -31,7 +31,7 @@
             tooltips: {
                 callbacks: {
                     label: function(tooltipItem, data) {
-                        return data.labels[tooltipItem.index];        
+                        return data.labels[tooltipItem.index];
                     },
                 },
             },
@@ -39,7 +39,6 @@
     }
 
     reviewChart.prototype.initChartJs = function () {
-        this.options.data = JSON.parse(this.$el.find('textarea')[0].value);
         this.chartJs = new Chart(this.$el.find('canvas'), this.options)
         this.chartJs.resize()
     }
@@ -85,5 +84,5 @@
     $(document).render(function () {
         $('[data-control="review-chart"]').reviewChart()
     })
-    
+
 }(window.jQuery)
