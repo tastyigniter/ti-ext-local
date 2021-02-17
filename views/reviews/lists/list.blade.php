@@ -1,10 +1,10 @@
+{!! $this->makePartial('lists/averages') !!}
+
 {!! form_open([
     'id' => 'list-form',
     'role' => 'form',
     'method' => 'POST',
 ]) !!}
-
-{!! $this->makePartial('lists/averages') !!}
 
 <div class="list-table table-responsive">
     <table class="table table-striped mb-0 border-bottom">

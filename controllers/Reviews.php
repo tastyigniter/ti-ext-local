@@ -3,6 +3,7 @@
 namespace Igniter\Local\Controllers;
 
 use AdminMenu;
+use Igniter\Local\Models\Reviews_model;
 
 class Reviews extends \Admin\Classes\AdminController
 {
@@ -48,10 +49,37 @@ class Reviews extends \Admin\Classes\AdminController
 
     protected $requiredPermissions = 'Admin.Reviews';
 
+    protected static $reviewHints;
+
     public function __construct()
     {
         parent::__construct();
 
         AdminMenu::setContext('reviews', 'sales');
+    }
+
+    public function makeAverageRatingDataset($ratingType, $records)
+    {
+        if (is_null(self::$reviewHints))
+            self::$reviewHints = Reviews_model::make()->getRatingOptions();
+
+        $pieColors = ['#4DB6AC', '#64B5F6', '#BA68C8'];
+
+        $chartData = [
+            'datasets' => [
+                [
+                    'data' => [],
+                    'backgroundColor' => [],
+                ],
+            ],
+            'labels' => array_values(self::$reviewHints),
+        ];
+
+        for ($rating = 5; $rating > 0; $rating--) {
+            $chartData['datasets'][0]['data'][] = $records->where($ratingType, $rating)->count();
+            $chartData['datasets'][0]['backgroundColor'][] = $pieColors[$rating % count($pieColors)];
+        }
+
+        return $chartData;
     }
 }
