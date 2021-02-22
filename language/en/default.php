@@ -108,7 +108,6 @@ return [
     'alert_slot_time_required' => 'Please select a slot time.',
     'alert_slot_date_required' => 'Please select a slot date.',
     'alert_slot_type_required' => 'Please select a slot type.',
-    'alert_no_delivery_available' => 'Delivery is not available to your selected address',
 
     'component_title' => 'Local Box Component',
     'component_desc' => 'Displays local information box',

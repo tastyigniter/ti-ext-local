@@ -49,17 +49,12 @@ class Delivery extends CartCondition
 
     public function whenInValid()
     {
-        if (!Cart::subtotal())
+        if (!Cart::subtotal() OR !$this->minimumOrder)
             return;
 
-        $warning = lang('igniter.local::default.alert_no_delivery_available');
-        if ($this->deliveryCharge > 0) {
-            $warning = sprintf(
-                lang('igniter.cart::default.alert_min_delivery_order_total'),
-                currency_format($this->minimumOrder)
-            );
-        }
-
-        flash()->warning($warning)->now();
+        flash()->warning(sprintf(
+            lang('igniter.cart::default.alert_min_delivery_order_total'),
+            currency_format($this->minimumOrder)
+        ))->now();
     }
 }
