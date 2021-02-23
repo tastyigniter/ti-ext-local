@@ -161,6 +161,16 @@ class Extension extends \System\Classes\BaseExtension
         ];
     }
 
+    public function registerFormWidgets()
+    {
+        return [
+            'Igniter\Local\FormWidgets\StarRating' => [
+                'label' => 'Star Rating',
+                'code' => 'starrating',
+            ],
+        ];
+    }
+
     protected function extendDashboardChartsDatasets()
     {
         Event::listen('admin.charts.extendDatasets', function ($widget) {
