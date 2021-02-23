@@ -55,6 +55,8 @@ class Reviews extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
+        $this->hiddenActions[] = 'makeAverageRatingDataset';
+
         AdminMenu::setContext('reviews', 'sales');
     }
 
@@ -72,7 +74,7 @@ class Reviews extends \Admin\Classes\AdminController
         if (is_null(self::$reviewHints))
             self::$reviewHints = Reviews_model::make()->getRatingOptions();
 
-        $pieColors = ['#4DB6AC', '#64B5F6', '#BA68C8'];
+        $pieColors = ['', '#1abc9c', '#64B5F6', '#9b59b6', '#f1c40f', '#e74c3c'];
 
         $chartData = [
             'datasets' => [
@@ -86,7 +88,7 @@ class Reviews extends \Admin\Classes\AdminController
 
         for ($rating = 5; $rating > 0; $rating--) {
             $chartData['datasets'][0]['data'][] = $records->where($ratingType, $rating)->count();
-            $chartData['datasets'][0]['backgroundColor'][] = $pieColors[$rating % count($pieColors)];
+            $chartData['datasets'][0]['backgroundColor'][] = $pieColors[$rating];
         }
 
         return $chartData;
