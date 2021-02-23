@@ -45,9 +45,7 @@ return [
     'text_no_min_total' => 'No Min. Order Amount',
 
     'text_categories' => 'Categories',
-    'text_view_categories' => 'View categories',
-    'text_clear' => 'Clear Selection',
-    'text_show_all' => 'Show All',
+    'text_all_categories' => 'All Categories',
 
     'text_only_delivery_is_available' => 'Offers delivery only, pick-up is not available.',
     'text_only_collection_is_available' => 'Offers pick-up only, delivery is not available.',
