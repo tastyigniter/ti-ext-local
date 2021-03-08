@@ -172,8 +172,11 @@ class Menu extends \System\Classes\BaseComponent
             }
 
             foreach ($categories as $category) {
-                $this->menuListCategories[$category->getKey()] = $category;
-                $groupedList[$category->getKey()][] = $menuItemObject;
+                $categoryLocations = $category->locations->pluck('location_id');
+                if ($categoryLocations->count() < 1 OR $categoryLocations->contains($this->getLocation())) {
+                    $this->menuListCategories[$category->getKey()] = $category;
+                    $groupedList[$category->getKey()][] = $menuItemObject;
+                }
             }
         }
 
