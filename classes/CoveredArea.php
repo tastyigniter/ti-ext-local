@@ -3,6 +3,7 @@
 namespace Igniter\Local\Classes;
 
 use Igniter\Flame\Location\Contracts\AreaInterface;
+use Location;
 
 /**
  * @method getLocationId()
@@ -20,7 +21,7 @@ class CoveredArea
 
     public function deliveryAmount($cartTotal)
     {
-        return $this->getConditionValue('amount', $cartTotal);
+        return $this->getConditionValue('amount', $cartTotal) + $this->calculateDistanceCharges();
     }
 
     public function minimumOrderTotal($cartTotal)
@@ -59,6 +60,28 @@ class CoveredArea
         return $this->listConditions()->first(function (CoveredAreaCondition $condition) use ($cartTotal) {
             return $condition->isValid($cartTotal);
         });
+    }
+
+    protected function calculateDistanceCharges()
+    {
+        if (isset($this->model->boundaries['distance']) AND count($this->model->boundaries['distance'])) {
+
+            $distanceFromLocation = Location::checkDistance(2);
+
+            $distances = collect($this->model->boundaries['distance'] ?? [])
+                ->sortBy('distance');
+
+            $distanceCharge = 0;
+            foreach ($distances as $distance) {
+                if ($distance['distance'] <= $distanceFromLocation)
+                    $distanceCharge = $distanceFromLocation * $distance['charge'];
+            }
+
+            return $distanceCharge;
+
+        }
+
+        return 0;
     }
 
     public function __get($key)
