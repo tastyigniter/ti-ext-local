@@ -38,7 +38,7 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $sortBy = $this->param('sort_by');
+        $sortBy = $orderBy = $this->param('sort_by');
 
         if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();
@@ -47,24 +47,24 @@ class LocalList extends \System\Classes\BaseComponent
 
         switch ($sortBy) {
             case 'distance':
-                $sortBy = 'distance asc';
+                $orderBy = 'distance asc';
                 break;
             case 'newest':
-                $sortBy = 'location_id desc';
+                $orderBy = 'location_id desc';
                 break;
             case 'rating':
-                $sortBy = 'reviews_count desc';
+                $orderBy = 'reviews_count desc';
                 break;
             case 'name':
-                $sortBy = 'location_name asc';
+                $orderBy = 'location_name asc';
                 break;
         }
 
         $options = [
             'page' => $this->param('page'),
-            'pageLimit' => $this->property('pageLimit'),
+            'pageLimit' => $this->param('pageLimit', $this->property('pageLimit')),
             'search' => $this->param('search'),
-            'sort' => $sortBy,
+            'sort' => $orderBy,
         ];
 
         if ($coordinates = Location::userPosition()->getCoordinates()) {
@@ -79,6 +79,12 @@ class LocalList extends \System\Classes\BaseComponent
         ])->isEnabled()->listFrontEnd($options);
 
         $this->mapIntoObjects($list);
+
+        if ($sortBy)
+            $list->appends('sort_by', $sortBy);
+
+        if ($pageLimit = $this->param('pageLimit'))
+            $list->appends('pageLimit', $pageLimit);
 
         return $list;
     }
