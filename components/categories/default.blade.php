@@ -1,4 +1,4 @@
-<ul class="nav flex-column nav-categories">
+<ul class="nav nav-categories">
     <li class="nav-item">
         <a
             class="nav-link font-weight-bold{{ $selectedCategory ? '' : ' active' }}"

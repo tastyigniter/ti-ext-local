@@ -143,13 +143,9 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function mapIntoObjects($list)
     {
-        $collection = $list->getCollection()
-            ->filter(function ($menuItem) {
-                return empty($menuItem->order_restriction) OR $menuItem->order_restriction == (Location::orderTypeIsDelivery() ? 1 : 2);
-            })
-            ->map(function ($menuItem) {
-                return $this->createMenuItemObject($menuItem);
-            });
+        $collection = $list->getCollection()->map(function ($menuItem) {
+            return $this->createMenuItemObject($menuItem);
+        });
 
         $list->setCollection($collection);
 
