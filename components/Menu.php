@@ -119,15 +119,19 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
+        $location = $this->getLocation();
         $list = Menus_model::with([
             'mealtimes', 'menu_options',
-            'categories', 'categories.media',
+            'categories' => function($query) use ($location) {
+                $query->whereHasOrDoesntHaveLocation($location);
+            }, 'categories.media',
             'special', 'allergens', 'media', 'allergens.media',
-        ])->listFrontEnd([
+        ])
+        ->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort' => $this->property('sort', 'menu_priority asc'),
-            'location' => $this->getLocation(),
+            'location' => $location,
             'category' => $this->param('category'),
             'search' => $this->getSearchTerm(),
         ]);
@@ -172,11 +176,8 @@ class Menu extends \System\Classes\BaseComponent
             }
 
             foreach ($categories as $category) {
-                $categoryLocations = $category->locations->pluck('location_id');
-                if ($categoryLocations->count() < 1 OR $categoryLocations->contains($this->getLocation())) {
-                    $this->menuListCategories[$category->getKey()] = $category;
-                    $groupedList[$category->getKey()][] = $menuItemObject;
-                }
+                $this->menuListCategories[$category->getKey()] = $category;
+                $groupedList[$category->getKey()][] = $menuItemObject;
             }
         }
 
