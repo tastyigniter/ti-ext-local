@@ -11,7 +11,7 @@
                     type="search"
                     class="form-control"
                     name="search"
-                    value="{{ $filterSearch ?: trim($userPosition->format()) }}"
+                    value="{{ $filterSearch }}"
                     placeholder="@lang('igniter.local::default.text_filter_search')"
                 />
                 <span class="input-group-append">

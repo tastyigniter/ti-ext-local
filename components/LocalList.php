@@ -27,7 +27,7 @@ class LocalList extends \System\Classes\BaseComponent
         $this->id = uniqid($this->alias);
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
         $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
-        $this->page['filterSearch'] = input('search');
+        $this->page['filterSearch'] = input('search', $this->getSearchQuery());
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();
 
