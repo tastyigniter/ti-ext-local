@@ -119,15 +119,19 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
+        $location = $this->getLocation();
+
         $list = Menus_model::with([
             'mealtimes', 'menu_options',
-            'categories', 'categories.media',
+            'categories' => function ($query) use ($location) {
+                $query->whereHasOrDoesntHaveLocation($location);
+            }, 'categories.media',
             'special', 'allergens', 'media', 'allergens.media',
         ])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort' => $this->property('sort', 'menu_priority asc'),
-            'location' => $this->getLocation(),
+            'location' => $location,
             'category' => $this->param('category'),
             'search' => $this->getSearchTerm(),
             'orderType' => Location::orderTypeIsDelivery() ? 1 : 2,
