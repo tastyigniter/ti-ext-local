@@ -211,6 +211,9 @@ class Location extends Manager
 
     public function orderTimeIsAsap()
     {
+        if ((bool)$this->getModel()->getOption('limit_orders'))
+            return FALSE;
+
         $dateTime = $this->getSession('order-timeslot.dateTime');
         $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', TRUE);
 
@@ -250,7 +253,7 @@ class Location extends Manager
 
     public function asapScheduleTimeslot()
     {
-        if ($this->isClosed() || $this->getModel()->getOption('limit_orders'))
+        if ($this->isClosed() || (bool)$this->getModel()->getOption('limit_orders'))
             return $this->firstScheduleTimeslot();
 
         return Carbon::now();
