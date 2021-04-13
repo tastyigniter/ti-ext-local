@@ -31,7 +31,6 @@ class Extension extends \System\Classes\BaseExtension
 
     public function boot()
     {
-        Event::subscribe(ChaseReviews::class);
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
         Event::listen('router.beforeRoute', function ($url, $router) {
@@ -43,45 +42,6 @@ class Extension extends \System\Classes\BaseExtension
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();
         $this->extendDashboardChartsDatasets();
-    }
-
-    public function registerAutomationRules()
-    {
-        return [
-            'events' => [],
-            'actions' => [],
-            'conditions' => [
-                \Igniter\Local\AutomationRules\Conditions\ReviewCount::class,
-            ],
-            'presets' => [
-                'chase_review_after_one_day' => [
-                    'name' => 'Send a message to leave a review after 24 hours',
-                    'event' => \Igniter\Automation\AutomationRules\Events\OrderSchedule::class,
-                    'actions' => [
-                        \Igniter\Automation\AutomationRules\Actions\SendMailTemplate::class => [
-                            'template' => 'igniter.local::mail.review_chase',
-                            'send_to' => 'customer',
-                        ],
-                    ],
-                    'conditions' => [
-                        \Igniter\Local\AutomationRules\Conditions\ReviewCount::class => [
-                            [
-                                'attribute' => 'review_count',
-                                'value' => '0',
-                                'condition' => 'is',
-                            ],
-                        ],
-                        \Igniter\Cart\AutomationRules\Conditions\OrderAttribute::class => [
-                            [
-                                'attribute' => 'hours_since',
-                                'value' => '24',
-                                'condition' => 'is',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
     }
 
     public function registerCartConditions()
@@ -158,13 +118,6 @@ class Extension extends \System\Classes\BaseExtension
                     'configFile' => '$/igniter/local/models/config/menuexport',
                 ],
             ],
-        ];
-    }
-
-    public function registerMailTemplates()
-    {
-        return [
-            'igniter.local::mail.review_chase' => 'lang:igniter.local::default.reviews.text_chase_email',
         ];
     }
 
