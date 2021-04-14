@@ -31,7 +31,6 @@ class Extension extends \System\Classes\BaseExtension
 
     public function boot()
     {
-        Event::subscribe(ChaseReviews::class);
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
         Event::listen('router.beforeRoute', function ($url, $router) {
