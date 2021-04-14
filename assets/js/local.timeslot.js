@@ -68,7 +68,7 @@
 
         $.each(this.options.timeSlot.dates, function (index, date) {
             self.$el.find(self.dateSelector).append('<option value="' + index + '"' + (
-                selectedDate === date ? 'selected="selected"' : ''
+                selectedDate === index ? 'selected="selected"' : ''
             ) + '>' + date + '</option>')
         });
 

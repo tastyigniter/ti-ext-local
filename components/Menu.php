@@ -21,6 +21,12 @@ class Menu extends \System\Classes\BaseComponent
                 'type' => 'switch',
                 'validationRule' => 'required|boolean',
             ],
+            'collapseCategoriesAfter' => [
+                'label' => 'Collapse after how many categories',
+                'type' => 'number',
+                'default' => 5,
+                'validationRule' => 'required|integer',
+            ],
             'menusPerPage' => [
                 'label' => 'Menus Per Page',
                 'type' => 'number',
@@ -95,6 +101,7 @@ class Menu extends \System\Classes\BaseComponent
             return $redirect;
 
         $this->page['menuIsGrouped'] = $this->property('isGrouped');
+        $this->page['menuCollapseCategoriesAfter'] = $this->property('collapseCategoriesAfter');
         $this->page['showMenuImages'] = $this->property('showMenuImages');
         $this->page['menuImageWidth'] = $this->property('menuImageWidth');
         $this->page['menuImageHeight'] = $this->property('menuImageHeight');
@@ -112,17 +119,22 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
+        $location = $this->getLocation();
+
         $list = Menus_model::with([
             'mealtimes', 'menu_options',
-            'categories', 'categories.media',
-            'special', 'allergens',
+            'categories' => function ($query) use ($location) {
+                $query->whereHasOrDoesntHaveLocation($location);
+            }, 'categories.media',
+            'special', 'allergens', 'media', 'allergens.media',
         ])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort' => $this->property('sort', 'menu_priority asc'),
-            'location' => $this->getLocation(),
+            'location' => $location,
             'category' => $this->param('category'),
             'search' => $this->getSearchTerm(),
+            'orderType' => Location::orderTypeIsDelivery() ? 1 : 2,
         ]);
 
         $this->mapIntoObjects($list);
@@ -156,23 +168,27 @@ class Menu extends \System\Classes\BaseComponent
     {
         $this->menuListCategories = [];
 
-        $collection = $list->getCollection()->mapToGroups(function ($menuItemObject) {
-            $categories = [];
-            foreach ($menuItemObject->model->categories as $category) {
-                $this->menuListCategories[$category->getKey()] = $category;
-                $categories[$category->getKey()] = $menuItemObject;
+        $groupedList = [];
+        foreach ($list->getCollection() as $menuItemObject) {
+            $categories = $menuItemObject->model->categories;
+            if (!$categories OR $categories->isEmpty()) {
+                $groupedList[0][] = $menuItemObject;
+                continue;
             }
 
-            if (!$categories)
-                $categories[] = $menuItemObject;
+            foreach ($categories as $category) {
+                $this->menuListCategories[$category->getKey()] = $category;
+                $groupedList[$category->getKey()][] = $menuItemObject;
+            }
+        }
 
-            return $categories;
-        })->sortBy(function ($menuItems, $categoryId) {
-            if (isset($this->menuListCategories[$categoryId]))
-                return $this->menuListCategories[$categoryId]->priority;
+        $collection = collect($groupedList)
+            ->sortBy(function ($menuItems, $categoryId) {
+                if (isset($this->menuListCategories[$categoryId]))
+                    return $this->menuListCategories[$categoryId]->priority;
 
-            return $categoryId;
-        });
+                return $categoryId;
+            });
 
         $list->setCollection($collection);
     }
@@ -216,7 +232,7 @@ class Menu extends \System\Classes\BaseComponent
 
         $mealtimes = optional($menuItem->mealtimes)->where('mealtime_status', 1);
         $object->hasMealtime = count($mealtimes);
-        $object->mealtimeIsNotAvailable = !$menuItem->isAvailable(Location::instance()->orderDateTime());
+        $object->mealtimeIsNotAvailable = !$menuItem->isAvailable(Location::orderDateTime());
 
         $object->mealtimeTitles = [];
         foreach ($mealtimes ?? [] as $mealtime) {

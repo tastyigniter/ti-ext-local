@@ -5,6 +5,7 @@ namespace Igniter\Local\Components;
 use Admin\Models\Locations_model;
 use App;
 use ApplicationException;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Igniter\Local\Classes\CoveredAreaCondition;
@@ -29,6 +30,11 @@ class LocalBox extends \System\Classes\BaseComponent
     public function initialize()
     {
         $this->location = App::make('location');
+        $this->location->current()->loadCount([
+            'reviews' => function ($q) {
+                $q->isApproved();
+            },
+        ]);
     }
 
     public function defineProperties()
@@ -87,34 +93,6 @@ class LocalBox extends \System\Classes\BaseComponent
                 'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'local/menus',
                 'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
-            ],
-            'localBoxTimeFormat' => [
-                'label' => 'Time format for the open/close time',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'hh:mm a',
-                'validationRule' => 'required|string',
-            ],
-            'openingTimeFormat' => [
-                'label' => 'Time format for the opening later time',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd hh:mm a',
-                'validationRule' => 'required|string',
-            ],
-            'timePickerDateFormat' => [
-                'label' => 'Date format for the timepicker',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd DD',
-                'validationRule' => 'required|string',
-            ],
-            'timePickerDateTimeFormat' => [
-                'label' => 'DateTime format for the timepicker',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd DD hh:mm a',
-                'validationRule' => 'required|string',
             ],
         ];
     }
@@ -179,7 +157,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
             $timeSlotDateTime = $timeIsAsap
-                ? $this->location->asapScheduleTimeslot()
+                ? Carbon::now()
                 : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
@@ -200,7 +178,6 @@ class LocalBox extends \System\Classes\BaseComponent
     protected function prepareVars()
     {
         $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
-        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
         $this->page['localThumbWidth'] = $this->property('localThumbWidth');
         $this->page['localThumbHeight'] = $this->property('localThumbHeight');
@@ -208,10 +185,10 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['timeSlotEventHandler'] = $this->getEventHandler('onSetOrderTime');
         $this->page['orderTypeEventHandler'] = $this->getEventHandler('onChangeOrderType');
-        $this->page['localBoxTimeFormat'] = $this->property('localBoxTimeFormat');
-        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat');
-        $this->page['timePickerDateFormat'] = $this->property('timePickerDateFormat');
-        $this->page['timePickerDateTimeFormat'] = $this->property('timePickerDateTimeFormat');
+        $this->page['localBoxTimeFormat'] = lang('system::lang.moment.time_format');
+        $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
+        $this->page['timePickerDateFormat'] = lang('system::lang.moment.day_format');
+        $this->page['timePickerDateTimeFormat'] = lang('system::lang.moment.day_time_format');
 
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
@@ -252,8 +229,8 @@ class LocalBox extends \System\Classes\BaseComponent
         $timeslot->collapse()->each(function (DateTime $slot) use (&$parsed) {
             $dateKey = $slot->format('Y-m-d');
             $hourKey = $slot->format('H:i');
-            $dateValue = make_carbon($slot)->isoFormat($this->property('timePickerDateFormat'));
-            $hourValue = make_carbon($slot)->isoFormat($this->property('openingTimeFormat'));
+            $dateValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.day_format'));
+            $hourValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.time_format'));
 
             $parsed['dates'][$dateKey] = $dateValue;
             $parsed['hours'][$dateKey][$hourKey] = $hourValue;
@@ -278,12 +255,16 @@ class LocalBox extends \System\Classes\BaseComponent
         if (!$locationCurrent = $this->location->current())
             return;
 
-        // Makes sure the current active order type is offered by the location.
-        if (in_array($this->location->orderType(), $locationCurrent->availableOrderTypes()))
-            return;
+        $locationOrderTypes = $locationCurrent->availableOrderTypes();
+        $defaultOrderType = $this->property('defaultOrderType', Locations_model::DELIVERY);
+        if (!in_array($defaultOrderType, $locationOrderTypes)) {
+            if (!count($locationOrderTypes))
+                return;
 
-        $this->location->updateOrderType(
-            $this->property('defaultOrderType', Locations_model::DELIVERY)
-        );
+            $defaultOrderType = head($locationOrderTypes);
+        }
+
+        if (!$sessionOrder = $this->location->getSession('orderType') OR !in_array($sessionOrder, $locationOrderTypes))
+            $this->location->updateOrderType($defaultOrderType);
     }
 }

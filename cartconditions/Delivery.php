@@ -29,7 +29,10 @@ class Delivery extends CartCondition
 
     public function getRules()
     {
-        return ["subtotal >= {$this->minimumOrder}"];
+        return [
+            "{$this->deliveryCharge} >= 0",
+            "subtotal >= {$this->minimumOrder}",
+        ];
     }
 
     public function getActions()
@@ -46,7 +49,7 @@ class Delivery extends CartCondition
 
     public function whenInValid()
     {
-        if (!Cart::subtotal())
+        if (!Cart::subtotal() OR !$this->minimumOrder)
             return;
 
         flash()->warning(sprintf(

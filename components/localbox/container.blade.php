@@ -2,13 +2,8 @@
     <div class="panel local-search">
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-{{ $hideSearch ? '12' : '4' }} mb-3 mb-sm-0">
-                    <div id="local-timeslot">
-                        @partial('@timeslot')
-                    </div>
-                </div>
                 @if (!$hideSearch)
-                    <div class="col-sm-8">
+                    <div class="col-sm-12">
                         @partial('@searchbar')
                     </div>
                 @endif
@@ -22,4 +17,15 @@
     </div>
 
     @partial($__SELF__.'::default')
+
+    <div class="card mt-1 d-block d-sm-none">
+        <div class="card-body">
+            <div class="local-timeslot mb-3">
+                @partial('@timeslot')
+            </div>
+            <div class="local-control">
+                @partial('@control')
+            </div>
+        </div>
+    </div>
 </div>

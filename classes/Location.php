@@ -73,16 +73,12 @@ class Location extends Manager
         $this->fireSystemEvent('location.position.updated', [$position, $oldPosition]);
     }
 
-    public function updateScheduleTimeSlot($dateTime = null, $type = null)
+    public function updateScheduleTimeSlot($dateTime, $isAsap = TRUE)
     {
         $oldSlot = $this->getSession('order-timeslot');
 
-        $slot = [];
-        if (!is_null($dateTime))
-            $slot['dateTime'] = make_carbon($dateTime, FALSE);
-
-        if (!is_null($type))
-            $slot['type'] = $type;
+        $slot['dateTime'] = !$isAsap ? make_carbon($dateTime) : null;
+        $slot['isAsap'] = $isAsap;
 
         if (!$slot) {
             $this->forgetSession('order-timeslot');
@@ -205,9 +201,7 @@ class Location extends Manager
 
     public function lastOrderTime()
     {
-        return Carbon::parse(
-            $this->closeTime($this->orderType())
-        )->subMinutes($this->orderLeadTime());
+        return Carbon::parse($this->closeTime($this->orderType()));
     }
 
     public function orderLeadTime()
@@ -217,12 +211,14 @@ class Location extends Manager
 
     public function orderTimeIsAsap()
     {
-        $sessionDateTime = $this->getSession('order-timeslot.dateTime');
-        $asapDateTime = Carbon::now()->addMinutes($this->orderLeadTime() * 2);
-        if ($sessionDateTime AND $sessionDateTime->lte($asapDateTime))
-            return TRUE;
+        if ((bool)$this->getModel()->getOption('limit_orders'))
+            return FALSE;
 
-        return (bool)$this->getSession('order-timeslot.type', 1);
+        $dateTime = $this->getSession('order-timeslot.dateTime');
+        $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', TRUE);
+
+        return ($this->isOpened() AND $orderTimeIsAsap)
+            OR ($dateTime AND now()->isAfter($dateTime));
     }
 
     /**
@@ -230,13 +226,11 @@ class Location extends Manager
      */
     public function orderDateTime()
     {
-        $dateTime = $this->asapScheduleTimeslot();
-        $sessionDateTime = $this->getSession('order-timeslot.dateTime');
-        if (!$this->orderTimeIsAsap()) {
-            $dateTime = $sessionDateTime;
-        }
+        $dateTime = $this->getSession('order-timeslot.dateTime');
+        if ($this->orderTimeIsAsap() OR !$dateTime)
+            $dateTime = $this->asapScheduleTimeslot();
 
-        return make_carbon($dateTime)->copy();
+        return make_carbon($dateTime);
     }
 
     public function scheduleTimeslot()
@@ -259,10 +253,10 @@ class Location extends Manager
 
     public function asapScheduleTimeslot()
     {
-        if ($this->isClosed() || $this->getModel()->getOption('limit_orders'))
+        if ($this->isClosed() || (bool)$this->getModel()->getOption('limit_orders'))
             return $this->firstScheduleTimeslot();
 
-        return Carbon::now()->addMinutes($this->orderLeadTime());
+        return Carbon::now();
     }
 
     public function checkOrderTime($timestamp = null, $orderType = null)
@@ -276,7 +270,7 @@ class Location extends Manager
         if (!$timestamp instanceof \DateTime)
             $timestamp = new \DateTime($timestamp);
 
-        if (Carbon::now()->gte($timestamp))
+        if (Carbon::now()->subMinute()->gte($timestamp))
             return FALSE;
 
         $days = $this->getModel()->hasFutureOrder($orderType)

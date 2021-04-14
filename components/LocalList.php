@@ -19,23 +19,15 @@ class LocalList extends \System\Classes\BaseComponent
                 'default' => 'mi',
                 'validationRule' => 'required|in:km,mi',
             ],
-            'openingTimeFormat' => [
-                'label' => 'Time format for the opening later time',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd HH:mm',
-                'validationRule' => 'required|string',
-            ],
         ];
     }
 
     public function onRun()
     {
         $this->id = uniqid($this->alias);
-        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
-        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat', 'D '.setting('time_format'));
-        $this->page['filterSearch'] = input('search');
+        $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
+        $this->page['filterSearch'] = input('search', $this->getSearchQuery());
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();
 
@@ -46,7 +38,7 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $sortBy = $this->param('sort_by');
+        $sortBy = $orderBy = $this->param('sort_by');
 
         if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();
@@ -55,24 +47,24 @@ class LocalList extends \System\Classes\BaseComponent
 
         switch ($sortBy) {
             case 'distance':
-                $sortBy = 'distance asc';
+                $orderBy = 'distance asc';
                 break;
             case 'newest':
-                $sortBy = 'location_id desc';
+                $orderBy = 'location_id desc';
                 break;
             case 'rating':
-                $sortBy = 'reviews_count desc';
+                $orderBy = 'reviews_count desc';
                 break;
             case 'name':
-                $sortBy = 'location_name asc';
+                $orderBy = 'location_name asc';
                 break;
         }
 
         $options = [
             'page' => $this->param('page'),
-            'pageLimit' => $this->property('pageLimit'),
+            'pageLimit' => $this->param('pageLimit', $this->property('pageLimit')),
             'search' => $this->param('search'),
-            'sort' => $sortBy,
+            'sort' => $orderBy,
         ];
 
         if ($coordinates = Location::userPosition()->getCoordinates()) {
@@ -87,6 +79,12 @@ class LocalList extends \System\Classes\BaseComponent
         ])->isEnabled()->listFrontEnd($options);
 
         $this->mapIntoObjects($list);
+
+        if ($sortBy)
+            $list->appends('sort_by', $sortBy);
+
+        if ($pageLimit = $this->param('pageLimit'))
+            $list->appends('pageLimit', $pageLimit);
 
         return $list;
     }
@@ -138,6 +136,7 @@ class LocalList extends \System\Classes\BaseComponent
         $object->name = $location->location_name;
         $object->permalink = $location->permalink_slug;
         $object->address = $location->getAddress();
+        $object->reviewsScore = $location->reviews_score();
         $object->reviewsCount = $location->reviews_count;
 
         $object->distance = ($coordinates = Location::userPosition()->getCoordinates())
@@ -156,7 +155,7 @@ class LocalList extends \System\Classes\BaseComponent
         $object->deliveryMinutes = $location->deliveryMinutes();
         $object->collectionMinutes = $location->collectionMinutes();
         $object->openingTime = make_carbon($object->openingSchedule->getOpenTime());
-        $object->collectionTime = make_carbon($object->deliverySchedule->getOpenTime());
+        $object->deliveryTime = make_carbon($object->deliverySchedule->getOpenTime());
         $object->collectionTime = make_carbon($object->collectionSchedule->getOpenTime());
 
         $object->model = $location;

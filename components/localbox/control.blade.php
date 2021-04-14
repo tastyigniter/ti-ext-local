@@ -4,14 +4,14 @@
         $collectionTime = make_carbon($location->collectionSchedule()->getOpenTime());
     @endphp
     <div
-        class="btn-group btn-group-toggle w-100 text-center order-type"
+        class="btn-group btn-group-toggle w-100 text-center"
         data-toggle="buttons"
         data-control="order-type-toggle"
         data-handler="{{ $orderTypeEventHandler }}"
     >
         @if ($locationCurrent->hasDelivery())
             <label
-                class="btn btn-light {{ $location->orderTypeIsDelivery() ? 'active' : '' }}">
+                class="btn btn-light w-50 {{ $location->orderTypeIsDelivery() ? 'active' : '' }}">
                 <input
                     type="radio"
                     name="order_type"
@@ -30,7 +30,7 @@
             </label>
         @endif
         @if ($locationCurrent->hasCollection())
-            <label class="btn btn-light {{ $location->orderTypeIsCollection() ? 'active' : '' }}">
+            <label class="btn btn-light w-50 {{ $location->orderTypeIsCollection() ? 'active' : '' }}">
                 <input
                     type="radio"
                     name="order_type"
@@ -52,7 +52,7 @@
         @endif
     </div>
     @if ($location->orderTypeIsDelivery())
-        <p class="text-muted text-center">
+        <p class="text-muted text-center my-2">
             @if ($minOrderTotal = $location->minimumOrder($cart->subtotal()))
                 @lang('igniter.local::default.text_min_total'): {{ currency_format($minOrderTotal) }}
             @else

@@ -67,10 +67,6 @@ permalink: /
 | locationThumbWidth        | Location thumb Height        |        80           |      80    |
 | locationThumbHeight       | Location thumb Width     |        80           |      80    |
 | menusPage           | Page name to the menus page           |    local/menus     |     local/menus     |
-| localBoxTimeFormat            | Time format for the open and close time |    HH:mm     |      HH:mm    |
-| openingTimeFormat            | Time format for the opening later time |    ddd HH:mm     |      ddd HH:mm    |
-| timePickerDateFormat            | Date format for the order timepicker |    ddd DD    |    ddd DD      |
-| timePickerDateTimeFormat            | Date time format for the order timepicker   |    ddd DD HH:mm     |     HH:mm     |
 | cartBoxAlias            | Used internally to find the CartBox component   |    cartBox     |     cartBox    |
 
 **Variables available in templates**
@@ -94,9 +90,6 @@ permalink: '/:location?local/menus/:category?'
     paramFrom: location
     showLocalThumb: 0
     menusPage: local/menus
-    openTimeFormat: 'HH:mm'
-    timePickerDateFormat: 'ddd DD'
-    timePickerDateTimeFormat: 'ddd DD HH:mm'
 ---
 ...
 @component('localBox')
@@ -109,9 +102,6 @@ permalink: '/:location?local/menus/:category?'
 
 | Property                 | Description              | Example Value | Default Value |
 | ------------------------ | ------------------------ | ------------- | ------------- |
-| infoTimeFormat           | Date format for the open and close hours   | HH:mm        | HH:mm         |
-| openingTimeFormat           | Time format for the opening later time    | ddd hh:mm a        | ddd hh:mm a         |
-| lastOrderTimeFormat           | Date format for the last order time  | ddd DD HH:mm        | ddd DD HH:mm         |
 
 **Variables available in templates**
 
@@ -141,15 +131,12 @@ permalink: '/:location?local/info'
 | Property                 | Description              | Example Value | Default Value |
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | distanceUnit           | Distance unit to use   | mi/km        | mi         |
-| openingTimeFormat           | Time format for the opening later time    | ddd hh:mm a        | ddd hh:mm a         |
 
 **Variables available in templates**
 
 | Variable                  | Description                                                  |
 | ------------------------- | ------------------------------------------------------------ |
 | `{{ $distanceUnit }}` | Unit of length to use for the distance. Uses system settings value                                               |
-| `{{ $showReviews }}` | Value determines whether to show reviews                                                |
-| `{{ $openingTimeFormat }}`       | Time format for the opening later time |    ddd HH:mm     |      ddd HH:mm    |
 | `{{ $filterSearch }}` | The user's search query                                                |
 | `{{ $filterSorted }}` | The user's selected filter                                                |
 | `{{ $filterSorters }}` | Array of available filters                                                |
@@ -254,7 +241,6 @@ permalink: '/:location?local/menus/:category?'
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | pageLimit | Number of reviews per page       |   20    |     20      |
 | sort | Sort the review list             |    date_added asc    |     date_added asc      |
-| reviewDateFormat | Date format to display the review date            |   DD MMM YY  |     DD MMM YY      |
 | reviewableType | Whether the review form is loaded on an order or reservation page, use by the review form            |   order  |     order      |
 | reviewableHash | Review sale identifier(hash), use by the review form            |   {{ :hash }}  |     {{ :hash }}      |
 | redirectPage | Page name to redirect to when reviews is disabled       |   local/menus  |     local/menus      |

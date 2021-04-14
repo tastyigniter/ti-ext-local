@@ -10,21 +10,6 @@
         $(this).closest('form').submit()
     })
 
-    $(document).render(function () {
-        var $affixEl = $('.affix-categories'),
-            offsetTop = $('.navbar-top').height(),
-            offsetBottom = $('footer.footer').outerHeight(true),
-            cartWidth = $affixEl.parent().width()
-
-        $affixEl.affix({
-            offset: {top: offsetTop, bottom: offsetBottom}
-        })
-
-        $affixEl.on('affixed.bs.affix', function () {
-            $affixEl.css('width', cartWidth)
-        })
-    })
-
     $(document).on('change', '[data-control="order-type-toggle"] input[type="radio"]', function (event) {
         var $input = $(event.currentTarget),
             $el = $input.closest('[data-control="order-type-toggle"]')
