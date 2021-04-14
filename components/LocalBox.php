@@ -208,6 +208,20 @@ class LocalBox extends \System\Classes\BaseComponent
         ];
     }
 
+    public function getOpeningHours($format)
+    {
+        $hours = $this->location->workingSchedule(
+            $this->location->orderType()
+        )->getPeriod()->getIterator();
+
+        return collect($hours)->map(function ($hour) use ($format) {
+            return sprintf('%s - %s',
+                make_carbon($hour->start()->toDateTime())->isoFormat($format),
+                make_carbon($hour->end()->toDateTime())->isoFormat($format)
+            );
+        })->all();
+    }
+
     protected function parseTimeslot(Collection $timeslot)
     {
         $parsed = ['dates' => [], 'hours' => []];
