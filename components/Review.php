@@ -2,14 +2,14 @@
 
 namespace Igniter\Local\Components;
 
-use Admin\Models\Reviews_model;
 use Admin\Traits\ValidatesForm;
 use ApplicationException;
 use Exception;
 use Igniter\Cart\Classes\OrderManager;
+use Igniter\Local\Models\Reviews_model;
+use Igniter\Local\Models\ReviewSettings;
 use Igniter\Reservation\Classes\BookingManager;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
 use Location;
 use Main\Facades\Auth;
 
@@ -24,16 +24,13 @@ class Review extends \System\Classes\BaseComponent
                 'label' => 'Reviews Per Page',
                 'type' => 'number',
                 'default' => 20,
+                'validationRule' => 'required|integer',
             ],
             'sort' => [
                 'label' => 'Sort reviews list by',
                 'type' => 'text',
                 'default' => 'date_added asc',
-            ],
-            'reviewDateFormat' => [
-                'label' => 'Date format to display the review date ',
-                'type' => 'text',
-                'default' => 'DD MMM YY',
+                'validationRule' => 'required|string',
             ],
             'reviewableType' => [
                 'label' => 'Whether the review form is loaded on an order or reservation page, use by the review form',
@@ -43,16 +40,20 @@ class Review extends \System\Classes\BaseComponent
                     'order' => 'Leave order reviews',
                     'reservation' => 'Leave reservation reviews',
                 ],
+                'validationRule' => 'required|in:order,reservation',
             ],
             'reviewableHash' => [
                 'label' => 'Review sale identifier(hash), use by the review form',
                 'type' => 'text',
                 'default' => '{{ :hash }}',
+                'validationRule' => 'required',
             ],
             'redirectPage' => [
                 'label' => 'Page to redirect to when reviews is disabled',
-                'type' => 'string',
+                'type' => 'select',
                 'default' => 'local/menus',
+                'options' => [static::class, 'getThemePageOptions'],
+                'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
             ],
         ];
     }
@@ -68,8 +69,9 @@ class Review extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->page['reviewDateFormat'] = $this->property('reviewDateFormat');
+        $this->page['reviewDateFormat'] = lang('system::lang.moment.date_format_short');
         $this->page['reviewRatingHints'] = $this->getHints();
+
         $this->page['reviewList'] = $this->loadReviewList();
         $this->page['reviewable'] = $reviewable = $this->loadReviewable();
         $this->page['customerReview'] = $this->loadReview($reviewable);
@@ -78,7 +80,7 @@ class Review extends \System\Classes\BaseComponent
     public function onLeaveReview()
     {
         try {
-            if (!(bool)setting('allow_reviews'))
+            if (!(bool)ReviewSettings::get('allow_reviews', false))
                 throw new ApplicationException(lang('igniter.local::default.review.alert_review_disabled'));
 
             if (!$customer = Auth::customer())
@@ -112,7 +114,7 @@ class Review extends \System\Classes\BaseComponent
             $model->delivery = array_get($data, 'rating.delivery');
             $model->service = array_get($data, 'rating.service');
             $model->review_text = array_get($data, 'review_text');
-            $model->review_status = (setting('approve_reviews') === 1) ? 1 : 0;
+            $model->review_status = !(bool)ReviewSettings::get('approve_reviews', false) ? 1 : 0;
 
             $model->save();
 
@@ -121,8 +123,9 @@ class Review extends \System\Classes\BaseComponent
             return Redirect::back();
         }
         catch (Exception $ex) {
-            if (Request::ajax()) throw $ex;
-            else flash()->alert($ex->getMessage())->important();
+            flash()->warning($ex->getMessage());
+
+            return Redirect::back()->withInput();
         }
     }
 
@@ -131,7 +134,7 @@ class Review extends \System\Classes\BaseComponent
      */
     protected function getHints()
     {
-        return array_get(setting('ratings'), 'ratings', []);
+        return Reviews_model::make()->getRatingOptions();
     }
 
     protected function loadReviewList()
@@ -175,7 +178,7 @@ class Review extends \System\Classes\BaseComponent
         if ($this->property('reviewableType') == 'reservation') {
             $reviewable = BookingManager::instance()->getReservationByHash($reviewableHash, Auth::customer());
         }
-        else if ($this->property('reviewableType') == 'order') {
+        elseif ($this->property('reviewableType') == 'order') {
             $reviewable = OrderManager::instance()->getOrderByHash($reviewableHash, Auth::customer());
         }
 

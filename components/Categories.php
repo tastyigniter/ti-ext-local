@@ -1,4 +1,6 @@
-<?php namespace Igniter\Local\Components;
+<?php
+
+namespace Igniter\Local\Components;
 
 use Admin\Models\Categories_model;
 use Location;
@@ -15,17 +17,20 @@ class Categories extends \System\Classes\BaseComponent
                 'type' => 'select',
                 'default' => 'local/menus',
                 'options' => [static::class, 'getThemePageOptions'],
+                'validationRule' => 'required|regex:/^[a-z0-9\-_\/]+$/i',
             ],
             'hideEmptyCategory' => [
                 'label' => 'Hide categories with no items from the list',
                 'type' => 'switch',
                 'default' => FALSE,
+                'validationRule' => 'required|boolean',
             ],
             'hiddenCategories' => [
                 'label' => 'Categories to hide from the list',
                 'type' => 'selectlist',
                 'options' => [Categories_model::class, 'getDropdownOptions'],
                 'placeholder' => 'lang:admin::lang.text_please_select',
+                'validationRule' => 'array',
             ],
         ];
     }

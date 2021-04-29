@@ -3,13 +3,13 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Menus_model;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Location;
 
 class Menu extends \System\Classes\BaseComponent
 {
     use \Main\Traits\UsesPage;
-
-    protected $location;
 
     protected $menuListCategories = [];
 
@@ -19,39 +19,78 @@ class Menu extends \System\Classes\BaseComponent
             'isGrouped' => [
                 'label' => 'Group menu items list by category',
                 'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+            'collapseCategoriesAfter' => [
+                'label' => 'Collapse after how many categories',
+                'type' => 'number',
+                'default' => 5,
+                'validationRule' => 'required|integer',
             ],
             'menusPerPage' => [
                 'label' => 'Menus Per Page',
                 'type' => 'number',
                 'default' => 20,
+                'validationRule' => 'required|integer',
             ],
             'showMenuImages' => [
                 'label' => 'Show Menu Item Images',
                 'type' => 'switch',
                 'default' => FALSE,
+                'validationRule' => 'required|boolean',
             ],
             'menuImageWidth' => [
-                'label' => 'lang:igniter.local::default.label_local_image_width',
+                'label' => 'Menu Thumb Width',
                 'type' => 'number',
                 'span' => 'left',
                 'default' => 95,
+                'validationRule' => 'integer',
             ],
             'menuImageHeight' => [
-                'label' => 'lang:igniter.local::default.label_local_image_height',
+                'label' => 'Menu Thumb Height',
                 'type' => 'number',
                 'span' => 'right',
                 'default' => 80,
+                'validationRule' => 'integer',
+            ],
+            'menuCategoryWidth' => [
+                'label' => 'Category Thumb Width',
+                'type' => 'number',
+                'span' => 'left',
+                'default' => 1240,
+                'validationRule' => 'integer',
+            ],
+            'menuCategoryHeight' => [
+                'label' => 'Category Thumb Height',
+                'type' => 'number',
+                'span' => 'right',
+                'default' => 256,
+                'validationRule' => 'integer',
             ],
             'defaultLocationParam' => [
                 'label' => 'The default location route parameter (used internally when no location is selected)',
                 'type' => 'text',
                 'default' => 'local',
+                'validationRule' => 'string',
             ],
             'localNotFoundPage' => [
                 'label' => 'lang:igniter.local::default.label_redirect',
                 'type' => 'select',
                 'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'home',
+                'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
+            ],
+            'hideMenuSearch' => [
+                'label' => 'Hide the menu item search form',
+                'type' => 'switch',
+                'default' => TRUE,
+                'validationRule' => 'required|boolean',
+            ],
+            'forceRedirect' => [
+                'label' => 'Whether to force a page redirect when no location param is present in the request URI.',
+                'type' => 'switch',
+                'default' => TRUE,
+                'validationRule' => 'required|boolean',
             ],
         ];
     }
@@ -62,11 +101,17 @@ class Menu extends \System\Classes\BaseComponent
             return $redirect;
 
         $this->page['menuIsGrouped'] = $this->property('isGrouped');
+        $this->page['menuCollapseCategoriesAfter'] = $this->property('collapseCategoriesAfter');
         $this->page['showMenuImages'] = $this->property('showMenuImages');
         $this->page['menuImageWidth'] = $this->property('menuImageWidth');
         $this->page['menuImageHeight'] = $this->property('menuImageHeight');
         $this->page['menuCategoryWidth'] = $this->property('menuCategoryWidth', 1240);
         $this->page['menuCategoryHeight'] = $this->property('menuCategoryHeight', 256);
+        $this->page['menuAllergenImageWidth'] = $this->property('menuAllergenImageWidth', 28);
+        $this->page['menuAllergenImageHeight'] = $this->property('menuAllergenImageHeight', 28);
+
+        $this->page['hideMenuSearch'] = $this->property('hideMenuSearch');
+        $this->page['menuSearchTerm'] = $this->getSearchTerm();
 
         $this->page['menuList'] = $this->loadList();
         $this->page['menuListCategories'] = $this->menuListCategories;
@@ -74,16 +119,39 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $list = Menus_model::with(['mealtime', 'menu_options', 'categories', 'categories.media', 'special'])->listFrontEnd([
+        $location = $this->getLocation();
+
+        $list = Menus_model::with([
+            'mealtimes', 'menu_options',
+            'categories' => function ($query) use ($location) {
+                $query->whereHasOrDoesntHaveLocation($location);
+            }, 'categories.media',
+            'special', 'allergens', 'media', 'allergens.media',
+        ])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort' => $this->property('sort', 'menu_priority asc'),
-            'location' => $this->getLocation(),
+            'location' => $location,
             'category' => $this->param('category'),
+            'search' => $this->getSearchTerm(),
+            'orderType' => Location::orderTypeIsDelivery() ? 1 : 2,
         ]);
+
+        $this->mapIntoObjects($list);
 
         if ($this->property('isGrouped'))
             $this->groupListByCategory($list);
+
+        return $list;
+    }
+
+    protected function mapIntoObjects($list)
+    {
+        $collection = $list->getCollection()->map(function ($menuItem) {
+            return $this->createMenuItemObject($menuItem);
+        });
+
+        $list->setCollection($collection);
 
         return $list;
     }
@@ -100,36 +168,84 @@ class Menu extends \System\Classes\BaseComponent
     {
         $this->menuListCategories = [];
 
-        $collection = $list->getCollection()->mapToGroups(function ($menu) {
-            $categories = [];
-            foreach ($menu->categories as $category) {
-                $this->menuListCategories[$category->getKey()] = $category;
-                $categories[$category->getKey()] = $menu;
+        $groupedList = [];
+        foreach ($list->getCollection() as $menuItemObject) {
+            $categories = $menuItemObject->model->categories;
+            if (!$categories OR $categories->isEmpty()) {
+                $groupedList[0][] = $menuItemObject;
+                continue;
             }
 
-            if (!$categories)
-                $categories[] = $menu;
+            foreach ($categories as $category) {
+                $this->menuListCategories[$category->getKey()] = $category;
+                $groupedList[$category->getKey()][] = $menuItemObject;
+            }
+        }
 
-            return $categories;
-        })->sortBy(function ($menu, $categoryId) {
-            if (isset($this->menuListCategories[$categoryId]))
-                return $this->menuListCategories[$categoryId]->priority;
+        $collection = collect($groupedList)
+            ->sortBy(function ($menuItems, $categoryId) {
+                if (isset($this->menuListCategories[$categoryId]))
+                    return $this->menuListCategories[$categoryId]->priority;
 
-            return $categoryId;
-        });
+                return $categoryId;
+            });
 
         $list->setCollection($collection);
     }
 
     protected function checkLocationParam()
     {
-        $param = $this->param('location');
+        if (!$this->property('forceRedirect', TRUE))
+            return;
+
+        $param = $this->param('location', 'local');
         if (is_single_location() AND $param === $this->property('defaultLocationParam', 'local'))
             return;
 
         if (Location::getBySlug($param))
             return;
 
-        return \Redirect::to($this->pageUrl($this->property('localNotFoundPage')));
+        return Redirect::to($this->controller->pageUrl($this->property('localNotFoundPage')));
+    }
+
+    public function getSearchTerm()
+    {
+        if ($this->property('hideMenuSearch'))
+            return '';
+
+        return Request::query('q');
+    }
+
+    public function createMenuItemObject($menuItem)
+    {
+        $object = new \stdClass();
+
+        $object->specialIsActive = ($menuItem->special AND $menuItem->special->active());
+        $object->specialDaysRemaining = optional($menuItem->special)->daysRemaining();
+
+        $object->menuPrice = $object->specialIsActive
+            ? $menuItem->special->getMenuPrice($menuItem->menu_price)
+            : $menuItem->menu_price;
+
+        $object->hasThumb = $menuItem->hasMedia('thumb');
+        $object->hasOptions = $menuItem->hasOptions();
+
+        $mealtimes = optional($menuItem->mealtimes)->where('mealtime_status', 1);
+        $object->hasMealtime = count($mealtimes);
+        $object->mealtimeIsNotAvailable = !$menuItem->isAvailable(Location::orderDateTime());
+
+        $object->mealtimeTitles = [];
+        foreach ($mealtimes ?? [] as $mealtime) {
+            $object->mealtimeTitles[] = sprintf(
+                lang('igniter.local::default.text_mealtime'),
+                $mealtime->mealtime_name,
+                $mealtime->start_time,
+                $mealtime->end_time
+            );
+        }
+
+        $object->model = $menuItem;
+
+        return $object;
     }
 }

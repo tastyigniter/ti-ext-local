@@ -6,7 +6,7 @@ use Admin\Models\Categories_model;
 use Admin\Models\Mealtimes_model;
 use Admin\Models\Menus_model;
 use Exception;
-use Igniter\ImportExport\Models\ImportModel;
+use IgniterLabs\ImportExport\Models\ImportModel;
 
 class MenuImport extends ImportModel
 {
@@ -31,7 +31,7 @@ class MenuImport extends ImportModel
                 if ($this->update_existing)
                     $menuItem = $this->findDuplicateMenuItem($data) ?: $menuItem;
 
-                $except = ['menu_id', 'categories', 'mealtime'];
+                $except = ['menu_id', 'categories', 'mealtimes'];
                 foreach (array_except($data, $except) as $attribute => $value) {
                     $menuItem->{$attribute} = $value ?: null;
                 }
@@ -67,7 +67,7 @@ class MenuImport extends ImportModel
 
     protected function findMealtimeFromName($data)
     {
-        if (!$name = array_get($data, 'mealtime')) {
+        if (!$name = array_get($data, 'mealtimes')) {
             return null;
         }
 

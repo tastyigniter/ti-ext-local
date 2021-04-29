@@ -1,4 +1,6 @@
-<?php namespace Igniter\Local\Traits;
+<?php
+
+namespace Igniter\Local\Traits;
 
 use ApplicationException;
 use Exception;
@@ -10,6 +12,11 @@ use Request;
 
 trait SearchesNearby
 {
+    public function getSearchQuery()
+    {
+        return post('search_query', Location::getSession('searchQuery'));
+    }
+
     public function onSearchNearby()
     {
         try {
@@ -62,6 +69,8 @@ trait SearchesNearby
             throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
 
         Location::updateUserPosition($userLocation);
+
+        Location::putSession('searchQuery', $searchQuery);
 
         return $userLocation;
     }

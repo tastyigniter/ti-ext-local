@@ -14,15 +14,16 @@ return [
     'text_hours' => 'Working Hours',
     'text_opening' => 'Opening',
     'text_opens_24_7' => '<strong>Opens:</strong> 24 hours a day & 7 days a week',
-    'text_24h' => 'Open all day',
+    'text_24h' => 'All day',
     'text_delivery_coverage' => '<span class="text-danger">Sorry, but this restaurant does not deliver to your location</span>',
     'text_is_opened' => '<span class="text-success">We are open</span>',
     'text_closed' => '<span class="text-close text-danger">CLOSED</span>',
     'text_is_closed' => '<span class="text-close text-danger">is CLOSED</span>',
-    'text_opening_time' => '<span class="text-close text-danger">Opening %s</span>',
+    'text_opening_time' => 'Opening <b>%s</b>',
     'text_delivery_time_info' => 'Delivery %s',
     'text_collection_time_info' => 'Pick-up %s',
     'text_collection_time' => 'Pick-up Time',
+    'text_last_order_time' => 'Last Order Time',
     'text_payments' => 'Payments',
     'text_offer' => 'Service Offered',
     'text_delivery_only' => 'Delivery only',
@@ -39,14 +40,12 @@ return [
     'text_condition_below_total' => '{amount} below {total}',
     'text_delivery_areas' => 'Delivery Areas',
     'text_delivery_map' => 'Delivery Map',
-    'text_working_hour' => '(%s - %s)',
+    'text_working_hour' => '%s - %s',
     'text_min_total' => 'Min. Order Amount',
     'text_no_min_total' => 'No Min. Order Amount',
 
     'text_categories' => 'Categories',
-    'text_view_categories' => 'View categories',
-    'text_clear' => 'Clear Selection',
-    'text_show_all' => 'Show All',
+    'text_all_categories' => 'All Categories',
 
     'text_only_delivery_is_available' => 'Offers delivery only, pick-up is not available.',
     'text_only_collection_is_available' => 'Offers pick-up only, delivery is not available.',
@@ -78,6 +77,7 @@ return [
     'label_lang' => 'Language Line',
     'label_status' => 'Status',
     'label_search_query' => 'Enter your address/postcode to order',
+    'label_menu_search' => 'Search menu items.',
     'label_redirect' => 'Page to redirect to when no location is selected',
     'label_menu_page' => 'Menus Page',
     'label_show_local_image' => 'Show Location Thumb',
@@ -103,6 +103,9 @@ return [
     'alert_order_unavailable' => 'This restaurant is unavailable to take orders at the moment.',
     'alert_delivery_unavailable' => 'This restaurant is unavailable to take delivery orders at the selected time.',
     'alert_collection_unavailable' => 'This restaurant is unavailable to take pick-up orders at the selected time.',
+    'alert_slot_time_required' => 'Please select a slot time.',
+    'alert_slot_date_required' => 'Please select a slot date.',
+    'alert_slot_type_required' => 'Please select a slot type.',
 
     'component_title' => 'Local Box Component',
     'component_desc' => 'Displays local information box',
@@ -139,6 +142,9 @@ return [
     'text_end_today' => 'Ends today',
     'text_end_elapsed' => 'Ends in %s',
     'text_mealtime' => 'Available during %s (%s - %s)',
+
+    'text_settings' => 'Review Settings',
+    'text_settings_description' => 'Manage local review settings',
 
     'search' => [
         'component_title' => 'Local Search Component',
@@ -192,5 +198,56 @@ return [
     'list' => [
         'component_title' => 'Local List Component',
         'component_desc' => 'Displays a list of locations',
+    ],
+
+    'reviews' => [
+        'side_menu' => 'Reviews',
+        'permissions' => 'Manage user reviews',
+
+        'text_title' => 'Reviews',
+        'text_form_name' => 'Review',
+        'text_empty' => 'There are no reviews available.',
+        'text_filter_search' => 'Search by author, restaurant or sale id.',
+        'text_pending_review' => 'Pending Review',
+        'text_approved' => 'Approved',
+        'text_order' => 'Order',
+        'text_reservation' => 'Reservation',
+
+        'text_settings' => 'Review Settings',
+        'text_settings_description' => 'Enable/disable and configure reviews settings',
+
+        'text_chase_email' => 'Review chase email to customer',
+
+        'column_location' => 'Location',
+        'column_author' => 'Author',
+        'column_sale_id' => 'Sale ID',
+        'column_sale_type' => 'Sale Type',
+        'column_text' => 'Review Text',
+
+        'label_sale_type' => 'Sale Type',
+        'label_sale_id' => 'Sale ID',
+        'label_location' => 'Location',
+        'label_customer' => 'Customer',
+        'label_author' => 'Author',
+        'label_quality' => 'Quality Rating',
+        'label_delivery' => 'Delivery Rating',
+        'label_service' => 'Service Rating',
+        'label_text' => 'Review Text',
+        'label_hints' => 'Rating Hints',
+
+        'label_allow_reviews' => 'Allow Reviews',
+        'label_approve_reviews' => 'Approve Reviews',
+        'label_chase_reviews' => 'Chase Reviews',
+        'label_chase_reviews_after' => 'Chase after how many hours?',
+
+        'text_tab_title_reviews' => 'Reviews',
+
+        'help_allow_reviews' => 'Enable or disable new customer review entry and display of reviews on storefront',
+        'help_approve_reviews' => 'Approve new review entry automatically or manually',
+        'help_hints' => 'Used when adding reviews.',
+        'help_chase_reviews' => 'Send a follow up email when a review has not been submitted',
+
+        'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
+        'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
     ],
 ];

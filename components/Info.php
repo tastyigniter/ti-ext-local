@@ -10,25 +10,16 @@ class Info extends \System\Classes\BaseComponent
 {
     public function defineProperties()
     {
-        return [
-            'infoTimeFormat' => [
-                'label' => 'Date format for the open and close hours',
-                'type' => 'text',
-                'default' => 'HH:mm',
-            ],
-        ];
+        return [];
     }
 
     public function onRun()
     {
-        $this->page['infoTimeFormat'] = $this->property('infoTimeFormat');
+        $this->page['infoTimeFormat'] = lang('system::lang.moment.time_format');
+        $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
+        $this->page['lastOrderTimeFormat'] = lang('system::lang.moment.day_time_format');
 
-        $this->page['location'] = Location::instance();
-        $this->page['locationCurrent'] = $locationCurrent = Location::current();
-
-        $this->page['localPayments'] = $locationCurrent->listAvailablePayments();
-        $this->page['localHours'] = $this->listWorkingHours($locationCurrent);
-        $this->page['deliveryAreas'] = $this->mapIntoCoveredArea($locationCurrent);
+        $this->page['locationInfo'] = $this->makeInfoObject();
     }
 
     public function getAreaConditionLabels(CoveredArea $area)
@@ -48,5 +39,33 @@ class Info extends \System\Classes\BaseComponent
         return $locationCurrent->listWorkingHours()->groupBy(function ($model) {
             return $model->day->isoFormat('dddd');
         });
+    }
+
+    protected function makeInfoObject()
+    {
+        $object = new \stdClass();
+
+        $current = Location::current();
+
+        $object->name = $current->getName();
+        $object->description = $current->getDescription();
+
+        $object->opensAllDay = $current->workingHourType('opening') == '24_7';
+        $object->hasDelivery = $current->hasDelivery();
+        $object->hasCollection = $current->hasCollection();
+        $object->deliveryMinutes = $current->deliveryMinutes();
+        $object->collectionMinutes = $current->collectionMinutes();
+        $object->openingSchedule = Location::openingSchedule();
+        $object->deliverySchedule = Location::deliverySchedule();
+        $object->collectionSchedule = Location::collectionSchedule();
+        $object->lastOrderTime = Location::lastOrderTime();
+
+        $object->payments = $current->listAvailablePayments()->pluck('name')->all();
+        $object->schedules = $this->listWorkingHours($current);
+        $object->deliveryAreas = $this->mapIntoCoveredArea($current);
+
+        $object->model = $current;
+
+        return $object;
     }
 }

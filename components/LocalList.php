@@ -17,12 +17,7 @@ class LocalList extends \System\Classes\BaseComponent
                 'label' => 'Distance unit to use, mi or km',
                 'type' => 'text',
                 'default' => 'mi',
-            ],
-            'openingTimeFormat' => [
-                'label' => 'Time format for the opening later time',
-                'type' => 'text',
-                'span' => 'left',
-                'default' => 'ddd HH:mm',
+                'validationRule' => 'required|in:km,mi',
             ],
         ];
     }
@@ -30,10 +25,9 @@ class LocalList extends \System\Classes\BaseComponent
     public function onRun()
     {
         $this->id = uniqid($this->alias);
-        $this->page['showReviews'] = setting('allow_reviews') == 1;
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
-        $this->page['openingTimeFormat'] = $this->property('openingTimeFormat', 'D '.setting('time_format'));
-        $this->page['filterSearch'] = input('search');
+        $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
+        $this->page['filterSearch'] = input('search', $this->getSearchQuery());
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();
 
@@ -44,7 +38,7 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $sortBy = $this->param('sort_by');
+        $sortBy = $orderBy = $this->param('sort_by');
 
         if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();
@@ -53,24 +47,24 @@ class LocalList extends \System\Classes\BaseComponent
 
         switch ($sortBy) {
             case 'distance':
-                $sortBy = 'distance asc';
+                $orderBy = 'distance asc';
                 break;
             case 'newest':
-                $sortBy = 'location_id desc';
+                $orderBy = 'location_id desc';
                 break;
             case 'rating':
-                $sortBy = 'reviews_count desc';
+                $orderBy = 'reviews_count desc';
                 break;
             case 'name':
-                $sortBy = 'location_name asc';
+                $orderBy = 'location_name asc';
                 break;
         }
 
         $options = [
             'page' => $this->param('page'),
-            'pageLimit' => $this->property('pageLimit'),
+            'pageLimit' => $this->param('pageLimit', $this->property('pageLimit')),
             'search' => $this->param('search'),
-            'sort' => $sortBy,
+            'sort' => $orderBy,
         ];
 
         if ($coordinates = Location::userPosition()->getCoordinates()) {
@@ -83,6 +77,14 @@ class LocalList extends \System\Classes\BaseComponent
                 $q->isApproved();
             },
         ])->isEnabled()->listFrontEnd($options);
+
+        $this->mapIntoObjects($list);
+
+        if ($sortBy)
+            $list->appends('sort_by', $sortBy);
+
+        if ($pageLimit = $this->param('pageLimit'))
+            $list->appends('pageLimit', $pageLimit);
 
         return $list;
     }
@@ -114,5 +116,50 @@ class LocalList extends \System\Classes\BaseComponent
         ];
 
         return $filters;
+    }
+
+    protected function mapIntoObjects($list)
+    {
+        $collection = $list->getCollection()->map(function ($location) {
+            return $this->createLocationObject($location);
+        });
+
+        $list->setCollection($collection);
+
+        return $list;
+    }
+
+    protected function createLocationObject($location)
+    {
+        $object = new \stdClass();
+
+        $object->name = $location->location_name;
+        $object->permalink = $location->permalink_slug;
+        $object->address = $location->getAddress();
+        $object->reviewsScore = $location->reviews_score();
+        $object->reviewsCount = $location->reviews_count;
+
+        $object->distance = ($coordinates = Location::userPosition()->getCoordinates())
+            ? $location->calculateDistance($coordinates)
+            : null;
+
+        $object->thumb = ($object->hasThumb = $location->hasMedia('thumb'))
+            ? $location->getThumb()
+            : null;
+
+        $object->openingSchedule = $location->newWorkingSchedule('opening');
+        $object->deliverySchedule = $location->newWorkingSchedule('delivery');
+        $object->collectionSchedule = $location->newWorkingSchedule('collection');
+        $object->hasDelivery = $location->hasDelivery();
+        $object->hasCollection = $location->hasCollection();
+        $object->deliveryMinutes = $location->deliveryMinutes();
+        $object->collectionMinutes = $location->collectionMinutes();
+        $object->openingTime = make_carbon($object->openingSchedule->getOpenTime());
+        $object->deliveryTime = make_carbon($object->deliverySchedule->getOpenTime());
+        $object->collectionTime = make_carbon($object->collectionSchedule->getOpenTime());
+
+        $object->model = $location;
+
+        return $object;
     }
 }

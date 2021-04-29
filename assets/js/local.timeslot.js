@@ -68,7 +68,7 @@
 
         $.each(this.options.timeSlot.dates, function (index, date) {
             self.$el.find(self.dateSelector).append('<option value="' + index + '"' + (
-                selectedDate === date ? 'selected="selected"' : ''
+                selectedDate === index ? 'selected="selected"' : ''
             ) + '>' + date + '</option>')
         });
 
@@ -87,7 +87,7 @@
         this.$el.find(this.timeSelector).html('<option value="">' + controlLabel + '</option>')
         $.each(this.options.timeSlot.hours[selectedDate], function (index, hour) {
             self.$el.find(self.timeSelector).append('<option value="' + index + '"' + (
-                selectedHour === hour ? 'selected="selected"' : ''
+                selectedHour === index ? 'selected="selected"' : ''
             ) + '>' + hour + '</option>')
         });
 
@@ -136,8 +136,7 @@
                 time: this.$el.find(this.timeSelector).val()
             }
         }).done(function () {
-            self.fillDates()
-            self.togglePicker()
+            location.reload();
         })
     }
 

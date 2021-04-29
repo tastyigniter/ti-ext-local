@@ -1,4 +1,6 @@
-<?php namespace Igniter\Local\Classes;
+<?php
+
+namespace Igniter\Local\Classes;
 
 use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
@@ -9,7 +11,6 @@ use Igniter\Flame\Location\Manager;
 
 /**
  * Location Class
- * @package System
  */
 class Location extends Manager
 {
@@ -26,6 +27,8 @@ class Location extends Manager
      */
     protected $coveredArea;
 
+    protected $scheduleCache = [];
+
     public function __construct()
     {
         $this->setDefaultLocation(params('default_location_id'));
@@ -36,7 +39,7 @@ class Location extends Manager
     }
 
     //
-    //	BOOT METHODS
+    // BOOT METHODS
     //
 
     public function updateNearbyArea(AreaInterface $area)
@@ -70,16 +73,12 @@ class Location extends Manager
         $this->fireSystemEvent('location.position.updated', [$position, $oldPosition]);
     }
 
-    public function updateScheduleTimeSlot($dateTime = null, $type = null)
+    public function updateScheduleTimeSlot($dateTime, $isAsap = TRUE)
     {
         $oldSlot = $this->getSession('order-timeslot');
 
-        $slot = [];
-        if (!is_null($dateTime))
-            $slot['dateTime'] = make_carbon($dateTime, FALSE);
-
-        if (!is_null($type))
-            $slot['type'] = $type;
+        $slot['dateTime'] = !$isAsap ? make_carbon($dateTime) : null;
+        $slot['isAsap'] = $isAsap;
 
         if (!$slot) {
             $this->forgetSession('order-timeslot');
@@ -92,7 +91,7 @@ class Location extends Manager
     }
 
     //
-    //	HELPER METHODS
+    // HELPER METHODS
     //
 
     public function getId()
@@ -106,7 +105,7 @@ class Location extends Manager
     }
 
     /**
-     * @return UserLocation
+     * @return \Igniter\Flame\Geolite\Model\Location
      */
     public function userPosition()
     {
@@ -122,17 +121,10 @@ class Location extends Manager
     {
         $orderType = !is_null($orderType) ? $orderType : $this->orderType();
 
-        $workingSchedule = $this->workingSchedule($orderType);
         $model = $this->getModel();
         $method = 'has'.ucfirst($orderType);
 
-        if ($model->methodExists($method) AND !$model->$method())
-            return FALSE;
-
-        $isOpen = $workingSchedule->isOpen();
-        $isOpening = ($workingSchedule->isOpening() AND $this->getModel()->hasFutureOrder());
-
-        return ($isOpen OR $isOpening);
+        return $model->methodExists($method) AND $model->$method();
     }
 
     public function orderTypeIsDelivery()
@@ -146,7 +138,7 @@ class Location extends Manager
     }
 
     //
-    //	HOURS
+    // HOURS
     //
 
     public function openingSchedule()
@@ -207,9 +199,26 @@ class Location extends Manager
         return $this->getModel()->getOrderTimeInterval($this->orderType());
     }
 
+    public function lastOrderTime()
+    {
+        return Carbon::parse($this->closeTime($this->orderType()));
+    }
+
+    public function orderLeadTime()
+    {
+        return $this->getModel()->getOrderLeadTime($this->orderType());
+    }
+
     public function orderTimeIsAsap()
     {
-        return (bool)$this->getSession('order-timeslot.type', 1);
+        if ((bool)$this->getModel()->getOption('limit_orders'))
+            return FALSE;
+
+        $dateTime = $this->getSession('order-timeslot.dateTime');
+        $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', TRUE);
+
+        return ($this->isOpened() AND $orderTimeIsAsap)
+            OR ($dateTime AND now()->isAfter($dateTime));
     }
 
     /**
@@ -217,22 +226,24 @@ class Location extends Manager
      */
     public function orderDateTime()
     {
-        $dateTime = $this->asapScheduleTimeslot();
-        $sessionDateTime = $this->getSession('order-timeslot.dateTime');
-        if (!$this->orderTimeIsAsap()
-            AND $sessionDateTime
-            AND Carbon::now()->lt($sessionDateTime)
-        ) {
-            $dateTime = $sessionDateTime;
-        }
+        $dateTime = $this->getSession('order-timeslot.dateTime');
+        if ($this->orderTimeIsAsap() OR !$dateTime)
+            $dateTime = $this->asapScheduleTimeslot();
 
-        return make_carbon($dateTime)->copy();
+        return make_carbon($dateTime);
     }
 
     public function scheduleTimeslot()
     {
-        return $this->workingSchedule($this->orderType())
-            ->getTimeslot($this->orderTimeInterval());
+        $orderType = $this->orderType();
+        if (array_key_exists($orderType, $this->scheduleCache))
+            return $this->scheduleCache[$orderType];
+
+        $result = $this->workingSchedule($orderType)->getTimeslot(
+            $this->orderTimeInterval(), null, $this->orderLeadTime()
+        );
+
+        return $this->scheduleCache[$orderType] = $result;
     }
 
     public function firstScheduleTimeslot()
@@ -242,19 +253,25 @@ class Location extends Manager
 
     public function asapScheduleTimeslot()
     {
-        if ($this->isClosed())
+        if ($this->isClosed() || (bool)$this->getModel()->getOption('limit_orders'))
             return $this->firstScheduleTimeslot();
 
-        return Carbon::now()->addMinutes($this->orderTimeInterval());
+        return Carbon::now();
     }
 
-    public function checkOrderTime($timestamp, $orderType = null)
+    public function checkOrderTime($timestamp = null, $orderType = null)
     {
+        if (is_null($timestamp))
+            $timestamp = $this->orderDateTime();
+
         if (is_null($orderType))
             $orderType = $this->orderType();
 
         if (!$timestamp instanceof \DateTime)
             $timestamp = new \DateTime($timestamp);
+
+        if (Carbon::now()->subMinute()->gte($timestamp))
+            return FALSE;
 
         $days = $this->getModel()->hasFutureOrder($orderType)
             ? $this->getModel()->futureOrderDays($orderType) : 0;
@@ -266,7 +283,7 @@ class Location extends Manager
     }
 
     //
-    //	DELIVERY AREA
+    // DELIVERY AREA
     //
 
     public function getAreaId()
@@ -353,7 +370,7 @@ class Location extends Manager
 
     public function checkMinimumOrder($cartTotal)
     {
-        return ($cartTotal >= $this->minimumOrder($cartTotal));
+        return $cartTotal >= $this->minimumOrder($cartTotal);
     }
 
     public function checkDistance($decimalPoint)
