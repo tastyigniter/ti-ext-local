@@ -1,6 +1,6 @@
 @if (count($locationInfo->schedules))
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th></th>
