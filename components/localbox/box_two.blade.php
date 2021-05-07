@@ -14,9 +14,9 @@
         @if ($openingTime->isToday() AND $locationCurrentSchedule->getPeriod($openingTime)->opensAllDay())
             <span class="fa fa-clock"></span>&nbsp;&nbsp;
             <span>@lang('igniter.local::default.text_24_7_hour')</span>
-        @else
+        @elseif ($openingHours = $__SELF__->getOpeningHours($localBoxTimeFormat))
             <span class="fa fa-clock-o"></span>&nbsp;
-            {!! implode(', ', $__SELF__->getOpeningHours($localBoxTimeFormat)) !!}
+            {!! implode(', ', $openingHours) !!}
         @endif
     </dd>
 
