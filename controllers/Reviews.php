@@ -31,11 +31,13 @@ class Reviews extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'igniter/local/reviews/edit/{review_id}',
             'redirectClose' => 'igniter/local/reviews',
+            'redirectNew' => 'igniter/local/reviews/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'igniter/local/reviews/edit/{review_id}',
             'redirectClose' => 'igniter/local/reviews',
+            'redirectNew' => 'igniter/local/reviews/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
