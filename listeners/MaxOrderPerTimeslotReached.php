@@ -35,8 +35,8 @@ class MaxOrderPerTimeslotReached
         if ($ordersOnThisDay->isEmpty())
             return;
 
-        $startTime = Carbon::parse($timeslot)->subMinute();
-        $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($workingSchedule->getType()));
+        $startTime = Carbon::parse($timeslot);
+        $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($workingSchedule->getType()))->subMinute();
 
         $orderCount = $ordersOnThisDay->filter(function ($time) use ($startTime, $endTime) {
             $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $startTime->format('Y-m-d').' '.$time);
