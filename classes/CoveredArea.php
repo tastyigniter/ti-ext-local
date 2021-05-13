@@ -40,6 +40,9 @@ class CoveredArea
 
     protected function getConditionValue($type, $cartTotal)
     {
+        if ($this->listConditions()->isEmpty())
+            return 0;
+
         if (!$condition = $this->checkConditions($cartTotal, $type))
             return $type == 'total' ? 0 : -1;
 
