@@ -113,7 +113,7 @@ $config['form']['toolbar'] = [
         ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
-            'context' => ['create', 'edit'],
+            'context' => ['edit'],
             'partial' => 'form/toolbar_save_button',
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
