@@ -36,7 +36,7 @@ class Info extends \System\Classes\BaseComponent
 
     protected function listWorkingHours($locationCurrent)
     {
-        return $locationCurrent->listWorkingHours()->groupBy(function ($model) {
+        return $locationCurrent->getWorkingHours()->groupBy(function ($model) {
             return $model->day->isoFormat('dddd');
         });
     }
