@@ -9,33 +9,19 @@
     @endif
 
     <div class="list-group list-group-flush">
-        @if ($locationInfo->opensAllDay)
-            <div class="list-group-item">@lang('igniter.local::default.text_opens_24_7')</div>
-        @endif
-        @if ($locationInfo->hasDelivery)
+        @foreach($locationInfo->orderTypes as $code => $orderType)
             <div class="list-group-item">
-                @lang('igniter.local::default.text_delivery')
-                @if ($locationInfo->deliverySchedule->isOpen())
-                    {!! sprintf(lang('igniter.local::default.text_in_minutes'), $locationInfo->deliveryMinutes) !!}
-                @elseif ($locationInfo->deliverySchedule->isOpening())
-                    <span class="text-danger">{!! sprintf(lang('igniter.local::default.text_starts'), make_carbon($locationInfo->deliverySchedule->getOpenTime())->isoFormat($openingTimeFormat)) !!}</span>
+                @if ($orderType->isDisabled())
+                    {!! $orderType->getDisabledDescription() !!}
+                @elseif ($orderType->getSchedule()->isOpen())
+                    {!! $orderType->getOpenDescription()!!}
+                @elseif ($orderType->getSchedule()->isOpening())
+                    {!! $orderType->getOpeningDescription($openingTimeFormat) !!}
                 @else
-                    @lang('igniter.local::default.text_closed')
+                    {!! $orderType->getClosedDescription() !!}
                 @endif
             </div>
-        @endif
-        @if ($locationInfo->hasCollection)
-            <div class="list-group-item">
-                @lang('igniter.local::default.text_collection')
-                @if ($locationInfo->collectionSchedule->isOpen())
-                    {!! sprintf(lang('igniter.local::default.text_in_minutes'), $locationInfo->collectionMinutes) !!}
-                @elseif ($locationInfo->collectionSchedule->isOpening())
-                    <span class="text-danger">{!! sprintf(lang('igniter.local::default.text_starts'), make_carbon($locationInfo->collectionSchedule->getOpenTime())->isoFormat($openingTimeFormat)) !!}</span>
-                @else
-                    @lang('igniter.local::default.text_closed')
-                @endif
-            </div>
-        @endif
+        @endforeach
         @if ($locationInfo->hasDelivery)
             <div class="list-group-item">
                 @lang('igniter.local::default.text_last_order_time')&nbsp;

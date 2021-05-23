@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Igniter\Local\Classes\CoveredAreaCondition;
+use Igniter\Local\Classes\OrderTypes;
 use Illuminate\Support\Collection;
 use Redirect;
 use Request;
@@ -23,9 +24,7 @@ class LocalBox extends \System\Classes\BaseComponent
      */
     protected $location;
 
-    protected $locationCurrent;
-
-    protected $currentSchedule;
+    protected $orderTypeManager;
 
     public function initialize()
     {
@@ -35,6 +34,8 @@ class LocalBox extends \System\Classes\BaseComponent
                 $q->isApproved();
             },
         ]);
+
+        $this->orderTypeManager = OrderTypes::instance();
     }
 
     public function defineProperties()
@@ -192,8 +193,9 @@ class LocalBox extends \System\Classes\BaseComponent
 
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
+        $this->page['locationOrderTypes'] = $this->location->getOrderTypes();
         $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());
-        $this->page['locationCurrentSchedule'] = $this->location->workingSchedule($this->location->orderType());
+        $this->page['locationCurrentSchedule'] = $this->location->getOrderType()->getSchedule();
     }
 
     public function fetchPartials()
@@ -210,9 +212,8 @@ class LocalBox extends \System\Classes\BaseComponent
 
     public function getOpeningHours($format)
     {
-        $hours = $this->location->workingSchedule(
-            $this->location->orderType()
-        )->getPeriod()->getIterator();
+        $hours = $this->location->getOrderType()
+            ->getSchedule()->getPeriod()->getIterator();
 
         return collect($hours)->map(function ($hour) use ($format) {
             return sprintf('%s - %s',
@@ -252,19 +253,17 @@ class LocalBox extends \System\Classes\BaseComponent
 
     protected function updateCurrentOrderType()
     {
-        if (!$locationCurrent = $this->location->current())
+        if (!$this->location->current())
             return;
 
-        $locationOrderTypes = $locationCurrent->availableOrderTypes();
-        $defaultOrderType = $this->property('defaultOrderType', Locations_model::DELIVERY);
-        if (!in_array($defaultOrderType, $locationOrderTypes)) {
-            if (!count($locationOrderTypes))
-                return;
+        $sessionOrderType = $this->location->getSession('orderType');
+        if ($sessionOrderType AND $this->orderTypeManager->hasOrderType($sessionOrderType))
+            return;
 
-            $defaultOrderType = head($locationOrderTypes);
-        }
+        $defaultOrderType = $this->property('defaultOrderType');
+        if (!$this->orderTypeManager->hasOrderType($defaultOrderType))
+            $defaultOrderType = Locations_model::DELIVERY;
 
-        if (!$sessionOrder = $this->location->getSession('orderType') OR !in_array($sessionOrder, $locationOrderTypes))
-            $this->location->updateOrderType($defaultOrderType);
+        $this->location->updateOrderType($defaultOrderType);
     }
 }

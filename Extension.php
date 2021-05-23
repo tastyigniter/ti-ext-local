@@ -218,6 +218,14 @@ class Extension extends \System\Classes\BaseExtension
         ];
     }
 
+    public function registerOrderTypes()
+    {
+        return [
+            OrderTypes\Delivery::class => Locations_model::DELIVERY,
+            OrderTypes\Collection::class => Locations_model::COLLECTION,
+        ];
+    }
+
     protected function extendDashboardChartsDatasets()
     {
         Event::listen('admin.charts.extendDatasets', function ($widget) {

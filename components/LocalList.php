@@ -3,6 +3,7 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Locations_model;
+use Igniter\Local\Classes\OrderTypes;
 use Igniter\Local\Traits\SearchesNearby;
 use Location;
 
@@ -147,9 +148,11 @@ class LocalList extends \System\Classes\BaseComponent
             ? $location->getThumb()
             : null;
 
+        $object->orderTypes = OrderTypes::instance()->getOrderTypesWith($location);
+
         $object->openingSchedule = $location->newWorkingSchedule('opening');
-        $object->deliverySchedule = $location->newWorkingSchedule('delivery');
-        $object->collectionSchedule = $location->newWorkingSchedule('collection');
+        $object->deliverySchedule = $object->orderTypes->get(Locations_model::DELIVERY)->getSchedule();
+        $object->collectionSchedule = $object->orderTypes->get(Locations_model::COLLECTION)->getSchedule();
         $object->hasDelivery = $location->hasDelivery();
         $object->hasCollection = $location->hasCollection();
         $object->deliveryMinutes = $location->deliveryMinutes();
