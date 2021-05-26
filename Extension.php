@@ -223,7 +223,7 @@ class Extension extends \System\Classes\BaseExtension
 
     protected function registerOrderTypes()
     {
-        OrderTypes::instance()->registerCallback(function ($manager) {
+        OrderTypes::registerCallback(function ($manager) {
             $manager->registerOrderTypes([
                 \Igniter\Local\OrderTypes\Delivery::class => [
                     'code' => Locations_model::DELIVERY,

@@ -126,7 +126,7 @@ class LocalBox extends \System\Classes\BaseComponent
             if ($orderType->isDisabled())
                 throw new ApplicationException($orderType->getDisabledDescription());
 
-            $this->location->updateOrderType($orderType);
+            $this->location->updateOrderType($orderType->getCode());
 
             $this->controller->pageCycle();
 
