@@ -122,8 +122,9 @@ class LocalBox extends \System\Classes\BaseComponent
             if (!$this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
-            if (!$this->location->checkOrderType($orderType = post('type')))
-                throw new ApplicationException(lang('igniter.local::default.alert_'.$orderType.'_unavailable'));
+            $orderType = $this->location->getOrderType(post('type'));
+            if ($orderType->isDisabled())
+                throw new ApplicationException($orderType->getDisabledDescription());
 
             $this->location->updateOrderType($orderType);
 
@@ -157,7 +158,9 @@ class LocalBox extends \System\Classes\BaseComponent
                 : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
-                throw new ApplicationException(lang('igniter.local::default.alert_'.$this->location->orderType().'_unavailable'));
+                throw new ApplicationException(sprintf(lang('igniter.local::default.alert_order_is_unavailable'),
+                    $this->location->getOrderType()->getLabel()
+                ));
 
             $this->location->updateScheduleTimeSlot($timeSlotDateTime, $timeIsAsap);
 

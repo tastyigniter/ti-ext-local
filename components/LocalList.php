@@ -148,7 +148,7 @@ class LocalList extends \System\Classes\BaseComponent
             ? $location->getThumb()
             : null;
 
-        $object->orderTypes = OrderTypes::instance()->makeOrderTypes($location);
+        $object->orderTypes = $location->availableOrderTypes();
 
         $object->openingSchedule = $location->newWorkingSchedule('opening');
         $object->deliverySchedule = $object->orderTypes->get(Locations_model::DELIVERY)->getSchedule();

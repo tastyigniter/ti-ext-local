@@ -35,7 +35,7 @@ class Delivery extends AbstractOrderType
 
     public function getDisabledDescription(): string
     {
-        return lang('igniter.local::default.text_delivery_is_unavailable');
+        return lang('igniter.local::default.text_delivery_is_disabled');
     }
 
     public function isActive(): bool

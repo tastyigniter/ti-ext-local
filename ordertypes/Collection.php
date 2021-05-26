@@ -35,7 +35,7 @@ class Collection extends AbstractOrderType
 
     public function getDisabledDescription(): string
     {
-        return lang('igniter.local::default.text_collection_is_unavailable');
+        return lang('igniter.local::default.text_collection_is_disabled');
     }
 
     public function isActive(): bool

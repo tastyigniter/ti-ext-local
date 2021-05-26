@@ -46,8 +46,8 @@ return [
     'text_categories' => 'Categories',
     'text_all_categories' => 'All Categories',
 
-    'text_delivery_is_unavailable' => 'Delivery is not available.',
-    'text_collection_is_unavailable' => 'Pick-up is not available.',
+    'text_delivery_is_disabled' => 'Delivery is not available.',
+    'text_collection_is_disabled' => 'Pick-up is not available.',
 
     'text_locations_filter_title' => 'Filter Locations',
     'text_filter_distance' => 'Distance',
@@ -97,9 +97,7 @@ return [
     'alert_invalid_search_query' => 'We couldn\'t locate the entered address/postcode, please enter a valid address/postcode.',
     'alert_no_found_restaurant' => 'We do not have any local restaurant near you.',
     'alert_location_required' => 'No location found or selected',
-    'alert_order_unavailable' => 'This restaurant is unavailable to take orders at the moment.',
-    'alert_delivery_unavailable' => 'This restaurant is unavailable to take delivery orders at the selected time.',
-    'alert_collection_unavailable' => 'This restaurant is unavailable to take pick-up orders at the selected time.',
+    'alert_order_is_unavailable' => 'This restaurant is unavailable to take %s orders at the selected time.',
     'alert_slot_time_required' => 'Please select a slot time.',
     'alert_slot_date_required' => 'Please select a slot date.',
     'alert_slot_type_required' => 'Please select a slot type.',
