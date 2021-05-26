@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Igniter\Local\Classes\CoveredAreaCondition;
-use Igniter\Local\Classes\OrderTypes;
 use Illuminate\Support\Collection;
 use Redirect;
 use Request;
@@ -24,8 +23,6 @@ class LocalBox extends \System\Classes\BaseComponent
      */
     protected $location;
 
-    protected $orderTypeManager;
-
     public function initialize()
     {
         $this->location = App::make('location');
@@ -34,8 +31,6 @@ class LocalBox extends \System\Classes\BaseComponent
                 $q->isApproved();
             },
         ]);
-
-        $this->orderTypeManager = OrderTypes::instance();
     }
 
     public function defineProperties()
@@ -124,7 +119,7 @@ class LocalBox extends \System\Classes\BaseComponent
     public function onChangeOrderType()
     {
         try {
-            if (!$location = $this->location->current())
+            if (!$this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
             if (!$this->location->checkOrderType($orderType = post('type')))
@@ -257,11 +252,11 @@ class LocalBox extends \System\Classes\BaseComponent
             return;
 
         $sessionOrderType = $this->location->getSession('orderType');
-        if ($sessionOrderType AND $this->orderTypeManager->hasOrderType($sessionOrderType))
+        if ($sessionOrderType AND $this->location->hasOrderType($sessionOrderType))
             return;
 
         $defaultOrderType = $this->property('defaultOrderType');
-        if (!$this->orderTypeManager->hasOrderType($defaultOrderType))
+        if (!$this->location->hasOrderType($defaultOrderType))
             $defaultOrderType = Locations_model::DELIVERY;
 
         $this->location->updateOrderType($defaultOrderType);

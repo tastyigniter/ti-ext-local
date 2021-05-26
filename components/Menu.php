@@ -134,7 +134,7 @@ class Menu extends \System\Classes\BaseComponent
             'location' => $location,
             'category' => $this->param('category'),
             'search' => $this->getSearchTerm(),
-            'orderType' => Location::orderTypeIsDelivery() ? 1 : 2,
+            'orderType' => Location::orderType(),
         ]);
 
         $this->mapIntoObjects($list);

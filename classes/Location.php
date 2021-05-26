@@ -137,6 +137,14 @@ class Location extends Manager
         return $this->orderType() === Locations_model::COLLECTION;
     }
 
+    public function hasOrderType($code)
+    {
+        if (!$orderType = $this->getOrderType($code))
+            return FALSE;
+
+        return !$orderType->isDisabled();
+    }
+
     public function getOrderType($code = null)
     {
         $code = !is_null($code) ? $code : $this->orderType();
@@ -149,9 +157,7 @@ class Location extends Manager
         if ($this->orderTypes)
             return $this->orderTypes;
 
-        return $this->orderTypes = OrderTypes::instance()->getOrderTypesWith(
-            $this->current()
-        );
+        return $this->orderTypes = $this->getModel()->availableOrderTypes();
     }
 
     //
@@ -213,17 +219,17 @@ class Location extends Manager
 
     public function orderTimeInterval()
     {
-        return $this->getModel()->getOrderTimeInterval($this->orderType());
+        return $this->getOrderType()->getInterval();
     }
 
     public function lastOrderTime()
     {
-        return Carbon::parse($this->closeTime($this->orderType()));
+        return Carbon::parse($this->getOrderType()->getSchedule()->getCloseTime());
     }
 
     public function orderLeadTime()
     {
-        return $this->getModel()->getOrderLeadTime($this->orderType());
+        return $this->getOrderType()->getLeadTime();
     }
 
     public function orderTimeIsAsap()

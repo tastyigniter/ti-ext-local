@@ -8,6 +8,7 @@ use Admin\Models\Locations_model;
 use Admin\Models\Orders_model;
 use Admin\Models\Reservations_model;
 use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Location\OrderTypes;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
@@ -27,6 +28,8 @@ class Extension extends \System\Classes\BaseExtension
 
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Location', Facades\Location::class);
+
+        $this->registerOrderTypes();
     }
 
     public function boot()
@@ -218,12 +221,20 @@ class Extension extends \System\Classes\BaseExtension
         ];
     }
 
-    public function registerOrderTypes()
+    protected function registerOrderTypes()
     {
-        return [
-            OrderTypes\Delivery::class => Locations_model::DELIVERY,
-            OrderTypes\Collection::class => Locations_model::COLLECTION,
-        ];
+        OrderTypes::instance()->registerCallback(function ($manager) {
+            $manager->registerOrderTypes([
+                \Igniter\Local\OrderTypes\Delivery::class => [
+                    'code' => Locations_model::DELIVERY,
+                    'name' => 'lang:igniter.local::default.text_delivery',
+                ],
+                \Igniter\Local\OrderTypes\Collection::class => [
+                    'code' => Locations_model::COLLECTION,
+                    'name' => 'lang:igniter.local::default.text_collection',
+                ],
+            ]);
+        });
     }
 
     protected function extendDashboardChartsDatasets()

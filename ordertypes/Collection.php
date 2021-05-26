@@ -2,16 +2,11 @@
 
 namespace Igniter\Local\OrderTypes;
 
-use Igniter\Local\Classes\BaseOrderType;
+use Igniter\Flame\Location\AbstractOrderType;
 use Igniter\Local\Facades\Location as LocationFacade;
 
-class Collection extends BaseOrderType
+class Collection extends AbstractOrderType
 {
-    public function getLabel(): string
-    {
-        return lang('igniter.local::default.text_collection');
-    }
-
     public function getOpenDescription(): string
     {
         return sprintf(
