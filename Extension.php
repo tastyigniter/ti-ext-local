@@ -200,7 +200,7 @@ class Extension extends \System\Classes\BaseExtension
         return [
             'reviewsettings' => [
                 'label' => 'lang:igniter.local::default.reviews.text_settings',
-                'icon' => 'fa fa-map-marker',
+                'icon' => 'fa fa-gear',
                 'description' => 'lang:igniter.local::default.reviews.text_settings_description',
                 'model' => 'Igniter\Local\Models\ReviewSettings',
                 'permissions' => ['Admin.Reviews'],
@@ -276,7 +276,7 @@ class Extension extends \System\Classes\BaseExtension
     protected function bindCheckoutEvents(): void
     {
         Event::listen('igniter.checkout.afterSaveOrder', function ($order) {
-            LocationFacade::updateScheduleTimeSlot(null, true);
+            LocationFacade::updateScheduleTimeSlot(null, TRUE);
         });
     }
 
