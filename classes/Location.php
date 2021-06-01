@@ -145,6 +145,10 @@ class Location extends Manager
         return !$orderType->isDisabled();
     }
 
+    /**
+     * @param null $code
+     * @return \Igniter\Flame\Location\AbstractOrderType
+     */
     public function getOrderType($code = null)
     {
         $code = !is_null($code) ? $code : $this->orderType();
@@ -234,7 +238,7 @@ class Location extends Manager
 
     public function orderTimeIsAsap()
     {
-        if ((bool)$this->getModel()->getOption('limit_orders'))
+        if (!$this->getOrderType()->hasAsapSchedule())
             return FALSE;
 
         $dateTime = $this->getSession('order-timeslot.dateTime');
