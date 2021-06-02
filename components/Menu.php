@@ -223,7 +223,6 @@ class Menu extends \System\Classes\BaseComponent
         $object->specialIsActive = ($menuItem->special AND $menuItem->special->active());
         $object->specialDaysRemaining = optional($menuItem->special)->daysRemaining();
 
-        $object->oldPrice = '';
         $object->menuPrice = $menuItem->menu_price;
 
         if($object->specialIsActive){
