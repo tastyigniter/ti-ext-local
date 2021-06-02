@@ -30,6 +30,9 @@
             @endif
 
             <div class="menu-price pr-3">
+                @if ($menuItemObject->specialIsActive)
+                    <s>{!! $menuItemObject->oldPrice > 0 ? currency_format($menuItemObject->oldPrice) : '' !!}</s>
+                @endif
                 <b>{!! $menuItemObject->menuPrice > 0 ? currency_format($menuItemObject->menuPrice) : lang('main::lang.text_free') !!}</b>
             </div>
 
