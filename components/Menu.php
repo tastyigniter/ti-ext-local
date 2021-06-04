@@ -223,9 +223,12 @@ class Menu extends \System\Classes\BaseComponent
         $object->specialIsActive = ($menuItem->special AND $menuItem->special->active());
         $object->specialDaysRemaining = optional($menuItem->special)->daysRemaining();
 
-        $object->menuPrice = $object->specialIsActive
-            ? $menuItem->special->getMenuPrice($menuItem->menu_price)
-            : $menuItem->menu_price;
+        $object->menuPriceBeforeSpecial = $object->menuPrice = $menuItem->menu_price;
+
+        if ($object->specialIsActive) {
+            $object->menuPriceBeforeSpecial = $menuItem->menu_price;
+            $object->menuPrice = $menuItem->special->getMenuPrice($menuItem->menu_price);
+        }
 
         $object->hasThumb = $menuItem->hasMedia('thumb');
         $object->hasOptions = $menuItem->hasOptions();
