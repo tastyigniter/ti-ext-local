@@ -36,18 +36,20 @@
         </button>
 
         <div class="dropdown-menu" aria-labelledby="orderTimePicker">
-            @if ($location->getOrderType()->hasAsapSchedule())
+            @if ($location->hasAsapSchedule())
                 <button
                     type="button"
                     class="dropdown-item py-2"
                     data-timepicker-option="asap"
                 ><i class="fa fa-clock-o"></i>&nbsp;&nbsp;@lang('igniter.local::default.text_asap')</button>
             @endif
-            <button
-                type="button"
-                class="dropdown-item py-2"
-                data-timepicker-option="later"
-            ><i class="fa fa-calendar"></i>&nbsp;&nbsp;@lang('igniter.local::default.text_later')</button>
+            @if ($location->hasLaterSchedule())
+                <button
+                    type="button"
+                    class="dropdown-item py-2"
+                    data-timepicker-option="later"
+                ><i class="fa fa-calendar"></i>&nbsp;&nbsp;@lang('igniter.local::default.text_later')</button>
+            @endif
 
             <form
                 class="dropdown-content px-4 py-3 hide"

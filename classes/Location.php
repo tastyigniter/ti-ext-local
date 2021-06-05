@@ -6,6 +6,7 @@ use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
 use Carbon\Carbon;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
+use Igniter\Flame\Location\AbstractOrderType;
 use Igniter\Flame\Location\Contracts\AreaInterface;
 use Igniter\Flame\Location\Manager;
 
@@ -62,6 +63,8 @@ class Location extends Manager
             $this->forgetSession('orderType');
 
         if (strlen($code)) {
+            $this->forgetSession('order-timeslot');
+
             $this->putSession('orderType', $code);
             $this->fireSystemEvent('location.orderType.updated', [$code, $oldOrderType]);
         }
@@ -238,7 +241,7 @@ class Location extends Manager
 
     public function orderTimeIsAsap()
     {
-        if (!$this->getOrderType()->hasAsapSchedule())
+        if (!$this->hasAsapSchedule())
             return FALSE;
 
         $dateTime = $this->getSession('order-timeslot.dateTime');
@@ -254,8 +257,14 @@ class Location extends Manager
     public function orderDateTime()
     {
         $dateTime = $this->getSession('order-timeslot.dateTime');
-        if ($this->orderTimeIsAsap() OR !$dateTime)
+        if ($this->orderTimeIsAsap())
             $dateTime = $this->asapScheduleTimeslot();
+
+        if (!$dateTime) {
+            $dateTime = $this->hasAsapSchedule()
+                ? $this->asapScheduleTimeslot()
+                : $this->firstScheduleTimeslot();
+        }
 
         return make_carbon($dateTime);
     }
@@ -303,6 +312,16 @@ class Location extends Manager
             return FALSE;
 
         return $orderType->getSchedule()->isOpenAt($timestamp);
+    }
+
+    public function hasAsapSchedule()
+    {
+        return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::LATER_ONLY;
+    }
+
+    public function hasLaterSchedule()
+    {
+        return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::ASAP_ONLY;
     }
 
     //
