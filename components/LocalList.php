@@ -2,9 +2,14 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Models\Addresses_model;
 use Admin\Models\Locations_model;
+use ErrorException;
+use Exception;
+use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Traits\SearchesNearby;
 use Location;
+use Redirect;
 
 class LocalList extends \System\Classes\BaseComponent
 {
@@ -33,11 +38,99 @@ class LocalList extends \System\Classes\BaseComponent
         $this->page['userPosition'] = Location::userPosition();
 
         $this->page['locationsList'] = $this->loadList();
+
+        if ($updatedLocation = $this->updateLocation()) {
+            return Redirect::back();
+        }
+    }
+
+    protected function updateLocation()
+    {
+        $lat = $this->param('lat');
+        $lng = $this->param('lng');
+
+        if ($lat!="" and $lng!="") {
+            $collection = Geocoder::reverse($lat, $lng);
+
+            if ($collection AND !$collection->isEmpty()) {
+                $userLocation  = $collection->first();
+
+                if ($userLocation->hasCoordinates()) {
+                    Location::updateUserPosition($userLocation);
+                    return TRUE;
+                }
+            }
+        }
+
+        $locationSearch = $this->param('locationSearch');
+
+        if (isset($locationSearch)) {
+            $collection = Geocoder::geocode($locationSearch);
+
+            if ($collection AND !$collection->isEmpty()) {
+                $userLocation = $collection->first();
+
+                if ($userLocation->hasCoordinates()) {
+                    Location::updateUserPosition($userLocation);
+                    return TRUE;
+                }
+            }
+        }
+
+        return FALSE;
     }
 
     protected function loadList()
     {
         $sortBy = $orderBy = $this->param('sort_by');
+
+        if (!Location::userPosition()->isValid() AND \Auth::customer()) {
+            $customer = \Auth::customer();
+            if ($customer->address_id) {
+                $address = Addresses_model::find($customer->address_id);
+                $searchQuery = $address->address_1.',';
+                if ($address->address_2)
+                    $searchQuery .= $address->address_2.',';
+                $searchQuery .= $address->city.',';
+                $searchQuery .= $address->state.',';
+                $searchQuery .= $address->postcode;
+
+                $collection = Geocoder::geocode($searchQuery);
+
+                if ($collection AND !$collection->isEmpty()) {
+                    $userLocation = $collection->first();
+
+                    if ($userLocation->hasCoordinates()) {
+                        Location::updateUserPosition($userLocation);
+                    }
+                }
+            }
+        }
+
+        if (!Location::userPosition()->isValid()) {
+            try {
+                $ip = $_SERVER['REMOTE_ADDR'];
+
+                $details = json_decode(file_get_contents("http://ip-api.com/json/{$ip}"));
+                $searchQuery = $details->city.',';
+                $searchQuery .= $details->region.',';
+                $searchQuery .= $details->zip;
+
+                $collection = Geocoder::geocode($searchQuery);
+
+                if ($collection AND !$collection->isEmpty()) {
+                $userLocation = $collection->first();
+
+                if ($userLocation->hasCoordinates()) {
+                    Location::updateUserPosition($userLocation);
+                }
+                }
+            } catch(Exception $e) {
+
+            } catch (ErrorException $e) {
+
+            }
+        }
 
         if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();

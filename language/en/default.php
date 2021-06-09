@@ -83,6 +83,10 @@ return [
     'label_show_local_image' => 'Show Location Thumb',
     'label_local_image_height' => 'Location Thumb Height',
     'label_local_image_width' => 'Location Thumb Width',
+    'label_customer_location' => 'Your Location:',
+    'label_search_locations' => 'Search Restaurants:',
+    'label_find_location' => 'Find My Location',
+
 
     'label_order_time' => '%s Time',
     'label_choose_order_time' => 'Set %s Time',
