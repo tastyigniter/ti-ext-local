@@ -244,6 +244,11 @@ class LocalBox extends \System\Classes\BaseComponent
 
     protected function redirectForceCurrent()
     {
+        if (isset($_GET['preview'])) {
+            if ($this->location->current() && $_GET['preview'] == 'true')
+                return;
+        }
+
         if ($this->location->current() && $this->location->current()->location_status == 1)
             return;
 
