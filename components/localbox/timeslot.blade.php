@@ -24,6 +24,7 @@
             data-boundary="viewport"
             aria-haspopup="true"
             aria-expanded="false"
+            @if ($location->hasAsapSchedule() && !$location->hasLaterSchedule()) disabled="true" @endif
         >
             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;
             <b>
