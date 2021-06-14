@@ -23,10 +23,6 @@ class LocalBox extends \System\Classes\BaseComponent
      */
     protected $location;
 
-    protected $locationCurrent;
-
-    protected $currentSchedule;
-
     public function initialize()
     {
         $this->location = App::make('location');
@@ -123,13 +119,14 @@ class LocalBox extends \System\Classes\BaseComponent
     public function onChangeOrderType()
     {
         try {
-            if (!$location = $this->location->current())
+            if (!$this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
-            if (!$this->location->checkOrderType($orderType = post('type')))
-                throw new ApplicationException(lang('igniter.local::default.alert_'.$orderType.'_unavailable'));
+            $orderType = $this->location->getOrderType(post('type'));
+            if ($orderType->isDisabled())
+                throw new ApplicationException($orderType->getDisabledDescription());
 
-            $this->location->updateOrderType($orderType);
+            $this->location->updateOrderType($orderType->getCode());
 
             $this->controller->pageCycle();
 
@@ -161,7 +158,9 @@ class LocalBox extends \System\Classes\BaseComponent
                 : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
-                throw new ApplicationException(lang('igniter.local::default.alert_'.$this->location->orderType().'_unavailable'));
+                throw new ApplicationException(sprintf(lang('igniter.local::default.alert_order_is_unavailable'),
+                    $this->location->getOrderType()->getLabel()
+                ));
 
             $this->location->updateScheduleTimeSlot($timeSlotDateTime, $timeIsAsap);
 
@@ -192,8 +191,9 @@ class LocalBox extends \System\Classes\BaseComponent
 
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
+        $this->page['locationOrderTypes'] = $this->location->getOrderTypes();
         $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());
-        $this->page['locationCurrentSchedule'] = $this->location->workingSchedule($this->location->orderType());
+        $this->page['locationCurrentSchedule'] = $this->location->getOrderType()->getSchedule();
     }
 
     public function fetchPartials()
@@ -210,9 +210,8 @@ class LocalBox extends \System\Classes\BaseComponent
 
     public function getOpeningHours($format)
     {
-        $hours = $this->location->workingSchedule(
-            $this->location->orderType()
-        )->getPeriod()->getIterator();
+        $hours = $this->location->getOrderType()
+            ->getSchedule()->getPeriod()->getIterator();
 
         return collect($hours)->map(function ($hour) use ($format) {
             return sprintf('%s - %s',
@@ -252,19 +251,17 @@ class LocalBox extends \System\Classes\BaseComponent
 
     protected function updateCurrentOrderType()
     {
-        if (!$locationCurrent = $this->location->current())
+        if (!$this->location->current())
             return;
 
-        $locationOrderTypes = $locationCurrent->availableOrderTypes();
-        $defaultOrderType = $this->property('defaultOrderType', Locations_model::DELIVERY);
-        if (!in_array($defaultOrderType, $locationOrderTypes)) {
-            if (!count($locationOrderTypes))
-                return;
+        $sessionOrderType = $this->location->getSession('orderType');
+        if ($sessionOrderType AND $this->location->hasOrderType($sessionOrderType))
+            return;
 
-            $defaultOrderType = head($locationOrderTypes);
-        }
+        $defaultOrderType = $this->property('defaultOrderType');
+        if (!$this->location->hasOrderType($defaultOrderType))
+            $defaultOrderType = Locations_model::DELIVERY;
 
-        if (!$sessionOrder = $this->location->getSession('orderType') OR !in_array($sessionOrder, $locationOrderTypes))
-            $this->location->updateOrderType($defaultOrderType);
+        $this->location->updateOrderType($defaultOrderType);
     }
 }

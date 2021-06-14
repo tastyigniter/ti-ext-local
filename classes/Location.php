@@ -6,6 +6,7 @@ use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
 use Carbon\Carbon;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
+use Igniter\Flame\Location\AbstractOrderType;
 use Igniter\Flame\Location\Contracts\AreaInterface;
 use Igniter\Flame\Location\Manager;
 
@@ -26,6 +27,11 @@ class Location extends Manager
      * @var \Igniter\Local\Classes\CoveredArea
      */
     protected $coveredArea;
+
+    /**
+     * @var \Illuminate\Support\Collection
+     */
+    protected $orderTypes;
 
     protected $scheduleCache = [];
 
@@ -49,16 +55,18 @@ class Location extends Manager
         $this->setCoveredArea(new CoveredArea($area));
     }
 
-    public function updateOrderType($orderType = null)
+    public function updateOrderType($code = null)
     {
         $oldOrderType = $this->getSession('orderType');
 
-        if (is_null($orderType))
+        if (is_null($code))
             $this->forgetSession('orderType');
 
-        if (strlen($orderType)) {
-            $this->putSession('orderType', $orderType);
-            $this->fireSystemEvent('location.orderType.updated', [$orderType, $oldOrderType]);
+        if (strlen($code)) {
+            $this->forgetSession('order-timeslot');
+
+            $this->putSession('orderType', $code);
+            $this->fireSystemEvent('location.orderType.updated', [$code, $oldOrderType]);
         }
     }
 
@@ -117,24 +125,46 @@ class Location extends Manager
         return setting('location_order') == 1;
     }
 
-    public function checkOrderType($orderType = null)
+    public function checkOrderType($code = null)
     {
-        $orderType = !is_null($orderType) ? $orderType : $this->orderType();
-
-        $model = $this->getModel();
-        $method = 'has'.ucfirst($orderType);
-
-        return $model->methodExists($method) AND $model->$method();
+        return !$this->getOrderType($code)->isDisabled();
     }
 
     public function orderTypeIsDelivery()
     {
-        return $this->orderType() == Locations_model::DELIVERY;
+        return $this->orderType() === Locations_model::DELIVERY;
     }
 
     public function orderTypeIsCollection()
     {
-        return $this->orderType() == Locations_model::COLLECTION;
+        return $this->orderType() === Locations_model::COLLECTION;
+    }
+
+    public function hasOrderType($code)
+    {
+        if (!$orderType = $this->getOrderType($code))
+            return FALSE;
+
+        return !$orderType->isDisabled();
+    }
+
+    /**
+     * @param null $code
+     * @return \Igniter\Flame\Location\AbstractOrderType
+     */
+    public function getOrderType($code = null)
+    {
+        $code = !is_null($code) ? $code : $this->orderType();
+
+        return $this->getOrderTypes()->get($code);
+    }
+
+    public function getOrderTypes()
+    {
+        if ($this->orderTypes)
+            return $this->orderTypes;
+
+        return $this->orderTypes = $this->getModel()->availableOrderTypes();
     }
 
     //
@@ -158,12 +188,12 @@ class Location extends Manager
 
     public function isOpened()
     {
-        return $this->workingSchedule($this->orderType())->isOpen();
+        return $this->getOrderType()->getSchedule()->isOpen();
     }
 
     public function isClosed()
     {
-        return $this->workingSchedule($this->orderType())->isClosed();
+        return $this->getOrderType()->getSchedule()->isClosed();
     }
 
     public function openTime($type = null, $format = null)
@@ -196,29 +226,31 @@ class Location extends Manager
 
     public function orderTimeInterval()
     {
-        return $this->getModel()->getOrderTimeInterval($this->orderType());
+        return $this->getOrderType()->getInterval();
     }
 
     public function lastOrderTime()
     {
-        return Carbon::parse($this->closeTime($this->orderType()));
+        return Carbon::parse($this->getOrderType()->getSchedule()->getCloseTime());
     }
 
     public function orderLeadTime()
     {
-        return $this->getModel()->getOrderLeadTime($this->orderType());
+        return $this->getOrderType()->getLeadTime();
     }
 
     public function orderTimeIsAsap()
     {
-        if ((bool)$this->getModel()->getOption('limit_orders'))
+        if (!$this->hasAsapSchedule())
             return FALSE;
 
         $dateTime = $this->getSession('order-timeslot.dateTime');
         $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', TRUE);
 
-        return ($this->isOpened() AND $orderTimeIsAsap)
-            OR ($dateTime AND now()->isAfter($dateTime));
+        if (!$this->isOpened())
+            return FALSE;
+
+        return $orderTimeIsAsap OR ($dateTime AND now()->isAfter($dateTime));
     }
 
     /**
@@ -227,8 +259,14 @@ class Location extends Manager
     public function orderDateTime()
     {
         $dateTime = $this->getSession('order-timeslot.dateTime');
-        if ($this->orderTimeIsAsap() OR !$dateTime)
+        if ($this->orderTimeIsAsap())
             $dateTime = $this->asapScheduleTimeslot();
+
+        if (!$dateTime OR now()->isAfter($dateTime)) {
+            $dateTime = $this->hasAsapSchedule()
+                ? $this->asapScheduleTimeslot()
+                : $this->firstScheduleTimeslot();
+        }
 
         return make_carbon($dateTime);
     }
@@ -239,7 +277,7 @@ class Location extends Manager
         if (array_key_exists($orderType, $this->scheduleCache))
             return $this->scheduleCache[$orderType];
 
-        $result = $this->workingSchedule($orderType)->getTimeslot(
+        $result = $this->getOrderType()->getSchedule()->getTimeslot(
             $this->orderTimeInterval(), null, $this->orderLeadTime()
         );
 
@@ -259,13 +297,10 @@ class Location extends Manager
         return Carbon::now();
     }
 
-    public function checkOrderTime($timestamp = null, $orderType = null)
+    public function checkOrderTime($timestamp = null, $orderTypeCode = null)
     {
         if (is_null($timestamp))
             $timestamp = $this->orderDateTime();
-
-        if (is_null($orderType))
-            $orderType = $this->orderType();
 
         if (!$timestamp instanceof \DateTime)
             $timestamp = new \DateTime($timestamp);
@@ -273,13 +308,22 @@ class Location extends Manager
         if (Carbon::now()->subMinute()->gte($timestamp))
             return FALSE;
 
-        $days = $this->getModel()->hasFutureOrder($orderType)
-            ? $this->getModel()->futureOrderDays($orderType) : 0;
+        $orderType = $this->getOrderType($orderTypeCode);
 
-        if ($days < Carbon::now()->diffInDays($timestamp))
+        if ($orderType->getFutureDays() < Carbon::now()->diffInDays($timestamp))
             return FALSE;
 
-        return $this->workingSchedule($orderType)->isOpenAt($timestamp);
+        return $orderType->getSchedule()->isOpenAt($timestamp);
+    }
+
+    public function hasAsapSchedule()
+    {
+        return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::LATER_ONLY;
+    }
+
+    public function hasLaterSchedule()
+    {
+        return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::ASAP_ONLY;
     }
 
     //

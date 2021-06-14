@@ -50,6 +50,8 @@ class Info extends \System\Classes\BaseComponent
         $object->name = $current->getName();
         $object->description = $current->getDescription();
 
+        $object->orderTypes = Location::getOrderTypes();
+
         $object->opensAllDay = $current->workingHourType('opening') == '24_7';
         $object->hasDelivery = $current->hasDelivery();
         $object->hasCollection = $current->hasCollection();

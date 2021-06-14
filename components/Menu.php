@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Models\Locations_model;
 use Admin\Models\Menus_model;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -134,7 +135,7 @@ class Menu extends \System\Classes\BaseComponent
             'location' => $location,
             'category' => $this->param('category'),
             'search' => $this->getSearchTerm(),
-            'orderType' => Location::orderTypeIsDelivery() ? 1 : 2,
+            'orderType' => Location::orderType(),
         ]);
 
         $this->mapIntoObjects($list);
@@ -202,7 +203,7 @@ class Menu extends \System\Classes\BaseComponent
         if (is_single_location() AND $param === $this->property('defaultLocationParam', 'local'))
             return;
 
-        if (Location::getBySlug($param))
+        if (Locations_model::whereSlug($param)->exists())
             return;
 
         return Redirect::to($this->controller->pageUrl($this->property('localNotFoundPage')));
