@@ -3,7 +3,6 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Locations_model;
-use Igniter\Local\Classes\OrderTypes;
 use Igniter\Local\Traits\SearchesNearby;
 use Location;
 
