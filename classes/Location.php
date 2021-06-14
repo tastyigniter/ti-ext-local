@@ -247,8 +247,10 @@ class Location extends Manager
         $dateTime = $this->getSession('order-timeslot.dateTime');
         $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', TRUE);
 
-        return ($this->isOpened() AND $orderTimeIsAsap)
-            OR ($dateTime AND now()->isAfter($dateTime));
+        if (!$this->isOpened())
+            return FALSE;
+
+        return $orderTimeIsAsap OR ($dateTime AND now()->isAfter($dateTime));
     }
 
     /**
@@ -260,7 +262,7 @@ class Location extends Manager
         if ($this->orderTimeIsAsap())
             $dateTime = $this->asapScheduleTimeslot();
 
-        if (!$dateTime) {
+        if (!$dateTime OR now()->isAfter($dateTime)) {
             $dateTime = $this->hasAsapSchedule()
                 ? $this->asapScheduleTimeslot()
                 : $this->firstScheduleTimeslot();
