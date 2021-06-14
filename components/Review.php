@@ -60,11 +60,11 @@ class Review extends \System\Classes\BaseComponent
 
     public function initialize()
     {
-        $this->addCss('~/app/admin/formwidgets/starrating/assets/vendor/raty/jquery.raty.css', 'jquery-raty-css');
-        $this->addJs('~/app/admin/formwidgets/starrating/assets/vendor/raty/jquery.raty.js', 'jquery-raty-js');
+        $this->addCss('../formwidgets/starrating/assets/vendor/raty/jquery.raty.css', 'jquery-raty-css');
+        $this->addJs('../formwidgets/starrating/assets/vendor/raty/jquery.raty.js', 'jquery-raty-js');
 
-        $this->addCss('~/app/admin/formwidgets/starrating/assets/css/starrating.css', 'starrating-css');
-        $this->addJs('~/app/admin/formwidgets/starrating/assets/js/starrating.js', 'starrating-js');
+        $this->addCss('../formwidgets/starrating/assets/css/starrating.css', 'starrating-css');
+        $this->addJs('../formwidgets/starrating/assets/js/starrating.js', 'starrating-js');
     }
 
     public function onRun()
