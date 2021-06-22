@@ -2,7 +2,7 @@
   "code": "igniter.local",
   "name": "Local",
   "description": "This extension allows your customers to find the nearest location.",
-  "version": "v1.11.1",
+  "version": "v2.0.0",
   "author": "SamPoyigi",
   "icon": {
     "class": "fa fa-map-marker",
