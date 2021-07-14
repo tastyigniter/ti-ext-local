@@ -7,7 +7,7 @@ return [
     'text_gallery_heading' => 'Gallery of %s',
 
     'text_find' => 'Find',
-    'text_order_summary' => 'Order delicious food online',
+    'text_order_summary' => 'Find a restaurant near you',
     'text_goto_menus' => 'Go to Menu',
     'text_location_summary' => 'We can deliver to you %s',
     'text_enter_location' => 'Check if we can deliver to you',
@@ -73,7 +73,7 @@ return [
     'label_hide_min_order_amount' => 'Hide Min. Order Amount',
     'label_lang' => 'Language Line',
     'label_status' => 'Status',
-    'label_search_query' => 'Enter your address/postcode to order',
+    'label_search_query' => 'Enter your address or postcode to order',
     'label_menu_search' => 'Search menu items.',
     'label_redirect' => 'Page to redirect to when no location is selected',
     'label_menu_page' => 'Menus Page',
@@ -93,8 +93,8 @@ return [
 
     'alert_unknown_error' => 'Error occurred, please check and try again.',
     'alert_no_search_setting' => 'Location Search By setting has not been specified.',
-    'alert_no_search_query' => 'Please type in a postcode/address to check if we can deliver to you.',
-    'alert_invalid_search_query' => 'We couldn\'t locate the entered address/postcode, please enter a valid address/postcode.',
+    'alert_no_search_query' => 'Please type in a address or postcode to check if we can deliver to you.',
+    'alert_invalid_search_query' => 'We couldn\'t locate the entered address or postcode, please enter a valid address or postcode.',
     'alert_no_found_restaurant' => 'We do not have any local restaurant near you.',
     'alert_location_required' => 'No location found or selected',
     'alert_order_is_unavailable' => 'This restaurant is unavailable to take %s orders at the selected time.',

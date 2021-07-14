@@ -1,7 +1,7 @@
 {
   "code": "igniter.local",
   "name": "Local",
-  "description": "This extension allows your customers to find the nearest location.",
+  "description": "This extension allows your customers find the nearest location.",
   "version": "v2.0.0",
   "author": "SamPoyigi",
   "icon": {
