@@ -61,6 +61,11 @@ class Categories extends \System\Classes\BaseComponent
         if (!strlen($slug))
             return null;
 
-        return Categories_model::isEnabled()->where('permalink_slug', $slug)->first();
+        $query = Categories_model::isEnabled()->where('permalink_slug', $slug);
+
+        if ($location = Location::current())
+            $query->whereHasOrDoesntHaveLocation($location->getKey());
+
+        return $query->first();
     }
 }
