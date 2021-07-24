@@ -3,8 +3,8 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Locations_model;
+use Igniter\Local\Facades\Location;
 use Igniter\Local\Traits\SearchesNearby;
-use Location;
 
 class LocalList extends \System\Classes\BaseComponent
 {

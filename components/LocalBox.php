@@ -3,15 +3,15 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Locations_model;
-use App;
-use ApplicationException;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Illuminate\Support\Collection;
-use Redirect;
-use Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class LocalBox extends \System\Classes\BaseComponent
 {

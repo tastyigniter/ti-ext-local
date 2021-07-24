@@ -3,7 +3,7 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Categories_model;
-use Location;
+use Igniter\Local\Facades\Location;
 
 class Categories extends \System\Classes\BaseComponent
 {

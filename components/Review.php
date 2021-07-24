@@ -3,14 +3,14 @@
 namespace Igniter\Local\Components;
 
 use Admin\Traits\ValidatesForm;
-use ApplicationException;
 use Exception;
 use Igniter\Cart\Classes\OrderManager;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\Reviews_model;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Reservation\Classes\BookingManager;
 use Illuminate\Support\Facades\Redirect;
-use Location;
 use Main\Facades\Auth;
 use Main\Traits\UsesPage;
 

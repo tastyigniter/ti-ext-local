@@ -4,9 +4,9 @@ namespace Igniter\Local\Components;
 
 use Admin\Models\Locations_model;
 use Admin\Models\Menus_model;
+use Igniter\Local\Facades\Location;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
-use Location;
 
 class Menu extends \System\Classes\BaseComponent
 {

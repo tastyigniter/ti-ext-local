@@ -361,7 +361,7 @@ class Location extends Manager
 
     /**
      * @return \Igniter\Local\Classes\CoveredArea
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     public function coveredArea()
     {

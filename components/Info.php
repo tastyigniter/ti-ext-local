@@ -4,7 +4,7 @@ namespace Igniter\Local\Components;
 
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
-use Location;
+use Igniter\Local\Facades\Location;
 
 class Info extends \System\Classes\BaseComponent
 {

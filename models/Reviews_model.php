@@ -4,9 +4,9 @@ namespace Igniter\Local\Models;
 
 use Admin\Traits\Locationable;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
-use Model;
 
 /**
  * Reviews Model Class

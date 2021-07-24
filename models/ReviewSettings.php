@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\Models;
 
-use Model;
+use Igniter\Flame\Database\Model;
 
 class ReviewSettings extends Model
 {

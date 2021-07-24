@@ -4,7 +4,7 @@ namespace Igniter\Local\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Add last_location_area column to customer table
