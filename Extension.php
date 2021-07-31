@@ -71,14 +71,14 @@ class Extension extends \System\Classes\BaseExtension
                             [
                                 'attribute' => 'review_count',
                                 'value' => '0',
-                                'condition' => 'is',
+                                'operator' => 'is',
                             ],
                         ],
                         \Igniter\Cart\AutomationRules\Conditions\OrderAttribute::class => [
                             [
                                 'attribute' => 'hours_since',
                                 'value' => '24',
-                                'condition' => 'is',
+                                'operator' => 'is',
                             ],
                         ],
                     ],
