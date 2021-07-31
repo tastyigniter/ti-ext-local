@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\Components;
 
-use Location;
+use Igniter\Local\Facades\Location;
 
 class Gallery extends \System\Classes\BaseComponent
 {

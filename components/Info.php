@@ -4,7 +4,7 @@ namespace Igniter\Local\Components;
 
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
-use Location;
+use Igniter\Local\Facades\Location;
 
 class Info extends \System\Classes\BaseComponent
 {
@@ -49,6 +49,8 @@ class Info extends \System\Classes\BaseComponent
 
         $object->name = $current->getName();
         $object->description = $current->getDescription();
+
+        $object->orderTypes = Location::getOrderTypes();
 
         $object->opensAllDay = $current->workingHourType('opening') == '24_7';
         $object->hasDelivery = $current->hasDelivery();

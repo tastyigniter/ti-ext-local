@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\Controllers;
 
-use AdminMenu;
+use Admin\Facades\AdminMenu;
 use Igniter\Local\Models\Reviews_model;
 
 class Reviews extends \Admin\Classes\AdminController

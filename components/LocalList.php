@@ -7,9 +7,9 @@ use Admin\Models\Locations_model;
 use ErrorException;
 use Exception;
 use Igniter\Flame\Geolite\Facades\Geocoder;
+use Illuminate\Support\Facades\Redirect;
+use Igniter\Local\Facades\Location;
 use Igniter\Local\Traits\SearchesNearby;
-use Location;
-use Redirect;
 
 class LocalList extends \System\Classes\BaseComponent
 {
@@ -239,9 +239,11 @@ class LocalList extends \System\Classes\BaseComponent
             ? $location->getThumb()
             : null;
 
+        $object->orderTypes = $location->availableOrderTypes();
+
         $object->openingSchedule = $location->newWorkingSchedule('opening');
-        $object->deliverySchedule = $location->newWorkingSchedule('delivery');
-        $object->collectionSchedule = $location->newWorkingSchedule('collection');
+        $object->deliverySchedule = $object->orderTypes->get(Locations_model::DELIVERY)->getSchedule();
+        $object->collectionSchedule = $object->orderTypes->get(Locations_model::COLLECTION)->getSchedule();
         $object->hasDelivery = $location->hasDelivery();
         $object->hasCollection = $location->hasCollection();
         $object->deliveryMinutes = $location->deliveryMinutes();

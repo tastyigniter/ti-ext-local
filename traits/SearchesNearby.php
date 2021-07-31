@@ -2,13 +2,13 @@
 
 namespace Igniter\Local\Traits;
 
-use ApplicationException;
 use Exception;
-use Geocoder;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Local\Facades\Location;
 use Illuminate\Support\Facades\Log;
-use Location;
-use Redirect;
-use Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 trait SearchesNearby
 {
@@ -53,7 +53,7 @@ trait SearchesNearby
     /**
      * @param $searchQuery
      * @return \Igniter\Flame\Geolite\Model\Location
-     * @throws \ApplicationException
+     * @throws \Igniter\Flame\Exception\ApplicationException
      */
     protected function geocodeSearchQuery($searchQuery)
     {
