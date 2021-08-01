@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Facades\AdminAuth;
 use Admin\Models\Locations_model;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Traits\SearchesNearby;
@@ -71,11 +72,16 @@ class LocalList extends \System\Classes\BaseComponent
             $options['longitude'] = $coordinates->getLongitude();
         }
 
-        $list = Locations_model::withCount([
+        $query = Locations_model::withCount([
             'reviews' => function ($q) {
                 $q->isApproved();
             },
-        ])->isEnabled()->listFrontEnd($options);
+        ]);
+
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations'))
+            $query->isEnabled();
+
+        $list = $query->listFrontEnd($options);
 
         $this->mapIntoObjects($list);
 

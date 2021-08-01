@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Facades\AdminAuth;
 use Admin\Models\Locations_model;
 use Carbon\Carbon;
 use DateTime;
@@ -100,10 +101,10 @@ class LocalBox extends \System\Classes\BaseComponent
 
         $this->updateCurrentOrderType();
 
-        if ($redirect = $this->redirectForceCurrent()) {
+        if ($this->checkCurrentLocation()) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
 
-            return $redirect;
+            return Redirect::to($this->controller->pageUrl($this->property('redirect')));
         }
 
         $this->prepareVars();
@@ -150,7 +151,7 @@ class LocalBox extends \System\Classes\BaseComponent
             if (!strlen($timeSlotTime = post('time')) AND !$timeIsAsap)
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_time_required'));
 
-            if (!$location = $this->location->current())
+            if (!$this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
             $timeSlotDateTime = $timeIsAsap
@@ -241,17 +242,12 @@ class LocalBox extends \System\Classes\BaseComponent
         return $parsed;
     }
 
-    protected function redirectForceCurrent()
+    protected function checkCurrentLocation()
     {
-        if (isset($_GET['preview'])) {
-            if ($this->location->current() && $_GET['preview'] == 'true')
-                return;
-        }
-
-        if ($this->location->current() && $this->location->current()->location_status == 1)
-            return;
-
-        return Redirect::to($this->controller->pageUrl($this->property('redirect')));
+        $hasAdminAccess = optional(AdminAuth::getUser())->hasPermission('Admin.Locations');
+        $locationEnabled = optional($this->location->current())->location_status;
+        if (!$hasAdminAccess AND !$locationEnabled)
+            return TRUE;
     }
 
     protected function updateCurrentOrderType()
@@ -268,5 +264,12 @@ class LocalBox extends \System\Classes\BaseComponent
             $defaultOrderType = Locations_model::DELIVERY;
 
         $this->location->updateOrderType($defaultOrderType);
+    }
+
+    protected function checkAdminAccess()
+    {
+        $adminUser = AdminAuth::getUser();
+
+        return $adminUser AND $adminUser->hasAccess('Admin.Locations');
     }
 }
