@@ -3,7 +3,7 @@
 namespace Igniter\Local\Classes;
 
 use Igniter\Flame\Location\Contracts\AreaInterface;
-use Location;
+use Igniter\Local\Facades\Location;
 
 /**
  * @method getLocationId()
@@ -64,24 +64,22 @@ class CoveredArea
 
     protected function calculateDistanceCharges()
     {
-        if (isset($this->model->boundaries['distance']) AND count($this->model->boundaries['distance'])) {
+        $distanceFromLocation = Location::checkDistance(2);
 
-            $distanceFromLocation = Location::checkDistance(2);
+        $condition = collect($this->model->boundaries['distance'] ?? [])
+            ->sortBy('priority')
+            ->map(function ($condition) {
+                return new CoveredAreaCondition([
+                    'type' => $condition['type'],
+                    'amount' => $condition['distance'],
+                    'total' => $condition['charge'],
+                ]);
+            })
+            ->first(function (CoveredAreaCondition $condition) use ($distanceFromLocation) {
+                return $condition->isValid($distanceFromLocation);
+            });
 
-            $distances = collect($this->model->boundaries['distance'] ?? [])
-                ->sortBy('distance');
-
-            $distanceCharge = 0;
-            foreach ($distances as $distance) {
-                if ($distance['distance'] <= $distanceFromLocation)
-                    $distanceCharge = $distanceFromLocation * $distance['charge'];
-            }
-
-            return $distanceCharge;
-
-        }
-
-        return 0;
+        return optional($condition)->total ?? 0;
     }
 
     public function __get($key)
