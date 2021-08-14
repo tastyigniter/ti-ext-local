@@ -49,39 +49,19 @@
                     @else
                         <dt class="text-muted">@lang('igniter.local::default.text_closed')</dt>
                     @endif
-                    <dd class="text-muted">
-                        @if ($locationObject->hasDelivery)
-                            @if ($locationObject->deliverySchedule->isOpen())
-                                {!! sprintf(lang('igniter.local::default.text_delivery_time_info'), sprintf(lang('igniter.local::default.text_in_minutes'), $locationObject->deliveryMinutes)) !!}
-                            @elseif ($locationObject->deliverySchedule->isOpening())
-                                {!! sprintf(lang('igniter.local::default.text_delivery_time_info'), sprintf(lang('igniter.local::default.text_starts'), '<b>'.$locationObject->deliveryTime->isoFormat($openingTimeFormat).'</b>')) !!}
+                    @foreach($locationObject->orderTypes as $code => $orderType)
+                        <dd class="text-muted">
+                            @if ($orderType->isDisabled())
+                                {!! $orderType->getDisabledDescription() !!}
+                            @elseif ($orderType->getSchedule()->isOpen())
+                                {!! $orderType->getOpenDescription()!!}
+                            @elseif ($orderType->getSchedule()->isOpening())
+                                {!! $orderType->getOpeningDescription($openingTimeFormat) !!}
                             @else
-                                {!! sprintf(lang('igniter.local::default.text_delivery_time_info'), lang('igniter.local::default.text_is_closed')) !!}
+                                {!! $orderType->getClosedDescription() !!}
                             @endif
-                        @endif
-                    </dd>
-                    <dd class="text-muted">
-                        @if ($locationObject->hasCollection)
-                            @if ($locationObject->collectionSchedule->isOpen())
-                                {!! sprintf(lang('igniter.local::default.text_collection_time_info'), sprintf(lang('igniter.local::default.text_in_minutes'), $locationObject->collectionMinutes)) !!}
-                            @elseif ($locationObject->collectionSchedule->isOpening())
-                                {!! sprintf(lang('igniter.local::default.text_collection_time_info'), sprintf(lang('igniter.local::default.text_starts'), '<b>'.$locationObject->collectionTime->isoFormat($openingTimeFormat).'</b>')) !!}
-                            @else
-                                {!! sprintf(lang('igniter.local::default.text_collection_time_info'), lang('igniter.local::default.text_is_closed')) !!}
-                            @endif
-                        @endif
-                    </dd>
-                    <dd class="text-muted small">
-                        @if (!$locationObject->hasDelivery AND $locationObject->hasCollection)
-                            @lang('igniter.local::default.text_only_collection_is_available')
-                        @elseif ($locationObject->hasDelivery AND !$locationObject->hasCollection)
-                            @lang('igniter.local::default.text_only_delivery_is_available')
-                        @elseif ($locationObject->hasDelivery AND $locationObject->hasCollection)
-                            @lang('igniter.local::default.text_offers_both_types')
-                        @else
-                            @lang('igniter.local::default.text_offers_no_types')
-                        @endif
-                    </dd>
+                        </dd>
+                    @endforeach
                 </dl>
             </div>
         </div>

@@ -7,13 +7,12 @@ return [
     'text_gallery_heading' => 'Gallery of %s',
 
     'text_find' => 'Find',
-    'text_order_summary' => 'Order delicious food online',
+    'text_order_summary' => 'Find a restaurant near you',
     'text_goto_menus' => 'Go to Menu',
     'text_location_summary' => 'We can deliver to you %s',
     'text_enter_location' => 'Check if we can deliver to you',
     'text_hours' => 'Working Hours',
     'text_opening' => 'Opening',
-    'text_opens_24_7' => '<strong>Opens:</strong> 24 hours a day & 7 days a week',
     'text_24h' => 'All day',
     'text_delivery_coverage' => '<span class="text-danger">Sorry, but this restaurant does not deliver to your location</span>',
     'text_is_opened' => '<span class="text-success">We are open</span>',
@@ -40,17 +39,15 @@ return [
     'text_condition_below_total' => '{amount} below {total}',
     'text_delivery_areas' => 'Delivery Areas',
     'text_delivery_map' => 'Delivery Map',
-    'text_working_hour' => '(%s - %s)',
+    'text_working_hour' => '%s - %s',
     'text_min_total' => 'Min. Order Amount',
     'text_no_min_total' => 'No Min. Order Amount',
 
     'text_categories' => 'Categories',
     'text_all_categories' => 'All Categories',
 
-    'text_only_delivery_is_available' => 'Offers delivery only, pick-up is not available.',
-    'text_only_collection_is_available' => 'Offers pick-up only, delivery is not available.',
-    'text_offers_both_types' => 'Offers both delivery and pick-up.',
-    'text_offers_no_types' => 'Does not offer delivery or pick-up.',
+    'text_delivery_is_disabled' => 'Delivery is not available.',
+    'text_collection_is_disabled' => 'Pick-up is not available.',
 
     'text_locations_filter_title' => 'Filter Locations',
     'text_filter_distance' => 'Distance',
@@ -76,7 +73,7 @@ return [
     'label_hide_min_order_amount' => 'Hide Min. Order Amount',
     'label_lang' => 'Language Line',
     'label_status' => 'Status',
-    'label_search_query' => 'Enter your address/postcode to order',
+    'label_search_query' => 'Enter your address or postcode to order',
     'label_menu_search' => 'Search menu items.',
     'label_redirect' => 'Page to redirect to when no location is selected',
     'label_menu_page' => 'Menus Page',
@@ -96,13 +93,11 @@ return [
 
     'alert_unknown_error' => 'Error occurred, please check and try again.',
     'alert_no_search_setting' => 'Location Search By setting has not been specified.',
-    'alert_no_search_query' => 'Please type in a postcode/address to check if we can deliver to you.',
-    'alert_invalid_search_query' => 'We couldn\'t locate the entered address/postcode, please enter a valid address/postcode.',
+    'alert_no_search_query' => 'Please type in a address or postcode to check if we can deliver to you.',
+    'alert_invalid_search_query' => 'We couldn\'t locate the entered address or postcode, please enter a valid address or postcode.',
     'alert_no_found_restaurant' => 'We do not have any local restaurant near you.',
     'alert_location_required' => 'No location found or selected',
-    'alert_order_unavailable' => 'This restaurant is unavailable to take orders at the moment.',
-    'alert_delivery_unavailable' => 'This restaurant is unavailable to take delivery orders at the selected time.',
-    'alert_collection_unavailable' => 'This restaurant is unavailable to take pick-up orders at the selected time.',
+    'alert_order_is_unavailable' => 'This restaurant is unavailable to take %s orders at the selected time.',
     'alert_slot_time_required' => 'Please select a slot time.',
     'alert_slot_date_required' => 'Please select a slot date.',
     'alert_slot_type_required' => 'Please select a slot type.',
@@ -216,6 +211,8 @@ return [
         'text_settings' => 'Review Settings',
         'text_settings_description' => 'Enable/disable and configure reviews settings',
 
+        'text_chase_email' => 'Review chase email to customer',
+
         'column_location' => 'Location',
         'column_author' => 'Author',
         'column_sale_id' => 'Sale ID',
@@ -235,12 +232,15 @@ return [
 
         'label_allow_reviews' => 'Allow Reviews',
         'label_approve_reviews' => 'Approve Reviews',
+        'label_chase_reviews' => 'Chase Reviews',
+        'label_chase_reviews_after' => 'Chase after how many hours?',
 
         'text_tab_title_reviews' => 'Reviews',
 
         'help_allow_reviews' => 'Enable or disable new customer review entry and display of reviews on storefront',
         'help_approve_reviews' => 'Approve new review entry automatically or manually',
         'help_hints' => 'Used when adding reviews.',
+        'help_chase_reviews' => 'Send a follow up email when a review has not been submitted',
 
         'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
         'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',

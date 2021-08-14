@@ -2,10 +2,11 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Models\Locations_model;
 use Admin\Models\Menus_model;
+use Igniter\Local\Facades\Location;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
-use Location;
 
 class Menu extends \System\Classes\BaseComponent
 {
@@ -119,17 +120,22 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
+        $location = $this->getLocation();
+
         $list = Menus_model::with([
             'mealtimes', 'menu_options',
-            'categories', 'categories.media',
+            'categories' => function ($query) use ($location) {
+                $query->whereHasOrDoesntHaveLocation($location);
+            }, 'categories.media',
             'special', 'allergens', 'media', 'allergens.media',
         ])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('menusPerPage'),
             'sort' => $this->property('sort', 'menu_priority asc'),
-            'location' => $this->getLocation(),
+            'location' => $location,
             'category' => $this->param('category'),
             'search' => $this->getSearchTerm(),
+            'orderType' => Location::orderType(),
         ]);
 
         $this->mapIntoObjects($list);
@@ -197,7 +203,7 @@ class Menu extends \System\Classes\BaseComponent
         if (is_single_location() AND $param === $this->property('defaultLocationParam', 'local'))
             return;
 
-        if (Location::getBySlug($param))
+        if (Locations_model::whereSlug($param)->exists())
             return;
 
         return Redirect::to($this->controller->pageUrl($this->property('localNotFoundPage')));
@@ -218,9 +224,12 @@ class Menu extends \System\Classes\BaseComponent
         $object->specialIsActive = ($menuItem->special AND $menuItem->special->active());
         $object->specialDaysRemaining = optional($menuItem->special)->daysRemaining();
 
-        $object->menuPrice = $object->specialIsActive
-            ? $menuItem->special->getMenuPrice($menuItem->menu_price)
-            : $menuItem->menu_price;
+        $object->menuPriceBeforeSpecial = $object->menuPrice = $menuItem->menu_price;
+
+        if ($object->specialIsActive) {
+            $object->menuPriceBeforeSpecial = $menuItem->menu_price;
+            $object->menuPrice = $menuItem->special->getMenuPrice($menuItem->menu_price);
+        }
 
         $object->hasThumb = $menuItem->hasMedia('thumb');
         $object->hasOptions = $menuItem->hasOptions();

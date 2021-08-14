@@ -8,6 +8,7 @@ use Admin\Models\Locations_model;
 use Admin\Models\Orders_model;
 use Admin\Models\Reservations_model;
 use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Location\OrderTypes;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
@@ -27,6 +28,8 @@ class Extension extends \System\Classes\BaseExtension
 
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Location', Facades\Location::class);
+
+        $this->registerOrderTypes();
     }
 
     public function boot()
@@ -38,10 +41,50 @@ class Extension extends \System\Classes\BaseExtension
         });
 
         $this->bindRememberLocationAreaEvents();
+        $this->bindCheckoutEvents();
 
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();
         $this->extendDashboardChartsDatasets();
+    }
+
+    public function registerAutomationRules()
+    {
+        return [
+            'events' => [],
+            'actions' => [],
+            'conditions' => [
+                \Igniter\Local\AutomationRules\Conditions\ReviewCount::class,
+            ],
+            'presets' => [
+                'chase_review_after_one_day' => [
+                    'name' => 'Send a message to leave a review after 24 hours',
+                    'event' => \Igniter\Automation\AutomationRules\Events\OrderSchedule::class,
+                    'actions' => [
+                        \Igniter\Automation\AutomationRules\Actions\SendMailTemplate::class => [
+                            'template' => 'igniter.local::mail.review_chase',
+                            'send_to' => 'customer',
+                        ],
+                    ],
+                    'conditions' => [
+                        \Igniter\Local\AutomationRules\Conditions\ReviewCount::class => [
+                            [
+                                'attribute' => 'review_count',
+                                'value' => '0',
+                                'operator' => 'is',
+                            ],
+                        ],
+                        \Igniter\Cart\AutomationRules\Conditions\OrderAttribute::class => [
+                            [
+                                'attribute' => 'hours_since',
+                                'value' => '24',
+                                'operator' => 'is',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function registerCartConditions()
@@ -121,6 +164,13 @@ class Extension extends \System\Classes\BaseExtension
         ];
     }
 
+    public function registerMailTemplates()
+    {
+        return [
+            'igniter.local::mail.review_chase' => 'lang:igniter.local::default.reviews.text_chase_email',
+        ];
+    }
+
     public function registerNavigation()
     {
         return [
@@ -153,7 +203,7 @@ class Extension extends \System\Classes\BaseExtension
         return [
             'reviewsettings' => [
                 'label' => 'lang:igniter.local::default.reviews.text_settings',
-                'icon' => 'fa fa-map-marker',
+                'icon' => 'fa fa-gear',
                 'description' => 'lang:igniter.local::default.reviews.text_settings_description',
                 'model' => 'Igniter\Local\Models\ReviewSettings',
                 'permissions' => ['Admin.Reviews'],
@@ -169,6 +219,22 @@ class Extension extends \System\Classes\BaseExtension
                 'code' => 'starrating',
             ],
         ];
+    }
+
+    protected function registerOrderTypes()
+    {
+        OrderTypes::registerCallback(function ($manager) {
+            $manager->registerOrderTypes([
+                \Igniter\Local\OrderTypes\Delivery::class => [
+                    'code' => Locations_model::DELIVERY,
+                    'name' => 'lang:igniter.local::default.text_delivery',
+                ],
+                \Igniter\Local\OrderTypes\Collection::class => [
+                    'code' => Locations_model::COLLECTION,
+                    'name' => 'lang:igniter.local::default.text_collection',
+                ],
+            ]);
+        });
     }
 
     protected function extendDashboardChartsDatasets()
@@ -224,6 +290,13 @@ class Extension extends \System\Classes\BaseExtension
         });
 
         Locations_model::addSortingColumns(['reviews_count asc', 'reviews_count desc']);
+    }
+
+    protected function bindCheckoutEvents(): void
+    {
+        Event::listen('igniter.checkout.afterSaveOrder', function ($order) {
+            LocationFacade::updateScheduleTimeSlot(null, TRUE);
+        });
     }
 
     protected function bindRememberLocationAreaEvents(): void

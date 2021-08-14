@@ -1,6 +1,6 @@
 @if (count($locationInfo->schedules))
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th></th>
@@ -10,25 +10,29 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($locationInfo->schedules as $day => $hours)
+            @foreach ($locationInfo->schedules as $day => $schedules)
                 <tr>
                     <td>{{ $day }}</td>
-                    @foreach ($hours->sortByDesc('type') as $hour)
-                        @if ($hour->type == 'delivery' AND !$locationInfo->hasDelivery)
-                            <td>@lang('igniter.local::default.text_closed')</td>
-                        @elseif ($hour->type == 'collection' AND !$locationInfo->hasCollection)
-                            <td>@lang('igniter.local::default.text_closed')</td>
-                        @elseif (!$hour->isEnabled())
-                            <td>@lang('igniter.local::default.text_closed')</td>
-                        @elseif ($hour->isOpenAllDay())
-                            <td>@lang('igniter.local::default.text_24h')</td>
-                        @else
-                            <td>{!! sprintf(
-                                lang('igniter.local::default.text_working_hour'),
-                                $hour->open->isoFormat($infoTimeFormat),
-                                $hour->close->isoFormat($infoTimeFormat)
-                            ) !!}</td>
-                        @endif
+                    @foreach ($schedules->sortByDesc('type')->groupBy('type') as $type => $hours)
+                        <td>
+                            @foreach ($hours as $hour)
+                                @if ($type == 'delivery' AND !$locationInfo->hasDelivery)
+                                    @lang('igniter.local::default.text_closed')
+                                @elseif ($type == 'collection' AND !$locationInfo->hasCollection)
+                                    @lang('igniter.local::default.text_closed')
+                                @elseif (!$hour->isEnabled())
+                                    @lang('igniter.local::default.text_closed')
+                                @elseif ($hour->isOpenAllDay())
+                                    @lang('igniter.local::default.text_24h')
+                                @else
+                                    {!! sprintf(
+                                        lang('igniter.local::default.text_working_hour'),
+                                        $hour->open->isoFormat($infoTimeFormat),
+                                        $hour->close->isoFormat($infoTimeFormat)
+                                    ) !!}{{ $loop->last ? '' : ', ' }}
+                                @endif
+                            @endforeach
+                        </td>
                     @endforeach
                 </tr>
             @endforeach

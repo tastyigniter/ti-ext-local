@@ -8,7 +8,7 @@
                 @endphp
                 <div id="category-{{ $menuCategoryAlias }}-heading" role="tab">
                     <h4
-                        class="category-title cursor-pointer {{ $loop->iteration >= 5 ? 'collapsed' : '' }}"
+                        class="category-title cursor-pointer {{ $loop->iteration >= $menuCollapseCategoriesAfter ? 'collapsed' : '' }}"
                         data-toggle="collapse"
                         data-target="#category-{{ $menuCategoryAlias }}-collapse"
                         aria-expanded="false"

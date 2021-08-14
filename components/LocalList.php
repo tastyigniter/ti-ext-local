@@ -2,9 +2,10 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Facades\AdminAuth;
 use Admin\Models\Locations_model;
+use Igniter\Local\Facades\Location;
 use Igniter\Local\Traits\SearchesNearby;
-use Location;
 
 class LocalList extends \System\Classes\BaseComponent
 {
@@ -24,10 +25,9 @@ class LocalList extends \System\Classes\BaseComponent
 
     public function onRun()
     {
-        $this->id = uniqid($this->alias);
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
         $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
-        $this->page['filterSearch'] = input('search');
+        $this->page['filterSearch'] = input('search', $this->getSearchQuery());
         $this->page['filterSorted'] = input('sort_by');
         $this->page['filterSorters'] = $this->loadFilters();
 
@@ -38,7 +38,7 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $sortBy = $this->param('sort_by');
+        $sortBy = $orderBy = $this->param('sort_by');
 
         if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();
@@ -47,24 +47,24 @@ class LocalList extends \System\Classes\BaseComponent
 
         switch ($sortBy) {
             case 'distance':
-                $sortBy = 'distance asc';
+                $orderBy = 'distance asc';
                 break;
             case 'newest':
-                $sortBy = 'location_id desc';
+                $orderBy = 'location_id desc';
                 break;
             case 'rating':
-                $sortBy = 'reviews_count desc';
+                $orderBy = 'reviews_count desc';
                 break;
             case 'name':
-                $sortBy = 'location_name asc';
+                $orderBy = 'location_name asc';
                 break;
         }
 
         $options = [
             'page' => $this->param('page'),
-            'pageLimit' => $this->property('pageLimit'),
+            'pageLimit' => $this->param('pageLimit', $this->property('pageLimit')),
             'search' => $this->param('search'),
-            'sort' => $sortBy,
+            'sort' => $orderBy,
         ];
 
         if ($coordinates = Location::userPosition()->getCoordinates()) {
@@ -72,13 +72,24 @@ class LocalList extends \System\Classes\BaseComponent
             $options['longitude'] = $coordinates->getLongitude();
         }
 
-        $list = Locations_model::withCount([
+        $query = Locations_model::withCount([
             'reviews' => function ($q) {
                 $q->isApproved();
             },
-        ])->isEnabled()->listFrontEnd($options);
+        ]);
+
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations'))
+            $query->isEnabled();
+
+        $list = $query->listFrontEnd($options);
 
         $this->mapIntoObjects($list);
+
+        if ($sortBy)
+            $list->appends('sort_by', $sortBy);
+
+        if ($pageLimit = $this->param('pageLimit'))
+            $list->appends('pageLimit', $pageLimit);
 
         return $list;
     }
@@ -141,9 +152,11 @@ class LocalList extends \System\Classes\BaseComponent
             ? $location->getThumb()
             : null;
 
+        $object->orderTypes = $location->availableOrderTypes();
+
         $object->openingSchedule = $location->newWorkingSchedule('opening');
-        $object->deliverySchedule = $location->newWorkingSchedule('delivery');
-        $object->collectionSchedule = $location->newWorkingSchedule('collection');
+        $object->deliverySchedule = $object->orderTypes->get(Locations_model::DELIVERY)->getSchedule();
+        $object->collectionSchedule = $object->orderTypes->get(Locations_model::COLLECTION)->getSchedule();
         $object->hasDelivery = $location->hasDelivery();
         $object->hasCollection = $location->hasCollection();
         $object->deliveryMinutes = $location->deliveryMinutes();

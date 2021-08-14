@@ -2,16 +2,17 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Facades\AdminAuth;
 use Admin\Models\Locations_model;
-use App;
-use ApplicationException;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Illuminate\Support\Collection;
-use Redirect;
-use Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class LocalBox extends \System\Classes\BaseComponent
 {
@@ -23,14 +24,10 @@ class LocalBox extends \System\Classes\BaseComponent
      */
     protected $location;
 
-    protected $locationCurrent;
-
-    protected $currentSchedule;
-
     public function initialize()
     {
         $this->location = App::make('location');
-        $this->location->current()->loadCount([
+        optional($this->location->current())->loadCount([
             'reviews' => function ($q) {
                 $q->isApproved();
             },
@@ -104,10 +101,10 @@ class LocalBox extends \System\Classes\BaseComponent
 
         $this->updateCurrentOrderType();
 
-        if ($redirect = $this->redirectForceCurrent()) {
+        if ($this->checkCurrentLocation()) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
 
-            return $redirect;
+            return Redirect::to($this->controller->pageUrl($this->property('redirect')));
         }
 
         $this->prepareVars();
@@ -123,13 +120,14 @@ class LocalBox extends \System\Classes\BaseComponent
     public function onChangeOrderType()
     {
         try {
-            if (!$location = $this->location->current())
+            if (!$this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
-            if (!$this->location->checkOrderType($orderType = post('type')))
-                throw new ApplicationException(lang('igniter.local::default.alert_'.$orderType.'_unavailable'));
+            $orderType = $this->location->getOrderType(post('type'));
+            if ($orderType->isDisabled())
+                throw new ApplicationException($orderType->getDisabledDescription());
 
-            $this->location->updateOrderType($orderType);
+            $this->location->updateOrderType($orderType->getCode());
 
             $this->controller->pageCycle();
 
@@ -153,7 +151,7 @@ class LocalBox extends \System\Classes\BaseComponent
             if (!strlen($timeSlotTime = post('time')) AND !$timeIsAsap)
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_time_required'));
 
-            if (!$location = $this->location->current())
+            if (!$this->location->current())
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
             $timeSlotDateTime = $timeIsAsap
@@ -161,7 +159,9 @@ class LocalBox extends \System\Classes\BaseComponent
                 : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
             if (!$this->location->checkOrderTime($timeSlotDateTime))
-                throw new ApplicationException(lang('igniter.local::default.alert_'.$this->location->orderType().'_unavailable'));
+                throw new ApplicationException(sprintf(lang('igniter.local::default.alert_order_is_unavailable'),
+                    $this->location->getOrderType()->getLabel()
+                ));
 
             $this->location->updateScheduleTimeSlot($timeSlotDateTime, $timeIsAsap);
 
@@ -192,8 +192,9 @@ class LocalBox extends \System\Classes\BaseComponent
 
         $this->page['location'] = $this->location;
         $this->page['locationCurrent'] = $this->location->current();
+        $this->page['locationOrderTypes'] = $this->location->getOrderTypes();
         $this->page['locationTimeslot'] = $this->parseTimeslot($this->location->scheduleTimeslot());
-        $this->page['locationCurrentSchedule'] = $this->location->workingSchedule($this->location->orderType());
+        $this->page['locationCurrentSchedule'] = $this->location->getOrderType()->getSchedule();
     }
 
     public function fetchPartials()
@@ -206,6 +207,19 @@ class LocalBox extends \System\Classes\BaseComponent
             '#local-control' => $this->renderPartial('@control'),
             '#local-box-two' => $this->renderPartial('@box_two'),
         ];
+    }
+
+    public function getOpeningHours($format)
+    {
+        $hours = $this->location->getOrderType()
+            ->getSchedule()->getPeriod()->getIterator();
+
+        return collect($hours)->map(function ($hour) use ($format) {
+            return sprintf('%s - %s',
+                make_carbon($hour->start()->toDateTime())->isoFormat($format),
+                make_carbon($hour->end()->toDateTime())->isoFormat($format)
+            );
+        })->all();
     }
 
     protected function parseTimeslot(Collection $timeslot)
@@ -228,29 +242,34 @@ class LocalBox extends \System\Classes\BaseComponent
         return $parsed;
     }
 
-    protected function redirectForceCurrent()
+    protected function checkCurrentLocation()
     {
-        if ($this->location->current() && $this->location->current()->location_status == 1)
-            return;
-
-        return Redirect::to($this->controller->pageUrl($this->property('redirect')));
+        $hasAdminAccess = optional(AdminAuth::getUser())->hasPermission('Admin.Locations');
+        $locationEnabled = optional($this->location->current())->location_status;
+        if (!$hasAdminAccess AND !$locationEnabled)
+            return TRUE;
     }
 
     protected function updateCurrentOrderType()
     {
-        if (!$locationCurrent = $this->location->current())
+        if (!$this->location->current())
             return;
 
-        $locationOrderTypes = $locationCurrent->availableOrderTypes();
-        $defaultOrderType = $this->property('defaultOrderType', Locations_model::DELIVERY);
-        if (!in_array($defaultOrderType, $locationOrderTypes)) {
-            if (!count($locationOrderTypes))
-                return;
+        $sessionOrderType = $this->location->getSession('orderType');
+        if ($sessionOrderType AND $this->location->hasOrderType($sessionOrderType))
+            return;
 
-            $defaultOrderType = head($locationOrderTypes);
-        }
+        $defaultOrderType = $this->property('defaultOrderType');
+        if (!$this->location->hasOrderType($defaultOrderType))
+            $defaultOrderType = Locations_model::DELIVERY;
 
-        if (!$sessionOrder = $this->location->getSession('orderType') OR !in_array($sessionOrder, $locationOrderTypes))
-            $this->location->updateOrderType($defaultOrderType);
+        $this->location->updateOrderType($defaultOrderType);
+    }
+
+    protected function checkAdminAccess()
+    {
+        $adminUser = AdminAuth::getUser();
+
+        return $adminUser AND $adminUser->hasAccess('Admin.Locations');
     }
 }

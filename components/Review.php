@@ -3,19 +3,21 @@
 namespace Igniter\Local\Components;
 
 use Admin\Traits\ValidatesForm;
-use ApplicationException;
 use Exception;
 use Igniter\Cart\Classes\OrderManager;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\Reviews_model;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Reservation\Classes\BookingManager;
 use Illuminate\Support\Facades\Redirect;
-use Location;
 use Main\Facades\Auth;
+use Main\Traits\UsesPage;
 
 class Review extends \System\Classes\BaseComponent
 {
     use ValidatesForm;
+    use UsesPage;
 
     public function defineProperties()
     {
@@ -60,11 +62,11 @@ class Review extends \System\Classes\BaseComponent
 
     public function initialize()
     {
-        $this->addCss('~/app/admin/formwidgets/starrating/assets/vendor/raty/jquery.raty.css', 'jquery-raty-css');
-        $this->addJs('~/app/admin/formwidgets/starrating/assets/vendor/raty/jquery.raty.js', 'jquery-raty-js');
+        $this->addCss('../formwidgets/starrating/assets/vendor/raty/jquery.raty.css', 'jquery-raty-css');
+        $this->addJs('../formwidgets/starrating/assets/vendor/raty/jquery.raty.js', 'jquery-raty-js');
 
-        $this->addCss('~/app/admin/formwidgets/starrating/assets/css/starrating.css', 'starrating-css');
-        $this->addJs('~/app/admin/formwidgets/starrating/assets/js/starrating.js', 'starrating-js');
+        $this->addCss('../formwidgets/starrating/assets/css/starrating.css', 'starrating-css');
+        $this->addJs('../formwidgets/starrating/assets/js/starrating.js', 'starrating-js');
     }
 
     public function onRun()
@@ -80,7 +82,7 @@ class Review extends \System\Classes\BaseComponent
     public function onLeaveReview()
     {
         try {
-            if (!(bool)ReviewSettings::get('allow_reviews', false))
+            if (!(bool)ReviewSettings::get('allow_reviews', FALSE))
                 throw new ApplicationException(lang('igniter.local::default.review.alert_review_disabled'));
 
             if (!$customer = Auth::customer())
@@ -114,7 +116,7 @@ class Review extends \System\Classes\BaseComponent
             $model->delivery = array_get($data, 'rating.delivery');
             $model->service = array_get($data, 'rating.service');
             $model->review_text = array_get($data, 'review_text');
-            $model->review_status = !(bool)ReviewSettings::get('approve_reviews', false) ? 1 : 0;
+            $model->review_status = !(bool)ReviewSettings::get('approve_reviews', FALSE) ? 1 : 0;
 
             $model->save();
 

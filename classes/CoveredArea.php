@@ -42,7 +42,7 @@ class CoveredArea
     protected function getConditionValue($type, $cartTotal)
     {
         if (!$condition = $this->checkConditions($cartTotal, $type))
-            return $type == 'total' ? 0 : -1;
+            return 0;
 
         // Delivery is unavailable when delivery charge from the matched rule is -1
         if ($condition->amount < 0)

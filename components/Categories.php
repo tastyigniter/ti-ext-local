@@ -3,7 +3,7 @@
 namespace Igniter\Local\Components;
 
 use Admin\Models\Categories_model;
-use Location;
+use Igniter\Local\Facades\Location;
 
 class Categories extends \System\Classes\BaseComponent
 {
@@ -61,6 +61,11 @@ class Categories extends \System\Classes\BaseComponent
         if (!strlen($slug))
             return null;
 
-        return Categories_model::isEnabled()->where('permalink_slug', $slug)->first();
+        $query = Categories_model::isEnabled()->where('permalink_slug', $slug);
+
+        if ($location = Location::current())
+            $query->whereHasOrDoesntHaveLocation($location->getKey());
+
+        return $query->first();
     }
 }

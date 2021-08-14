@@ -3,9 +3,9 @@
 namespace Igniter\Local\CartConditions;
 
 use Admin\Models\Locations_model;
-use Cart;
 use Igniter\Flame\Cart\CartCondition;
-use Location;
+use Igniter\Flame\Cart\Facades\Cart;
+use Igniter\Local\Facades\Location;
 
 class Delivery extends CartCondition
 {

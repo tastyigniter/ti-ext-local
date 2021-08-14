@@ -11,7 +11,7 @@
             class="form-control text-center postcode-control"
             name="search_query"
             placeholder="@lang('igniter.local::default.label_search_query')"
-            value="{{ $searchQueryPosition->isValid() ? trim($searchQueryPosition->format()) : '' }}"
+            value="{{ $__SELF__->getSearchQuery() }}"
         >
         <div class="input-group-append">
             <button
