@@ -64,6 +64,9 @@ class CoveredArea
 
     protected function calculateDistanceCharges()
     {
+        if (!Location::userPosition()->isValid())
+            return 0;
+
         $distanceFromLocation = Location::checkDistance(2);
 
         $condition = collect($this->model->boundaries['distance'] ?? [])
