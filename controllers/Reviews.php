@@ -76,7 +76,7 @@ class Reviews extends \Admin\Classes\AdminController
         if (is_null(self::$reviewHints))
             self::$reviewHints = Reviews_model::make()->getRatingOptions();
 
-        $pieColors = ['', '#1abc9c', '#64B5F6', '#9b59b6', '#f1c40f', '#e74c3c'];
+        $pieColors = ['', '#e74c3c', '#f1c40f', '#9b59b6', '#64B5F6', '#1abc9c'];
 
         $chartData = [
             'datasets' => [
@@ -88,7 +88,7 @@ class Reviews extends \Admin\Classes\AdminController
             'labels' => array_values(self::$reviewHints),
         ];
 
-        for ($rating = 5; $rating > 0; $rating--) {
+        for ($rating = 1; $rating <= 5; $rating++) {
             $chartData['datasets'][0]['data'][] = $records->where($ratingType, $rating)->count();
             $chartData['datasets'][0]['backgroundColor'][] = $pieColors[$rating];
         }
