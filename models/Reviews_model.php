@@ -211,6 +211,6 @@ class Reviews_model extends Model
             $totalReviews += $totalRatings;
         }
 
-        return $totalWeight / ($totalReviews + 1);
+        return $totalReviews > 0 ? ($totalWeight / $totalReviews) : 0;
     }
 }
