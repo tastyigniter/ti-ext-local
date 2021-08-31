@@ -61,8 +61,9 @@ class LocalList extends \System\Classes\BaseComponent
         }
 
         $options = [
-            'page' => $this->param('page'),
-            'pageLimit' => $this->param('pageLimit', $this->property('pageLimit')),
+            'orderTypes' => $this->param('order_types'),
+            'page' => $this->param('page', 1),
+            'pageLimit' => $this->param('pageLimit', $this->property('pageLimit', 20)),
             'search' => $this->param('search'),
             'sort' => $orderBy,
         ];
@@ -70,6 +71,7 @@ class LocalList extends \System\Classes\BaseComponent
         if ($coordinates = Location::userPosition()->getCoordinates()) {
             $options['latitude'] = $coordinates->getLatitude();
             $options['longitude'] = $coordinates->getLongitude();
+            $options['searchDeliveryAreas'] = in_array('delivery', explode(',', $options['orderTypes']));
         }
 
         $query = Locations_model::withCount([
