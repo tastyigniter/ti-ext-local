@@ -53,7 +53,7 @@ class Review extends \System\Classes\BaseComponent
             'redirectPage' => [
                 'label' => 'Page to redirect to when reviews is disabled',
                 'type' => 'select',
-                'default' => 'local/menus',
+                'default' => 'local'.DIRECTORY_SEPARATOR.'menus',
                 'options' => [static::class, 'getThemePageOptions'],
                 'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
             ],

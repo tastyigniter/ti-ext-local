@@ -88,7 +88,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 'label' => 'lang:igniter.local::default.label_menu_page',
                 'type' => 'select',
                 'options' => [static::class, 'getThemePageOptions'],
-                'default' => 'local/menus',
+                'default' => 'local'.DIRECTORY_SEPARATOR.'menus',
                 'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
             ],
         ];
