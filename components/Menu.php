@@ -84,7 +84,7 @@ class Menu extends \System\Classes\BaseComponent
             'hideMenuSearch' => [
                 'label' => 'Hide the menu item search form',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => FALSE,
                 'validationRule' => 'required|boolean',
             ],
             'forceRedirect' => [
