@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Models\Addresses_model;
 use Admin\Models\Customers_model;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
@@ -110,6 +111,9 @@ class Search extends \System\Classes\BaseComponent
 
     protected function updateNearbyAreaFromSavedAddress($address)
     {
+        if (!$address instanceof Addresses_model)
+            return $address;
+
         try {
             $userLocation = $this->geocodeSearchQuery(
                 format_address($address->toArray(), FALSE)

@@ -12,11 +12,11 @@
     >
         <i data-address-picker-loading class="fa fa-map-marker"></i>&nbsp;&nbsp;
         <span class="pr-2">{{ $searchDefaultAddress->formatted_address }}</span>
-        <span class="small text-primary">change</span>
+        <span class="small text-primary">@lang('igniter.local::default.search.text_change')</span>
     </a>
 
     <div class="dropdown-menu w-100" aria-labelledby="savedAddressPicker">
-        <h6 class="dropdown-header">Saved addresses</h6>
+        <h6 class="dropdown-header">@lang('igniter.local::default.search.text_saved_addresses')</h6>
         <a
             class="dropdown-item"
             data-address-picker-control="new"

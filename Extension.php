@@ -320,8 +320,8 @@ class Extension extends \System\Classes\BaseExtension
 
                 $lastArea = json_decode($lastArea, TRUE);
 
-                if ($searchQuery = array_get($lastArea, 'query')) {
-                    $userPosition = Geocoder::geocode($searchQuery)->first();
+                $searchQuery = array_get($lastArea, 'query');
+                if ($searchQuery AND $userPosition = Geocoder::geocode($searchQuery)->first()) {
                     LocationFacade::updateUserPosition($userPosition);
                 }
 
