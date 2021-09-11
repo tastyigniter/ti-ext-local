@@ -250,7 +250,7 @@ class Extension extends \System\Classes\BaseExtension
                 'label' => 'lang:igniter.local::default.reviews.text_title',
                 'color' => '#FFB74D',
                 'model' => Reviews_model::class,
-                'column' => 'date_added',
+                'column' => 'created_at',
             ];
         });
     }

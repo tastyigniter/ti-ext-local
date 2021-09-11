@@ -38,6 +38,6 @@
             {{ $review->customer->address ? $review->customer->address->city : '' }}
         </cite>
         @lang('igniter.local::default.text_on')
-        {{ $review->date_added->isoFormat($reviewDateFormat) }}
+        {{ $review->created_at->isoFormat($reviewDateFormat) }}
     </small>
 </blockquote>

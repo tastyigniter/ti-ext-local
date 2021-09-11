@@ -31,7 +31,7 @@ class Review extends \System\Classes\BaseComponent
             'sort' => [
                 'label' => 'Sort reviews list by',
                 'type' => 'text',
-                'default' => 'date_added asc',
+                'default' => 'created_at asc',
                 'validationRule' => 'required|string',
             ],
             'reviewableType' => [
@@ -147,7 +147,7 @@ class Review extends \System\Classes\BaseComponent
         $list = Reviews_model::with(['customer', 'customer.address'])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('pageLimit'),
-            'sort' => $this->property('sort', 'date_added asc'),
+            'sort' => $this->property('sort', 'created_at asc'),
             'location' => $location->getKey(),
         ]);
 

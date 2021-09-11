@@ -25,7 +25,7 @@ $config['list']['filter'] = [
         'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'daterange',
-            'conditions' => 'date_added >= CAST(:filtered_start AS DATE) AND date_added <= CAST(:filtered_end AS DATE)',
+            'conditions' => 'created_at >= CAST(:filtered_start AS DATE) AND created_at <= CAST(:filtered_end AS DATE)',
         ],
     ],
 ];
@@ -90,7 +90,7 @@ $config['list']['columns'] = [
         'onText' => 'lang:igniter.local::default.reviews.text_pending_review',
         'offText' => 'lang:igniter.local::default.reviews.text_approved',
     ],
-    'date_added' => [
+    'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
     ],
