@@ -14,6 +14,8 @@ class Search extends \System\Classes\BaseComponent
     use \Igniter\Local\Traits\SearchesNearby;
     use \Main\Traits\UsesPage;
 
+    protected $defaultAddress;
+
     protected $savedAddresses;
 
     public function defineProperties()
@@ -37,7 +39,7 @@ class Search extends \System\Classes\BaseComponent
 
     public function showAddressPicker()
     {
-        return Auth::customer() ? TRUE : FALSE;
+        return (Auth::customer() AND $this->getDefaultAddress());
     }
 
     public function getSavedAddresses()
@@ -105,7 +107,7 @@ class Search extends \System\Classes\BaseComponent
 
         $this->page['searchQueryPosition'] = Location::instance()->userPosition();
         $this->page['searchDefaultAddress'] = $this->updateNearbyAreaFromSavedAddress(
-            optional(Auth::customer())->address ?? optional($this->getSavedAddresses())->first()
+            $this->getDefaultAddress()
         );
     }
 
@@ -132,5 +134,14 @@ class Search extends \System\Classes\BaseComponent
         }
 
         return $address;
+    }
+
+    protected function getDefaultAddress()
+    {
+        if (!is_null($this->defaultAddress))
+            return $this->defaultAddress;
+
+        return $this->defaultAddress = optional(Auth::customer())->address
+            ?? optional($this->getSavedAddresses())->first();
     }
 }
