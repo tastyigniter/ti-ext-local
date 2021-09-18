@@ -124,6 +124,8 @@ class Reviews_model extends Model
             }
         }
 
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
         return $query->paginate($pageLimit, $page);
     }
 
