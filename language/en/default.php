@@ -144,6 +144,9 @@ return [
     'search' => [
         'component_title' => 'Local Search Component',
         'component_desc' => 'Displays a standalone local search form',
+
+        'text_change' => 'change',
+        'text_saved_addresses' => 'Saved addresses',
     ],
 
     'menu' => [

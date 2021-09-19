@@ -31,7 +31,7 @@ class Review extends \System\Classes\BaseComponent
             'sort' => [
                 'label' => 'Sort reviews list by',
                 'type' => 'text',
-                'default' => 'date_added asc',
+                'default' => 'created_at asc',
                 'validationRule' => 'required|string',
             ],
             'reviewableType' => [
@@ -53,7 +53,7 @@ class Review extends \System\Classes\BaseComponent
             'redirectPage' => [
                 'label' => 'Page to redirect to when reviews is disabled',
                 'type' => 'select',
-                'default' => 'local/menus',
+                'default' => 'local'.DIRECTORY_SEPARATOR.'menus',
                 'options' => [static::class, 'getThemePageOptions'],
                 'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
             ],
@@ -147,7 +147,7 @@ class Review extends \System\Classes\BaseComponent
         $list = Reviews_model::with(['customer', 'customer.address'])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('pageLimit'),
-            'sort' => $this->property('sort', 'date_added asc'),
+            'sort' => $this->property('sort', 'created_at asc'),
             'location' => $location->getKey(),
         ]);
 

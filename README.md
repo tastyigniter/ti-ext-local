@@ -62,7 +62,6 @@ permalink: /
 | paramFrom           | URL routing code used for determining the location slug           | location        | location         |
 | redirect           | Page name to redirect to when location is not loaded            | home        | home         |
 | defaultOrderType           | The default selected order type            | true/false        | false         |
-| hideSearch           | Show/hide the location search field            | true/false        | false         |
 | showLocalThumb           | Show/hide the current location's thumb            | true/false        | false         |
 | locationThumbWidth        | Location thumb Height        |        80           |      80    |
 | locationThumbHeight       | Location thumb Width     |        80           |      80    |
@@ -240,7 +239,7 @@ permalink: '/:location?local/menus/:category?'
 | Property                 | Description              | Example Value | Default Value |
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | pageLimit | Number of reviews per page       |   20    |     20      |
-| sort | Sort the review list             |    date_added asc    |     date_added asc      |
+| sort | Sort the review list             |    created_at asc    |     created_at asc      |
 | reviewableType | Whether the review form is loaded on an order or reservation page, use by the review form            |   order  |     order      |
 | reviewableHash | Review sale identifier(hash), use by the review form            |   {{ :hash }}  |     {{ :hash }}      |
 | redirectPage | Page name to redirect to when reviews is disabled       |   local/menus  |     local/menus      |
@@ -262,7 +261,7 @@ permalink: '/:location?local/reviews'
 
 '[localReview]':
     pageLimit: 10
-    sort: 'date_added asc'
+    sort: 'created_at asc'
 ---
 ...
 @component('localReview')

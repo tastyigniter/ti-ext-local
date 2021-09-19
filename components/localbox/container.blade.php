@@ -1,21 +1,10 @@
 <div id="local-box">
     @if ($location->orderTypeIsDelivery())
-        <div class="panel local-search">
-            <div class="panel-body">
-                <div class="row">
-                    @if (!$hideSearch)
-                        <div class="col-sm-12">
-                            @partial('@searchbar')
-                        </div>
-                    @endif
-                </div>
-                @if ($location->requiresUserPosition()
-                    AND $location->userPosition()->hasCoordinates()
-                    AND !$location->checkDeliveryCoverage())
-                    <span class="help-block">@lang('igniter.local::default.text_delivery_coverage')</span>
-                @endif
+        @if ($alias = $__SELF__->property('localSearchAlias')  AND has_component($alias))
+            <div id="local-search-container">
+                @partial($alias.'::container')
             </div>
-        </div>
+        @endif
     @endif
 
     @partial($__SELF__.'::default')

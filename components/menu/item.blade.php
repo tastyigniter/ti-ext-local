@@ -2,14 +2,13 @@
     <div class="d-flex flex-row">
         @if ($showMenuImages == 1 AND $menuItemObject->hasThumb)
             <div
-                class="menu-thumb align-self-center mr-3"
-                style="width: {{ $menuImageWidth }}px"
-            >
-                <img
-                    class="img-responsive img-rounded"
-                    alt="{{ $menuItem->menu_name }}"
-                    src="{{ $menuItem->getThumb(['width' => $menuImageWidth, 'height' => $menuImageHeight]) }}"
-                />
+                class="col-3 p-0 mr-3 menu-item-image align-self-center"
+                style="
+                    background: url('{{ $menuItem->getThumb() }}') no-repeat center center;
+                    background-size: cover;
+                    width: {{$menuImageWidth}}px;
+                    height: {{$menuImageHeight}}px;
+                    ">
             </div>
         @endif
 

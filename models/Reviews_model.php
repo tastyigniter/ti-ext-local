@@ -15,10 +15,6 @@ class Reviews_model extends Model
 {
     use Locationable;
 
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = null;
-
     /**
      * @var string The database table name
      */
@@ -56,7 +52,7 @@ class Reviews_model extends Model
         ],
     ];
 
-    public static $allowedSortingColumns = ['date_added asc', 'date_added desc'];
+    public static $allowedSortingColumns = ['created_at asc', 'created_at desc'];
 
     public static $relatedSaleTypes = [
         'orders' => 'Admin\Models\Orders_model',
@@ -128,6 +124,8 @@ class Reviews_model extends Model
             }
         }
 
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
+
         return $query->paginate($pageLimit, $page);
     }
 
@@ -170,7 +168,7 @@ class Reviews_model extends Model
      */
     public function getReviewDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     public static function checkReviewed(Model $object, Model $customer)

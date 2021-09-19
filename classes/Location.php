@@ -140,7 +140,7 @@ class Location extends Manager
         return $this->orderType() === Locations_model::COLLECTION;
     }
 
-    public function hasOrderType($code)
+    public function hasOrderType($code = null)
     {
         if (!$orderType = $this->getOrderType($code))
             return FALSE;

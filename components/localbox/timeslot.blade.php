@@ -29,7 +29,6 @@
             type="button"
             id="orderTimePicker"
             data-toggle="dropdown"
-            data-boundary="viewport"
             aria-haspopup="true"
             aria-expanded="false"
         >
@@ -43,7 +42,7 @@
             </b>
         </button>
 
-        <div class="dropdown-menu" aria-labelledby="orderTimePicker">
+        <div class="dropdown-menu w-100" aria-labelledby="orderTimePicker">
             @if ($location->hasAsapSchedule())
                 <button
                     type="button"

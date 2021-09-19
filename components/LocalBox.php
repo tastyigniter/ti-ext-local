@@ -58,12 +58,6 @@ class LocalBox extends \System\Classes\BaseComponent
                 ],
                 'validationRule' => 'required|in:delivery,collection',
             ],
-            'hideSearch' => [
-                'label' => 'lang:igniter.local::default.label_location_search_mode',
-                'type' => 'switch',
-                'comment' => 'lang:igniter.local::default.help_location_search_mode',
-                'validationRule' => 'required|boolean',
-            ],
             'showLocalThumb' => [
                 'label' => 'lang:igniter.local::default.label_show_local_image',
                 'type' => 'switch',
@@ -88,8 +82,14 @@ class LocalBox extends \System\Classes\BaseComponent
                 'label' => 'lang:igniter.local::default.label_menu_page',
                 'type' => 'select',
                 'options' => [static::class, 'getThemePageOptions'],
-                'default' => 'local/menus',
+                'default' => 'local'.DIRECTORY_SEPARATOR.'menus',
                 'validationRule' => 'regex:/^[a-z0-9\-_\/]+$/i',
+            ],
+            'localSearchAlias' => [
+                'label' => 'Specify the Local Search component alias used to display the local search form',
+                'type' => 'text',
+                'default' => 'localSearch',
+                'validationRule' => 'required|regex:/^[a-z0-9\-_]+$/i',
             ],
         ];
     }
@@ -177,7 +177,6 @@ class LocalBox extends \System\Classes\BaseComponent
 
     protected function prepareVars()
     {
-        $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
         $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
         $this->page['localThumbWidth'] = $this->property('localThumbWidth');
         $this->page['localThumbHeight'] = $this->property('localThumbHeight');
