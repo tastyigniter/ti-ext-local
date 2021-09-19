@@ -168,7 +168,14 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function getOrderTypes()
     {
-        return Location::current()->getOrderTypeOptions();
+        $types = [];
+        foreach (Locations_model::isEnabled()->get() as $location) {
+            foreach ($location->getOrderTypeOptions() as $locationOrderType) {
+                if (!in_array($locationOrderType, $types))
+                    $types[] = $locationOrderType;
+            }
+        }
+        return $types;
     }
 
     protected function mapIntoObjects($list)
