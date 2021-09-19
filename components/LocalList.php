@@ -6,10 +6,14 @@ use Admin\Facades\AdminAuth;
 use Admin\Models\Locations_model;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Traits\SearchesNearby;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
 
 class LocalList extends \System\Classes\BaseComponent
 {
     use SearchesNearby;
+
+    protected static $registeredSorting;
 
     public function defineProperties()
     {
@@ -25,12 +29,16 @@ class LocalList extends \System\Classes\BaseComponent
 
     public function onRun()
     {
+        $this->addJs('js/local.js', 'local-js');
+
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
         $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
-        $this->page['filterSearch'] = input('search', $this->getSearchQuery());
-        $this->page['filterSorted'] = input('sort_by');
-        $this->page['filterSorters'] = $this->loadFilters();
-
+        $this->page['searchTerm'] = $this->page['filterSearch'] = $this->getSearchTerm();
+        $this->page['activeSortBy'] = $this->page['filterSorted'] = $this->getSortBy();
+        $this->page['listSorting'] = $this->page['filterSorters'] = $this->getSorting();
+        $this->page['activeOrderType'] = $this->getOrderType();
+        $this->page['listOrderTypes'] = $this->getOrderTypes();
+        $this->page['filterPageUrl'] = $this->buildPageUrl();
         $this->page['userPosition'] = Location::userPosition();
 
         $this->page['locationsList'] = $this->loadList();
@@ -38,40 +46,21 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function loadList()
     {
-        $sortBy = $orderBy = $this->param('sort_by');
-
-        if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
-            flash()->warning('Could not determine user location')->now();
-            $sortBy = null;
-        }
-
-        switch ($sortBy) {
-            case 'distance':
-                $orderBy = 'distance asc';
-                break;
-            case 'newest':
-                $orderBy = 'location_id desc';
-                break;
-            case 'rating':
-                $orderBy = 'reviews_count desc';
-                break;
-            case 'name':
-                $orderBy = 'location_name asc';
-                break;
-        }
+        $sortBy = $this->getSortByCondition();
 
         $options = [
-            'orderTypes' => $this->param('order_types'),
-            'page' => $this->param('page', 1),
-            'pageLimit' => $this->param('pageLimit', $this->property('pageLimit', 20)),
+            'pageLimit' => null,
             'search' => $this->param('search'),
-            'sort' => $orderBy,
+            'sort' => $sortBy,
+            'paginate' => FALSE,
         ];
+
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations'))
+            $options['enabled'] = TRUE;
 
         if ($coordinates = Location::userPosition()->getCoordinates()) {
             $options['latitude'] = $coordinates->getLatitude();
             $options['longitude'] = $coordinates->getLongitude();
-            $options['searchDeliveryAreas'] = in_array('delivery', explode(',', $options['orderTypes']));
         }
 
         $query = Locations_model::withCount([
@@ -80,10 +69,22 @@ class LocalList extends \System\Classes\BaseComponent
             },
         ]);
 
-        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations'))
-            $query->isEnabled();
+        $searchDeliveryAreas = FALSE;
+        if (strlen($orderType = $this->getOrderType())) {
+            if ($orderType == 'delivery')
+                $searchDeliveryAreas = TRUE;
 
-        $list = $query->listFrontEnd($options);
+            $optionKey = studly_case('has_'.$orderType);
+            $options[$optionKey] = TRUE;
+        }
+
+        $query->listFrontEnd($options);
+
+        $list = $this->filterQueryResult($query->get(), $searchDeliveryAreas);
+
+        $page = $this->param('page', 1);
+        $pageLimit = $this->param('pageLimit', $this->property('pageLimit', 20));
+        $list = new Paginator($list->forPage($page, $pageLimit), $pageLimit, $page);
 
         $this->mapIntoObjects($list);
 
@@ -96,33 +97,78 @@ class LocalList extends \System\Classes\BaseComponent
         return $list;
     }
 
-    protected function loadFilters()
+    protected function getSorting()
     {
         $url = page_url().'?';
-        if ($filterSearch = input('search')) {
-            $url .= 'search='.$filterSearch.'&';
-        }
+        if ($searchTerm = $this->getSearchTerm())
+            $url .= 'search='.$searchTerm.'&';
 
-        $filters = [
+        if ($orderType = $this->getOrderType())
+            $url .= 'order_type='.$orderType.'&';
+
+        return collect($this->listSorting())
+            ->sortBy('priority')
+            ->mapWithKeys(function ($sorting, $code) use ($url) {
+                $sorting['href'] = $url.'sort_by='.$code;
+
+                return [$code => $sorting];
+            })
+            ->all();
+    }
+
+    protected function listSorting()
+    {
+        if (self::$registeredSorting)
+            return self::$registeredSorting;
+
+        $result = [
             'distance' => [
                 'name' => lang('igniter.local::default.text_filter_distance'),
-                'href' => $url.'sort_by=distance',
+                'priority' => 0,
+                'condition' => 'distance asc',
             ],
             'newest' => [
                 'name' => lang('igniter.local::default.text_filter_newest'),
-                'href' => $url.'sort_by=newest',
+                'priority' => 1,
+                'condition' => 'location_id desc',
             ],
             'rating' => [
                 'name' => lang('igniter.local::default.text_filter_rating'),
-                'href' => $url.'sort_by=rating',
+                'priority' => 2,
+                'condition' => 'reviews_count desc',
             ],
             'name' => [
                 'name' => lang('admin::lang.label_name'),
-                'href' => $url.'sort_by=name',
+                'priority' => 3,
+                'condition' => 'location_name asc',
             ],
         ];
 
-        return $filters;
+        $eventResult = Event::fire('local.list.extendSorting');
+        if (is_array($eventResult))
+            $result = array_merge($result, ...array_filter($eventResult));
+
+        return self::$registeredSorting = $result;
+    }
+
+    protected function getSortBy()
+    {
+        return input('sort_by', $this->param('sort_by'));
+    }
+
+    protected function getSearchTerm()
+    {
+        return input('search', $this->param('search'));
+    }
+
+    protected function getOrderType()
+    {
+        return input('order_type', $this->param('order_type', Locations_model::DELIVERY));
+    }
+
+    protected function getOrderTypes()
+    {
+        return Location::current()->getOrderTypeOptions();
     }
 
     protected function mapIntoObjects($list)
@@ -145,10 +191,7 @@ class LocalList extends \System\Classes\BaseComponent
         $object->address = $location->getAddress();
         $object->reviewsScore = $location->reviews_score();
         $object->reviewsCount = $location->reviews_count;
-
-        $object->distance = ($coordinates = Location::userPosition()->getCoordinates())
-            ? $location->calculateDistance($coordinates)
-            : null;
+        $object->distance = $location->distance;
 
         $object->thumb = ($object->hasThumb = $location->hasMedia('thumb'))
             ? $location->getThumb()
@@ -170,5 +213,41 @@ class LocalList extends \System\Classes\BaseComponent
         $object->model = $location;
 
         return $object;
+    }
+
+    protected function getSortByCondition()
+    {
+        $sortBy = $this->param('sort_by');
+        if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
+            flash()->warning('Could not determine user location')->now();
+
+            return null;
+        }
+
+        return array_get($this->getSorting(), $sortBy.'.condition');
+    }
+
+    protected function filterQueryResult($collection, $searchDeliveryAreas = FALSE)
+    {
+        $coordinates = Location::userPosition()->getCoordinates();
+        if ($searchDeliveryAreas AND $coordinates) {
+            $collection = $collection->filter(function ($location) use ($coordinates) {
+                return (bool)$location->searchDeliveryArea($coordinates);
+            });
+        }
+
+        return $collection;
+    }
+
+    protected function buildPageUrl()
+    {
+        $url = page_url().'?';
+        if ($searchTerm = $this->getSearchTerm())
+            $url .= 'search='.$searchTerm.'&';
+
+        if ($sortBy = $this->getSortBy())
+            $url .= 'sort_by='.$sortBy.'&';
+
+        return $url;
     }
 }

@@ -41,4 +41,11 @@
             $('[data-address-picker-loading]').removeClass('fa-spinner fa-spin')
         })
 
+    $(document).on('change', 'input[type="radio"][name="order_type"][data-page-url]', function (event) {
+        var $input = $(event.currentTarget),
+            pageUrl = $input.data('pageUrl')
+
+        window.location.href = pageUrl+'order_type='+$input.val()
+    })
+
 }(jQuery)
