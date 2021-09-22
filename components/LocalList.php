@@ -4,7 +4,6 @@ namespace Igniter\Local\Components;
 
 use Admin\Facades\AdminAuth;
 use Admin\Models\Locations_model;
-use Igniter\Flame\Location\OrderTypes;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Traits\SearchesNearby;
 use Illuminate\Pagination\Paginator;
@@ -169,10 +168,7 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function getOrderTypes()
     {
-        return collect(OrderTypes::instance()->listOrderTypes())
-            ->map(function ($type) {
-                return $type['name'];
-            });
+        return Location::current()->getOrderTypeOptions();
     }
 
     protected function mapIntoObjects($list)
