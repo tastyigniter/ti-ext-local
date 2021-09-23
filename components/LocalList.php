@@ -24,6 +24,18 @@ class LocalList extends \System\Classes\BaseComponent
                 'default' => 'mi',
                 'validationRule' => 'required|in:km,mi',
             ],
+            'searchParamName' => [
+                'type' => 'text',
+                'default' => 'search',
+            ],
+            'sortByParamName' => [
+                'type' => 'text',
+                'default' => 'sort_by',
+            ],
+            'orderTypeParamName' => [
+                'type' => 'text',
+                'default' => 'order_type',
+            ],
         ];
     }
 
@@ -33,6 +45,10 @@ class LocalList extends \System\Classes\BaseComponent
 
         $this->page['distanceUnit'] = $this->property('distanceUnit', setting('distance_unit'));
         $this->page['openingTimeFormat'] = lang('system::lang.moment.day_time_format_short');
+        $this->page['searchTermParam'] = $this->property('searchParamName');
+        $this->page['sortByParam'] = $this->property('sortByParamName');
+        $this->page['orderTypeParam'] = $this->property('orderTypeParamName');
+
         $this->page['searchTerm'] = $this->page['filterSearch'] = $this->getSearchTerm();
         $this->page['activeSortBy'] = $this->page['filterSorted'] = $this->getSortBy();
         $this->page['listSorting'] = $this->page['filterSorters'] = $this->getSorting();
@@ -50,7 +66,7 @@ class LocalList extends \System\Classes\BaseComponent
 
         $options = [
             'pageLimit' => null,
-            'search' => $this->param('search'),
+            'search' => $this->getSearchTerm(),
             'sort' => $sortBy,
             'paginate' => FALSE,
         ];
@@ -89,7 +105,7 @@ class LocalList extends \System\Classes\BaseComponent
         $this->mapIntoObjects($list);
 
         if ($sortBy)
-            $list->appends('sort_by', $sortBy);
+            $list->appends($this->property('sortByParamName'), $sortBy);
 
         if ($pageLimit = $this->param('pageLimit'))
             $list->appends('pageLimit', $pageLimit);
@@ -101,15 +117,15 @@ class LocalList extends \System\Classes\BaseComponent
     {
         $url = page_url().'?';
         if ($searchTerm = $this->getSearchTerm())
-            $url .= 'search='.$searchTerm.'&';
+            $url .= $this->property('searchParamName').'='.$searchTerm.'&';
 
         if ($orderType = $this->getOrderType())
-            $url .= 'order_type='.$orderType.'&';
+            $url .= $this->property('orderTypeParamName').'='.$orderType.'&';
 
         return collect($this->listSorting())
             ->sortBy('priority')
             ->mapWithKeys(function ($sorting, $code) use ($url) {
-                $sorting['href'] = $url.'sort_by='.$code;
+                $sorting['href'] = $url.$this->property('sortByParamName').'='.$code;
 
                 return [$code => $sorting];
             })
@@ -153,17 +169,23 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function getSortBy()
     {
-        return input('sort_by', $this->param('sort_by'));
+        $sortByParamName = $this->property('sortByParamName');
+
+        return input($sortByParamName, $this->param($sortByParamName));
     }
 
     protected function getSearchTerm()
     {
-        return input('search', $this->param('search'));
+        $searchParamName = $this->property('searchParamName');
+
+        return input($searchParamName, $this->param($searchParamName));
     }
 
     protected function getOrderType()
     {
-        return input('order_type', $this->param('order_type', Locations_model::DELIVERY));
+        $orderTypeParamName = $this->property('orderTypeParamName');
+
+        return input($orderTypeParamName, $this->param($orderTypeParamName));
     }
 
     protected function getOrderTypes()
@@ -217,7 +239,7 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function getSortByCondition()
     {
-        $sortBy = $this->param('sort_by');
+        $sortBy = $this->getSortBy();
         if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();
 
@@ -243,10 +265,10 @@ class LocalList extends \System\Classes\BaseComponent
     {
         $url = page_url().'?';
         if ($searchTerm = $this->getSearchTerm())
-            $url .= 'search='.$searchTerm.'&';
+            $url .= $this->property('searchParamName').'='.$searchTerm.'&';
 
         if ($sortBy = $this->getSortBy())
-            $url .= 'sort_by='.$sortBy.'&';
+            $url .= $this->property('sortByParamName').'='.$sortBy.'&';
 
         return $url;
     }

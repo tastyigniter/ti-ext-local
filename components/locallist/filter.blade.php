@@ -22,7 +22,7 @@
                     <input
                         type="radio"
                         id="customRadio{{$key}}"
-                        name="order_type"
+                        name="{{ $orderTypeParam }}"
                         class="custom-control-input"
                         value="{{$key}}"
                         data-page-url="{{ $filterPageUrl }}"
