@@ -1,13 +1,39 @@
-<div class="card">
-    <div class="card-header">
-        <h5>@lang('igniter.local::default.text_locations_filter_title')</h5>
+@if ($searchQueryPosition->isValid())
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex">
+                <h5 class="mb-0 d-inline-block flex-grow-1">
+                    <i class="fa fa-map-marker"></i>&nbsp;&nbsp;
+                    {{ $searchQueryPosition->getLocality() }}
+                </h5>
+                <a
+                    class="text-primary"
+                    href="{{ page_url('home') }}"
+                >@lang('igniter.local::default.search.text_change')</a>
+            </div>
+        </div>
     </div>
+@endif
+<div class="card">
     <div class="list-group list-group-flush">
-        @foreach ($filterSorters as $key => $filter)
-            <a
-                class="list-group-item{{ $key == $filterSorted ? ' disabled' : '' }}"
-                href="{{ $filter['href'] }}"
-            >{{ $filter['name'] }}</a>
+        @foreach ($listOrderTypes as $key => $name)
+            <div class="list-group-item">
+                <div class="custom-control custom-radio">
+                    <input
+                        type="radio"
+                        id="customRadio{{$key}}"
+                        name="{{ $orderTypeParam }}"
+                        class="custom-control-input"
+                        value="{{$key}}"
+                        data-page-url="{{ $filterPageUrl }}"
+                        {!! $key == $activeOrderType ? 'checked=checked' : '' !!}
+                    />
+                    <label
+                        class="custom-control-label w-100"
+                        for="customRadio{{$key}}"
+                    >@lang($name)</label>
+                </div>
+            </div>
         @endforeach
     </div>
 </div>

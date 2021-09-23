@@ -49,7 +49,7 @@ return [
     'text_delivery_is_disabled' => 'Delivery is not available.',
     'text_collection_is_disabled' => 'Pick-up is not available.',
 
-    'text_locations_filter_title' => 'Filter Locations',
+    'text_locations_filter_title' => 'Filters',
     'text_filter_distance' => 'Distance',
     'text_filter_newest' => 'Newest',
     'text_filter_rating' => 'Rating',
