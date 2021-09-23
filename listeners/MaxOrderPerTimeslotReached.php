@@ -4,31 +4,42 @@ namespace Igniter\Local\Listeners;
 
 use Admin\Models\Orders_model;
 use Carbon\Carbon;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Location\Models\AbstractLocation;
-use Igniter\Flame\Traits\EventEmitter;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Illuminate\Contracts\Events\Dispatcher;
 
 class MaxOrderPerTimeslotReached
 {
-    use EventEmitter;
-
     protected static $ordersCache = [];
 
     public function subscribe(Dispatcher $dispatcher)
     {
         $dispatcher->listen('igniter.workingSchedule.timeslotValid', __CLASS__.'@timeslotValid');
+
+        $dispatcher->listen('igniter.checkout.beforeSaveOrder', __CLASS__.'@beforeSaveOrder');
     }
 
     public function timeslotValid($workingSchedule, $timeslot)
     {
-        $locationModel = LocationFacade::current();
-
-        if (!(bool)$locationModel->getOption('limit_orders'))
-            return;
-
         // Skip if the working schedule is not for delivery or pickup
         if ($workingSchedule->getType() == AbstractLocation::OPENING)
+            return;
+
+        if ($this->execute($timeslot, $workingSchedule->getType()))
+            return FALSE;
+    }
+
+    public function beforeSaveOrder($order, $data)
+    {
+        if ($this->execute($order->order_datetime, $order->order_type))
+            throw new ApplicationException(lang('igniter.local::default.alert_max_guest_reached'));
+    }
+
+    protected function execute($timeslot, $orderType)
+    {
+        $locationModel = LocationFacade::current();
+        if (!(bool)$locationModel->getOption('limit_orders'))
             return;
 
         $ordersOnThisDay = $this->getOrders($timeslot);
@@ -36,7 +47,7 @@ class MaxOrderPerTimeslotReached
             return;
 
         $startTime = Carbon::parse($timeslot);
-        $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($workingSchedule->getType()))->subMinute();
+        $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($orderType))->subMinute();
 
         $orderCount = $ordersOnThisDay->filter(function ($time) use ($startTime, $endTime) {
             $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $startTime->format('Y-m-d').' '.$time);
@@ -44,8 +55,7 @@ class MaxOrderPerTimeslotReached
             return $orderTime->between($startTime, $endTime);
         })->count();
 
-        if ($orderCount >= (int)$locationModel->getOption('limit_orders_count', 50))
-            return FALSE;
+        return $orderCount >= (int)$locationModel->getOption('limit_orders_count', 50);
     }
 
     protected function getOrders($timeslot)

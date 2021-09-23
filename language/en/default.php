@@ -101,6 +101,7 @@ return [
     'alert_slot_time_required' => 'Please select a slot time.',
     'alert_slot_date_required' => 'Please select a slot date.',
     'alert_slot_type_required' => 'Please select a slot type.',
+    'alert_max_guest_reached' => 'We\'ve reached the maximum number of orders allowed for the selected timeslot, please choose another timeslot.',
 
     'component_title' => 'Local Box Component',
     'component_desc' => 'Displays local information box',
