@@ -61,8 +61,8 @@ class Search extends \System\Classes\BaseComponent
         if (!Location::requiresUserPosition())
             return FALSE;
 
-        return Location::userPosition()->hasCoordinates()
-            AND !Location::checkDeliveryCoverage();
+        return !Location::userPosition()->hasCoordinates()
+            OR !Location::checkDeliveryCoverage();
     }
 
     public function onRun()
@@ -116,10 +116,12 @@ class Search extends \System\Classes\BaseComponent
         if (!$address instanceof Addresses_model)
             return $address;
 
+        $searchQuery = format_address($address->toArray(), FALSE);
+        if ($searchQuery == Location::getSession('searchQuery'))
+            return $address;
+
         try {
-            $userLocation = $this->geocodeSearchQuery(
-                format_address($address->toArray(), FALSE)
-            );
+            $userLocation = $this->geocodeSearchQuery($searchQuery);
 
             Location::searchByCoordinates($userLocation->getCoordinates())
                 ->first(function ($location) use ($userLocation) {
