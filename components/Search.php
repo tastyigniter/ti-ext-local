@@ -39,7 +39,7 @@ class Search extends \System\Classes\BaseComponent
 
     public function showAddressPicker()
     {
-        return (Auth::customer() AND $this->getDefaultAddress());
+        return Auth::customer() AND $this->getDefaultAddress();
     }
 
     public function getSavedAddresses()
