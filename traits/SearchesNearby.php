@@ -20,10 +20,12 @@ trait SearchesNearby
     public function onSearchNearby()
     {
         try {
-            if (!strlen($searchQuery = post('search_query')))
+            if (!$searchQuery = $this->getRequestSearchQuery())
                 throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
 
-            $userLocation = $this->geocodeSearchQuery($searchQuery);
+            $userLocation = is_array($searchQuery)
+                ? $this->geocodeSearchPoint($searchQuery)
+                : $this->geocodeSearchQuery($searchQuery);
 
             $nearByLocation = Location::searchByCoordinates(
                 $userLocation->getCoordinates()
@@ -50,6 +52,14 @@ trait SearchesNearby
         }
     }
 
+    protected function getRequestSearchQuery()
+    {
+        if ($coordinates = post('search_point'))
+            return $coordinates;
+
+        return post('search_query');
+    }
+
     /**
      * @param $searchQuery
      * @return \Igniter\Flame\Geolite\Model\Location
@@ -59,6 +69,34 @@ trait SearchesNearby
     {
         $collection = Geocoder::geocode($searchQuery);
 
+        $userLocation = $this->handleGeocodeResponse($collection);
+
+        Location::putSession('searchQuery', $searchQuery);
+
+        return $userLocation;
+    }
+
+    protected function geocodeSearchPoint($searchPoint)
+    {
+        if (count($searchPoint) !== 2)
+            throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
+
+        [$latitude, $longitude] = $searchPoint;
+        if (!strlen($latitude) OR !strlen($longitude))
+            throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
+
+        $collection = Geocoder::reverse($latitude, $longitude);
+
+        $userLocation = $this->handleGeocodeResponse($collection);
+
+        Location::putSession('searchPoint', $searchPoint);
+        Location::putSession('searchQuery', $userLocation->format());
+
+        return $userLocation;
+    }
+
+    protected function handleGeocodeResponse($collection)
+    {
         if (!$collection OR $collection->isEmpty()) {
             Log::error(implode(PHP_EOL, Geocoder::getLogs()));
             throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
@@ -69,8 +107,6 @@ trait SearchesNearby
             throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
 
         Location::updateUserPosition($userLocation);
-
-        Location::putSession('searchQuery', $searchQuery);
 
         return $userLocation;
     }
