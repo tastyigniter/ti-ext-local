@@ -37,15 +37,32 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'igniter/local/reviews/create',
         ],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete',
-            'class' => 'btn btn-danger',
-            'data-attach-loading' => '',
-            'data-request' => 'onDelete',
-            'data-request-form' => '#list-form',
-            'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.label_status',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'review_status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:igniter.local::default.reviews.text_approved',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:igniter.local::default.reviews.text_pending_review',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
         ],
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -87,8 +104,8 @@ $config['list']['columns'] = [
     'review_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
-        'onText' => 'lang:igniter.local::default.reviews.text_pending_review',
-        'offText' => 'lang:igniter.local::default.reviews.text_approved',
+        'onText' => 'lang:igniter.local::default.reviews.text_approved',
+        'offText' => 'lang:igniter.local::default.reviews.text_pending_review',
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
@@ -184,6 +201,8 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
         'default' => TRUE,
+        'on' => 'lang:igniter.local::default.reviews.text_approved',
+        'off' => 'lang:igniter.local::default.reviews.text_pending_review',
     ],
 ];
 
