@@ -11,7 +11,7 @@
     @endif
 
     <dd>
-        @if ($openingTime->isToday() AND $locationCurrentSchedule->getPeriod($openingTime)->opensAllDay())
+        @if ($openingTime->isToday() && $locationCurrentSchedule->getPeriod($openingTime)->opensAllDay())
             <span class="fa fa-clock"></span>&nbsp;&nbsp;
             <span>@lang('igniter.local::default.text_24_7_hour')</span>
         @elseif ($openingHours = $__SELF__->getOpeningHours($localBoxTimeFormat))
@@ -21,11 +21,11 @@
     </dd>
 
     <dd class="text-muted">
-        @if (!$locationCurrent->hasDelivery() AND $locationCurrent->hasCollection())
+        @if (!$locationCurrent->hasDelivery() && $locationCurrent->hasCollection())
             @lang('igniter.local::default.text_collection_only')
-        @elseif ($locationCurrent->hasDelivery() AND !$locationCurrent->hasCollection())
+        @elseif ($locationCurrent->hasDelivery() && !$locationCurrent->hasCollection())
             @lang('igniter.local::default.text_delivery_only')
-        @elseif ($locationCurrent->hasDelivery() AND $locationCurrent->hasCollection())
+        @elseif ($locationCurrent->hasDelivery() && $locationCurrent->hasCollection())
             @lang('igniter.local::default.text_both_types')
         @else
             @lang('igniter.local::default.text_no_types')

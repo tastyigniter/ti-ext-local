@@ -16,9 +16,9 @@
                     @foreach ($schedules->sortByDesc('type')->groupBy('type') as $type => $hours)
                         <td>
                             @foreach ($hours as $hour)
-                                @if ($type == 'delivery' AND !$locationInfo->hasDelivery)
+                                @if ($type == 'delivery' && !$locationInfo->hasDelivery)
                                     @lang('igniter.local::default.text_closed')
-                                @elseif ($type == 'collection' AND !$locationInfo->hasCollection)
+                                @elseif ($type == 'collection' && !$locationInfo->hasCollection)
                                     @lang('igniter.local::default.text_closed')
                                 @elseif (!$hour->isEnabled())
                                     @lang('igniter.local::default.text_closed')

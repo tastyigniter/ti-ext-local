@@ -10,7 +10,7 @@
         <i class="fa fa-clock-o"></i>&nbsp;&nbsp;
         <b>@lang('igniter.cart::default.text_is_closed')</b>
     </button>
-@elseif ($orderTimeIsAsap AND !$location->hasLaterSchedule())
+@elseif ($orderTimeIsAsap && !$location->hasLaterSchedule())
     <button
         class="btn btn-light btn-timepicker btn-block text-truncate active"
         id="orderTimePicker"

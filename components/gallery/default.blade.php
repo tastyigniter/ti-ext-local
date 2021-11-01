@@ -1,4 +1,4 @@
-@if (($galleryImages = array_get($gallery, 'images')) AND count($galleryImages))
+@if (($galleryImages = array_get($gallery, 'images')) && count($galleryImages))
     <h1 class="h4"><b>{{ array_get($gallery, 'title') }}</b></h1>
     <p>{!! nl2br(array_get($gallery, 'description', '')) !!}</p><br/>
     <div class="row gallery">

@@ -1,6 +1,6 @@
 <div id="menu{{ $menuItem->menu_id }}" class="menu-item">
     <div class="d-flex flex-row">
-        @if ($showMenuImages == 1 AND $menuItemObject->hasThumb)
+        @if ($showMenuImages == 1 && $menuItemObject->hasThumb)
             <div
                 class="col-3 p-0 mr-3 menu-item-image align-self-center"
                 style="
