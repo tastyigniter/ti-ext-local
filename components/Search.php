@@ -39,7 +39,7 @@ class Search extends \System\Classes\BaseComponent
 
     public function showAddressPicker()
     {
-        return Auth::customer() AND $this->getDefaultAddress();
+        return Auth::customer() && $this->getDefaultAddress();
     }
 
     public function getSavedAddresses()
@@ -62,7 +62,7 @@ class Search extends \System\Classes\BaseComponent
             return FALSE;
 
         return !Location::userPosition()->hasCoordinates()
-            OR !Location::checkDeliveryCoverage();
+            || !Location::checkDeliveryCoverage();
     }
 
     public function onRun()

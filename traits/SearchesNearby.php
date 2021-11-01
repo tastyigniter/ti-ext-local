@@ -82,7 +82,7 @@ trait SearchesNearby
             throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
 
         [$latitude, $longitude] = $searchPoint;
-        if (!strlen($latitude) OR !strlen($longitude))
+        if (!strlen($latitude) || !strlen($longitude))
             throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
 
         $collection = Geocoder::reverse($latitude, $longitude);
@@ -97,7 +97,7 @@ trait SearchesNearby
 
     protected function handleGeocodeResponse($collection)
     {
-        if (!$collection OR $collection->isEmpty()) {
+        if (!$collection || $collection->isEmpty()) {
             Log::error(implode(PHP_EOL, Geocoder::getLogs()));
             throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
         }

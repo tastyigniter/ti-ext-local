@@ -145,10 +145,10 @@ class LocalBox extends \System\Classes\BaseComponent
             if (!is_numeric($timeIsAsap = post('asap')))
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_type_required'));
 
-            if (!strlen($timeSlotDate = post('date')) AND !$timeIsAsap)
+            if (!strlen($timeSlotDate = post('date')) && !$timeIsAsap)
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_date_required'));
 
-            if (!strlen($timeSlotTime = post('time')) AND !$timeIsAsap)
+            if (!strlen($timeSlotTime = post('time')) && !$timeIsAsap)
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_time_required'));
 
             if (!$this->location->current())
@@ -245,7 +245,7 @@ class LocalBox extends \System\Classes\BaseComponent
     {
         $hasAdminAccess = optional(AdminAuth::getUser())->hasPermission('Admin.Locations');
         $locationEnabled = optional($this->location->current())->location_status;
-        if (!$hasAdminAccess AND !$locationEnabled)
+        if (!$hasAdminAccess && !$locationEnabled)
             return TRUE;
     }
 
@@ -255,7 +255,7 @@ class LocalBox extends \System\Classes\BaseComponent
             return;
 
         $sessionOrderType = $this->location->getSession('orderType');
-        if ($sessionOrderType AND $this->location->hasOrderType($sessionOrderType))
+        if ($sessionOrderType && $this->location->hasOrderType($sessionOrderType))
             return;
 
         $defaultOrderType = $this->property('defaultOrderType');
@@ -269,6 +269,6 @@ class LocalBox extends \System\Classes\BaseComponent
     {
         $adminUser = AdminAuth::getUser();
 
-        return $adminUser AND $adminUser->hasAccess('Admin.Locations');
+        return $adminUser && $adminUser->hasAccess('Admin.Locations');
     }
 }

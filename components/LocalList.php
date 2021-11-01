@@ -240,7 +240,7 @@ class LocalList extends \System\Classes\BaseComponent
     protected function getSortByCondition()
     {
         $sortBy = $this->getSortBy();
-        if ($sortBy == 'distance' AND !Location::userPosition()->isValid()) {
+        if ($sortBy == 'distance' && !Location::userPosition()->isValid()) {
             flash()->warning('Could not determine user location')->now();
 
             return null;
@@ -252,7 +252,7 @@ class LocalList extends \System\Classes\BaseComponent
     protected function filterQueryResult($collection, $searchDeliveryAreas = FALSE)
     {
         $coordinates = Location::userPosition()->getCoordinates();
-        if ($searchDeliveryAreas AND $coordinates) {
+        if ($searchDeliveryAreas && $coordinates) {
             $collection = $collection->filter(function ($location) use ($coordinates) {
                 return (bool)$location->searchDeliveryArea($coordinates);
             });

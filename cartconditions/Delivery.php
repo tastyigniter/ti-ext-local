@@ -49,7 +49,7 @@ class Delivery extends CartCondition
 
     public function whenInValid()
     {
-        if (!Cart::subtotal() OR !$this->minimumOrder)
+        if (!Cart::subtotal() || !$this->minimumOrder)
             return;
 
         flash()->warning(sprintf(
