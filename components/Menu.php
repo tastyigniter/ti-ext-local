@@ -172,7 +172,7 @@ class Menu extends \System\Classes\BaseComponent
         $groupedList = [];
         foreach ($list->getCollection() as $menuItemObject) {
             $categories = $menuItemObject->model->categories;
-            if (!$categories OR $categories->isEmpty()) {
+            if (!$categories || $categories->isEmpty()) {
                 $groupedList[0][] = $menuItemObject;
                 continue;
             }
@@ -200,7 +200,7 @@ class Menu extends \System\Classes\BaseComponent
             return;
 
         $param = $this->param('location', 'local');
-        if (is_single_location() AND $param === $this->property('defaultLocationParam', 'local'))
+        if (is_single_location() && $param === $this->property('defaultLocationParam', 'local'))
             return;
 
         if (Locations_model::whereSlug($param)->exists())
@@ -221,7 +221,7 @@ class Menu extends \System\Classes\BaseComponent
     {
         $object = new \stdClass();
 
-        $object->specialIsActive = ($menuItem->special AND $menuItem->special->active());
+        $object->specialIsActive = ($menuItem->special && $menuItem->special->active());
         $object->specialDaysRemaining = optional($menuItem->special)->daysRemaining();
 
         $object->menuPriceBeforeSpecial = $object->menuPrice = $menuItem->menu_price;

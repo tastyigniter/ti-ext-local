@@ -321,12 +321,12 @@ class Extension extends \System\Classes\BaseExtension
                 $lastArea = json_decode($lastArea, TRUE);
 
                 $searchQuery = array_get($lastArea, 'query');
-                if ($searchQuery AND $userPosition = Geocoder::geocode($searchQuery)->first()) {
+                if ($searchQuery && $userPosition = Geocoder::geocode($searchQuery)->first()) {
                     LocationFacade::updateUserPosition($userPosition);
                 }
 
                 $areaId = array_get($lastArea, 'areaId');
-                if ($areaId AND $area = Location_areas_model::find($areaId)) {
+                if ($areaId && $area = Location_areas_model::find($areaId)) {
                     LocationFacade::updateNearbyArea($area);
                 }
             }

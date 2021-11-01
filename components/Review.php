@@ -89,7 +89,7 @@ class Review extends \System\Classes\BaseComponent
                 throw new ApplicationException(lang('igniter.local::default.review.alert_expired_login'));
 
             $reviewable = $this->getReviewable();
-            if (!$reviewable OR !$reviewable->isCompleted())
+            if (!$reviewable || !$reviewable->isCompleted())
                 throw new ApplicationException(lang('igniter.local::default.review.alert_review_status_history'));
 
             if ($this->checkReviewableExists($reviewable))
@@ -158,7 +158,7 @@ class Review extends \System\Classes\BaseComponent
     {
         $reviewable = $this->getReviewable();
 
-        if (!$reviewable OR !$reviewable->isCompleted())
+        if (!$reviewable || !$reviewable->isCompleted())
             return null;
 
         return $reviewable;

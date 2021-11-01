@@ -250,7 +250,7 @@ class Location extends Manager
         if (!$this->isOpened())
             return FALSE;
 
-        return $orderTimeIsAsap OR ($dateTime AND now()->isAfter($dateTime));
+        return $orderTimeIsAsap || ($dateTime && now()->isAfter($dateTime));
     }
 
     /**
@@ -262,7 +262,7 @@ class Location extends Manager
         if ($this->orderTimeIsAsap())
             $dateTime = $this->asapScheduleTimeslot();
 
-        if (!$dateTime OR now()->isAfter($dateTime)) {
+        if (!$dateTime || now()->isAfter($dateTime)) {
             $dateTime = $this->hasAsapSchedule()
                 ? $this->asapScheduleTimeslot()
                 : $this->firstScheduleTimeslot();
@@ -372,7 +372,7 @@ class Location extends Manager
         if ($areaId = (int)$this->getSession('area'))
             $area = $this->getModel()->findDeliveryArea($areaId);
 
-        if ($area AND $this->getId() !== $area->getLocationId()) {
+        if ($area && $this->getId() !== $area->getLocationId()) {
             $area = null;
             $this->clearCoveredArea();
         }
@@ -383,7 +383,7 @@ class Location extends Manager
             );
         }
 
-        if (!$area OR !$area instanceof AreaInterface)
+        if (!$area || !$area instanceof AreaInterface)
             return new CoveredArea(new Location_areas_model());
 
         $coveredArea = new CoveredArea($area);
