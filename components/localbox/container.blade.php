@@ -1,6 +1,6 @@
 <div id="local-box">
     @if ($location->orderTypeIsDelivery())
-        @if ($alias = $__SELF__->property('localSearchAlias')  && has_component($alias))
+        @if (($alias = $__SELF__->property('localSearchAlias')) && has_component($alias))
             <div class="panel local-search">
                 <div class="panel-body">
                     <div id="local-search-container">
