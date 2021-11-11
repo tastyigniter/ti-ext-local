@@ -8,7 +8,7 @@
             href="{{ page_url('local/menus', ['category' => $category->permalink_slug]) }}"
         >{{ $category->name }}</a>
 
-        @if ((!isset($displayAsFlatTree) OR !$displayAsFlatTree) && count($category->children))
+        @if ((!isset($displayAsFlatTree) || !$displayAsFlatTree) && count($category->children))
             <ul class="nav flex-column ml-3 my-1">
                 @partial('@items', ['categories' => $category->children])
             </ul>
