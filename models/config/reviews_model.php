@@ -75,10 +75,9 @@ $config['list']['columns'] = [
             'href' => 'igniter/local/reviews/edit/{review_id}',
         ],
     ],
-    'location' => [
+    'location_name' => [
         'label' => 'lang:igniter.local::default.reviews.column_location',
         'relation' => 'location',
-        'select' => 'location_name',
         'searchable' => TRUE,
         'locationAware' => TRUE,
     ],
