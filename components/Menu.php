@@ -123,7 +123,7 @@ class Menu extends \System\Classes\BaseComponent
         $location = $this->getLocation();
 
         $list = Menus_model::with([
-            'mealtimes', 'menu_options',
+            'mealtimes', 'menu_option_values.option_value',
             'categories' => function ($query) use ($location) {
                 $query->whereHasOrDoesntHaveLocation($location);
             }, 'categories.media',
