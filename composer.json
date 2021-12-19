@@ -1,0 +1,24 @@
+{
+  "name": "tastyigniter/ti-ext-local",
+  "type": "tastyigniter-extension",
+  "description": "This extension allows your customers find and view menu items of their nearest location.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "SamPoyigi",
+      "email": "sam@sampoyigi.com"
+    }
+  ],
+  "extra": {
+    "tastyigniter-extension": {
+      "code": "igniter.local",
+      "name": "Local",
+      "icon": {
+        "class": "fa fa-map-marker",
+        "backgroundColor": "#CD4341",
+        "color": "#fff"
+      },
+      "homepage": "https://tastyigniter.com/marketplace/item/igniter-local"
+    }
+  }
+}
