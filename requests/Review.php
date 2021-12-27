@@ -6,18 +6,33 @@ use System\Classes\FormRequest;
 
 class Review extends FormRequest
 {
+    public function attributes()
+    {
+        return [
+            'sale_type' => lang('igniter.local::default.reviews.label_sale_type'),
+            'sale_id' => lang('igniter.local::default.reviews.label_sale_id'),
+            'location_id' => lang('igniter.local::default.reviews.label_location'),
+            'customer_id' => lang('igniter.local::default.reviews.label_customer'),
+            'quality' => lang('igniter.local::default.reviews.label_quality'),
+            'delivery' => lang('igniter.local::default.reviews.label_delivery'),
+            'service' => lang('igniter.local::default.reviews.label_service'),
+            'review_text' => lang('igniter.local::default.reviews.label_text'),
+            'review_status' => lang('admin::lang.label_status'),
+        ];
+    }
+
     public function rules()
     {
         return [
-            ['sale_type', 'igniter.local::default.reviews.label_sale_type', 'required'],
-            ['sale_id', 'igniter.local::default.reviews.label_sale_id', 'required|integer|saleIdExists'],
-            ['location_id', 'igniter.local::default.reviews.label_location', 'required|integer'],
-            ['customer_id', 'igniter.local::default.reviews.label_customer', 'required|integer'],
-            ['quality', 'igniter.local::default.reviews.label_quality', 'required|integer|min:1'],
-            ['delivery', 'igniter.local::default.reviews.label_delivery', 'required|integer|min:1'],
-            ['service', 'igniter.local::default.reviews.label_service', 'required|integer|min:1'],
-            ['review_text', 'igniter.local::default.reviews.label_text', 'required|between:2,1028'],
-            ['review_status', 'admin::lang.label_status', 'required|boolean'],
+            'sale_type' => ['required'],
+            'sale_id' => ['required', 'integer', 'saleIdExists'],
+            'location_id' => ['required', 'integer'],
+            'customer_id' => ['required', 'integer'],
+            'quality' => ['required', 'integer', 'min:1'],
+            'delivery' => ['required|integer', 'min:1'],
+            'service' => ['required', 'integer', 'min:1'],
+            'review_text' => ['required', 'between:2,1028'],
+            'review_status' => ['required', 'boolean'],
         ];
     }
 
