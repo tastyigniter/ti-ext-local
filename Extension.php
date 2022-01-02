@@ -313,7 +313,7 @@ class Extension extends \System\Classes\BaseExtension
             ]);
         });
 
-        Event::listen('igniter.user.login', function () {
+        Event::listen(['igniter.user.login', 'igniter.socialite.login'], function () {
             try {
                 if (!strlen($lastArea = Auth::customer()->last_location_area))
                     return;
