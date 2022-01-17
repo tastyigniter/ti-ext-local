@@ -53,16 +53,16 @@ class CoveredAreaCondition
     public function isValid($cartTotal)
     {
         if ($this->type === 'above' || $this->type == 'equals_or_greater')
-            return $cartTotal >= $this->total;
+            return $cartTotal >= $this->amount;
 
         if ($this->type == 'equals_or_less')
-            return $cartTotal <= $this->total;
+            return $cartTotal <= $this->amount;
 
         if ($this->type == 'greater')
-            return $cartTotal > $this->total;
+            return $cartTotal > $this->amount;
 
         if ($this->type === 'below' || $this->type == 'less')
-            return $cartTotal < $this->total;
+            return $cartTotal < $this->amount;
 
         return TRUE;
     }
