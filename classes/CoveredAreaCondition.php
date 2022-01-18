@@ -47,22 +47,22 @@ class CoveredAreaCondition
 
     public function getMinTotal()
     {
-        return $this->amount;
+        return $this->total;
     }
 
     public function isValid($cartTotal)
     {
         if ($this->type === 'above' || $this->type == 'equals_or_greater')
-            return $cartTotal >= $this->amount;
+            return $cartTotal >= $this->total;
 
         if ($this->type == 'equals_or_less')
-            return $cartTotal <= $this->amount;
+            return $cartTotal <= $this->total;
 
         if ($this->type == 'greater')
-            return $cartTotal > $this->amount;
+            return $cartTotal > $this->total;
 
         if ($this->type === 'below' || $this->type == 'less')
-            return $cartTotal < $this->amount;
+            return $cartTotal < $this->total;
 
         return TRUE;
     }
