@@ -47,7 +47,7 @@ class CoveredAreaCondition
 
     public function getMinTotal()
     {
-        return $this->amount;
+        return $this->total;
     }
 
     public function isValid($cartTotal)

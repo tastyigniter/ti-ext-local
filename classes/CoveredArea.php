@@ -74,8 +74,8 @@ class CoveredArea
             ->map(function ($condition) {
                 return new CoveredAreaCondition([
                     'type' => $condition['type'],
-                    'amount' => $condition['distance'],
-                    'total' => $condition['charge'],
+                    'amount' => $condition['charge'],
+                    'total' => $condition['distance'],
                 ]);
             })
             ->first(function (CoveredAreaCondition $condition) use ($distanceFromLocation) {
