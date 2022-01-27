@@ -61,8 +61,8 @@ class Search extends \System\Classes\BaseComponent
         if (!Location::requiresUserPosition())
             return FALSE;
 
-        return !Location::userPosition()->hasCoordinates()
-            || !Location::checkDeliveryCoverage();
+        return Location::userPosition()->hasCoordinates()
+            && !Location::checkDeliveryCoverage();
     }
 
     public function onRun()
