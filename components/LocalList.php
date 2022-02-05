@@ -6,7 +6,7 @@ use Admin\Facades\AdminAuth;
 use Admin\Models\Locations_model;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Traits\SearchesNearby;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Event;
 
 class LocalList extends \System\Classes\BaseComponent
@@ -96,21 +96,25 @@ class LocalList extends \System\Classes\BaseComponent
 
         $query->listFrontEnd($options);
 
-        $list = $this->filterQueryResult($query->get(), $searchDeliveryAreas);
-
         $page = $this->param('page', 1);
         $pageLimit = $this->param('pageLimit', $this->property('pageLimit', 20));
-        $list = new Paginator($list->forPage($page, $pageLimit), $pageLimit, $page);
 
-        $this->mapIntoObjects($list);
+        $results = $query->get()->forPage($page, $pageLimit);
 
-        if ($sortBy)
-            $list->appends($this->property('sortByParamName'), $sortBy);
+        $results = $this->mapIntoObjects(
+            $this->filterQueryResult($results, $searchDeliveryAreas)
+        );
 
-        if ($pageLimit = $this->param('pageLimit'))
-            $list->appends('pageLimit', $pageLimit);
-
-        return $list;
+        return new LengthAwarePaginator(
+            $results,
+            $query->toBase()->getCountForPagination(),
+            $pageLimit,
+            $page,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
     }
 
     protected function getSorting()
@@ -193,15 +197,11 @@ class LocalList extends \System\Classes\BaseComponent
         return Location::current()->getOrderTypeOptions();
     }
 
-    protected function mapIntoObjects($list)
+    protected function mapIntoObjects($collection)
     {
-        $collection = $list->getCollection()->map(function ($location) {
+        return $collection->map(function ($location) {
             return $this->createLocationObject($location);
         });
-
-        $list->setCollection($collection);
-
-        return $list;
     }
 
     protected function createLocationObject($location)
