@@ -41,7 +41,6 @@ class Extension extends \System\Classes\BaseExtension
         });
 
         $this->bindRememberLocationAreaEvents();
-        $this->bindCheckoutEvents();
 
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();
@@ -290,13 +289,6 @@ class Extension extends \System\Classes\BaseExtension
         });
 
         Locations_model::addSortingColumns(['reviews_count asc', 'reviews_count desc']);
-    }
-
-    protected function bindCheckoutEvents(): void
-    {
-        Event::listen('igniter.checkout.afterSaveOrder', function ($order) {
-            LocationFacade::updateScheduleTimeSlot(null, TRUE);
-        });
     }
 
     protected function bindRememberLocationAreaEvents(): void
