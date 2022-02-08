@@ -85,7 +85,7 @@ class Location extends Manager
     {
         $oldSlot = $this->getSession('order-timeslot');
 
-        $slot['dateTime'] = !$isAsap ? make_carbon($dateTime) : null;
+        $slot['dateTime'] = (!$isAsap && !is_null($dateTime)) ? make_carbon($dateTime) : null;
         $slot['isAsap'] = $isAsap;
 
         if (!$slot) {
