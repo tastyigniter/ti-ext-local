@@ -1,4 +1,4 @@
-@foreach ($menuItem->allergens->where('status', 1) ?? [] as $allergen)
+@foreach ($menuItem->ingredients->isAllergen()->where('status', 1) ?? [] as $allergen)
     <a
         class="badge {{ !($hasMedia = $allergen->hasMedia('thumb')) ? 'badge-light' : '' }} rounded mt-2 mr-1"
         data-toggle="tooltip"
