@@ -28,9 +28,9 @@ class Review extends FormRequest
             'sale_id' => ['required', 'integer', 'saleIdExists'],
             'location_id' => ['required', 'integer'],
             'customer_id' => ['required', 'integer'],
-            'quality' => ['required', 'integer', 'min:1'],
-            'delivery' => ['required|integer', 'min:1'],
-            'service' => ['required', 'integer', 'min:1'],
+            'quality' => ['required', 'integer', 'min:1', 'max:5'],
+            'delivery' => ['required', 'integer', 'min:1', 'max:5'],
+            'service' => ['required', 'integer', 'min:1', 'max:5'],
             'review_text' => ['required', 'between:2,1028'],
             'review_status' => ['required', 'boolean'],
         ];
