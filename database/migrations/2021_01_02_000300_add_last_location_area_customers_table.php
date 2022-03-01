@@ -13,6 +13,9 @@ class AddLastLocationAreaCustomersTable extends Migration
 {
     public function up()
     {
+        if (Schema::hasColumn('customers', 'last_location_area'))
+            return;
+
         Schema::table('customers', function (Blueprint $table) {
             $table->text('last_location_area');
         });
