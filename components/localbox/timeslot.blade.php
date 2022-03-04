@@ -92,7 +92,7 @@
                     </div>
                     <button
                         type="button"
-                        class="btn btn-block btn-primary text-nowrap"
+                        class="btn btn-block btn-outline-primary text-nowrap"
                         data-timepicker-submit
                         data-attach-loading
                     >

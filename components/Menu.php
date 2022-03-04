@@ -101,7 +101,7 @@ class Menu extends \System\Classes\BaseComponent
         if ($redirect = $this->checkLocationParam())
             return $redirect;
 
-        $this->page['menuIsGrouped'] = $this->property('isGrouped');
+        $this->page['menuIsGrouped'] = !strlen($this->param('category')) && $this->property('isGrouped');
         $this->page['menuCollapseCategoriesAfter'] = $this->property('collapseCategoriesAfter');
         $this->page['showMenuImages'] = $this->property('showMenuImages');
         $this->page['menuImageWidth'] = $this->property('menuImageWidth');
@@ -140,7 +140,7 @@ class Menu extends \System\Classes\BaseComponent
 
         $this->mapIntoObjects($list);
 
-        if ($this->property('isGrouped'))
+        if (!strlen($this->param('category')) && $this->property('isGrouped'))
             $this->groupListByCategory($list);
 
         return $list;
