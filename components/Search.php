@@ -93,9 +93,7 @@ class Search extends \System\Classes\BaseComponent
 
         $this->prepareVars();
 
-        return [
-            '#local-search-container' => $this->renderPartial('@container'),
-        ];
+        return redirect()->back();
     }
 
     protected function prepareVars()
