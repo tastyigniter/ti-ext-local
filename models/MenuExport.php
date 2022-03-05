@@ -15,8 +15,8 @@ class MenuExport extends ExportModel
 
     public $relation = [
         'belongsToMany' => [
-            'menu_categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories', 'foreignKey' => 'menu_id'],
-            'menu_mealtimes' => ['Admin\Models\Mealtimes_model', 'table' => 'menu_mealtimes', 'foreignKey' => 'menu_id'],
+            'menu_categories' => [\Admin\Models\Categories_model::class, 'table' => 'menu_categories', 'foreignKey' => 'menu_id'],
+            'menu_mealtimes' => [\Admin\Models\Mealtimes_model::class, 'table' => 'menu_mealtimes', 'foreignKey' => 'menu_id'],
         ],
     ];
 

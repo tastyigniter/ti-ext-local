@@ -27,14 +27,14 @@ class UpdateReviewsTable extends Migration
     protected function updateMorphsOnReviews()
     {
         if (DB::table('igniter_reviews')
-            ->where('sale_type', 'Admin\Models\Orders_model')
-            ->orWhere('sale_type', 'Admin\Models\Reservations_model')
+            ->where('sale_type', \Admin\Models\Orders_model::class)
+            ->orWhere('sale_type', \Admin\Models\Reservations_model::class)
             ->count()
         ) return;
 
         $morphs = [
-            'order' => 'Admin\Models\Orders_model',
-            'reservation' => 'Admin\Models\Reservations_model',
+            'order' => \Admin\Models\Orders_model::class,
+            'reservation' => \Admin\Models\Reservations_model::class,
         ];
 
         DB::table('igniter_reviews')->get()->each(function ($model) use ($morphs) {

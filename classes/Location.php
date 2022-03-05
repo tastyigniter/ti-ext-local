@@ -21,7 +21,7 @@ class Location extends Manager
 
     const OPENING = 'opening';
 
-    protected $locationModel = 'Admin\Models\Locations_model';
+    protected $locationModel = \Admin\Models\Locations_model::class;
 
     /**
      * @var \Igniter\Local\Classes\CoveredArea

@@ -44,8 +44,8 @@ class Reviews_model extends Model
 
     public $relation = [
         'belongsTo' => [
-            'location' => ['Admin\Models\Locations_model', 'scope' => 'isEnabled'],
-            'customer' => 'Admin\Models\Customers_model',
+            'location' => [\Admin\Models\Locations_model::class, 'scope' => 'isEnabled'],
+            'customer' => \Admin\Models\Customers_model::class,
         ],
         'morphTo' => [
             'reviewable' => ['name' => 'sale'],
@@ -55,8 +55,8 @@ class Reviews_model extends Model
     public static $allowedSortingColumns = ['created_at asc', 'created_at desc'];
 
     public static $relatedSaleTypes = [
-        'orders' => 'Admin\Models\Orders_model',
-        'reservations' => 'Admin\Models\Reservations_model',
+        'orders' => \Admin\Models\Orders_model::class,
+        'reservations' => \Admin\Models\Reservations_model::class,
     ];
 
     public static $ratingScoreCache = [];
