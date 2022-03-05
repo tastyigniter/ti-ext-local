@@ -277,8 +277,11 @@ class Location extends Manager
         if (array_key_exists($orderType, $this->scheduleCache))
             return $this->scheduleCache[$orderType];
 
+        $leadMinutes = $this->model->getOption($orderType.'_add_lead_time')
+            ? $this->orderLeadTime() : 0;
+
         $result = $this->getOrderType()->getSchedule()->getTimeslot(
-            $this->orderTimeInterval(), null, $this->orderLeadTime()
+            $this->orderTimeInterval(), null, $leadMinutes
         );
 
         return $this->scheduleCache[$orderType] = $result;
