@@ -23,6 +23,18 @@
                 $el.find('.btn').removeClass('disabled')
             })
         })
+        .on('click', '[data-control="order-type-toggle"] [data-order-type-code]', function (event) {
+            var $btn = $(event.currentTarget),
+                $el = $btn.closest('[data-control="order-type-toggle"]')
+
+            $el.find('[data-toggle="dropdown"]').attr('disabled', true)
+            $el.find('.dropdown-item').addClass('disabled')
+            $.request($el.data('handler'), {
+                data: {'type': $btn.data('orderTypeCode')}
+            }).always(function () {
+                $el.find('.dropdown-item').removeClass('disabled')
+            })
+        })
         .on('click', '[data-address-picker-control="new"]', function () {
             $('#local-search-form').toggleClass('hide')
             $('[data-control="address-picker"]').toggleClass('hide')
