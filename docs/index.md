@@ -32,7 +32,7 @@ Manage locations and menu items from the admin panel.
 | Search  | `@component('localSearch')` | Display the nearby search box on the page |
 | LocalBox  | `@component('localBox')` | Display information about and manages the user's location |
 | Info  | `@component('localInfo')` | Display the opening hours of the user's location |
-| List  | `@component('localBox')` | Display a list of locations on the page |
+| List  | `@component('localList')` | Display a list of locations on the page |
 | Menu  | `@component('localMenu')` | Display a list of menu items on the page |
 | Categories | `@component('categories')` | Displays menu categories on the page            |
 | Review  | `@component('localReview')` | Display a list of reviews on the page |
