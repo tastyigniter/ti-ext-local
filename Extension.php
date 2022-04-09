@@ -89,7 +89,7 @@ class Extension extends \System\Classes\BaseExtension
     public function registerCartConditions()
     {
         return [
-            'Igniter\Local\CartConditions\Delivery' => [
+            \Igniter\Local\CartConditions\Delivery::class => [
                 'name' => 'delivery',
                 'label' => 'lang:igniter.local::default.text_delivery',
                 'description' => 'lang:igniter.local::default.help_delivery_condition',
@@ -100,42 +100,42 @@ class Extension extends \System\Classes\BaseExtension
     public function registerComponents()
     {
         return [
-            'Igniter\Local\Components\LocalBox' => [
+            \Igniter\Local\Components\LocalBox::class => [
                 'code' => 'localBox',
                 'name' => 'lang:igniter.local::default.component_title',
                 'description' => 'lang:igniter.local::default.component_desc',
             ],
-            'Igniter\Local\Components\Search' => [
+            \Igniter\Local\Components\Search::class => [
                 'code' => 'localSearch',
                 'name' => 'lang:igniter.local::default.search.component_title',
                 'description' => 'lang:igniter.local::default.search.component_desc',
             ],
-            'Igniter\Local\Components\Menu' => [
+            \Igniter\Local\Components\Menu::class => [
                 'code' => 'localMenu',
                 'name' => 'lang:igniter.local::default.menu.component_title',
                 'description' => 'lang:igniter.local::default.menu.component_desc',
             ],
-            'Igniter\Local\Components\Categories' => [
+            \Igniter\Local\Components\Categories::class => [
                 'code' => 'categories',
                 'name' => 'lang:igniter.local::default.categories.component_title',
                 'description' => 'lang:igniter.local::default.categories.component_desc',
             ],
-            'Igniter\Local\Components\Review' => [
+            \Igniter\Local\Components\Review::class => [
                 'code' => 'localReview',
                 'name' => 'lang:igniter.local::default.review.component_title',
                 'description' => 'lang:igniter.local::default.review.component_desc',
             ],
-            'Igniter\Local\Components\Info' => [
+            \Igniter\Local\Components\Info::class => [
                 'code' => 'localInfo',
                 'name' => 'lang:igniter.local::default.info.component_title',
                 'description' => 'lang:igniter.local::default.info.component_desc',
             ],
-            'Igniter\Local\Components\Gallery' => [
+            \Igniter\Local\Components\Gallery::class => [
                 'code' => 'localGallery',
                 'name' => 'lang:igniter.local::default.gallery.component_title',
                 'description' => 'lang:igniter.local::default.gallery.component_desc',
             ],
-            'Igniter\Local\Components\LocalList' => [
+            \Igniter\Local\Components\LocalList::class => [
                 'code' => 'localList',
                 'name' => 'lang:igniter.local::default.list.component_title',
                 'description' => 'lang:igniter.local::default.list.component_desc',
@@ -149,14 +149,14 @@ class Extension extends \System\Classes\BaseExtension
             'import' => [
                 'menus' => [
                     'label' => 'Import Menu Items',
-                    'model' => 'Igniter\Local\Models\MenuImport',
+                    'model' => \Igniter\Local\Models\MenuImport::class,
                     'configFile' => '$/igniter/local/models/config/menuimport',
                 ],
             ],
             'export' => [
                 'menus' => [
                     'label' => 'Export Menu Items',
-                    'model' => 'Igniter\Local\Models\MenuExport',
+                    'model' => \Igniter\Local\Models\MenuExport::class,
                     'configFile' => '$/igniter/local/models/config/menuexport',
                 ],
             ],
@@ -204,7 +204,7 @@ class Extension extends \System\Classes\BaseExtension
                 'label' => 'lang:igniter.local::default.reviews.text_settings',
                 'icon' => 'fa fa-gear',
                 'description' => 'lang:igniter.local::default.reviews.text_settings_description',
-                'model' => 'Igniter\Local\Models\ReviewSettings',
+                'model' => \Igniter\Local\Models\ReviewSettings::class,
                 'permissions' => ['Admin.Reviews'],
             ],
         ];
@@ -213,7 +213,7 @@ class Extension extends \System\Classes\BaseExtension
     public function registerFormWidgets()
     {
         return [
-            'Igniter\Local\FormWidgets\StarRating' => [
+            \Igniter\Local\FormWidgets\StarRating::class => [
                 'label' => 'Star Rating',
                 'code' => 'starrating',
             ],
@@ -269,19 +269,19 @@ class Extension extends \System\Classes\BaseExtension
     protected function addReviewsRelationship(): void
     {
         Relation::morphMap([
-            'reviews' => 'Igniter\Local\Models\Reviews_model',
+            'reviews' => \Igniter\Local\Models\Reviews_model::class,
         ]);
 
         Orders_model::extend(function ($model) {
-            $model->relation['morphMany']['review'] = ['Igniter\Local\Models\Reviews_model'];
+            $model->relation['morphMany']['review'] = [\Igniter\Local\Models\Reviews_model::class];
         });
 
         Reservations_model::extend(function ($model) {
-            $model->relation['morphMany']['review'] = ['Igniter\Local\Models\Reviews_model'];
+            $model->relation['morphMany']['review'] = [\Igniter\Local\Models\Reviews_model::class];
         });
 
         Locations_model::extend(function ($model) {
-            $model->relation['hasMany']['reviews'] = ['Igniter\Local\Models\Reviews_model'];
+            $model->relation['hasMany']['reviews'] = [\Igniter\Local\Models\Reviews_model::class];
 
             $model->addDynamicMethod('reviews_score', function () use ($model) {
                 return Reviews_model::getScoreForLocation($model->getKey());

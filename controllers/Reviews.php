@@ -15,7 +15,7 @@ class Reviews extends \Admin\Classes\AdminController
 
     public $listConfig = [
         'list' => [
-            'model' => 'Igniter\Local\Models\Reviews_model',
+            'model' => \Igniter\Local\Models\Reviews_model::class,
             'title' => 'lang:igniter.local::default.reviews.text_title',
             'emptyMessage' => 'lang:igniter.local::default.reviews.text_empty',
             'defaultSort' => ['review_id', 'DESC'],
@@ -25,8 +25,8 @@ class Reviews extends \Admin\Classes\AdminController
 
     public $formConfig = [
         'name' => 'lang:igniter.local::default.reviews.text_form_name',
-        'model' => 'Igniter\Local\Models\Reviews_model',
-        'request' => 'Igniter\Local\Requests\Review',
+        'model' => \Igniter\Local\Models\Reviews_model::class,
+        'request' => \Igniter\Local\Requests\Review::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'igniter/local/reviews/edit/{review_id}',
