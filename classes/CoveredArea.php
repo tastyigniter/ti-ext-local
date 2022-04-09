@@ -82,7 +82,7 @@ class CoveredArea
                 return $condition->isValid($distanceFromLocation);
             });
 
-        return optional($condition)->total ?? 0;
+        return optional($condition)->amount ?? 0;
     }
 
     public function __get($key)
