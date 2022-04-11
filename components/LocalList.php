@@ -263,13 +263,8 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function buildPageUrl()
     {
-        $url = page_url().'?';
-        if ($searchTerm = $this->getSearchTerm())
-            $url .= $this->property('searchParamName').'='.$searchTerm.'&';
+        $query = array_except(request()->query(), [$this->property('orderTypeParamName')]);
 
-        if ($sortBy = $this->getSortBy())
-            $url .= $this->property('sortByParamName').'='.$sortBy.'&';
-
-        return $url;
+        return page_url().'?'.http_build_query($query).'&';
     }
 }

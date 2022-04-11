@@ -236,15 +236,16 @@ class Menu extends \System\Classes\BaseComponent
 
         $mealtimes = optional($menuItem->mealtimes)->where('mealtime_status', 1);
         $object->hasMealtime = count($mealtimes);
-        $object->mealtimeIsNotAvailable = !$menuItem->isAvailable(Location::orderDateTime());
+        $object->mealtimeIsAvailable = $menuItem->isAvailable(Location::orderDateTime());
+        $object->mealtimeIsNotAvailable = !$object->mealtimeIsAvailable;
 
         $object->mealtimeTitles = [];
         foreach ($mealtimes ?? [] as $mealtime) {
             $object->mealtimeTitles[] = sprintf(
                 lang('igniter.local::default.text_mealtime'),
                 $mealtime->mealtime_name,
-                $mealtime->start_time,
-                $mealtime->end_time
+                now()->setTimeFromTimeString($mealtime->start_time)->isoFormat(lang('system::lang.moment.time_format')),
+                now()->setTimeFromTimeString($mealtime->end_time)->isoFormat(lang('system::lang.moment.time_format'))
             );
         }
 

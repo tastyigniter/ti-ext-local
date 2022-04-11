@@ -73,7 +73,7 @@ return [
     'label_hide_min_order_amount' => 'Hide Min. Order Amount',
     'label_lang' => 'Language Line',
     'label_status' => 'Status',
-    'label_search_query' => 'Enter your address or postcode to order',
+    'label_search_query' => 'Enter delivery address',
     'label_menu_search' => 'Search menu items.',
     'label_redirect' => 'Page to redirect to when no location is selected',
     'label_menu_page' => 'Menus Page',

@@ -271,16 +271,18 @@ class Location extends Manager
         return make_carbon($dateTime);
     }
 
-    public function scheduleTimeslot()
+    public function scheduleTimeslot($orderType = null)
     {
-        $orderType = $this->orderType();
+        if (is_null($orderType))
+            $orderType = $this->orderType();
+
         if (array_key_exists($orderType, $this->scheduleCache))
             return $this->scheduleCache[$orderType];
 
         $leadMinutes = $this->model->getOption($orderType.'_add_lead_time')
             ? $this->orderLeadTime() : 0;
 
-        $result = $this->getOrderType()->getSchedule()->getTimeslot(
+        $result = $this->getOrderType($orderType)->getSchedule()->getTimeslot(
             $this->orderTimeInterval(), null, $leadMinutes
         );
 
