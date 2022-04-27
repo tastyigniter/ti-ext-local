@@ -3,13 +3,13 @@
         class="card w-100 p-3 mb-2"
         href="{{ page_url('local/menus', ['location' => $locationObject->permalink]) }}"
     >
-        <div class="boxes d-sm-flex no-gutters">
+        <div class="boxes d-sm-flex g-0">
             <div class="col-12 col-sm-7">
                 <div class="d-sm-flex">
                     @if ($locationObject->hasThumb)
-                        <div class="col-sm-3 p-0 mr-sm-4 mb-3 mb-sm-0">
+                        <div class="col-sm-3 p-0 me-sm-4 mb-3 mb-sm-0">
                             <img
-                                class="img-responsive img-fluid"
+                                class="img-fluid img-fluid"
                                 src="{{ $locationObject->thumb }}"
                             />
                         </div>

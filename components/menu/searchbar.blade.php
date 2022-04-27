@@ -6,16 +6,14 @@
         action="{{ current_url() }}"
     >
         <div class="input-group">
-            <div class="input-group-prepend">
-                @if (strlen($menuSearchTerm))
-                    <a
-                        class="btn btn-light"
-                        href="{{ current_url() }}"
-                    ><i class="fa fa-times"></i></a>
-                @else
-                    <span class="input-group-text"><i class="fa fa-search"></i></span>
-                @endif
-            </div>
+            @if (strlen($menuSearchTerm))
+                <a
+                    class="btn btn-light"
+                    href="{{ current_url() }}"
+                ><i class="fa fa-times"></i></a>
+            @else
+                <span class="input-group-text"><i class="fa fa-search"></i></span>
+            @endif
             <input
                 type="search"
                 class="form-control"

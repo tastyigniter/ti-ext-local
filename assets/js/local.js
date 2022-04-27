@@ -27,7 +27,7 @@
             var $btn = $(event.currentTarget),
                 $el = $btn.closest('[data-control="order-type-toggle"]')
 
-            $el.find('[data-toggle="dropdown"]').attr('disabled', true)
+            $el.find('[data-bs-toggle="dropdown"]').attr('disabled', true)
             $el.find('.dropdown-item').addClass('disabled')
             $.request($el.data('handler'), {
                 data: {'type': $btn.data('orderTypeCode')}
@@ -41,23 +41,23 @@
             $('#local-search-form #search-query').focus()
         })
         .on('ajaxSetup', '[data-address-picker-control="select"]', function () {
-            $('[data-control="address-picker"] [data-toggle="dropdown"]').addClass('disabled')
+            $('[data-control="address-picker"] [data-bs-toggle="dropdown"]').addClass('disabled')
             $('[data-address-picker-loading]').addClass('fa-spinner fa-spin')
         })
         .on('ajaxDone', '[data-address-picker-control="select"]', function () {
-            $('[data-control="address-picker"] [data-toggle="dropdown"]').removeClass('disabled')
+            $('[data-control="address-picker"] [data-bs-toggle="dropdown"]').removeClass('disabled')
             $('[data-address-picker-loading]').removeClass('fa-spinner fa-spin')
         })
         .on('ajaxFail', '[data-address-picker-control="select"]', function () {
-            $('[data-control="address-picker"] [data-toggle="dropdown"]').removeClass('disabled')
+            $('[data-control="address-picker"] [data-bs-toggle="dropdown"]').removeClass('disabled')
             $('[data-address-picker-loading]').removeClass('fa-spinner fa-spin')
         })
 
-    $(document).on('change', 'input[type="radio"][name="order_type"][data-page-url]', function (event) {
+    $(document).on('change', 'input[type="radio"][data-page-url]', function (event) {
         var $input = $(event.currentTarget),
             pageUrl = $input.data('pageUrl')
 
-        window.location.href = pageUrl+'order_type='+$input.val()
+        window.location.href = pageUrl+$input.attr('name')+'='+$input.val()
     })
 
 }(jQuery)

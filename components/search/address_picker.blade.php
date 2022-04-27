@@ -6,12 +6,12 @@
         class="btn btn-block dropdown-toggle border text-truncate"
         role="button"
         id="savedAddressPicker"
-        data-toggle="dropdown"
+        data-bs-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
     >
         <i data-address-picker-loading class="fa fa-map-marker"></i>&nbsp;&nbsp;
-        <span class="pr-2">{{ $searchDefaultAddress->formatted_address }}</span>
+        <span class="pe-2">{{ $searchDefaultAddress->formatted_address }}</span>
         <span class="small text-primary">@lang('igniter.local::default.search.text_change')</span>
     </a>
 

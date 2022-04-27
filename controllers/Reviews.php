@@ -65,6 +65,7 @@ class Reviews extends \Admin\Classes\AdminController
     public function index()
     {
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/Chart.min.js', 'chartsjs-js');
+        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/chartjs-adapter-moment.min.js', 'chartsjs-adapter-js');
 
         $this->addJs('$/igniter/local/assets/js/reviewchart.js', 'reviewchart-js');
 

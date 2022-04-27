@@ -1,7 +1,7 @@
 @if (!$hideSearch)
     <div
         id="local-search-form"
-        class="{{ $__SELF__->showAddressPicker() ? 'hide' : '' }}"
+        @class(['hide' => $localSearch->showAddressPicker()])
     >
         @partial('@form')
     </div>

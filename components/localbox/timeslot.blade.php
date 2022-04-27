@@ -28,7 +28,7 @@
             class="btn btn-light btn-timepicker btn-block dropdown-toggle text-truncate"
             type="button"
             id="orderTimePicker"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
         >
@@ -68,11 +68,11 @@
                         value="{{ $orderTimeIsAsap ? 'asap' : 'later' }}"
                         autocomplete="off"
                     />
-                    <div class="row no-gutters">
-                        <div class="col pr-1">
+                    <div class="row g-0">
+                        <div class="col pe-1">
                             <div class="form-group">
                                 <select
-                                    class="form-control"
+                                    class="form-select"
                                     data-timepicker-control="date"
                                     data-timepicker-label="@lang('igniter.local::default.label_date')"
                                     data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('Y-m-d') : '' }}"
@@ -82,7 +82,7 @@
                         <div class="col pl-1">
                             <div class="form-group">
                                 <select
-                                    class="form-control"
+                                    class="form-select"
                                     data-timepicker-control="time"
                                     data-timepicker-label="@lang('igniter.local::default.label_time')"
                                     data-timepicker-selected="{{ $orderDateTime ? $orderDateTime->format('H:i') : '' }}"

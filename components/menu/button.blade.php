@@ -14,5 +14,5 @@
     title="{{ implode("\r\n", $menuItemObject->mealtimeTitles) }}"
     @endif
 >
-    <i class="fa fa-{{ $menuItemObject->mealtimeIsNotAvailable ? 'clock-o' : 'plus' }}"></i>
+    <i @class(['fa fa-plus' => $menuItemObject->mealtimeIsAvailable, 'far fa-clock' => $menuItemObject->mealtimeIsNotAvailable])></i>
 </button>

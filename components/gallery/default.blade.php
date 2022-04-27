@@ -5,7 +5,7 @@
         @foreach ($galleryImages as $media)
             <div class="col-sm-4">
                 <img
-                    class="img-responsive img-rounded"
+                    class="img-fluid img-rounded"
                     src="{{ $media->getThumb() }}"
                 />
                 <div class="overlay">

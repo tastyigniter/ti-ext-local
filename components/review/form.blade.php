@@ -1,5 +1,5 @@
 @if ($reviewable)
-    <h4 class="text-center font-weight-normal">
+    <h4 class="text-center fw-normal">
         @if ($customerReview)
             @lang('igniter.local::default.review.text_your_review')
         @else
@@ -15,7 +15,7 @@
         <div class="d-flex text-center">
             <div class="form-group flex-fill">
                 <label
-                    class="control-label d-block"
+                    class="form-label d-block"
                     for="quality"
                 >@lang('igniter.local::default.review.label_quality')</label>
                 <div
@@ -32,7 +32,7 @@
             </div>
             <div class="form-group flex-fill">
                 <label
-                    class="control-label d-block"
+                    class="form-label d-block"
                     for="delivery"
                 >@lang('igniter.local::default.review.label_delivery')</label>
                 <div
@@ -49,7 +49,7 @@
             </div>
             <div class="form-group flex-fill">
                 <label
-                    class="control-label d-block"
+                    class="form-label d-block"
                     for="service"
                 >@lang('igniter.local::default.review.label_service')</label>
                 <div

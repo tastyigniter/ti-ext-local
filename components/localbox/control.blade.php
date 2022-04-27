@@ -1,21 +1,23 @@
 @if (count($locationOrderTypes) <= $__SELF__->property('maxOrderTypeButtons', 2))
     <div
         class="btn-group btn-group-toggle w-100 text-center"
-        data-toggle="buttons"
         data-control="order-type-toggle"
         data-handler="{{ $orderTypeEventHandler }}"
     >
         @foreach($locationOrderTypes as $orderType)
             @continue($orderType->isDisabled())
-            <label class="btn btn-light w-50 {{ $orderType->isActive() ? 'active' : '' }}">
-                <input
-                    type="radio"
-                    name="order_type"
-                    value="{{ $orderType->getCode() }}"
-                    {!! $orderType->isActive() ? 'checked="checked"' : '' !!}
-                />&nbsp;&nbsp;
-                @partial('@control_info', ['orderType' => $orderType])
-            </label>
+            <input
+                id="btn-check-{{$orderType->getCode()}}"
+                type="radio"
+                name="order_type"
+                class="btn-check"
+                value="{{ $orderType->getCode() }}"
+                {!! $orderType->isActive() ? 'checked="checked"' : '' !!}
+            />
+            <label
+                for="btn-check-{{$orderType->getCode()}}"
+                class="btn btn-light w-50 {{ $orderType->isActive() ? 'active' : '' }}"
+            >@partial('@control_info', ['orderType' => $orderType])</label>
         @endforeach
     </div>
 @else
@@ -27,7 +29,7 @@
         <button
             class="btn btn-light btn-block dropdown-toggle"
             type="button"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-expanded="false"
         >
             @partial('@control_info', ['orderType' => $location->getOrderType()])

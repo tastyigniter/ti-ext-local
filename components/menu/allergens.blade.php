@@ -1,17 +1,20 @@
 @foreach ($menuItem->allergens->where('status', 1) ?? [] as $allergen)
-    <a
-        class="badge {{ !($hasMedia = $allergen->hasMedia('thumb')) ? 'badge-light' : '' }} rounded mt-2 mr-1"
-        data-toggle="tooltip"
+    <span
+        @class([
+            'badge bg-light text-dark fw-normal rounded-pill shadow-sm px-2',
+            'py-2' => !$allergen->hasMedia('thumb'),
+            'me-2' => !$loop->last
+        ])
+        data-bs-toggle="tooltip"
         title="{{ $allergen->name }}: {{ $allergen->description }}"
     >
-        @if ($hasMedia)
+        @if ($allergen->hasMedia('thumb'))
             <img
-                class="img-responsive img-rounded"
+                class="img-fluid rounded-pill"
                 alt="{{ $allergen->name }}"
                 src="{{ $allergen->getThumb(['width' => $menuAllergenImageWidth, 'height' => $menuAllergenImageHeight]) }}"
-            >
-        @else
-            {{ $allergen->name }}
+            />
         @endif
-    </a>
+        {{ $allergen->name }}
+    </span>
 @endforeach

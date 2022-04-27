@@ -18,18 +18,18 @@
     <div class="list-group list-group-flush">
         @foreach ($listOrderTypes as $key => $name)
             <div class="list-group-item">
-                <div class="custom-control custom-radio">
+                <div class="form-check">
                     <input
                         type="radio"
                         id="customRadio{{$key}}"
                         name="{{ $orderTypeParam }}"
-                        class="custom-control-input"
+                        class="form-check-input"
                         value="{{$key}}"
                         data-page-url="{{ $filterPageUrl }}"
                         {!! $key == $activeOrderType ? 'checked=checked' : '' !!}
                     />
                     <label
-                        class="custom-control-label w-100"
+                        class="form-check-label w-100"
                         for="customRadio{{$key}}"
                     >@lang($name)</label>
                 </div>

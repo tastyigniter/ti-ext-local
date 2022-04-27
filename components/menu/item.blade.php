@@ -2,7 +2,7 @@
     <div class="d-flex flex-row">
         @if ($showMenuImages == 1 && $menuItemObject->hasThumb)
             <div
-                class="col-3 p-0 mr-3 menu-item-image align-self-center"
+                class="col-3 p-0 me-3 menu-item-image align-self-center"
                 style="
                     background: url('{{ $menuItem->getThumb() }}') no-repeat center center;
                     background-size: cover;
@@ -12,7 +12,7 @@
             </div>
         @endif
 
-        <div class="menu-content flex-grow-1 mr-3">
+        <div class="menu-content flex-grow-1 me-3">
             <h6 class="menu-name">{{ $menuItem->menu_name }}</h6>
             <p class="menu-desc text-muted mb-0">
                 {!! nl2br($menuItem->menu_description) !!}
@@ -20,7 +20,7 @@
         </div>
         <div class="menu-detail d-flex justify-content-end col-3 p-0">
             @if ($menuItemObject->specialIsActive)
-                <div class="menu-meta text-muted pr-2">
+                <div class="menu-meta text-muted pe-2">
                     <i
                         class="fa fa-star text-warning"
                         title="{!! sprintf(lang('igniter.local::default.text_end_elapsed'), $menuItemObject->specialDaysRemaining) !!}"
@@ -28,7 +28,7 @@
                 </div>
             @endif
 
-            <div class="menu-price pr-3">
+            <div class="menu-price pe-3">
                 @if ($menuItemObject->specialIsActive)
                     <s>{!! currency_format($menuItemObject->menuPriceBeforeSpecial) !!}</s>
                 @endif
@@ -42,7 +42,9 @@
             @endisset
         </div>
     </div>
-    <div class="d-flex flex-wrap align-items-center allergens">
-        @partial('@allergens', ['menuItem' => $menuItem, 'menuItemObject' => $menuItemObject])
+    <div class="layout-scrollable w-100">
+        <div class="d-flex align-items-center py-2 allergens">
+            @partial('@allergens', ['menuItem' => $menuItem, 'menuItemObject' => $menuItemObject])
+        </div>
     </div>
 </div>

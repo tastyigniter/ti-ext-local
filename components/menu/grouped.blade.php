@@ -1,6 +1,6 @@
 <div class="menu-group">
     @forelse ($groupedMenuItems as $categoryId => $menuList)
-        <div class="menu-group-item">
+        <div @class(['menu-group-item'])>
             @if ($categoryId > 0)
                 @php
                     $menuCategory = array_get($menuListCategories, $categoryId);
@@ -8,9 +8,9 @@
                 @endphp
                 <div id="category-{{ $menuCategoryAlias }}-heading" role="tab">
                     <h4
-                        class="category-title cursor-pointer {{ $loop->iteration >= $menuCollapseCategoriesAfter ? 'collapsed' : '' }}"
-                        data-toggle="collapse"
-                        data-target="#category-{{ $menuCategoryAlias }}-collapse"
+                        @class(['category-title cursor-pointer', 'collapsed' => $loop->iteration >= $menuCollapseCategoriesAfter])
+                        data-bs-toggle="collapse"
+                        data-bs-target="#category-{{ $menuCategoryAlias }}-collapse"
                         aria-expanded="false"
                         aria-controls="category-{{ $menuCategoryAlias }}-heading"
                     >{{ $menuCategory->name }}<span class="collapse-toggle text-muted pull-right"></span></h4>
@@ -28,7 +28,7 @@
                         @if ($menuCategory->hasMedia('thumb'))
                             <div class="image">
                                 <img
-                                    class="img-responsive"
+                                    class="img-fluid"
                                     src="{{ $menuCategory->getThumb(['width' => $menuCategoryWidth, 'height' => $menuCategoryHeight]) }}"
                                     alt="{{ $menuCategory->name }}"
                                 />
