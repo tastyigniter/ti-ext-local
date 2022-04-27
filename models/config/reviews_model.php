@@ -78,6 +78,7 @@ $config['list']['columns'] = [
     'location_name' => [
         'label' => 'lang:igniter.local::default.reviews.column_location',
         'relation' => 'location',
+        'select' => 'location_name',
         'searchable' => TRUE,
         'locationAware' => TRUE,
     ],
