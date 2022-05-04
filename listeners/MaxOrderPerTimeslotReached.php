@@ -27,7 +27,7 @@ class MaxOrderPerTimeslotReached
             return;
 
         if ($this->execute($timeslot, $workingSchedule->getType()))
-            return FALSE;
+            return false;
     }
 
     public function beforeSaveOrder($order, $data)

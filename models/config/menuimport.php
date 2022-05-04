@@ -15,7 +15,7 @@ return [
         'update_existing' => [
             'label' => 'Update existing menu items',
             'type' => 'switch',
-            'default' => TRUE,
+            'default' => true,
         ],
     ],
 ];

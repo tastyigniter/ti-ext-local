@@ -17,7 +17,7 @@ class CreateReviewsTableOrRename extends Migration
         if (!Schema::hasTable('igniter_reviews')) {
             Schema::create('igniter_reviews', function (Blueprint $table) {
                 $table->engine = 'InnoDB';
-                $table->integer('review_id', TRUE);
+                $table->integer('review_id', true);
                 $table->integer('customer_id');
                 $table->integer('sale_id');
                 $table->string('sale_type', 32)->default('');

@@ -37,7 +37,7 @@ class Menu extends \System\Classes\BaseComponent
             'showMenuImages' => [
                 'label' => 'Show Menu Item Images',
                 'type' => 'switch',
-                'default' => FALSE,
+                'default' => false,
                 'validationRule' => 'required|boolean',
             ],
             'menuImageWidth' => [
@@ -84,13 +84,13 @@ class Menu extends \System\Classes\BaseComponent
             'hideMenuSearch' => [
                 'label' => 'Hide the menu item search form',
                 'type' => 'switch',
-                'default' => FALSE,
+                'default' => false,
                 'validationRule' => 'required|boolean',
             ],
             'forceRedirect' => [
                 'label' => 'Whether to force a page redirect when no location param is present in the request URI.',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'validationRule' => 'required|boolean',
             ],
         ];
@@ -196,7 +196,7 @@ class Menu extends \System\Classes\BaseComponent
 
     protected function checkLocationParam()
     {
-        if (!$this->property('forceRedirect', TRUE))
+        if (!$this->property('forceRedirect', true))
             return;
 
         $param = $this->param('location', 'local');

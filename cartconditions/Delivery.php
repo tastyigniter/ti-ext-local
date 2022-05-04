@@ -19,7 +19,7 @@ class Delivery extends CartCondition
     {
         // Do not apply condition when orderType is not delivery
         if (Location::orderType() != Locations_model::DELIVERY)
-            return FALSE;
+            return false;
 
         $coveredArea = Location::coveredArea();
         $cartSubtotal = Cart::subtotal();

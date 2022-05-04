@@ -22,7 +22,7 @@ return [
                 'label' => 'lang:igniter.local::default.reviews.label_allow_reviews',
                 'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'on' => 'lang:admin::lang.text_yes',
                 'off' => 'lang:admin::lang.text_no',
                 'comment' => 'lang:igniter.local::default.reviews.help_allow_reviews',

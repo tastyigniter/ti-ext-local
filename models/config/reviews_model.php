@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => \Admin\Models\Locations_model::class,
             'nameFrom' => 'location_name',
-            'locationAware' => TRUE,
+            'locationAware' => true,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -79,24 +79,24 @@ $config['list']['columns'] = [
         'label' => 'lang:igniter.local::default.reviews.column_location',
         'relation' => 'location',
         'select' => 'location_name',
-        'searchable' => TRUE,
-        'locationAware' => TRUE,
+        'searchable' => true,
+        'locationAware' => true,
     ],
     'author' => [
         'label' => 'lang:igniter.local::default.reviews.column_author',
         'relation' => 'customer',
         'select' => "concat(first_name, ' ', last_name)",
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'sale_id' => [
         'label' => 'lang:igniter.local::default.reviews.column_sale_id',
         'type' => 'number',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'sale_type' => [
         'label' => 'lang:igniter.local::default.reviews.column_sale_type',
         'type' => 'select',
-        'searchable' => TRUE,
+        'searchable' => true,
         'formatter' => function ($record, $column, $value) {
             return ucwords($value);
         },
@@ -113,11 +113,11 @@ $config['list']['columns'] = [
     ],
     'review_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'review_text' => [
         'label' => 'lang:igniter.local::default.reviews.column_text',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 ];
 
@@ -200,7 +200,7 @@ $config['form']['fields'] = [
     'review_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
-        'default' => TRUE,
+        'default' => true,
         'on' => 'lang:igniter.local::default.reviews.text_approved',
         'off' => 'lang:igniter.local::default.reviews.text_pending_review',
     ],
