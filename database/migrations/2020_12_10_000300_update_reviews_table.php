@@ -39,7 +39,7 @@ class UpdateReviewsTable extends Migration
 
         DB::table('igniter_reviews')->get()->each(function ($model) use ($morphs) {
             if (!isset($morphs[$model->sale_type]))
-                return FALSE;
+                return false;
 
             DB::table('igniter_reviews')->where('review_id', $model->review_id)->update([
                 'sale_type' => $morphs[$model->sale_type],

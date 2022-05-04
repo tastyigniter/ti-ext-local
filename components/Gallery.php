@@ -6,7 +6,7 @@ use Igniter\Local\Facades\Location;
 
 class Gallery extends \System\Classes\BaseComponent
 {
-    public $isHidden = TRUE;
+    public $isHidden = true;
 
     public function onRun()
     {

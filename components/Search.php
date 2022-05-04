@@ -56,10 +56,10 @@ class Search extends \System\Classes\BaseComponent
     public function showDeliveryCoverageAlert()
     {
         if (!Location::orderTypeIsDelivery())
-            return FALSE;
+            return false;
 
         if (!Location::requiresUserPosition())
-            return FALSE;
+            return false;
 
         return Location::userPosition()->hasCoordinates()
             && !Location::checkDeliveryCoverage();
@@ -99,7 +99,7 @@ class Search extends \System\Classes\BaseComponent
     protected function prepareVars()
     {
         $this->page['menusPage'] = $this->property('menusPage');
-        $this->page['hideSearch'] = $this->property('hideSearch', FALSE);
+        $this->page['hideSearch'] = $this->property('hideSearch', false);
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['pickerEventHandler'] = $this->getEventHandler('onSetSavedAddress');
 
@@ -114,7 +114,7 @@ class Search extends \System\Classes\BaseComponent
         if (!$address instanceof Addresses_model)
             return $address;
 
-        $searchQuery = format_address($address->toArray(), FALSE);
+        $searchQuery = format_address($address->toArray(), false);
         if ($searchQuery == Location::getSession('searchQuery'))
             return $address;
 

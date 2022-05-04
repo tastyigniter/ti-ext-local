@@ -37,7 +37,7 @@ class Extension extends \System\Classes\BaseExtension
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
         Event::listen('router.beforeRoute', function ($url, $router) {
-            View::share('showReviews', (bool)ReviewSettings::get('allow_reviews', FALSE));
+            View::share('showReviews', (bool)ReviewSettings::get('allow_reviews', false));
         });
 
         $this->bindRememberLocationAreaEvents();
@@ -243,7 +243,7 @@ class Extension extends \System\Classes\BaseExtension
             if (!$widget instanceof Charts)
                 return;
 
-            if (!ReviewSettings::get('allow_reviews', FALSE))
+            if (!ReviewSettings::get('allow_reviews', false))
                 return;
 
             $widget->contextDefinitions['reviews'] = [
@@ -311,7 +311,7 @@ class Extension extends \System\Classes\BaseExtension
                 if (!strlen($lastArea = Auth::customer()->last_location_area))
                     return;
 
-                $lastArea = json_decode($lastArea, TRUE);
+                $lastArea = json_decode($lastArea, true);
 
                 $searchQuery = array_get($lastArea, 'query');
                 if ($searchQuery && $userPosition = Geocoder::geocode($searchQuery)->first()) {
@@ -333,7 +333,7 @@ class Extension extends \System\Classes\BaseExtension
         if (!$customer = Auth::customer())
             return;
 
-        $lastArea = @json_decode($customer->last_location_area, TRUE) ?: [];
+        $lastArea = @json_decode($customer->last_location_area, true) ?: [];
         $lastArea = array_merge($lastArea, $value);
 
         $customer->update([

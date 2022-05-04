@@ -61,7 +61,7 @@ class LocalBox extends \System\Classes\BaseComponent
             'showLocalThumb' => [
                 'label' => 'lang:igniter.local::default.label_show_local_image',
                 'type' => 'switch',
-                'default' => FALSE,
+                'default' => false,
                 'validationRule' => 'required|boolean',
             ],
             'localThumbWidth' => [
@@ -177,7 +177,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
     protected function prepareVars()
     {
-        $this->page['showLocalThumb'] = $this->property('showLocalThumb', FALSE);
+        $this->page['showLocalThumb'] = $this->property('showLocalThumb', false);
         $this->page['localThumbWidth'] = $this->property('localThumbWidth');
         $this->page['localThumbHeight'] = $this->property('localThumbHeight');
         $this->page['menusPage'] = $this->property('menusPage');
@@ -246,7 +246,7 @@ class LocalBox extends \System\Classes\BaseComponent
         $hasAdminAccess = optional(AdminAuth::getUser())->hasPermission('Admin.Locations');
         $locationEnabled = optional($this->location->current())->location_status;
         if (!$hasAdminAccess && !$locationEnabled)
-            return TRUE;
+            return true;
     }
 
     protected function updateCurrentOrderType()

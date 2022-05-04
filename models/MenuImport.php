@@ -43,7 +43,7 @@ class MenuImport extends ImportModel
                 $menuItem->save();
 
                 if ($categoryIds = $this->getCategoryIdsForMenuItem($data))
-                    $menuItem->categories()->sync($categoryIds, FALSE);
+                    $menuItem->categories()->sync($categoryIds, false);
 
                 $menuExists ? $this->logUpdated() : $this->logCreated();
             }

@@ -64,6 +64,6 @@ class CoveredAreaCondition
         if ($this->type === 'below' || $this->type == 'less')
             return $cartTotal < $this->total;
 
-        return TRUE;
+        return true;
     }
 }

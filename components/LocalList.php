@@ -68,11 +68,11 @@ class LocalList extends \System\Classes\BaseComponent
             'pageLimit' => null,
             'search' => $this->getSearchTerm(),
             'sort' => $sortBy,
-            'paginate' => FALSE,
+            'paginate' => false,
         ];
 
         if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations'))
-            $options['enabled'] = TRUE;
+            $options['enabled'] = true;
 
         if ($coordinates = Location::userPosition()->getCoordinates()) {
             $options['latitude'] = $coordinates->getLatitude();
@@ -85,13 +85,13 @@ class LocalList extends \System\Classes\BaseComponent
             },
         ]);
 
-        $searchDeliveryAreas = FALSE;
+        $searchDeliveryAreas = false;
         if (strlen($orderType = $this->getOrderType())) {
             if ($orderType == 'delivery')
-                $searchDeliveryAreas = TRUE;
+                $searchDeliveryAreas = true;
 
             $optionKey = studly_case('has_'.$orderType);
-            $options[$optionKey] = TRUE;
+            $options[$optionKey] = true;
         }
 
         $query->listFrontEnd($options);
@@ -249,7 +249,7 @@ class LocalList extends \System\Classes\BaseComponent
         return array_get($this->getSorting(), $sortBy.'.condition');
     }
 
-    protected function filterQueryResult($collection, $searchDeliveryAreas = FALSE)
+    protected function filterQueryResult($collection, $searchDeliveryAreas = false)
     {
         $coordinates = Location::userPosition()->getCoordinates();
         if ($searchDeliveryAreas && $coordinates) {

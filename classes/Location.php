@@ -81,7 +81,7 @@ class Location extends Manager
         $this->fireSystemEvent('location.position.updated', [$position, $oldPosition]);
     }
 
-    public function updateScheduleTimeSlot($dateTime, $isAsap = TRUE)
+    public function updateScheduleTimeSlot($dateTime, $isAsap = true)
     {
         $oldSlot = $this->getSession('order-timeslot');
 
@@ -143,7 +143,7 @@ class Location extends Manager
     public function hasOrderType($code = null)
     {
         if (!$orderType = $this->getOrderType($code))
-            return FALSE;
+            return false;
 
         return !$orderType->isDisabled();
     }
@@ -242,13 +242,13 @@ class Location extends Manager
     public function orderTimeIsAsap()
     {
         if (!$this->hasAsapSchedule())
-            return FALSE;
+            return false;
 
         $dateTime = $this->getSession('order-timeslot.dateTime');
-        $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', TRUE);
+        $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', true);
 
         if (!$this->isOpened())
-            return FALSE;
+            return false;
 
         return $orderTimeIsAsap || ($dateTime && now()->isAfter($dateTime));
     }
@@ -311,12 +311,12 @@ class Location extends Manager
             $timestamp = new \DateTime($timestamp);
 
         if (Carbon::now()->subMinute()->gte($timestamp))
-            return FALSE;
+            return false;
 
         $orderType = $this->getOrderType($orderTypeCode);
 
         if ($orderType->getFutureDays() < Carbon::now()->diffInDays($timestamp))
-            return FALSE;
+            return false;
 
         return $orderType->getSchedule()->isOpenAt($timestamp);
     }
