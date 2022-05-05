@@ -2,6 +2,9 @@
 
 namespace Igniter\Local\Components;
 
+use Admin\Models\Locations_model;
+use Admin\Models\Working_hours_model;
+use Igniter\Flame\Location\OrderTypes;
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Igniter\Local\Facades\Location;
@@ -41,6 +44,25 @@ class Info extends \System\Classes\BaseComponent
         });
     }
 
+    protected function listScheduleItems($locationCurrent)
+    {
+        $scheduleTypes = collect(OrderTypes::instance()->listOrderTypes())
+            ->prepend(['name' => 'igniter.local::default.text_opening'], Locations_model::OPENING)
+            ->all();
+
+        $scheduleItems = [];
+        foreach ($scheduleTypes as $code => $definition) {
+            $schedule = $locationCurrent->createScheduleItem($code);
+            foreach (Working_hours_model::make()->getWeekDaysOptions() as $index => $day) {
+                $scheduleItems[$code][$day] = array_filter(array_get($schedule->getHours(), $index, []), function ($hour) {
+                    return (bool)$hour['status'];
+                });
+            }
+        }
+
+        return [$scheduleTypes, $scheduleItems];
+    }
+
     protected function makeInfoObject()
     {
         $object = new \stdClass();
@@ -50,6 +72,7 @@ class Info extends \System\Classes\BaseComponent
         $object->name = $current->getName();
         $object->description = $current->getDescription();
 
+        $object->orderType = Location::getOrderType();
         $object->orderTypes = Location::getOrderTypes();
 
         $object->opensAllDay = $current->workingHourType('opening') == '24_7';
@@ -65,6 +88,8 @@ class Info extends \System\Classes\BaseComponent
         $object->payments = $current->listAvailablePayments()->pluck('name')->all();
         $object->schedules = $this->listWorkingHours($current);
         $object->deliveryAreas = $this->mapIntoCoveredArea($current);
+
+        [$object->scheduleTypes, $object->scheduleItems] = $this->listScheduleItems($current);
 
         $object->model = $current;
 

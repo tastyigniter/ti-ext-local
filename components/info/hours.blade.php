@@ -1,42 +1,44 @@
-@if (count($locationInfo->schedules))
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th></th>
-                <th>@lang('igniter.local::default.text_opening')</th>
-                <th>@lang('igniter.local::default.text_delivery')</th>
-                <th>@lang('igniter.local::default.text_collection')</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($locationInfo->schedules as $day => $schedules)
-                <tr>
-                    <td>{{ $day }}</td>
-                    @foreach ($schedules->sortByDesc('type')->groupBy('type') as $type => $hours)
-                        <td>
-                            @foreach ($hours as $hour)
-                                @if ($type == 'delivery' && !$locationInfo->hasDelivery)
-                                    @lang('igniter.local::default.text_closed')
-                                @elseif ($type == 'collection' && !$locationInfo->hasCollection)
-                                    @lang('igniter.local::default.text_closed')
-                                @elseif (!$hour->isEnabled())
-                                    @lang('igniter.local::default.text_closed')
-                                @elseif ($hour->isOpenAllDay())
-                                    @lang('igniter.local::default.text_24h')
-                                @else
-                                    {!! sprintf(
-                                        lang('igniter.local::default.text_working_hour'),
-                                        $hour->open->isoFormat($infoTimeFormat),
-                                        $hour->close->isoFormat($infoTimeFormat)
-                                    ) !!}{{ $loop->last ? '' : ', ' }}
-                                @endif
-                            @endforeach
-                        </td>
-                    @endforeach
-                </tr>
+@if (count($locationInfo->scheduleItems))
+    <div class="px-3">
+        <ul class="nav nav-tabs justify-content-center">
+            @foreach ($locationInfo->scheduleTypes as $code => $definition)
+                <li class="nav-item">
+                    <a
+                        role="button"
+                        @class(['nav-link', 'active' => $code == $locationInfo->orderType->getCode()])
+                        data-bs-toggle="tab"
+                        data-bs-target="#{{$code}}"
+                    >@lang(array_get($definition, 'name'))</a>
+                </li>
             @endforeach
-            </tbody>
-        </table>
+        </ul>
+        <div class="tab-content border-top">
+            @foreach ($locationInfo->scheduleItems as $code => $schedules)
+                <div
+                    @class(['tab-pane', 'active' => $code == $locationInfo->orderType->getCode()])
+                    id="{{$code}}"
+                    role="tabpanel"
+                    aria-labelledby="{{$code}}-tab"
+                >
+                    <div class="list-group list-group-flush">
+                        @foreach ($schedules as $day => $hours)
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between">
+                                    <div class="text-muted">{{ $day }}</div>
+                                    <div class="text-right text-nowrap text-truncate">
+                                        @forelse($hours as $hour)
+                                            @php($formatted = sprintf('%s-%s', $hour['open'], $hour['close']))
+                                            <span title="{{ $formatted }}">{{ $formatted }}</span>
+                                        @empty
+                                            <span>@lang('igniter.local::default.text_closed')</span>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 @endif

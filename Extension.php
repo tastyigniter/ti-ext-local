@@ -567,7 +567,7 @@ class Extension extends \System\Classes\BaseExtension
 
             $dataHolder->rules = array_merge($dataHolder->rules, [
                 'options.limit_orders' => ['boolean'],
-                'options.limit_orders_count' => ['required', 'integer', 'min:1', 'max:999'],
+                'options.limit_orders_count' => ['integer', 'min:1', 'max:999'],
                 'options.offer_delivery' => ['boolean'],
                 'options.offer_collection' => ['boolean'],
                 'options.offer_reservation' => ['boolean'],
