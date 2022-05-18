@@ -1,70 +1,14 @@
 <?php
 
-namespace Igniter\Local\Models;
-
-use Igniter\Flame\Database\Attach\HasMedia;
-use IgniterLabs\ImportExport\Models\ExportModel;
-
-class MenuExport extends ExportModel
-{
-    use HasMedia;
-
-    protected $table = 'menus';
-
-    protected $primaryKey = 'menu_id';
-
-    public $relation = [
-        'belongsToMany' => [
-            'menu_categories' => [\Admin\Models\Categories_model::class, 'table' => 'menu_categories', 'foreignKey' => 'menu_id'],
-            'menu_mealtimes' => [\Admin\Models\Mealtimes_model::class, 'table' => 'menu_mealtimes', 'foreignKey' => 'menu_id'],
-        ],
-    ];
-
-    public $mediable = ['thumb'];
-
-    /**
-     * The accessors to append to the model's array form.
-     * @var array
-     */
-    protected $appends = [
-        'categories',
-        'thumb_url',
-        'mealtimes',
-    ];
-
-    public function exportData($columns)
-    {
-        return self::make()->with([
-            'menu_mealtimes',
-            'menu_categories',
-            'media',
-        ])->get()->toArray();
-    }
-
-    public function getCategoriesAttribute()
-    {
-        if (!$this->menu_categories) {
-            return '';
-        }
-
-        return $this->encodeArrayValue($this->menu_categories->pluck('name')->all());
-    }
-
-    public function getThumbUrlAttribute()
-    {
-        if (!$this->hasMedia('thumb')) {
-            return '';
-        }
-
-        return $this->getFirstMedia('thumb')->getPath();
-    }
-
-    public function getMealtimesAttribute()
-    {
-        if (!$this->menu_mealtimes) {
-            return '';
-        }
-
-        return $this->encodeArrayValue($this->menu_mealtimes->pluck('mealtime_name')->all());
-    }
-}
+return [
+    'columns' => [
+        'menu_id' => 'lang:admin::lang.column_id',
+        'menu_name' => 'lang:admin::lang.label_name',
+        'menu_price' => 'lang:admin::lang.menus.label_price',
+        'menu_description' => 'lang:admin::lang.label_description',
+        'minimum_qty' => 'lang:admin::lang.menus.label_minimum_qty',
+        'categories' => 'lang:admin::lang.menus.label_category',
+        'menu_status' => 'lang:admin::lang.label_status',
+        'mealtimes' => 'lang:admin::lang.menus.label_mealtime',
+    ],
+];
