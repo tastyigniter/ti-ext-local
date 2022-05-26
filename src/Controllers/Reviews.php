@@ -8,9 +8,9 @@ use Igniter\Local\Models\Review;
 class Reviews extends \Igniter\Admin\Classes\AdminController
 {
     public $implement = [
-        \Igniter\Admin\Actions\ListController::class,
-        \Igniter\Admin\Actions\FormController::class,
-        \Igniter\Admin\Actions\LocationAwareController::class,
+        \Igniter\Admin\Http\Actions\ListController::class,
+        \Igniter\Admin\Http\Actions\FormController::class,
+        \Igniter\Admin\Http\Actions\LocationAwareController::class,
     ];
 
     public $listConfig = [
