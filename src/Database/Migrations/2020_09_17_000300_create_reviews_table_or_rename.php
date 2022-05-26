@@ -7,8 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReviewsTableOrRename extends Migration
-{
+return new class extends Migration {
     public function up()
     {
         if (Schema::hasTable('reviews'))
@@ -46,4 +45,4 @@ class CreateReviewsTableOrRename extends Migration
     {
         Schema::dropIfExists('igniter_reviews');
     }
-}
+};
