@@ -2,6 +2,8 @@
 
 namespace Igniter\Local\Components;
 
+use Igniter\Admin\Models\Location as LocationModel;
+use Igniter\Admin\Models\Menu as MenuModel;
 use Igniter\Local\Facades\Location;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -120,8 +122,8 @@ class Menu extends \Igniter\System\Classes\BaseComponent
     {
         $location = $this->getLocation();
 
-        $list = Menu::with([
-            'mealtimes', 'menu_options',
+        $list = MenuModel::with([
+            'mealtimes', 'menu_option_values.option_value',
             'categories' => function ($query) use ($location) {
                 $query->whereHasOrDoesntHaveLocation($location);
             }, 'categories.media',
@@ -201,7 +203,7 @@ class Menu extends \Igniter\System\Classes\BaseComponent
         if (is_single_location() && $param === $this->property('defaultLocationParam', 'local'))
             return;
 
-        if (Location::whereSlug($param)->exists())
+        if (LocationModel::whereSlug($param)->exists())
             return;
 
         return Redirect::to($this->controller->pageUrl($this->property('localNotFoundPage')));

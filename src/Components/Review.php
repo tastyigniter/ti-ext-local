@@ -7,6 +7,7 @@ use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Cart\Classes\OrderManager;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Facades\Location;
+use Igniter\Local\Models\Review as ReviewModel;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Main\Facades\Auth;
 use Igniter\Main\Traits\UsesPage;
@@ -135,7 +136,7 @@ class Review extends \Igniter\System\Classes\BaseComponent
      */
     protected function getHints()
     {
-        return Review::make()->getRatingOptions();
+        return ReviewModel::make()->getRatingOptions();
     }
 
     protected function loadReviewList()
@@ -143,7 +144,7 @@ class Review extends \Igniter\System\Classes\BaseComponent
         if (!$location = Location::current())
             return null;
 
-        $list = Review::with(['customer', 'customer.address'])->listFrontEnd([
+        $list = ReviewModel::with(['customer', 'customer.address'])->listFrontEnd([
             'page' => $this->param('page'),
             'pageLimit' => $this->property('pageLimit'),
             'sort' => $this->property('sort', 'created_at asc'),
@@ -168,7 +169,7 @@ class Review extends \Igniter\System\Classes\BaseComponent
         if (!$reviewable)
             return null;
 
-        return Review::whereReviewable($reviewable)->first();
+        return ReviewModel::whereReviewable($reviewable)->first();
     }
 
     protected function getReviewable()
@@ -191,6 +192,6 @@ class Review extends \Igniter\System\Classes\BaseComponent
         if (!$customer = Auth::customer())
             return false;
 
-        return Review::checkReviewed($reviewable, $customer);
+        return ReviewModel::checkReviewed($reviewable, $customer);
     }
 }

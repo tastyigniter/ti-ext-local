@@ -7,6 +7,6 @@
             >@lang('igniter.local::default.text_all_categories')</a>
         </li>
 
-        @partial('@items', ['categories' => $categories->toFlatTree(), 'displayAsFlatTree' => true])
+        @themePartial('@items', ['categories' => $categories->toFlatTree(), 'displayAsFlatTree' => true])
     </ul>
 </div>

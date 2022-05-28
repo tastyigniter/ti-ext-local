@@ -3,6 +3,7 @@
 namespace Igniter\Local\Classes;
 
 use Carbon\Carbon;
+use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Admin\Models\LocationArea;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Flame\Location\AbstractOrderType;
@@ -108,7 +109,7 @@ class Location extends Manager
 
     public function orderType()
     {
-        return $this->getSession('orderType', Location::DELIVERY);
+        return $this->getSession('orderType', LocationModel::DELIVERY);
     }
 
     /**
@@ -131,12 +132,12 @@ class Location extends Manager
 
     public function orderTypeIsDelivery()
     {
-        return $this->orderType() === Location::DELIVERY;
+        return $this->orderType() === LocationModel::DELIVERY;
     }
 
     public function orderTypeIsCollection()
     {
-        return $this->orderType() === Location::COLLECTION;
+        return $this->orderType() === LocationModel::COLLECTION;
     }
 
     public function hasOrderType($code = null)
@@ -177,12 +178,12 @@ class Location extends Manager
 
     public function deliverySchedule()
     {
-        return $this->workingSchedule(Location::DELIVERY);
+        return $this->workingSchedule(LocationModel::DELIVERY);
     }
 
     public function collectionSchedule()
     {
-        return $this->workingSchedule(Location::COLLECTION);
+        return $this->workingSchedule(LocationModel::COLLECTION);
     }
 
     public function isOpened()

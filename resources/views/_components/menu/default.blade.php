@@ -1,14 +1,14 @@
 @if (!$hideMenuSearch)
     <div class="menu-search">
-        @partial('@searchbar')
+        @themePartial('@searchbar')
     </div>
 @endif
 
 <div class="menu-list">
     @if ($menuIsGrouped)
-        @partial('@grouped', ['groupedMenuItems' => $menuList])
+        @themePartial('@grouped', ['groupedMenuItems' => $menuList])
     @else
-        @partial('@items', ['menuItems' => $menuList])
+        @themePartial('@items', ['menuItems' => $menuList])
     @endif
 
     <div class="pagination-bar text-right">

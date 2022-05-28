@@ -45,7 +45,7 @@ class Review extends Model
     public $relation = [
         'belongsTo' => [
             'location' => [\Igniter\Admin\Models\Location::class, 'scope' => 'isEnabled'],
-            'customer' => \Igniter\Admin\Models\Customer::class,
+            'customer' => \Igniter\Main\Models\Customer::class,
         ],
         'morphTo' => [
             'reviewable' => ['name' => 'sale'],

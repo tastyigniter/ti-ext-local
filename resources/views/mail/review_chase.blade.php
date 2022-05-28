@@ -55,7 +55,7 @@ We would really appreciate you leaving a review to tell us how we did and help u
 
 {{$order_comment}}
 
-@partial('table')
+@themePartial('table')
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <thead>
     <tr>

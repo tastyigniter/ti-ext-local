@@ -10,7 +10,7 @@
 
         @if ((!isset($displayAsFlatTree) || !$displayAsFlatTree) && count($category->children))
             <ul class="nav flex-column ms-3 my-1">
-                @partial('@items', ['categories' => $category->children])
+                @themePartial('@items', ['categories' => $category->children])
             </ul>
         @endif
     </li>

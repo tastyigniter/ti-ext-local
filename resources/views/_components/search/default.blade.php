@@ -10,7 +10,7 @@
                 <h2 class="text-center text-primary">@lang('igniter.local::default.text_order_summary')</h2>
                 <span class="search-label sr-only">@lang('igniter.local::default.label_search_query')</span>
                 <div id="local-search-container">
-                    @partial('@container')
+                    @themePartial('@container')
                 </div>
             @endif
         </div>

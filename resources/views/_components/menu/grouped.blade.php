@@ -36,10 +36,10 @@
                         @endif
                     </div>
 
-                    @partial('@items', ['menuItems' => $menuList])
+                    @themePartial('@items', ['menuItems' => $menuList])
                 </div>
             @else
-                @partial('@items', ['menuItems' => $menuList])
+                @themePartial('@items', ['menuItems' => $menuList])
             @endif
         </div>
     @empty
