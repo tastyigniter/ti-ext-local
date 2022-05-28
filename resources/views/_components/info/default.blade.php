@@ -36,10 +36,10 @@
         @endif
     </div>
 
-    @partial('@areas')
+    @themePartial('@areas')
 
     <h4 class="panel-title p-3"><b>@lang('igniter.local::default.text_hours')</b></h4>
 
-    @partial('@hours')
+        @themePartial('@hours')
 </div>
 

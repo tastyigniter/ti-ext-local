@@ -3,11 +3,11 @@
         id="local-search-form"
         @class(['hide' => $localSearch->showAddressPicker()])
     >
-        @partial('@form')
+        @themePartial('@form')
     </div>
 
     @if ($__SELF__->showAddressPicker())
-        @partial('@address_picker')
+        @themePartial('@address_picker')
     @endif
 
     @if ($__SELF__->showDeliveryCoverageAlert())

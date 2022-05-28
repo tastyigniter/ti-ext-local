@@ -17,7 +17,7 @@
             <label
                 for="btn-check-{{$orderType->getCode()}}"
                 class="btn btn-light w-50 {{ $orderType->isActive() ? 'active' : '' }}"
-            >@partial('@control_info', ['orderType' => $orderType])</label>
+            >@themePartial('@control_info', ['orderType' => $orderType])</label>
         @endforeach
     </div>
 @else
@@ -32,7 +32,7 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
         >
-            @partial('@control_info', ['orderType' => $location->getOrderType()])
+            @themePartial('@control_info', ['orderType' => $location->getOrderType()])
         </button>
         <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
             @foreach($locationOrderTypes as $orderType)
@@ -42,7 +42,7 @@
                     class="dropdown-item text-center {{ $orderType->isActive() ? 'active' : '' }}"
                     data-order-type-code="{{ $orderType->getCode() }}"
                 >
-                    @partial('@control_info', ['orderType' => $orderType])
+                    @themePartial('@control_info', ['orderType' => $orderType])
                 </a>
             @endforeach
         </div>

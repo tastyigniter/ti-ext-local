@@ -37,14 +37,14 @@
 
             @isset ($updateCartItemEventHandler)
                 <div class="menu-button">
-                    @partial('@button', ['menuItem' => $menuItem, 'menuItemObject' => $menuItemObject ])
+                    @themePartial('@button', ['menuItem' => $menuItem, 'menuItemObject' => $menuItemObject ])
                 </div>
             @endisset
         </div>
     </div>
     <div class="layout-scrollable w-100">
         <div class="d-flex align-items-center py-2 allergens">
-            @partial('@allergens', ['menuItem' => $menuItem, 'menuItemObject' => $menuItemObject])
+            @themePartial('@allergens', ['menuItem' => $menuItem, 'menuItemObject' => $menuItemObject])
         </div>
     </div>
 </div>

@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\CartConditions;
 
-use Igniter\Admin\Models\Location;
+use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Flame\Cart\CartCondition;
 use Igniter\Flame\Cart\Facades\Cart;
 use Igniter\Local\Facades\Location;
@@ -18,7 +18,7 @@ class Delivery extends CartCondition
     public function beforeApply()
     {
         // Do not apply condition when orderType is not delivery
-        if (Location::orderType() != Location::DELIVERY)
+        if (Location::orderType() != LocationModel::DELIVERY)
             return false;
 
         $coveredArea = Location::coveredArea();

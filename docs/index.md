@@ -29,14 +29,14 @@ Manage locations and menu items from the admin panel.
 
 | Name     | Page variable                | Description                                      |
 | -------- | ---------------------------- | ------------------------------------------------ |
-| Search  | `@component('localSearch')` | Display the nearby search box on the page |
-| LocalBox  | `@component('localBox')` | Display information about and manages the user's location |
-| Info  | `@component('localInfo')` | Display the opening hours of the user's location |
-| List  | `@component('localList')` | Display a list of locations on the page |
-| Menu  | `@component('localMenu')` | Display a list of menu items on the page |
-| Categories | `@component('categories')` | Displays menu categories on the page            |
-| Review  | `@component('localReview')` | Display a list of reviews on the page |
-| Gallery | `@component('gallery')` | Displays the location gallery on the page            |
+| Search  | `@componentPartial('localSearch')` | Display the nearby search box on the page |
+| LocalBox  | `@componentPartial('localBox')` | Display information about and manages the user's location |
+| Info  | `@componentPartial('localInfo')` | Display the opening hours of the user's location |
+| List  | `@componentPartial('localList')` | Display a list of locations on the page |
+| Menu  | `@componentPartial('localMenu')` | Display a list of menu items on the page |
+| Categories | `@componentPartial('categories')` | Displays menu categories on the page            |
+| Review  | `@componentPartial('localReview')` | Display a list of reviews on the page |
+| Gallery | `@componentPartial('gallery')` | Displays the location gallery on the page            |
 
 ### Search Component
 
@@ -65,7 +65,7 @@ permalink: /
     menusPage: local/menus
 ---
 ...
-@component('localSearch')
+@componentPartial('localSearch')
 ...
 ```
 
@@ -107,7 +107,7 @@ permalink: '/:location?local/menus/:category?'
     menusPage: local/menus
 ---
 ...
-@component('localBox')
+@componentPartial('localBox')
 ...
 ```
 
@@ -135,7 +135,7 @@ permalink: '/:location?local/info'
 '[localInfo]': { }
 ---
 ...
-@component('localInfo')
+@componentPartial('localInfo')
 ...
 ```
 
@@ -169,7 +169,7 @@ permalink: '/locations'
 '[localList]': { }
 ---
 ...
-@component('localList')
+@componentPartial('localList')
 ...
 ```
 
@@ -211,7 +211,7 @@ permalink: '/:location?local/menus/:category?'
     menuImageHeight: 80
 ---
 ...
-@component('localMenu')
+@componentPartial('localMenu')
 ...
 ```
 
@@ -244,7 +244,7 @@ permalink: '/:location?local/menus/:category?'
     menusPage: local/menus
 ---
 ...
-@component('categories')
+@componentPartial('categories')
 ...
 ```
 
@@ -280,7 +280,7 @@ permalink: '/:location?local/reviews'
     sort: 'created_at asc'
 ---
 ...
-@component('localReview')
+@componentPartial('localReview')
 ...
 ```
 
@@ -303,6 +303,6 @@ permalink: /:location?local/gallery
 '[localGallery]':
 ---
 ...
-@component('localGallery')
+@componentPartial('localGallery')
 ...
 ```

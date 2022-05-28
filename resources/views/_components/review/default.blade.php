@@ -2,7 +2,7 @@
     <ul class="list-group list-group-flush">
         @foreach ($reviewList as $review)
             <li class="list-group-item review-item">
-                @partial('@item', ['review' => $review])
+                @themePartial('@item', ['review' => $review])
             </li>
         @endforeach
 

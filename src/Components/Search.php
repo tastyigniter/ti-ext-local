@@ -4,10 +4,10 @@ namespace Igniter\Local\Components;
 
 use Exception;
 use Igniter\Admin\Models\Address;
-use Igniter\Admin\Models\Customer;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Facades\Location;
 use Igniter\Main\Facades\Auth;
+use Igniter\Main\Models\Customer;
 
 class Search extends \Igniter\System\Classes\BaseComponent
 {
@@ -103,7 +103,7 @@ class Search extends \Igniter\System\Classes\BaseComponent
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['pickerEventHandler'] = $this->getEventHandler('onSetSavedAddress');
 
-        $this->page['searchQueryPosition'] = Location::instance()->userPosition();
+        $this->page['searchQueryPosition'] = Location::userPosition();
         $this->page['searchDefaultAddress'] = $this->updateNearbyAreaFromSavedAddress(
             $this->getDefaultAddress()
         );
