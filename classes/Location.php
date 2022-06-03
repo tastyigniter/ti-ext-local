@@ -327,7 +327,7 @@ class Location extends Manager
 
         $minFutureDays = Carbon::now()->startOfDay()->addDays($orderType->getMinimumFutureDays());
         $maxFutureDays = Carbon::now()->endOfDay()->addDays($orderType->getFutureDays());
-        if ($timestamp->between($minFutureDays, $maxFutureDays))
+        if (!$timestamp->between($minFutureDays, $maxFutureDays))
             return false;
 
         return $orderType->getSchedule()->isOpenAt($timestamp);
