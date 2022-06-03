@@ -333,6 +333,9 @@ class Location extends Manager
 
     public function hasAsapSchedule()
     {
+        if ($this->getOrderType()->getMinimumFutureDays())
+            return false;
+
         return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::LATER_ONLY;
     }
 

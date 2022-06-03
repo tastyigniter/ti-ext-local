@@ -35,6 +35,7 @@ class Extension extends \System\Classes\BaseExtension
 
     public function boot()
     {
+        Event::subscribe(ExtendLocationOptions::class);
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
         Event::listen('router.beforeRoute', function ($url, $router) {
@@ -46,7 +47,6 @@ class Extension extends \System\Classes\BaseExtension
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();
         $this->extendDashboardChartsDatasets();
-        $this->extendLocationOptionsFields();
     }
 
     public function registerAutomationRules()
@@ -340,10 +340,5 @@ class Extension extends \System\Classes\BaseExtension
         $customer->update([
             'last_location_area' => json_encode($lastArea),
         ]);
-    }
-
-    protected function extendLocationOptionsFields()
-    {
-        Event::subscribe(ExtendLocationOptions::class);
     }
 }
