@@ -167,6 +167,16 @@ class Location extends Manager
         return $this->orderTypes = $this->getModel()->availableOrderTypes();
     }
 
+    public function minimumOrderTotal($orderType = null)
+    {
+        return $this->getOrderType($orderType)->getMinimumOrderTotal();
+    }
+
+    public function checkMinimumOrderTotal($cartTotal, $orderType = null)
+    {
+        return $cartTotal >= $this->minimumOrderTotal($orderType);
+    }
+
     //
     // HOURS
     //
@@ -407,9 +417,12 @@ class Location extends Manager
         return $this->coveredArea()->deliveryAmount($cartTotal);
     }
 
+    /**
+     * @deprecated remove after v4, use minimumOrderTotal() instead
+     */
     public function minimumOrder($cartTotal)
     {
-        return $this->coveredArea()->minimumOrderTotal($cartTotal);
+        return $this->minimumOrderTotal();
     }
 
     public function getDeliveryChargeConditions()
@@ -417,9 +430,12 @@ class Location extends Manager
         return $this->coveredArea()->listConditions();
     }
 
+    /**
+     * @deprecated remove after v4, use checkMinimumOrderTotal() instead
+     */
     public function checkMinimumOrder($cartTotal)
     {
-        return $cartTotal >= $this->minimumOrder($cartTotal);
+        return $cartTotal >= $this->minimumOrderTotal();
     }
 
     public function checkDistance($decimalPoint)
