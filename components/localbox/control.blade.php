@@ -48,3 +48,8 @@
         </div>
     </div>
 @endif
+@if ($minOrderTotal = $location->minimumOrderTotal())
+    <p class="text-muted text-center my-2">
+        @lang('igniter.local::default.text_min_total'): {{ currency_format($minOrderTotal) }}
+    </p>
+@endif

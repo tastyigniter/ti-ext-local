@@ -23,12 +23,14 @@ class Delivery extends CartCondition
 
         $cartSubtotal = Cart::subtotal();
         $this->deliveryCharge = Location::coveredArea()->deliveryAmount($cartSubtotal);
+        $this->minimumOrder = (float)Location::coveredArea()->minimumOrderTotal($cartSubtotal);
     }
 
     public function getRules()
     {
         return [
             "{$this->deliveryCharge} >= 0",
+            "subtotal >= {$this->minimumOrder}",
         ];
     }
 
@@ -42,5 +44,16 @@ class Delivery extends CartCondition
     public function getValue()
     {
         return $this->calculatedValue > 0 ? $this->calculatedValue : lang('main::lang.text_free');
+    }
+
+    public function whenInValid()
+    {
+        if (!Cart::subtotal() || !$this->minimumOrder)
+            return;
+
+        flash()->warning(sprintf(
+            lang('igniter.cart::default.alert_min_delivery_order_total'),
+            currency_format($this->minimumOrder)
+        ))->now();
     }
 }
