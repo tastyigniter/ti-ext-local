@@ -329,6 +329,9 @@ class Location extends Manager
 
         $orderType = $this->getOrderType($orderTypeCode);
 
+        if (!$orderType->getFutureDays() && $this->isClosed())
+            return false;
+
         if ($orderType->getFutureDays() < Carbon::now()->diffInDays($timestamp))
             return false;
 
