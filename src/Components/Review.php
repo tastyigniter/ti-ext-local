@@ -178,10 +178,10 @@ class Review extends \Igniter\System\Classes\BaseComponent
 
         $reviewable = null;
         if ($this->property('reviewableType') == 'reservation') {
-            $reviewable = BookingManager::instance()->getReservationByHash($reviewableHash, Auth::customer());
+            $reviewable = resolve(BookingManager::class)->getReservationByHash($reviewableHash, Auth::customer());
         }
         elseif ($this->property('reviewableType') == 'order') {
-            $reviewable = OrderManager::instance()->getOrderByHash($reviewableHash, Auth::customer());
+            $reviewable = resolve(OrderManager::class)->getOrderByHash($reviewableHash, Auth::customer());
         }
 
         return $reviewable;
