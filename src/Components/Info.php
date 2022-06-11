@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\Components;
 
+use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Admin\Models\WorkingHour;
 use Igniter\Flame\Location\OrderTypes;
 use Igniter\Local\Classes\CoveredArea;
@@ -45,8 +46,8 @@ class Info extends \Igniter\System\Classes\BaseComponent
 
     protected function listScheduleItems($locationCurrent)
     {
-        $scheduleTypes = collect(OrderTypes::instance()->listOrderTypes())
-            ->prepend(['name' => 'igniter.local::default.text_opening'], Location::OPENING)
+        $scheduleTypes = collect(resolve(OrderTypes::class)->listOrderTypes())
+            ->prepend(['name' => 'igniter.local::default.text_opening'], LocationModel::OPENING)
             ->all();
 
         $scheduleItems = [];

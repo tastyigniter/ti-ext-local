@@ -3,9 +3,9 @@
 namespace Igniter\Local\Listeners;
 
 use Carbon\Carbon;
+use Igniter\Admin\Models\Location;
 use Igniter\Admin\Models\Order;
 use Igniter\Flame\Exception\ApplicationException;
-use Igniter\Flame\Location\Models\AbstractLocation;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Illuminate\Contracts\Events\Dispatcher;
 
@@ -23,7 +23,7 @@ class MaxOrderPerTimeslotReached
     public function timeslotValid($workingSchedule, $timeslot)
     {
         // Skip if the working schedule is not for delivery or pickup
-        if ($workingSchedule->getType() == AbstractLocation::OPENING)
+        if ($workingSchedule->getType() == Location::OPENING)
             return;
 
         if ($this->execute($timeslot, $workingSchedule->getType()))
