@@ -347,7 +347,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             return [
                 'limit_orders' => [
                     'label' => 'lang:igniter.local::default.label_limit_orders',
-                    'accordion' => 'lang:admin::lang.locations.text_tab_general_options',
+                    'accordion' => 'lang:igniter::admin.locations.text_tab_general_options',
                     'type' => 'switch',
                     'default' => 0,
                     'comment' => 'lang:igniter.local::default.help_limit_orders',
@@ -355,7 +355,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 ],
                 'limit_orders_count' => [
                     'label' => 'lang:igniter.local::default.label_limit_orders_count',
-                    'accordion' => 'lang:admin::lang.locations.text_tab_general_options',
+                    'accordion' => 'lang:igniter::admin.locations.text_tab_general_options',
                     'type' => 'number',
                     'default' => 50,
                     'span' => 'right',
