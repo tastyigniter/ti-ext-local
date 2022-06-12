@@ -1,6 +1,6 @@
 <?php
 
-namespace Igniter\Local\Controllers;
+namespace Igniter\Local\Http\Controllers;
 
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Local\Models\Review;
