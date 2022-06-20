@@ -2,7 +2,9 @@
 
 namespace Igniter\Local\OrderTypes;
 
+use Igniter\Flame\Cart\Facades\Cart;
 use Igniter\Flame\Location\AbstractOrderType;
+use Igniter\Local\Facades\Location;
 use Igniter\Local\Facades\Location as LocationFacade;
 
 class Delivery extends AbstractOrderType
@@ -46,5 +48,13 @@ class Delivery extends AbstractOrderType
     public function isDisabled(): bool
     {
         return !$this->model->hasDelivery();
+    }
+
+    public function getMinimumOrderTotal()
+    {
+        $total = Location::coveredArea()->minimumOrderTotal(Cart::subtotal());
+        $minTotal = $this->model->getMinimumOrderTotal($this->code);
+
+        return $total > $minTotal ? $total : $minTotal;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\Classes;
 
+use Admin\Facades\AdminAuth;
 use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
 use Carbon\Carbon;
@@ -96,6 +97,19 @@ class Location extends Manager
         }
 
         $this->fireSystemEvent('location.timeslot.updated', [$slot, $oldSlot]);
+    }
+
+    /**
+     * Extend the query used for finding the location.
+     *
+     * @param \Igniter\Flame\Database\Builder $query
+     *
+     * @return void
+     */
+    public function extendLocationQuery($query)
+    {
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations'))
+            $query->IsEnabled();
     }
 
     //
@@ -324,6 +338,9 @@ class Location extends Manager
             return false;
 
         $orderType = $this->getOrderType($orderTypeCode);
+
+        if (!$orderType->getFutureDays() && $this->isClosed())
+            return false;
 
         $minFutureDays = Carbon::now()->startOfDay()->addDays($orderType->getMinimumFutureDays());
         $maxFutureDays = Carbon::now()->endOfDay()->addDays($orderType->getFutureDays());
