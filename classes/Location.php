@@ -342,7 +342,9 @@ class Location extends Manager
         if (!$orderType->getFutureDays() && $this->isClosed())
             return false;
 
-        if ($orderType->getFutureDays() < Carbon::now()->diffInDays($timestamp))
+        $minFutureDays = Carbon::now()->startOfDay()->addDays($orderType->getMinimumFutureDays());
+        $maxFutureDays = Carbon::now()->endOfDay()->addDays($orderType->getFutureDays());
+        if (!$timestamp->between($minFutureDays, $maxFutureDays))
             return false;
 
         return $orderType->getSchedule()->isOpenAt($timestamp);
@@ -350,6 +352,9 @@ class Location extends Manager
 
     public function hasAsapSchedule()
     {
+        if ($this->getOrderType()->getMinimumFutureDays())
+            return false;
+
         return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::LATER_ONLY;
     }
 
