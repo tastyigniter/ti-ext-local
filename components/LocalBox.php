@@ -53,7 +53,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 'type' => 'select',
                 'default' => Locations_model::DELIVERY,
                 'options' => [Locations_model::class, 'getOrderTypeOptions'],
-                'validationRule' => 'required|in:delivery,collection',
+                'validationRule' => 'required|alpha_dash',
             ],
             'showLocalThumb' => [
                 'label' => 'lang:igniter.local::default.label_show_local_image',
