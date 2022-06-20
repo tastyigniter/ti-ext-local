@@ -48,12 +48,8 @@
         </div>
     </div>
 @endif
-@if ($location->orderTypeIsDelivery())
+@if ($minOrderTotal = $location->minimumOrderTotal())
     <p class="text-muted text-center my-2">
-        @if ($minOrderTotal = $location->minimumOrder($cart->subtotal()))
-            @lang('igniter.local::default.text_min_total'): {{ currency_format($minOrderTotal) }}
-        @else
-            @lang('igniter.local::default.text_no_min_total')
-        @endif
+        @lang('igniter.local::default.text_min_total'): {{ currency_format($minOrderTotal) }}
     </p>
 @endif

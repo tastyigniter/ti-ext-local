@@ -107,6 +107,8 @@ return [
     'label_collection_time_restriction' => 'Pick-up Time Restriction',
     'label_delivery_add_lead_time' => 'Add Lead Time to Delivery Start Time',
     'label_collection_add_lead_time' => 'Add Lead Time to Pick-up Start Time',
+    'label_delivery_min_order_amount' => 'Delivery Minimum Order Amount',
+    'label_collection_min_order_amount' => 'Pick-up Minimum Order Amount',
 
     'help_location_search_mode' => 'Hides the local search form. To disable the local search feature entirely on the storefront, disable <b>Require Location To Order</b> on the Order & Reservation Settings page.',
     'help_menu_page_limit' => 'Limit how many menus are shown per page',
@@ -124,6 +126,8 @@ return [
     'help_collection_cancellation_timeout' => 'Set when a customer can no longer cancel a pick-up order. Number of minutes before pick-up time. Leave as 0, to disable customer pick-up order cancellation.',
     'help_delivery_add_lead_time' => 'Disabling will start the delivery timeslots from the scheduled open time.',
     'help_collection_add_lead_time' => 'Disabling will start the pickup timeslots from the scheduled open time.',
+    'help_delivery_min_order_amount' => 'Set the minimum amount a customer\'s cart total must reach before they can place a delivery order.',
+    'help_collection_min_order_amount' => 'Set the minimum amount a customer\'s cart total must reach before they can place a pickup order.',
     'help_future_delivery_days' => 'Set the number of days a customer can order for delivery in advance.',
     'help_future_collection_days' => 'Set the number of days a customer can order for pick-up in advance.',
 

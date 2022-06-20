@@ -21,10 +21,9 @@ class Delivery extends CartCondition
         if (Location::orderType() != Locations_model::DELIVERY)
             return false;
 
-        $coveredArea = Location::coveredArea();
         $cartSubtotal = Cart::subtotal();
-        $this->deliveryCharge = $coveredArea->deliveryAmount($cartSubtotal);
-        $this->minimumOrder = (float)$coveredArea->minimumOrderTotal($cartSubtotal);
+        $this->deliveryCharge = Location::coveredArea()->deliveryAmount($cartSubtotal);
+        $this->minimumOrder = (float)Location::coveredArea()->minimumOrderTotal($cartSubtotal);
     }
 
     public function getRules()
