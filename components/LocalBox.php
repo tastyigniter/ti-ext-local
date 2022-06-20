@@ -52,10 +52,7 @@ class LocalBox extends \System\Classes\BaseComponent
                 'label' => 'lang:igniter.local::default.label_default_order_type',
                 'type' => 'select',
                 'default' => Locations_model::DELIVERY,
-                'options' => [
-                    Locations_model::DELIVERY => 'lang:igniter.local::default.text_delivery',
-                    Locations_model::COLLECTION => 'lang:igniter.local::default.text_collection',
-                ],
+                'options' => [Locations_model::class, 'getOrderTypeOptions'],
                 'validationRule' => 'required|in:delivery,collection',
             ],
             'showLocalThumb' => [
@@ -260,7 +257,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
         $defaultOrderType = $this->property('defaultOrderType');
         if (!$this->location->hasOrderType($defaultOrderType))
-            $defaultOrderType = Locations_model::DELIVERY;
+            $defaultOrderType = key(Locations_model::getOrderTypeOptions()->all());
 
         $this->location->updateOrderType($defaultOrderType);
     }
