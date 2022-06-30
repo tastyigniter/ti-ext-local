@@ -10,7 +10,7 @@
         <dd class="text-muted">
             <div class="rating rating-sm">
                 @php $reviewScore = $locationCurrent->reviews_score() @endphp @for ($value = 1; $value<6; $value++)
-                    <span @class(['fa-star', 'fa' => $value < $reviewScore, 'far' => $value > $reviewScore])></span>
+                    <span @class(['fa-star', 'fa' => $value <= $reviewScore, 'far' => $value > $reviewScore])></span>
                 @endfor
                 <span class="small">({{ $locationCurrent->reviews_count ?? 0 }})</span>
             </div>
