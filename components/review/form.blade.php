@@ -19,7 +19,7 @@
                     for="quality"
                 >@lang('igniter.local::default.review.label_quality')</label>
                 <div
-                    class="h4"
+                    class="field-rating"
                     data-control="star-rating"
                     data-score="{{ $customerReview ? $customerReview->quality : set_radio('rating[quality]') }}"
                     data-hints='@json(array_values($reviewRatingHints))'
