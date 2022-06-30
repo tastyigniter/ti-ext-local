@@ -144,14 +144,14 @@ class Review extends \System\Classes\BaseComponent
         if (!$location = Location::current())
             return null;
 
-        $list = Reviews_model::with(['customer', 'customer.address'])->listFrontEnd([
-            'page' => $this->param('page'),
-            'pageLimit' => $this->property('pageLimit'),
-            'sort' => $this->property('sort', 'created_at asc'),
-            'location' => $location->getKey(),
-        ]);
-
-        return $list;
+        return Reviews_model::with(['customer', 'customer.address'])
+            ->isApproved()
+            ->listFrontEnd([
+                'page' => $this->param('page'),
+                'pageLimit' => $this->property('pageLimit'),
+                'sort' => $this->property('sort', 'created_at asc'),
+                'location' => $location->getKey(),
+            ]);
     }
 
     protected function loadReviewable()
