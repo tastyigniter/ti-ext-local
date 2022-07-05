@@ -1,6 +1,6 @@
 @foreach ($locationsList as $locationObject)
     <a
-        class="card w-100 p-3 mb-2"
+        class="card w-100 p-3 mb-2 text-decoration-none"
         href="{{ page_url('local/menus', ['location' => $locationObject->permalink]) }}"
     >
         <div class="boxes d-sm-flex g-0">
@@ -14,30 +14,29 @@
                             />
                         </div>
                     @endif
-                    <dl class="no-spacing">
-                        <dd><h2 class="h5 mb-0 text-body">{{ $locationObject->name }}</h2></dd>
-                        @if ($showReviews)
-                            <dd>
+                    <div class="no-spacing">
+                        <div class="d-flex flex-row mb-2">
+                            <h2 class="h5 mb-0 text-body">{{ $locationObject->name }}</h2>
+                            @if ($showReviews)
                                 <div class="rating rating-sm text-muted">
                                     @php $reviewScore = $locationObject->reviewsScore @endphp @for ($value = 1; $value<6; $value++)
                                         <span class="fa fa-star{{ $value > $reviewScore ? '-o' : '' }}"></span>
                                     @endfor
                                     <span class="small">({{ $locationObject->reviewsCount ?? 0 }})</span>
                                 </div>
-                            </dd>
-                        @endif
-                        <dd class="d-none">
-                        <span
-                            class="text-muted text-truncate">{!! format_address($locationObject->address) !!}</span>
-                        </dd>
+                            @endif
+                        </div>
+                        <div class="text-muted text-truncate">
+                            {!! format_address($locationObject->address) !!}
+                        </div>
                         @if ($locationObject->distance)
-                            <dd>
+                            <div>
                                 <span
                                     class="text-muted small"
                                 ><i class="fa fa-map-marker"></i>&nbsp;&nbsp;{{ number_format($locationObject->distance, 1) }} {{ $distanceUnit }}</span>
-                            </dd>
+                            </div>
                         @endif
-                    </dl>
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-sm-5">
