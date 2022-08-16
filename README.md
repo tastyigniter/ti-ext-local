@@ -22,4 +22,5 @@ security vulnerabilities.
 
 ### License
 
-TastyIgniter Local extension is open-sourced software licensed under the [MIT license](LICENSE).
+TastyIgniter Local extension is open-sourced software licensed under
+the [MIT license](https://github.com/tastyigniter/ti-ext-local/LICENSE.md).
