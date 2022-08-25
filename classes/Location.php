@@ -123,7 +123,20 @@ class Location extends Manager
 
     public function orderType()
     {
-        return $this->getSession('orderType', Locations_model::DELIVERY);
+        return $this->getSession('orderType', $this->defaultOrderType());
+    }
+
+    public function defaultOrderType()
+    {
+        foreach ($this->getOrderTypes() as $orderType){
+            if(!$orderType->isDisabled()){
+                return $orderType->getCode();
+            }
+        }
+
+        // TODO: handle corner case for all order type disabled.
+        // If all order type disabled, return Delivery.
+        return Locations_model::DELIVERY;
     }
 
     /**

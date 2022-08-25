@@ -48,13 +48,6 @@ class LocalBox extends \System\Classes\BaseComponent
                 'default' => 'home',
                 'validationRule' => 'required|regex:/^[a-z0-9\-_\/]+$/i',
             ],
-            'defaultOrderType' => [
-                'label' => 'lang:igniter.local::default.label_default_order_type',
-                'type' => 'select',
-                'default' => Locations_model::DELIVERY,
-                'options' => [Locations_model::class, 'getOrderTypeOptions'],
-                'validationRule' => 'required|alpha_dash',
-            ],
             'showLocalThumb' => [
                 'label' => 'lang:igniter.local::default.label_show_local_image',
                 'type' => 'switch',
@@ -259,7 +252,7 @@ class LocalBox extends \System\Classes\BaseComponent
         if ($sessionOrderType && $this->location->hasOrderType($sessionOrderType))
             return;
 
-        $defaultOrderType = $this->property('defaultOrderType');
+        $defaultOrderType = $this->location->defaultOrderType();
         if (!$this->location->hasOrderType($defaultOrderType))
             $defaultOrderType = key(Locations_model::getOrderTypeOptions()->all());
 
