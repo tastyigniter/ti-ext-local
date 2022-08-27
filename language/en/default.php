@@ -141,6 +141,7 @@ return [
     'alert_invalid_search_query' => 'We couldn\'t locate the entered address or postcode, please enter a valid address or postcode.',
     'alert_no_found_restaurant' => 'We do not have any local restaurant near you.',
     'alert_location_required' => 'No location found or selected',
+    'alert_order_type_required' => 'Sorry, there\'s no active order type for this location',
     'alert_order_is_unavailable' => 'This restaurant is unavailable to take %s orders at the selected time.',
     'alert_slot_time_required' => 'Please select a slot time.',
     'alert_slot_date_required' => 'Please select a slot date.',
