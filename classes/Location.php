@@ -123,7 +123,7 @@ class Location extends Manager
 
     public function orderType()
     {
-        return $this->getSession('orderType', $this->defaultOrderType());
+        return $this->getSession('orderType', Locations_model::DELIVERY);
     }
 
     /**
