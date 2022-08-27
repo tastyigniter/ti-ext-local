@@ -3,6 +3,7 @@
 namespace Igniter\Local\Components;
 
 use Admin\Facades\AdminAuth;
+use Admin\Models\Locations_model;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
@@ -46,6 +47,13 @@ class LocalBox extends \System\Classes\BaseComponent
                 'options' => [static::class, 'getThemePageOptions'],
                 'default' => 'home',
                 'validationRule' => 'required|regex:/^[a-z0-9\-_\/]+$/i',
+            ],
+            'defaultOrderType' => [
+                'label' => 'lang:igniter.local::default.label_default_order_type',
+                'type' => 'select',
+                'default' => Locations_model::DELIVERY,
+                'options' => [Locations_model::class, 'getOrderTypeOptions'],
+                'validationRule' => 'required|alpha_dash',
             ],
             'showLocalThumb' => [
                 'label' => 'lang:igniter.local::default.label_show_local_image',
@@ -255,7 +263,7 @@ class LocalBox extends \System\Classes\BaseComponent
         if ($sessionOrderType && $this->location->hasOrderType($sessionOrderType))
             return;
 
-        $defaultOrderType = $this->location->defaultOrderType();
+        $defaultOrderType = $this->property('defaultOrderType');
         if (!$this->location->hasOrderType($defaultOrderType)) {
             $defaultOrderType = optional($this->location->getOrderTypes()->first(function ($orderType) {
                 return !$orderType->isDisabled();

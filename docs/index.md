@@ -77,6 +77,7 @@ permalink: /
 | ------------------------ | ------------------------ | ------------- | ------------- |
 | paramFrom           | URL routing code used for determining the location slug           | location        | location         |
 | redirect           | Page name to redirect to when location is not loaded            | home        | home         |
+| defaultOrderType           | The default selected order type            | true/false        | false         |
 | showLocalThumb           | Show/hide the current location's thumb            | true/false        | false         |
 | locationThumbWidth        | Location thumb Height        |        80           |      80    |
 | locationThumbHeight       | Location thumb Width     |        80           |      80    |
