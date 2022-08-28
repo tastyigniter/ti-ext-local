@@ -102,12 +102,6 @@ class LocalBox extends \System\Classes\BaseComponent
             return Redirect::to($this->controller->pageUrl($this->property('redirect')));
         }
 
-        if ($this->updateAndCheckCurrentOrderTypeIsInActive()) {
-            flash()->error(lang('igniter.local::default.alert_order_type_required'));
-
-            return Redirect::to($this->controller->pageUrl($this->property('redirect')));
-        }
-
         $this->prepareVars();
     }
 
