@@ -13,7 +13,7 @@
 
     @partial($__SELF__.'::default')
 
-    <div class="card mt-1 d-block d-sm-none">
+    <div class="card mt-1 d-block d-lg-none">
         <div class="card-body">
             <div class="local-timeslot mb-3">
                 @partial('@timeslot')
