@@ -1,7 +1,7 @@
 @if ($location->checkNoOrderTypeAvailable())
-        <label
-            class="btn btn-light w-100 active"
-        ><b>@lang('igniter.local::default.alert_order_type_required')</b></label>
+    <label
+        class="btn btn-light w-100 active"
+    ><b>@lang('igniter.local::default.alert_order_type_required')</b></label>
 @else
     @if (count($locationOrderTypes) <= $__SELF__->property('maxOrderTypeButtons', 2))
         <div

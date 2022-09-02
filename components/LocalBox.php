@@ -96,6 +96,8 @@ class LocalBox extends \System\Classes\BaseComponent
         $this->addJs('js/local.js', 'local-js');
         $this->addJs('js/local.timeslot.js', 'local-timeslot-js');
 
+        $this->updateCurrentOrderType();
+
         if ($this->currentLocationIsDisabled()) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
 
@@ -248,7 +250,7 @@ class LocalBox extends \System\Classes\BaseComponent
             return true;
     }
 
-    protected function updateAndCheckCurrentOrderTypeIsInActive()
+    protected function updateCurrentOrderType()
     {
         if (!$this->location->current())
             return;
@@ -264,10 +266,8 @@ class LocalBox extends \System\Classes\BaseComponent
             }))->getCode();
         }
 
-        if (!$defaultOrderType)
-            return true;
-
-        $this->location->updateOrderType($defaultOrderType);
+        if ($defaultOrderType)
+            $this->location->updateOrderType($defaultOrderType);
     }
 
     protected function checkAdminAccess()
