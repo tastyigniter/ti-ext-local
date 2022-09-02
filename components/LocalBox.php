@@ -98,7 +98,7 @@ class LocalBox extends \System\Classes\BaseComponent
 
         $this->updateCurrentOrderType();
 
-        if ($this->checkCurrentLocation()) {
+        if ($this->currentLocationIsDisabled()) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
 
             return Redirect::to($this->controller->pageUrl($this->property('redirect')));
@@ -242,7 +242,7 @@ class LocalBox extends \System\Classes\BaseComponent
         return $parsed;
     }
 
-    protected function checkCurrentLocation()
+    protected function currentLocationIsDisabled()
     {
         $hasAdminAccess = optional(AdminAuth::getUser())->hasPermission('Admin.Locations');
         $locationEnabled = optional($this->location->current())->location_status;
@@ -260,10 +260,14 @@ class LocalBox extends \System\Classes\BaseComponent
             return;
 
         $defaultOrderType = $this->property('defaultOrderType');
-        if (!$this->location->hasOrderType($defaultOrderType))
-            $defaultOrderType = key(Locations_model::getOrderTypeOptions()->all());
+        if (!$this->location->hasOrderType($defaultOrderType)) {
+            $defaultOrderType = optional($this->location->getOrderTypes()->first(function ($orderType) {
+                return !$orderType->isDisabled();
+            }))->getCode();
+        }
 
-        $this->location->updateOrderType($defaultOrderType);
+        if ($defaultOrderType)
+            $this->location->updateOrderType($defaultOrderType);
     }
 
     protected function checkAdminAccess()

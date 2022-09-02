@@ -350,6 +350,13 @@ class Location extends Manager
         return $orderType->getSchedule()->isOpenAt($timestamp);
     }
 
+    public function checkNoOrderTypeAvailable()
+    {
+        return $this->getOrderTypes()->filter(function ($orderType) {
+            return !$orderType->isDisabled();
+        })->isEmpty();
+    }
+
     public function hasAsapSchedule()
     {
         if ($this->getOrderType()->getMinimumFutureDays())

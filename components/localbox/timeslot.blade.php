@@ -2,7 +2,7 @@
     $orderDateTime = $location->orderDateTime();
     $orderTimeIsAsap = $location->orderTimeIsAsap();
 @endphp
-@if (!$location->checkOrderTime())
+@if (!$location->checkOrderTime() || $location->checkNoOrderTypeAvailable())
     <button
         class="btn btn-light btn-timepicker btn-block text-truncate active"
         id="orderTimePicker"
