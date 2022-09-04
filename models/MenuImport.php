@@ -94,7 +94,7 @@ class MenuImport extends ImportModel
             }
             else {
                 $newCategory = Categories_model::firstOrCreate(['name' => $name]);
-                $ids[] = $this->categoryNameCache[$name] = $newCategory->id;
+                $ids[] = $this->categoryNameCache[$name] = $newCategory->category_id;
             }
         }
 
