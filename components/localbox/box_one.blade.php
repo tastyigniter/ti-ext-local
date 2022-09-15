@@ -20,3 +20,8 @@
         <span class="text-muted">{!! format_address($locationCurrent->getAddress(), FALSE) !!}</span>
     </dd>
 </dl>
+<div class="card">
+    <div class="card-header">
+        <?=$locationCurrent->description;?>
+    </div>
+</div>
