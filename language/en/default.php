@@ -139,6 +139,7 @@ return [
     'alert_no_search_setting' => 'Location Search By setting has not been specified.',
     'alert_no_search_query' => 'Please type in a address or postcode to check if we can deliver to you.',
     'alert_invalid_search_query' => 'We couldn\'t locate the entered address or postcode, please enter a valid address or postcode.',
+    'alert_missing_street_address' => 'Please enter your street address.',
     'alert_no_found_restaurant' => 'We do not have any local restaurant near you.',
     'alert_location_required' => 'No location found or selected',
     'alert_order_type_required' => 'There\'s no active online ordering option for this location',

@@ -106,6 +106,9 @@ trait SearchesNearby
         if (!$userLocation->hasCoordinates())
             throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
 
+        if (!$userLocation->getStreetName())
+            throw new ApplicationException(lang('igniter.local::default.alert_missing_street_address'));
+
         Location::updateUserPosition($userLocation);
 
         return $userLocation;
