@@ -7,7 +7,7 @@
         class="btn btn-light btn-timepicker btn-block text-truncate active"
         id="orderTimePicker"
     >
-        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;
+        <i class="far fa-clock"></i>&nbsp;&nbsp;
         <b>@lang('igniter.cart::default.text_is_closed')</b>
     </button>
 @elseif ($orderTimeIsAsap && !$location->hasLaterSchedule())
@@ -15,7 +15,7 @@
         class="btn btn-light btn-timepicker btn-block text-truncate active"
         id="orderTimePicker"
     >
-        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;
+        <i class="far fa-clock"></i>&nbsp;&nbsp;
         <b>@lang('igniter.local::default.text_asap')</b>
     </button>
 @else
@@ -32,7 +32,7 @@
             aria-haspopup="true"
             aria-expanded="false"
         >
-            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;
+            <i class="far fa-clock"></i>&nbsp;&nbsp;
             <b>
                 @if ($orderTimeIsAsap)
                     @lang('igniter.local::default.text_asap')

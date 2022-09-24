@@ -30,7 +30,7 @@
         @endif
         @if ($locationInfo->payments)
             <div class="list-group-item">
-                <i class="fas fa-credit-card fa-fw"></i>&nbsp;<b>@lang('igniter.local::default.text_payments')</b><br/>
+                <i class="fas fa-credit-card fa-fw"></i>&nbsp;<b>@lang('igniter.local::default.text_payments')</b><br />
                 {!! implode(', ', $locationInfo->payments) !!}.
             </div>
         @endif
