@@ -13,7 +13,7 @@
                         data-bs-target="#category-{{ $menuCategoryAlias }}-collapse"
                         aria-expanded="false"
                         aria-controls="category-{{ $menuCategoryAlias }}-heading"
-                    >{{ $menuCategory->name }}<span class="collapse-toggle text-muted pull-right"></span></h4>
+                    >{{ $menuCategory->name }}<i class="fa fa-chevron-down pull-right"></i></h4>
                 </div>
                 <div
                     id="category-{{ $menuCategoryAlias }}-collapse"
