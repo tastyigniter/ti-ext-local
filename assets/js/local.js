@@ -17,7 +17,7 @@
             $el.find('input[type="radio"]').attr('disabled', true)
             $el.find('.btn').addClass('disabled')
             $.request($el.data('handler'), {
-                data: {'type': $input.val()}
+                data: {'type': $input.val(), 'redirect': $el.data('redirect')}
             }).always(function () {
                 $el.find('input[type="radio"]').attr('disabled', false)
                 $el.find('.btn').removeClass('disabled')
@@ -30,7 +30,7 @@
             $el.find('[data-bs-toggle="dropdown"]').attr('disabled', true)
             $el.find('.dropdown-item').addClass('disabled')
             $.request($el.data('handler'), {
-                data: {'type': $btn.data('orderTypeCode')}
+                data: {'type': $btn.data('orderTypeCode'), 'redirect': $el.data('redirect')}
             }).always(function () {
                 $el.find('.dropdown-item').removeClass('disabled')
             })

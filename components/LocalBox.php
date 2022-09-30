@@ -128,7 +128,9 @@ class LocalBox extends \System\Classes\BaseComponent
 
             $this->controller->pageCycle();
 
-            return Redirect::back();
+            return ($redirectUrl = input('redirect'))
+                ? Redirect::to($this->controller->pageUrl($redirectUrl))
+                : Redirect::back();
         }
         catch (Exception $ex) {
             if (Request::ajax()) throw $ex;
