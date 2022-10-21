@@ -17,6 +17,6 @@
         </dd>
     @endif
     <dd>
-        <span class="text-muted">{!! format_address($locationCurrent->getAddress(), FALSE) !!}</span>
+        <span class="text-muted">{{ format_address($locationCurrent->getAddress(), false) }}</span>
     </dd>
 </dl>
