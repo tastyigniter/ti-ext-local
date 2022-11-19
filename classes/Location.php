@@ -318,7 +318,7 @@ class Location extends Manager
 
         $firstTime = $firstTime[array_key_first($firstTime)];
 
-        while ( Carbon::now()->diffInMinutes($firstTime) < $this->orderLeadTime() )
+        while (Carbon::now()->diffInMinutes($firstTime) < $this->orderLeadTime())
         {
             $firstDateObject = array_slice($firstDateObject, 1, count($firstDateObject) - 1, true);
 
