@@ -310,6 +310,26 @@ class Location extends Manager
             $this->orderTimeInterval(), null, $leadMinutes
         );
 
+        $firstDate = $result->keys()->first();
+
+        $firstDateObject = $result->pull($firstDate);
+
+        $firstTime = array_slice($firstDateObject, 0, 1, true);
+
+        $firstTime = $firstTime[array_key_first($firstTime)];
+
+        while ( Carbon::now()->diffInMinutes($firstTime) < $this->orderLeadTime() )
+        {
+            $firstDateObject = array_slice($firstDateObject, 1, count($firstDateObject) - 1, true);
+
+            $firstTime = array_slice($firstDateObject, 0, 1, true);
+            $firstTime = $firstTime[array_key_first($firstTime)];
+        }
+
+        $result->put($firstDate, $firstDateObject);
+
+        $result = $result->sortKeys();
+
         return $this->scheduleCache[$orderType] = $result;
     }
 
