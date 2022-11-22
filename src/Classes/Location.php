@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Admin\Models\LocationArea;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
-use Igniter\Flame\Location\AbstractOrderType;
 use Igniter\Flame\Location\Contracts\AreaInterface;
 use Igniter\Flame\Location\Manager;
 
@@ -150,7 +149,7 @@ class Location extends Manager
 
     /**
      * @param null $code
-     * @return \Igniter\Flame\Location\AbstractOrderType
+     * @return \Igniter\Local\Classes\AbstractOrderType
      */
     public function getOrderType($code = null)
     {

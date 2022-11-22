@@ -1,16 +1,16 @@
 <?php
 
-namespace Igniter\Local\OrderTypes;
+namespace Igniter\Local\ScheduleTypes;
 
-use Igniter\Flame\Location\AbstractOrderType;
+use Igniter\Local\Classes\AbstractOrderType;
 use Igniter\Local\Facades\Location as LocationFacade;
 
-class Delivery extends AbstractOrderType
+class Collection extends AbstractOrderType
 {
     public function getOpenDescription(): string
     {
         return sprintf(
-            lang('igniter.local::default.text_delivery_time_info'),
+            lang('igniter.local::default.text_collection_time_info'),
             sprintf(lang('igniter.local::default.text_in_minutes'), $this->getLeadTime())
         );
     }
@@ -20,7 +20,7 @@ class Delivery extends AbstractOrderType
         $starts = make_carbon($this->getSchedule()->getOpenTime());
 
         return sprintf(
-            lang('igniter.local::default.text_delivery_time_info'),
+            lang('igniter.local::default.text_collection_time_info'),
             sprintf(lang('igniter.local::default.text_starts'), '<b>'.$starts->isoFormat($format).'</b>')
         );
     }
@@ -28,14 +28,14 @@ class Delivery extends AbstractOrderType
     public function getClosedDescription(): string
     {
         return sprintf(
-            lang('igniter.local::default.text_delivery_time_info'),
+            lang('igniter.local::default.text_collection_time_info'),
             lang('igniter.local::default.text_is_closed')
         );
     }
 
     public function getDisabledDescription(): string
     {
-        return lang('igniter.local::default.text_delivery_is_disabled');
+        return lang('igniter.local::default.text_collection_is_disabled');
     }
 
     public function isActive(): bool
@@ -45,6 +45,6 @@ class Delivery extends AbstractOrderType
 
     public function isDisabled(): bool
     {
-        return !$this->model->hasDelivery();
+        return !$this->model->hasCollection();
     }
 }

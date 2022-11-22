@@ -8,7 +8,6 @@ use Igniter\Admin\Models\LocationArea;
 use Igniter\Admin\Models\Order;
 use Igniter\Admin\Models\Reservation;
 use Igniter\Flame\Geolite\Facades\Geocoder;
-use Igniter\Flame\Location\OrderTypes;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
@@ -25,11 +24,10 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function register()
     {
         $this->app->singleton('location', Location::class);
+        $this->app->singleton(OrderTypes::class);
 
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Location', Facades\Location::class);
-
-        $this->registerOrderTypes();
     }
 
     public function boot()
@@ -221,20 +219,18 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    protected function registerOrderTypes()
+    public function registerScheduleTypes()
     {
-        OrderTypes::registerCallback(function ($manager) {
-            $manager->registerOrderTypes([
-                \Igniter\Local\OrderTypes\Delivery::class => [
-                    'code' => LocationModel::DELIVERY,
-                    'name' => 'lang:igniter.local::default.text_delivery',
-                ],
-                \Igniter\Local\OrderTypes\Collection::class => [
-                    'code' => LocationModel::COLLECTION,
-                    'name' => 'lang:igniter.local::default.text_collection',
-                ],
-            ]);
-        });
+        return [
+            \Igniter\Local\ScheduleTypes\Delivery::class => [
+                'code' => LocationModel::DELIVERY,
+                'name' => 'lang:igniter.local::default.text_delivery',
+            ],
+            \Igniter\Local\ScheduleTypes\Collection::class => [
+                'code' => LocationModel::COLLECTION,
+                'name' => 'lang:igniter.local::default.text_collection',
+            ],
+        ];
     }
 
     protected function extendDashboardChartsDatasets()

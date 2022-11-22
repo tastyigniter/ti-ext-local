@@ -4,9 +4,9 @@ namespace Igniter\Local\Components;
 
 use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Admin\Models\WorkingHour;
-use Igniter\Flame\Location\OrderTypes;
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
+use Igniter\Local\Classes\OrderTypes;
 use Igniter\Local\Facades\Location;
 
 class Info extends \Igniter\System\Classes\BaseComponent
