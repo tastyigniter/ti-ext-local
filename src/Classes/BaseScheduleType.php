@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\Classes;
 
-use Igniter\Flame\Location\Contracts\OrderTypeInterface;
+use Igniter\Local\Contracts\OrderTypeInterface;
 
 abstract class BaseScheduleType implements OrderTypeInterface
 {
