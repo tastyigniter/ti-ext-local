@@ -9,6 +9,7 @@ use Igniter\Admin\Models\Order;
 use Igniter\Admin\Models\Reservation;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Classes\Location;
+use Igniter\Local\Classes\OrderTypes;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\Models\Review;
