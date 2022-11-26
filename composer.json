@@ -1,6 +1,6 @@
 {
   "name": "tastyigniter/ti-ext-local",
-  "type": "tastyigniter-extension",
+  "type": "tastyigniter-package",
   "description": "This extension allows your customers find and view menu items of their nearest location.",
   "license": "MIT",
   "authors": [
