@@ -1,4 +1,4 @@
-@if ($showLocalThumb)
+@if ($showLocalThumb && $locationCurrent->hasMedia('thumb'))
     <img
         class="img-fluid pull-left"
         src="{{ $locationCurrent->getThumb(['width' => $localThumbWidth, 'height' => $localThumbHeight]) }}"
