@@ -6,6 +6,7 @@ use Admin\Facades\AdminAuth;
 use Admin\Models\Location_areas_model;
 use Admin\Models\Locations_model;
 use Carbon\Carbon;
+use Igniter\Flame\Geolite\Model\Distance;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Flame\Location\AbstractOrderType;
 use Igniter\Flame\Location\Contracts\AreaInterface;
@@ -35,6 +36,8 @@ class Location extends Manager
     protected $orderTypes;
 
     protected $scheduleCache = [];
+
+    protected $distanceCache;
 
     public function __construct()
     {
@@ -467,12 +470,16 @@ class Location extends Manager
         return $cartTotal >= $this->minimumOrderTotal();
     }
 
-    public function checkDistance($decimalPoint)
+    public function checkDistance()
     {
-        $coordinates = $this->userPosition()->getCoordinates();
-        $distance = $this->getModel()->calculateDistance($coordinates);
+        $distance = $this->getModel()->calculateDistance(
+            $this->userPosition()->getCoordinates()
+        );
 
-        return round($distance, $decimalPoint);
+        if (!$distance instanceof Distance)
+            return $distance;
+
+        return $distance->formatDistance($this->getModel()->getDistanceUnit());
     }
 
     public function checkDeliveryCoverage(UserLocation $userPosition = null)
