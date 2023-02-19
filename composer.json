@@ -9,9 +9,6 @@
       "email": "sam@sampoyigi.com"
     }
   ],
-  "require": {
-    "tastyigniter/flame": "v4.x-dev"
-  },
   "require-dev": {
     "orchestra/testbench": "^7.0",
     "pestphp/pest": "^1.21",
