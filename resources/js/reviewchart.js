@@ -24,6 +24,7 @@
         responsive: true,
         type: 'bar',
         options: {
+            responsive: true,
             legend: {
                 display: false,
             },

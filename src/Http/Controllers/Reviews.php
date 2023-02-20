@@ -59,15 +59,14 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
 
         $this->hiddenActions[] = 'makeAverageRatingDataset';
 
-        AdminMenu::setContext('reviews', 'sales');
+        AdminMenu::setContext('reviews', 'marketing');
     }
 
     public function index()
     {
-        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/Chart.min.js', 'chartsjs-js');
-        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/chartjs-adapter-moment.min.js', 'chartsjs-adapter-js');
+        $this->addJs('js/vendor.chart.js', 'vendor-chart-js');
 
-        $this->addJs('$/igniter/local/assets/js/reviewchart.js', 'reviewchart-js');
+        $this->addJs('igniter.local::js/reviewchart.js', 'reviewchart-js');
 
         $this->asExtension('ListController')->index();
     }
@@ -80,14 +79,11 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
         $pieColors = ['', '#e74c3c', '#f1c40f', '#9b59b6', '#64B5F6', '#1abc9c'];
 
         $chartData = [
-            'datasets' => [
-                [
-                    'data' => [],
-                    'backgroundColor' => [],
-                ],
-            ],
             'labels' => array_values(self::$reviewHints),
+            'datasets' => [],
         ];
+
+        $chartData['datasets'][0]['label'][] = lang('igniter.local::default.reviews.label_'.$ratingType);
 
         for ($rating = 1; $rating <= 5; $rating++) {
             $chartData['datasets'][0]['data'][] = $records->where($ratingType, $rating)->count();
