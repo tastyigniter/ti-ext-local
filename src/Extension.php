@@ -173,7 +173,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function registerNavigation()
     {
         return [
-            'sales' => [
+            'marketing' => [
                 'child' => [
                     'reviews' => [
                         'priority' => 30,
