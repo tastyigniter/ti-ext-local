@@ -44,7 +44,7 @@ trait SearchesNearby
             if ($redirectPage = post('redirect'))
                 return Redirect::to($this->controller->pageUrl($redirectPage));
 
-            return Redirect::to(restaurant_url($this->property('menusPage')));
+            return Redirect::to(restaurant_url($this->property('menusPage'), ['location' => null]));
         }
         catch (Exception $ex) {
             if (Request::ajax()) throw $ex;
