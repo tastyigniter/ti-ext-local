@@ -15,7 +15,7 @@ class ExtendLocationOptions
 
     public function extendValidator($formRequest, $dataHolder)
     {
-        if (!$formRequest instanceof \Admin\Requests\Location) {
+        if (!$formRequest instanceof \Igniter\Admin\Requests\Location) {
             return;
         }
 

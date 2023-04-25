@@ -2,8 +2,8 @@
 
 namespace Igniter\Local\Classes;
 
-use Admin\Facades\AdminAuth;
 use Carbon\Carbon;
+use Igniter\Admin\Facades\AdminAuth;
 use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Admin\Models\LocationArea;
 use Igniter\Flame\Geolite\Model\Distance;
@@ -94,7 +94,8 @@ class Location extends Manager
 
         if (!$slot) {
             $this->forgetSession('order-timeslot');
-        } else {
+        }
+        else {
             $this->putSession('order-timeslot', $slot);
         }
 
