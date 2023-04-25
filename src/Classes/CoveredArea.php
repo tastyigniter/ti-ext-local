@@ -41,16 +41,19 @@ class CoveredArea
 
     protected function getConditionValue($type, $cartTotal)
     {
-        if (!$condition = $this->checkConditions($cartTotal, $type))
+        if (!$condition = $this->checkConditions($cartTotal, $type)) {
             return 0;
+        }
 
         // Delivery is unavailable when delivery charge from the matched rule is -1
-        if ($condition->amount < 0)
+        if ($condition->amount < 0) {
             return $type == 'total' ? $condition->total : -1;
+        }
 
         // At this stage, minimum total is 0 when the matched condition is a below
-        if ($type == 'total' && $condition->type == 'below')
+        if ($type == 'total' && $condition->type == 'below') {
             return 0;
+        }
 
         return $condition->{$type};
     }
@@ -64,8 +67,9 @@ class CoveredArea
 
     protected function calculateDistanceCharges()
     {
-        if (!Location::userPosition()->isValid())
+        if (!Location::userPosition()->isValid()) {
             return 0;
+        }
 
         $distanceFromLocation = round(Location::checkDistance(), 2);
 
@@ -92,7 +96,8 @@ class CoveredArea
 
     public function __call($method, $parameters)
     {
-        if (method_exists($this->model, $method))
+        if (method_exists($this->model, $method)) {
             return call_user_func_array([$this->model, $method], $parameters);
+        }
     }
 }

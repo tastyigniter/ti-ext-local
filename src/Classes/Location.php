@@ -2,9 +2,11 @@
 
 namespace Igniter\Local\Classes;
 
+use Admin\Facades\AdminAuth;
 use Carbon\Carbon;
 use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Admin\Models\LocationArea;
+use Igniter\Flame\Geolite\Model\Distance;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Flame\Location\Contracts\AreaInterface;
 use Igniter\Flame\Location\Manager;
@@ -34,6 +36,8 @@ class Location extends Manager
 
     protected $scheduleCache = [];
 
+    protected $distanceCache;
+
     public function __construct()
     {
         $this->setDefaultLocation(params('default_location_id'));
@@ -58,8 +62,9 @@ class Location extends Manager
     {
         $oldOrderType = $this->getSession('orderType');
 
-        if (is_null($code))
+        if (is_null($code)) {
             $this->forgetSession('orderType');
+        }
 
         if (strlen($code)) {
             $this->forgetSession('order-timeslot');
@@ -89,12 +94,25 @@ class Location extends Manager
 
         if (!$slot) {
             $this->forgetSession('order-timeslot');
-        }
-        else {
+        } else {
             $this->putSession('order-timeslot', $slot);
         }
 
         $this->fireSystemEvent('location.timeslot.updated', [$slot, $oldSlot]);
+    }
+
+    /**
+     * Extend the query used for finding the location.
+     *
+     * @param \Igniter\Flame\Database\Builder $query
+     *
+     * @return void
+     */
+    public function extendLocationQuery($query)
+    {
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations')) {
+            $query->IsEnabled();
+        }
     }
 
     //
@@ -141,8 +159,9 @@ class Location extends Manager
 
     public function hasOrderType($code = null)
     {
-        if (!$orderType = $this->getOrderType($code))
+        if (!$orderType = $this->getOrderType($code)) {
             return false;
+        }
 
         return !$orderType->isDisabled();
     }
@@ -160,10 +179,21 @@ class Location extends Manager
 
     public function getOrderTypes()
     {
-        if ($this->orderTypes)
+        if ($this->orderTypes) {
             return $this->orderTypes;
+        }
 
         return $this->orderTypes = $this->getModel()->availableOrderTypes();
+    }
+
+    public function minimumOrderTotal($orderType = null)
+    {
+        return $this->getOrderType($orderType)->getMinimumOrderTotal();
+    }
+
+    public function checkMinimumOrderTotal($cartTotal, $orderType = null)
+    {
+        return $cartTotal >= $this->minimumOrderTotal($orderType);
     }
 
     //
@@ -197,24 +227,27 @@ class Location extends Manager
 
     public function openTime($type = null, $format = null)
     {
-        if (is_null($type))
+        if (is_null($type)) {
             $type = $this->orderType();
+        }
 
         return $this->workingSchedule($type)->getOpenTime($format);
     }
 
     public function closeTime($type = null, $format = null)
     {
-        if (is_null($type))
+        if (is_null($type)) {
             $type = $this->orderType();
+        }
 
         return $this->workingSchedule($type)->getCloseTime($format);
     }
 
     protected function workingStatus($type = null, $timestamp = null)
     {
-        if (is_null($type))
+        if (is_null($type)) {
             $type = $this->orderType();
+        }
 
         return $this->workingSchedule($type)->checkStatus($timestamp);
     }
@@ -240,14 +273,16 @@ class Location extends Manager
 
     public function orderTimeIsAsap()
     {
-        if (!$this->hasAsapSchedule())
+        if (!$this->hasAsapSchedule()) {
             return false;
+        }
 
         $dateTime = $this->getSession('order-timeslot.dateTime');
         $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', true);
 
-        if (!$this->isOpened())
+        if (!$this->isOpened()) {
             return false;
+        }
 
         return $orderTimeIsAsap || ($dateTime && now()->isAfter($dateTime));
     }
@@ -258,8 +293,9 @@ class Location extends Manager
     public function orderDateTime()
     {
         $dateTime = $this->getSession('order-timeslot.dateTime');
-        if ($this->orderTimeIsAsap())
+        if ($this->orderTimeIsAsap()) {
             $dateTime = $this->asapScheduleTimeslot();
+        }
 
         if (!$dateTime || now()->isAfter($dateTime)) {
             $dateTime = $this->hasAsapSchedule()
@@ -272,11 +308,13 @@ class Location extends Manager
 
     public function scheduleTimeslot($orderType = null)
     {
-        if (is_null($orderType))
+        if (is_null($orderType)) {
             $orderType = $this->orderType();
+        }
 
-        if (array_key_exists($orderType, $this->scheduleCache))
+        if (array_key_exists($orderType, $this->scheduleCache)) {
             return $this->scheduleCache[$orderType];
+        }
 
         $leadMinutes = $this->model->getOption($orderType.'_add_lead_time')
             ? $this->orderLeadTime() : 0;
@@ -295,33 +333,55 @@ class Location extends Manager
 
     public function asapScheduleTimeslot()
     {
-        if ($this->isClosed() || (bool)$this->getModel()->getOption('limit_orders'))
+        if ($this->isClosed() || (bool)$this->getModel()->getOption('limit_orders')) {
             return $this->firstScheduleTimeslot();
+        }
 
         return Carbon::now();
     }
 
     public function checkOrderTime($timestamp = null, $orderTypeCode = null)
     {
-        if (is_null($timestamp))
+        if (is_null($timestamp)) {
             $timestamp = $this->orderDateTime();
+        }
 
-        if (!$timestamp instanceof \DateTime)
+        if (!$timestamp instanceof \DateTime) {
             $timestamp = new \DateTime($timestamp);
+        }
 
-        if (Carbon::now()->subMinute()->gte($timestamp))
+        if (Carbon::now()->subMinute()->gte($timestamp)) {
             return false;
+        }
 
         $orderType = $this->getOrderType($orderTypeCode);
 
-        if ($orderType->getFutureDays() < Carbon::now()->diffInDays($timestamp))
+        if (!$orderType->getFutureDays() && $this->isClosed()) {
             return false;
+        }
+
+        $minFutureDays = Carbon::now()->startOfDay()->addDays($orderType->getMinimumFutureDays());
+        $maxFutureDays = Carbon::now()->endOfDay()->addDays($orderType->getFutureDays());
+        if (!$timestamp->between($minFutureDays, $maxFutureDays)) {
+            return false;
+        }
 
         return $orderType->getSchedule()->isOpenAt($timestamp);
     }
 
+    public function checkNoOrderTypeAvailable()
+    {
+        return $this->getOrderTypes()->filter(function ($orderType) {
+            return !$orderType->isDisabled();
+        })->isEmpty();
+    }
+
     public function hasAsapSchedule()
     {
+        if ($this->getOrderType()->getMinimumFutureDays()) {
+            return false;
+        }
+
         return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::LATER_ONLY;
     }
 
@@ -369,12 +429,14 @@ class Location extends Manager
      */
     public function coveredArea()
     {
-        if (!is_null($this->coveredArea))
+        if (!is_null($this->coveredArea)) {
             return $this->coveredArea;
+        }
 
         $area = null;
-        if ($areaId = (int)$this->getSession('area'))
+        if ($areaId = (int)$this->getSession('area')) {
             $area = $this->getModel()->findDeliveryArea($areaId);
+        }
 
         if ($area && $this->getId() !== $area->getLocationId()) {
             $area = null;
@@ -387,8 +449,9 @@ class Location extends Manager
             );
         }
 
-        if (!$area || !$area instanceof AreaInterface)
+        if (!$area || !$area instanceof AreaInterface) {
             return new CoveredArea(new LocationArea());
+        }
 
         $coveredArea = new CoveredArea($area);
         $this->setCoveredArea($coveredArea);
@@ -406,9 +469,12 @@ class Location extends Manager
         return $this->coveredArea()->deliveryAmount($cartTotal);
     }
 
+    /**
+     * @deprecated remove after v4, use minimumOrderTotal() instead
+     */
     public function minimumOrder($cartTotal)
     {
-        return $this->coveredArea()->minimumOrderTotal($cartTotal);
+        return $this->minimumOrderTotal();
     }
 
     public function getDeliveryChargeConditions()
@@ -416,23 +482,32 @@ class Location extends Manager
         return $this->coveredArea()->listConditions();
     }
 
+    /**
+     * @deprecated remove after v4, use checkMinimumOrderTotal() instead
+     */
     public function checkMinimumOrder($cartTotal)
     {
-        return $cartTotal >= $this->minimumOrder($cartTotal);
+        return $cartTotal >= $this->minimumOrderTotal();
     }
 
-    public function checkDistance($decimalPoint)
+    public function checkDistance()
     {
-        $coordinates = $this->userPosition()->getCoordinates();
-        $distance = $this->getModel()->calculateDistance($coordinates);
+        $distance = $this->getModel()->calculateDistance(
+            $this->userPosition()->getCoordinates()
+        );
 
-        return round($distance, $decimalPoint);
+        if (!$distance instanceof Distance) {
+            return $distance;
+        }
+
+        return $distance->formatDistance($this->getModel()->getDistanceUnit());
     }
 
     public function checkDeliveryCoverage(UserLocation $userPosition = null)
     {
-        if (is_null($userPosition))
+        if (is_null($userPosition)) {
             $userPosition = $this->userPosition();
+        }
 
         return $this->coveredArea()->checkBoundary($userPosition->getCoordinates());
     }

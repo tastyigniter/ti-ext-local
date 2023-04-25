@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up()
     {
         Schema::table('igniter_reviews', function (Blueprint $table) {
@@ -27,7 +28,9 @@ return new class extends Migration {
             ->where('sale_type', \Igniter\Admin\Models\Order::class)
             ->orWhere('sale_type', \Igniter\Admin\Models\Reservation::class)
             ->count()
-        ) return;
+        ) {
+            return;
+        }
 
         $morphs = [
             'order' => \Igniter\Admin\Models\Order::class,
@@ -35,8 +38,9 @@ return new class extends Migration {
         ];
 
         DB::table('igniter_reviews')->get()->each(function ($model) use ($morphs) {
-            if (!isset($morphs[$model->sale_type]))
+            if (!isset($morphs[$model->sale_type])) {
                 return false;
+            }
 
             DB::table('igniter_reviews')->where('review_id', $model->review_id)->update([
                 'sale_type' => $morphs[$model->sale_type],

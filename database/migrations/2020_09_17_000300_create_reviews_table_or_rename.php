@@ -5,11 +5,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up()
     {
-        if (Schema::hasTable('reviews'))
+        if (Schema::hasTable('reviews')) {
             Schema::rename('reviews', 'igniter_reviews');
+        }
 
         if (!Schema::hasTable('igniter_reviews')) {
             Schema::create('igniter_reviews', function (Blueprint $table) {

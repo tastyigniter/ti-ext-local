@@ -73,8 +73,9 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
 
     public function makeAverageRatingDataset($ratingType, $records)
     {
-        if (is_null(self::$reviewHints))
+        if (is_null(self::$reviewHints)) {
             self::$reviewHints = Review::make()->getRatingOptions();
+        }
 
         $pieColors = ['', '#e74c3c', '#f1c40f', '#9b59b6', '#64B5F6', '#1abc9c'];
 

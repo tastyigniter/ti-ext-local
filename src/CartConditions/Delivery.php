@@ -18,8 +18,9 @@ class Delivery extends CartCondition
     public function beforeApply()
     {
         // Do not apply condition when orderType is not delivery
-        if (Location::orderType() != LocationModel::DELIVERY)
+        if (Location::orderType() != LocationModel::DELIVERY) {
             return false;
+        }
 
         $cartSubtotal = Cart::subtotal();
         $this->deliveryCharge = Location::coveredArea()->deliveryAmount($cartSubtotal);
