@@ -67,7 +67,7 @@ class CoveredArea
         if (!Location::userPosition()->isValid())
             return 0;
 
-        $distanceFromLocation = Location::checkDistance(2);
+        $distanceFromLocation = round(Location::checkDistance(), 2);
 
         $condition = collect($this->model->boundaries['distance'] ?? [])
             ->sortBy('priority')

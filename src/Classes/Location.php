@@ -2,12 +2,14 @@
 
 namespace Igniter\Local\Classes;
 
+use Admin\Facades\AdminAuth;
 use Carbon\Carbon;
 use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Admin\Models\LocationArea;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Flame\Location\Contracts\AreaInterface;
 use Igniter\Flame\Location\Manager;
+use Igniter\Flame\Geolite\Model\Distance;
 
 /**
  * Location Class
@@ -33,6 +35,8 @@ class Location extends Manager
     protected $orderTypes;
 
     protected $scheduleCache = [];
+
+    protected $distanceCache;
 
     public function __construct()
     {
@@ -95,6 +99,19 @@ class Location extends Manager
         }
 
         $this->fireSystemEvent('location.timeslot.updated', [$slot, $oldSlot]);
+    }
+
+    /**
+     * Extend the query used for finding the location.
+     *
+     * @param \Igniter\Flame\Database\Builder $query
+     *
+     * @return void
+     */
+    public function extendLocationQuery($query)
+    {
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations'))
+            $query->IsEnabled();
     }
 
     //
@@ -164,6 +181,16 @@ class Location extends Manager
             return $this->orderTypes;
 
         return $this->orderTypes = $this->getModel()->availableOrderTypes();
+    }
+
+    public function minimumOrderTotal($orderType = null)
+    {
+        return $this->getOrderType($orderType)->getMinimumOrderTotal();
+    }
+
+    public function checkMinimumOrderTotal($cartTotal, $orderType = null)
+    {
+        return $cartTotal >= $this->minimumOrderTotal($orderType);
     }
 
     //
@@ -314,14 +341,29 @@ class Location extends Manager
 
         $orderType = $this->getOrderType($orderTypeCode);
 
-        if ($orderType->getFutureDays() < Carbon::now()->diffInDays($timestamp))
+        if (!$orderType->getFutureDays() && $this->isClosed())
+            return false;
+
+        $minFutureDays = Carbon::now()->startOfDay()->addDays($orderType->getMinimumFutureDays());
+        $maxFutureDays = Carbon::now()->endOfDay()->addDays($orderType->getFutureDays());
+        if (!$timestamp->between($minFutureDays, $maxFutureDays))
             return false;
 
         return $orderType->getSchedule()->isOpenAt($timestamp);
     }
 
+    public function checkNoOrderTypeAvailable()
+    {
+        return $this->getOrderTypes()->filter(function ($orderType) {
+            return !$orderType->isDisabled();
+        })->isEmpty();
+    }
+
     public function hasAsapSchedule()
     {
+        if ($this->getOrderType()->getMinimumFutureDays())
+            return false;
+
         return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::LATER_ONLY;
     }
 
@@ -406,9 +448,12 @@ class Location extends Manager
         return $this->coveredArea()->deliveryAmount($cartTotal);
     }
 
+    /**
+     * @deprecated remove after v4, use minimumOrderTotal() instead
+     */
     public function minimumOrder($cartTotal)
     {
-        return $this->coveredArea()->minimumOrderTotal($cartTotal);
+        return $this->minimumOrderTotal();
     }
 
     public function getDeliveryChargeConditions()
@@ -416,17 +461,24 @@ class Location extends Manager
         return $this->coveredArea()->listConditions();
     }
 
+    /**
+     * @deprecated remove after v4, use checkMinimumOrderTotal() instead
+     */
     public function checkMinimumOrder($cartTotal)
     {
-        return $cartTotal >= $this->minimumOrder($cartTotal);
+        return $cartTotal >= $this->minimumOrderTotal();
     }
 
-    public function checkDistance($decimalPoint)
+    public function checkDistance()
     {
-        $coordinates = $this->userPosition()->getCoordinates();
-        $distance = $this->getModel()->calculateDistance($coordinates);
+        $distance = $this->getModel()->calculateDistance(
+            $this->userPosition()->getCoordinates()
+        );
 
-        return round($distance, $decimalPoint);
+        if (!$distance instanceof Distance)
+            return $distance;
+
+        return $distance->formatDistance($this->getModel()->getDistanceUnit());
     }
 
     public function checkDeliveryCoverage(UserLocation $userPosition = null)

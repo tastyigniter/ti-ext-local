@@ -90,8 +90,10 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
             if ($orderType == 'delivery')
                 $searchDeliveryAreas = true;
 
-            $optionKey = studly_case('has_'.$orderType);
-            $options[$optionKey] = true;
+            $query->whereHas('all_options', function ($q) use ($orderType) {
+                $q->where('item', 'offer_'.$orderType)
+                    ->where('value', '1')->orWhere('value', 1);
+            });
         }
 
         $query->listFrontEnd($options);

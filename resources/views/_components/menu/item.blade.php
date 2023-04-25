@@ -32,7 +32,10 @@
                 @if ($menuItemObject->specialIsActive)
                     <s>{!! currency_format($menuItemObject->menuPriceBeforeSpecial) !!}</s>
                 @endif
-                <b>{!! $menuItemObject->menuPrice > 0 ? currency_format($menuItemObject->menuPrice) : lang('main::lang.text_free') !!}</b>
+                {!! $menuItemObject->menuPrice > 0
+                    ? '<b>'.currency_format($menuItemObject->menuPrice).'</b>'
+                    : sprintf(lang('igniter.local::default.text_price_form'), '<b>'.currency_format($menuItem->menu_price_from).'</b>')
+                !!}
             </div>
 
             @isset ($updateCartItemEventHandler)

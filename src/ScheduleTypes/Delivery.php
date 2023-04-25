@@ -47,4 +47,12 @@ class Delivery extends AbstractOrderType
     {
         return !$this->model->hasDelivery();
     }
+
+    public function getMinimumOrderTotal()
+    {
+        $total = LocationFacade::coveredArea()->minimumOrderTotal(Cart::subtotal());
+        $minTotal = $this->model->getMinimumOrderTotal($this->code);
+
+        return $total > $minTotal ? $total : $minTotal;
+    }
 }

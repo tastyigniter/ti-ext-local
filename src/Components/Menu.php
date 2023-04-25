@@ -203,7 +203,7 @@ class Menu extends \Igniter\System\Classes\BaseComponent
         if (is_single_location() && $param === $this->property('defaultLocationParam', 'local'))
             return;
 
-        if (LocationModel::whereSlug($param)->exists())
+        if (LocationModel::whereSlug($param)->isEnabled()->exists())
             return;
 
         return Redirect::to($this->controller->pageUrl($this->property('localNotFoundPage')));

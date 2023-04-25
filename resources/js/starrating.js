@@ -33,8 +33,8 @@
         scoreName: null,
         readOnly: false,
         hints: [],
-        starOff: 'fa fa-star-o',
-        starOn: 'fa fa-star',
+        starOff: 'far fa-star',
+        starOn: 'fas fa-star',
         cancel: false,
         half: false,
         starType: 'i'
