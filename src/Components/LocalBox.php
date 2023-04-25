@@ -50,8 +50,8 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
             'defaultOrderType' => [
                 'label' => 'lang:igniter.local::default.label_default_order_type',
                 'type' => 'select',
-                'default' => Locations_model::DELIVERY,
-                'options' => [Locations_model::class, 'getOrderTypeOptions'],
+                'default' => Location::DELIVERY,
+                'options' => [Location::class, 'getOrderTypeOptions'],
                 'validationRule' => 'required|alpha_dash',
             ],
             'showLocalThumb' => [

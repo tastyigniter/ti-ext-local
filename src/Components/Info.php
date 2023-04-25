@@ -52,7 +52,7 @@ class Info extends \Igniter\System\Classes\BaseComponent
         $scheduleItems = [];
         foreach ($scheduleTypes as $code => $definition) {
             $schedule = $locationCurrent->createScheduleItem($code);
-            foreach (Working_hours_model::make()->getWeekDaysOptions() as $index => $day) {
+            foreach (WorkingHour::make()->getWeekDaysOptions() as $index => $day) {
                 $hours = array_map(function ($hour) {
                     $hour['open'] = now()->setTimeFromTimeString($hour['open'])->isoFormat(lang('system::lang.moment.time_format'));
                     $hour['close'] = now()->setTimeFromTimeString($hour['close'])->isoFormat(lang('system::lang.moment.time_format'));
