@@ -94,8 +94,7 @@ class Location extends Manager
 
         if (!$slot) {
             $this->forgetSession('order-timeslot');
-        }
-        else {
+        } else {
             $this->putSession('order-timeslot', $slot);
         }
 
