@@ -62,6 +62,18 @@ abstract class AbstractOrderType implements OrderTypeInterface
             : 0;
     }
 
+    public function getMinimumFutureDays(): int
+    {
+        return $this->model->hasFutureOrder($this->code)
+            ? $this->model->minimumFutureOrderDays($this->code)
+            : 0;
+    }
+
+    public function getMinimumOrderTotal()
+    {
+        return $this->model->getMinimumOrderTotal($this->code);
+    }
+
     public function getSchedule(): WorkingSchedule
     {
         if (!is_null($this->schedule)) {
@@ -69,7 +81,7 @@ abstract class AbstractOrderType implements OrderTypeInterface
         }
 
         $schedule = $this->model->newWorkingSchedule(
-            $this->code, $this->getFutureDays()
+            $this->code, [$this->getMinimumFutureDays(), $this->getFutureDays()]
         );
 
         return $this->schedule = $schedule;
