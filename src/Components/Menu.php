@@ -98,8 +98,9 @@ class Menu extends \Igniter\System\Classes\BaseComponent
 
     public function onRun()
     {
-        if ($redirect = $this->checkLocationParam())
+        if ($redirect = $this->checkLocationParam()) {
             return $redirect;
+        }
 
         $this->page['menuIsGrouped'] = !strlen($this->param('category')) && $this->property('isGrouped');
         $this->page['menuCollapseCategoriesAfter'] = $this->property('collapseCategoriesAfter');
@@ -140,8 +141,9 @@ class Menu extends \Igniter\System\Classes\BaseComponent
 
         $this->mapIntoObjects($list);
 
-        if (!strlen($this->param('category')) && $this->property('isGrouped'))
+        if (!strlen($this->param('category')) && $this->property('isGrouped')) {
             $this->groupListByCategory($list);
+        }
 
         return $list;
     }
@@ -159,8 +161,9 @@ class Menu extends \Igniter\System\Classes\BaseComponent
 
     protected function getLocation()
     {
-        if (!$location = Location::current())
+        if (!$location = Location::current()) {
             return null;
+        }
 
         return $location->getKey();
     }
@@ -185,8 +188,9 @@ class Menu extends \Igniter\System\Classes\BaseComponent
 
         $collection = collect($groupedList)
             ->sortBy(function ($menuItems, $categoryId) {
-                if (isset($this->menuListCategories[$categoryId]))
+                if (isset($this->menuListCategories[$categoryId])) {
                     return $this->menuListCategories[$categoryId]->priority;
+                }
 
                 return $categoryId;
             });
@@ -196,23 +200,27 @@ class Menu extends \Igniter\System\Classes\BaseComponent
 
     protected function checkLocationParam()
     {
-        if (!$this->property('forceRedirect', true))
+        if (!$this->property('forceRedirect', true)) {
             return;
+        }
 
         $param = $this->param('location', 'local');
-        if (is_single_location() && $param === $this->property('defaultLocationParam', 'local'))
+        if (is_single_location() && $param === $this->property('defaultLocationParam', 'local')) {
             return;
+        }
 
-        if (LocationModel::whereSlug($param)->isEnabled()->exists())
+        if (LocationModel::whereSlug($param)->isEnabled()->exists()) {
             return;
+        }
 
         return Redirect::to($this->controller->pageUrl($this->property('localNotFoundPage')));
     }
 
     public function getSearchTerm()
     {
-        if ($this->property('hideMenuSearch'))
+        if ($this->property('hideMenuSearch')) {
             return '';
+        }
 
         return Request::query('q');
     }

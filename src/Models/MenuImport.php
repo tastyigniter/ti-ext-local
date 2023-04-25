@@ -28,26 +28,28 @@ class MenuImport extends ImportModel
                 }
 
                 $menuItem = Menu::make();
-                if ($this->update_existing)
+                if ($this->update_existing) {
                     $menuItem = $this->findDuplicateMenuItem($data) ?: $menuItem;
+                }
 
                 $except = ['menu_id', 'categories', 'mealtimes'];
                 foreach (array_except($data, $except) as $attribute => $value) {
                     $menuItem->{$attribute} = $value ?: null;
                 }
 
-                if ($mealtime = $this->findMealtimeFromName($data))
+                if ($mealtime = $this->findMealtimeFromName($data)) {
                     $menuItem->mealtime_id = $mealtime->mealtime_id;
+                }
 
                 $menuExists = $menuItem->exists;
                 $menuItem->save();
 
-                if ($categoryIds = $this->getCategoryIdsForMenuItem($data))
+                if ($categoryIds = $this->getCategoryIdsForMenuItem($data)) {
                     $menuItem->categories()->sync($categoryIds, false);
+                }
 
                 $menuExists ? $this->logUpdated() : $this->logCreated();
-            }
-            catch (Exception $ex) {
+            } catch (Exception $ex) {
                 $this->logError($row, $ex->getMessage());
             }
         }
@@ -87,12 +89,13 @@ class MenuImport extends ImportModel
         $categoryNames = $this->decodeArrayValue(array_get($data, 'categories'));
 
         foreach ($categoryNames as $name) {
-            if (!$name = trim($name)) continue;
+            if (!$name = trim($name)) {
+                continue;
+            }
 
             if (isset($this->categoryNameCache[$name])) {
                 $ids[] = $this->categoryNameCache[$name];
-            }
-            else {
+            } else {
                 $newCategory = Category::firstOrCreate(['name' => $name]);
                 $ids[] = $this->categoryNameCache[$name] = $newCategory->category_id;
             }

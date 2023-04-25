@@ -3,7 +3,6 @@
 namespace Igniter\Local\Components;
 
 use Igniter\Admin\Models\Location as LocationModel;
-use Igniter\Admin\Models\WorkingHour;
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Igniter\Local\Classes\OrderTypes;

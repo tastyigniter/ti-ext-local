@@ -44,22 +44,26 @@ class Search extends \Igniter\System\Classes\BaseComponent
 
     public function getSavedAddresses()
     {
-        if (!is_null($this->savedAddresses))
+        if (!is_null($this->savedAddresses)) {
             return $this->savedAddresses;
+        }
 
-        if (!$customer = Auth::customer())
+        if (!$customer = Auth::customer()) {
             return null;
+        }
 
         return $this->savedAddresses = $customer->addresses()->get();
     }
 
     public function showDeliveryCoverageAlert()
     {
-        if (!Location::orderTypeIsDelivery())
+        if (!Location::orderTypeIsDelivery()) {
             return false;
+        }
 
-        if (!Location::requiresUserPosition())
+        if (!Location::requiresUserPosition()) {
             return false;
+        }
 
         return Location::userPosition()->hasCoordinates()
             && !Location::checkDeliveryCoverage();
@@ -74,14 +78,17 @@ class Search extends \Igniter\System\Classes\BaseComponent
 
     public function onSetSavedAddress()
     {
-        if (!$customer = Auth::customer())
+        if (!$customer = Auth::customer()) {
             return null;
+        }
 
-        if (!is_numeric($addressId = post('addressId')))
+        if (!is_numeric($addressId = post('addressId'))) {
             throw new ApplicationException(lang('igniter.local::default.alert_address_id_required'));
+        }
 
-        if (!$address = $customer->addresses()->find($addressId))
+        if (!$address = $customer->addresses()->find($addressId)) {
             throw new ApplicationException(lang('igniter.local::default.alert_address_not_found'));
+        }
 
         Customer::withoutEvents(function () use ($customer, $address) {
             $customer->address_id = $address->address_id;
@@ -111,12 +118,14 @@ class Search extends \Igniter\System\Classes\BaseComponent
 
     protected function updateNearbyAreaFromSavedAddress($address)
     {
-        if (!$address instanceof Address)
+        if (!$address instanceof Address) {
             return $address;
+        }
 
         $searchQuery = format_address($address->toArray(), false);
-        if ($searchQuery == Location::getSession('searchQuery'))
+        if ($searchQuery == Location::getSession('searchQuery')) {
             return $address;
+        }
 
         try {
             $userLocation = $this->geocodeSearchQuery($searchQuery);
@@ -129,8 +138,7 @@ class Search extends \Igniter\System\Classes\BaseComponent
                         return $area;
                     }
                 });
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
         }
 
         return $address;
@@ -138,8 +146,9 @@ class Search extends \Igniter\System\Classes\BaseComponent
 
     protected function getDefaultAddress()
     {
-        if (!is_null($this->defaultAddress))
+        if (!is_null($this->defaultAddress)) {
             return $this->defaultAddress;
+        }
 
         return $this->defaultAddress = optional(Auth::customer())->address
             ?? optional($this->getSavedAddresses())->first();

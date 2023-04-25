@@ -238,11 +238,13 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     protected function extendDashboardChartsDatasets()
     {
         Event::listen('admin.charts.extendDatasets', function ($widget) {
-            if (!$widget instanceof Charts)
+            if (!$widget instanceof Charts) {
                 return;
+            }
 
-            if (!ReviewSettings::get('allow_reviews', false))
+            if (!ReviewSettings::get('allow_reviews', false)) {
                 return;
+            }
 
             $widget->contextDefinitions['reviews'] = [
                 'label' => 'lang:igniter.local::default.reviews.text_title',
@@ -256,8 +258,9 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     protected function addAssetsToReviewsSettingsPage()
     {
         Event::listen('admin.form.extendFieldsBefore', function ($form) {
-            if (!$form->model instanceof ReviewSettings)
+            if (!$form->model instanceof ReviewSettings) {
                 return;
+            }
 
             $form->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/Sortable.min.js', 'sortable-js');
             $form->addJs('~/app/admin/formwidgets/repeater/assets/vendor/sortablejs/jquery-sortable.js', 'jquery-sortable-js');
@@ -306,8 +309,9 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
         Event::listen(['igniter.user.login', 'igniter.socialite.login'], function () {
             try {
-                if (!strlen($lastArea = Auth::customer()->last_location_area))
+                if (!strlen($lastArea = Auth::customer()->last_location_area)) {
                     return;
+                }
 
                 $lastArea = json_decode($lastArea, true);
 
@@ -320,16 +324,16 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 if ($areaId && $area = LocationArea::find($areaId)) {
                     LocationFacade::updateNearbyArea($area);
                 }
-            }
-            catch (\Exception $exception) {
+            } catch (\Exception $exception) {
             }
         });
     }
 
     protected function updateCustomerLastArea($value)
     {
-        if (!$customer = Auth::customer())
+        if (!$customer = Auth::customer()) {
             return;
+        }
 
         $lastArea = @json_decode($customer->last_location_area, true) ?: [];
         $lastArea = array_merge($lastArea, $value);

@@ -101,11 +101,9 @@ class Review extends Model
 
         if ($customer instanceof User) {
             $query->where('customer_id', $customer->getKey());
-        }
-        elseif (strlen($customer)) {
+        } elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
-        }
-        else {
+        } else {
             $query->has('customer');
         }
 
@@ -155,8 +153,9 @@ class Review extends Model
     public function getSaleTypeModel($saleType)
     {
         $model = self::$relatedSaleTypes[$saleType] ?? null;
-        if (!$model || !class_exists($model))
+        if (!$model || !class_exists($model)) {
             throw new ModelNotFoundException;
+        }
 
         return new $model();
     }
@@ -181,8 +180,9 @@ class Review extends Model
 
     public static function getScoreForLocation($locationId)
     {
-        if (!$locationId)
+        if (!$locationId) {
             return null;
+        }
 
         if (!$ratings = array_get(self::$ratingScoreCache, $locationId)) {
             $ratings = DB::table(self::make()->getTable())

@@ -82,18 +82,22 @@ class Review extends \Igniter\System\Classes\BaseComponent
     public function onLeaveReview()
     {
         try {
-            if (!(bool)ReviewSettings::get('allow_reviews', false))
+            if (!(bool)ReviewSettings::get('allow_reviews', false)) {
                 throw new ApplicationException(lang('igniter.local::default.review.alert_review_disabled'));
+            }
 
-            if (!$customer = Auth::customer())
+            if (!$customer = Auth::customer()) {
                 throw new ApplicationException(lang('igniter.local::default.review.alert_expired_login'));
+            }
 
             $reviewable = $this->getReviewable();
-            if (!$reviewable || !$reviewable->isCompleted())
+            if (!$reviewable || !$reviewable->isCompleted()) {
                 throw new ApplicationException(lang('igniter.local::default.review.alert_review_status_history'));
+            }
 
-            if ($this->checkReviewableExists($reviewable))
+            if ($this->checkReviewableExists($reviewable)) {
                 throw new ApplicationException(lang('igniter.local::default.review.alert_review_duplicate'));
+            }
 
             $data = post();
 
@@ -123,8 +127,7 @@ class Review extends \Igniter\System\Classes\BaseComponent
             flash()->success(lang('igniter.local::default.review.alert_review_success'))->now();
 
             return Redirect::back();
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             flash()->warning($ex->getMessage());
 
             return Redirect::back()->withInput();
@@ -141,8 +144,9 @@ class Review extends \Igniter\System\Classes\BaseComponent
 
     protected function loadReviewList()
     {
-        if (!$location = Location::current())
+        if (!$location = Location::current()) {
             return null;
+        }
 
         return ReviewModel::with(['customer', 'customer.address'])
             ->isApproved()
@@ -158,16 +162,18 @@ class Review extends \Igniter\System\Classes\BaseComponent
     {
         $reviewable = $this->getReviewable();
 
-        if (!$reviewable || !$reviewable->isCompleted())
+        if (!$reviewable || !$reviewable->isCompleted()) {
             return null;
+        }
 
         return $reviewable;
     }
 
     protected function loadReview($reviewable)
     {
-        if (!$reviewable)
+        if (!$reviewable) {
             return null;
+        }
 
         return ReviewModel::whereReviewable($reviewable)->first();
     }
@@ -179,8 +185,7 @@ class Review extends \Igniter\System\Classes\BaseComponent
         $reviewable = null;
         if ($this->property('reviewableType') == 'reservation') {
             $reviewable = resolve(BookingManager::class)->getReservationByHash($reviewableHash, Auth::customer());
-        }
-        elseif ($this->property('reviewableType') == 'order') {
+        } elseif ($this->property('reviewableType') == 'order') {
             $reviewable = resolve(OrderManager::class)->getOrderByHash($reviewableHash, Auth::customer());
         }
 
@@ -189,8 +194,9 @@ class Review extends \Igniter\System\Classes\BaseComponent
 
     protected function checkReviewableExists($reviewable)
     {
-        if (!$customer = Auth::customer())
+        if (!$customer = Auth::customer()) {
             return false;
+        }
 
         return ReviewModel::checkReviewed($reviewable, $customer);
     }

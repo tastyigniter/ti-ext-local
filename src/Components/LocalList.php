@@ -71,8 +71,9 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
             'paginate' => false,
         ];
 
-        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations'))
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations')) {
             $options['enabled'] = true;
+        }
 
         if ($coordinates = Location::userPosition()->getCoordinates()) {
             $options['latitude'] = $coordinates->getLatitude();
@@ -87,8 +88,9 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
 
         $searchDeliveryAreas = false;
         if (strlen($orderType = $this->getOrderType())) {
-            if ($orderType == 'delivery')
+            if ($orderType == 'delivery') {
                 $searchDeliveryAreas = true;
+            }
 
             $query->whereHas('all_options', function ($q) use ($orderType) {
                 $q->where('item', 'offer_'.$orderType)
@@ -122,11 +124,13 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
     protected function getSorting()
     {
         $url = page_url().'?';
-        if ($searchTerm = $this->getSearchTerm())
+        if ($searchTerm = $this->getSearchTerm()) {
             $url .= $this->property('searchParamName').'='.$searchTerm.'&';
+        }
 
-        if ($orderType = $this->getOrderType())
+        if ($orderType = $this->getOrderType()) {
             $url .= $this->property('orderTypeParamName').'='.$orderType.'&';
+        }
 
         return collect($this->listSorting())
             ->sortBy('priority')
@@ -140,8 +144,9 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
 
     protected function listSorting()
     {
-        if (self::$registeredSorting)
+        if (self::$registeredSorting) {
             return self::$registeredSorting;
+        }
 
         $result = [
             'distance' => [
@@ -167,8 +172,9 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
         ];
 
         $eventResult = Event::fire('local.list.extendSorting');
-        if (is_array($eventResult))
+        if (is_array($eventResult)) {
             $result = array_merge($result, ...array_filter($eventResult));
+        }
 
         return self::$registeredSorting = $result;
     }

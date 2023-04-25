@@ -23,28 +23,33 @@ class MaxOrderPerTimeslotReached
     public function timeslotValid($workingSchedule, $timeslot)
     {
         // Skip if the working schedule is not for delivery or pickup
-        if ($workingSchedule->getType() == Location::OPENING)
+        if ($workingSchedule->getType() == Location::OPENING) {
             return;
+        }
 
-        if ($this->execute($timeslot, $workingSchedule->getType()))
+        if ($this->execute($timeslot, $workingSchedule->getType())) {
             return false;
+        }
     }
 
     public function beforeSaveOrder($order, $data)
     {
-        if ($this->execute($order->order_datetime, $order->order_type))
+        if ($this->execute($order->order_datetime, $order->order_type)) {
             throw new ApplicationException(lang('igniter.local::default.alert_max_guest_reached'));
+        }
     }
 
     protected function execute($timeslot, $orderType)
     {
         $locationModel = LocationFacade::current();
-        if (!(bool)$locationModel->getOption('limit_orders'))
+        if (!(bool)$locationModel->getOption('limit_orders')) {
             return;
+        }
 
         $ordersOnThisDay = $this->getOrders($timeslot);
-        if ($ordersOnThisDay->isEmpty())
+        if ($ordersOnThisDay->isEmpty()) {
             return;
+        }
 
         $startTime = Carbon::parse($timeslot);
         $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($orderType))->subMinute();
@@ -62,8 +67,9 @@ class MaxOrderPerTimeslotReached
     {
         $date = Carbon::parse($timeslot)->toDateString();
 
-        if (array_has(self::$ordersCache, $date))
+        if (array_has(self::$ordersCache, $date)) {
             return self::$ordersCache[$date];
+        }
 
         $result = Order::where('order_date', $date)
             ->where('location_id', LocationFacade::getId())

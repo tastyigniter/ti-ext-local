@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Igniter\Admin\Facades\AdminAuth;
-use Igniter\Admin\Models\Location;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Illuminate\Support\Collection;
@@ -117,12 +116,14 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
     public function onChangeOrderType()
     {
         try {
-            if (!$this->location->current())
+            if (!$this->location->current()) {
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
+            }
 
             $orderType = $this->location->getOrderType(post('type'));
-            if ($orderType->isDisabled())
+            if ($orderType->isDisabled()) {
                 throw new ApplicationException($orderType->getDisabledDescription());
+            }
 
             $this->location->updateOrderType($orderType->getCode());
 
@@ -131,46 +132,55 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
             return ($redirectUrl = input('redirect'))
                 ? Redirect::to($this->controller->pageUrl($redirectUrl))
                 : Redirect::back();
-        }
-        catch (Exception $ex) {
-            if (Request::ajax()) throw $ex;
-            else flash()->danger($ex->getMessage())->now();
+        } catch (Exception $ex) {
+            if (Request::ajax()) {
+                throw $ex;
+            } else {
+                flash()->danger($ex->getMessage())->now();
+            }
         }
     }
 
     public function onSetOrderTime()
     {
         try {
-            if (!is_numeric($timeIsAsap = post('asap')))
+            if (!is_numeric($timeIsAsap = post('asap'))) {
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_type_required'));
+            }
 
-            if (!strlen($timeSlotDate = post('date')) && !$timeIsAsap)
+            if (!strlen($timeSlotDate = post('date')) && !$timeIsAsap) {
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_date_required'));
+            }
 
-            if (!strlen($timeSlotTime = post('time')) && !$timeIsAsap)
+            if (!strlen($timeSlotTime = post('time')) && !$timeIsAsap) {
                 throw new ApplicationException(lang('igniter.local::default.alert_slot_time_required'));
+            }
 
-            if (!$this->location->current())
+            if (!$this->location->current()) {
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
+            }
 
             $timeSlotDateTime = $timeIsAsap
                 ? Carbon::now()
                 : make_carbon($timeSlotDate.' '.$timeSlotTime);
 
-            if (!$this->location->checkOrderTime($timeSlotDateTime))
+            if (!$this->location->checkOrderTime($timeSlotDateTime)) {
                 throw new ApplicationException(sprintf(lang('igniter.local::default.alert_order_is_unavailable'),
                     $this->location->getOrderType()->getLabel()
                 ));
+            }
 
             $this->location->updateScheduleTimeSlot($timeSlotDateTime, $timeIsAsap);
 
             $this->controller->pageCycle();
 
             return $this->fetchPartials();
-        }
-        catch (Exception $ex) {
-            if (Request::ajax()) throw $ex;
-            else flash()->danger($ex->getMessage())->now();
+        } catch (Exception $ex) {
+            if (Request::ajax()) {
+                throw $ex;
+            } else {
+                flash()->danger($ex->getMessage())->now();
+            }
         }
     }
 
@@ -248,18 +258,21 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
     {
         $hasAdminAccess = optional(AdminAuth::getUser())->hasPermission('Admin.Locations');
         $locationEnabled = optional($this->location->current())->location_status;
-        if (!$hasAdminAccess && !$locationEnabled)
+        if (!$hasAdminAccess && !$locationEnabled) {
             return true;
+        }
     }
 
     protected function updateCurrentOrderType()
     {
-        if (!$this->location->current())
+        if (!$this->location->current()) {
             return;
+        }
 
         $sessionOrderType = $this->location->getSession('orderType');
-        if ($sessionOrderType && $this->location->hasOrderType($sessionOrderType))
+        if ($sessionOrderType && $this->location->hasOrderType($sessionOrderType)) {
             return;
+        }
 
         $defaultOrderType = $this->property('defaultOrderType');
         if (!$this->location->hasOrderType($defaultOrderType)) {
@@ -268,8 +281,9 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
             }))->getCode();
         }
 
-        if ($defaultOrderType)
+        if ($defaultOrderType) {
             $this->location->updateOrderType($defaultOrderType);
+        }
     }
 
     protected function checkAdminAccess()

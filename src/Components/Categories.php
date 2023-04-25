@@ -49,8 +49,9 @@ class Categories extends \Igniter\System\Classes\BaseComponent
     {
         $query = Category::with(['children', 'children.children'])->isEnabled()->sorted();
 
-        if ($location = Location::current())
+        if ($location = Location::current()) {
             $query->whereHasOrDoesntHaveLocation($location->getKey());
+        }
 
         return $query->get();
     }
@@ -58,13 +59,15 @@ class Categories extends \Igniter\System\Classes\BaseComponent
     protected function findSelectedCategory()
     {
         $slug = $this->param('category');
-        if (!strlen($slug))
+        if (!strlen($slug)) {
             return null;
+        }
 
         $query = Category::isEnabled()->where('permalink_slug', $slug);
 
-        if ($location = Location::current())
+        if ($location = Location::current()) {
             $query->whereHasOrDoesntHaveLocation($location->getKey());
+        }
 
         return $query->first();
     }

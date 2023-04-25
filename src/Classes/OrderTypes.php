@@ -33,7 +33,6 @@ class OrderTypes
     }
 
     /**
-     * @param $code
      * @return \Igniter\Local\Classes\AbstractOrderType
      */
     public function findOrderType($code)
@@ -69,8 +68,9 @@ class OrderTypes
     {
         $code = $definition['code'] ?? strtolower(basename($className));
 
-        if (!array_key_exists('name', $definition))
+        if (!array_key_exists('name', $definition)) {
             $definition['name'] = $code;
+        }
 
         $this->registeredOrderTypes[$code] = array_merge($definition, [
             'className' => $className,

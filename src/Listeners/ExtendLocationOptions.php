@@ -15,8 +15,9 @@ class ExtendLocationOptions
 
     public function extendValidator($formRequest, $dataHolder)
     {
-        if (!$formRequest instanceof \Admin\Requests\Location)
+        if (!$formRequest instanceof \Admin\Requests\Location) {
             return;
+        }
 
         $dataHolder->attributes = array_merge($dataHolder->attributes, $this->attributes());
 

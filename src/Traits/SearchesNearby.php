@@ -20,8 +20,9 @@ trait SearchesNearby
     public function onSearchNearby()
     {
         try {
-            if (!$searchQuery = $this->getRequestSearchQuery())
+            if (!$searchQuery = $this->getRequestSearchQuery()) {
                 throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
+            }
 
             $userLocation = is_array($searchQuery)
                 ? $this->geocodeSearchPoint($searchQuery)
@@ -41,27 +42,30 @@ trait SearchesNearby
                 throw new ApplicationException(lang('igniter.local::default.alert_no_found_restaurant'));
             }
 
-            if ($redirectPage = post('redirect'))
+            if ($redirectPage = post('redirect')) {
                 return Redirect::to($this->controller->pageUrl($redirectPage));
+            }
 
             return Redirect::to(restaurant_url($this->property('menusPage'), ['location' => null]));
-        }
-        catch (Exception $ex) {
-            if (Request::ajax()) throw $ex;
-            else flash()->danger($ex->getMessage());
+        } catch (Exception $ex) {
+            if (Request::ajax()) {
+                throw $ex;
+            } else {
+                flash()->danger($ex->getMessage());
+            }
         }
     }
 
     protected function getRequestSearchQuery()
     {
-        if ($coordinates = post('search_point'))
+        if ($coordinates = post('search_point')) {
             return $coordinates;
+        }
 
         return post('search_query');
     }
 
     /**
-     * @param $searchQuery
      * @return \Igniter\Flame\Geolite\Model\Location
      * @throws \Igniter\Flame\Exception\ApplicationException
      */
@@ -78,12 +82,14 @@ trait SearchesNearby
 
     protected function geocodeSearchPoint($searchPoint)
     {
-        if (count($searchPoint) !== 2)
+        if (count($searchPoint) !== 2) {
             throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
+        }
 
         [$latitude, $longitude] = $searchPoint;
-        if (!strlen($latitude) || !strlen($longitude))
+        if (!strlen($latitude) || !strlen($longitude)) {
             throw new ApplicationException(lang('igniter.local::default.alert_no_search_query'));
+        }
 
         $collection = Geocoder::reverse($latitude, $longitude);
 
@@ -99,12 +105,14 @@ trait SearchesNearby
     {
         if (!$collection || $collection->isEmpty()) {
             Log::error(implode(PHP_EOL, Geocoder::getLogs()));
+
             throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
         }
 
         $userLocation = $collection->first();
-        if (!$userLocation->hasCoordinates())
+        if (!$userLocation->hasCoordinates()) {
             throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
+        }
 
         Location::updateUserPosition($userLocation);
 

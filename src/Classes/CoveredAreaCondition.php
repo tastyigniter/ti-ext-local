@@ -25,8 +25,7 @@ class CoveredAreaCondition
         $condition['amount'] = lang('main::lang.text_free');
         if ($this->amount < 0) {
             $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
-        }
-        elseif ($this->amount > 0) {
+        } elseif ($this->amount > 0) {
             $condition['amount'] = currency_format($this->amount);
         }
 
@@ -52,17 +51,21 @@ class CoveredAreaCondition
 
     public function isValid($cartTotal)
     {
-        if ($this->type === 'above' || $this->type == 'equals_or_greater')
+        if ($this->type === 'above' || $this->type == 'equals_or_greater') {
             return $cartTotal >= $this->total;
+        }
 
-        if ($this->type == 'equals_or_less')
+        if ($this->type == 'equals_or_less') {
             return $cartTotal <= $this->total;
+        }
 
-        if ($this->type == 'greater')
+        if ($this->type == 'greater') {
             return $cartTotal > $this->total;
+        }
 
-        if ($this->type === 'below' || $this->type == 'less')
+        if ($this->type === 'below' || $this->type == 'less') {
             return $cartTotal < $this->total;
+        }
 
         return true;
     }
