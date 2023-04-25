@@ -53,7 +53,14 @@ class Info extends \Igniter\System\Classes\BaseComponent
         foreach ($scheduleTypes as $code => $definition) {
             $schedule = $locationCurrent->createScheduleItem($code);
             foreach (WorkingHour::make()->getWeekDaysOptions() as $index => $day) {
-                $scheduleItems[$code][$day] = array_filter(array_get($schedule->getHours(), $index, []), function ($hour) {
+                $hours = array_map(function ($hour) {
+                    $hour['open'] = now()->setTimeFromTimeString($hour['open'])->isoFormat(lang('system::lang.moment.time_format'));
+                    $hour['close'] = now()->setTimeFromTimeString($hour['close'])->isoFormat(lang('system::lang.moment.time_format'));
+
+                    return $hour;
+                }, array_get($schedule->getHours(), $index, []));
+
+                $scheduleItems[$code][$day] = array_filter($hours, function ($hour) {
                     return (bool)$hour['status'];
                 });
             }
