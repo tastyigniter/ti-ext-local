@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\ScheduleTypes;
 
+use Igniter\Cart\Facades\Cart;
 use Igniter\Local\Classes\AbstractOrderType;
 use Igniter\Local\Facades\Location as LocationFacade;
 
