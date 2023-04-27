@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Igniter\Admin\Facades\AdminAuth;
+use Igniter\Admin\Models\Location;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Illuminate\Support\Collection;
