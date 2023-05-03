@@ -1,46 +1,52 @@
 {
-  "name": "tastyigniter/ti-ext-local",
-  "type": "tastyigniter-package",
-  "description": "This extension allows your customers find and view menu items of their nearest location.",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Sam Poyigi",
-      "email": "sam@sampoyigi.com"
-    }
-  ],
-  "require-dev": {
-    "orchestra/testbench": "^8.5",
-    "pestphp/pest": "^2.5",
-    "pestphp/pest-plugin-laravel": "^2.0",
-    "laravel/pint": "^1.2",
-    "nunomaduro/larastan": "^2.4.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Igniter\\Local\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests"
-    }
-  },
-  "extra": {
-    "tastyigniter-extension": {
-      "name": "Local",
-      "icon": {
-        "class": "fa fa-map-marker",
-        "backgroundColor": "#CD4341",
-        "color": "#fff"
-      },
-      "homepage": "https://tastyigniter.com/marketplace/item/igniter-local"
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
+    "name": "tastyigniter/ti-ext-local",
+    "type": "tastyigniter-package",
+    "description": "This extension allows your customers find and view menu items of their nearest location.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sam Poyigi",
+            "email": "sam@sampoyigi.com"
+        }
+    ],
+    "require-dev": {
+        "orchestra/testbench": "^8.5",
+        "pestphp/pest": "^2.5",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "laravel/pint": "^1.2",
+        "nunomaduro/larastan": "^2.4.0"
     },
-    "sort-packages": true
-  }
+    "autoload": {
+        "psr-4": {
+            "Igniter\\Local\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "tastyigniter-extension": {
+            "name": "Local",
+            "icon": {
+                "class": "fa fa-map-marker",
+                "backgroundColor": "#CD4341",
+                "color": "#fff"
+            },
+            "homepage": "https://tastyigniter.com/marketplace/item/igniter-local"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint",
+        "static": "vendor/bin/phpstan analyse --ansi --memory-limit 1056M"
+    }
 }
