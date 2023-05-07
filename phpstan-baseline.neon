@@ -6,37 +6,7 @@ parameters:
 			path: database/migrations/2020_09_17_000300_create_reviews_table_or_rename.php
 
 		-
-			message: "#^Function setting not found\\.$#"
-			count: 3
-			path: database/migrations/2020_09_17_000300_create_reviews_table_or_rename.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Order not found\\.$#"
-			count: 2
-			path: database/migrations/2020_12_10_000300_update_reviews_table.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Reservation not found\\.$#"
-			count: 2
-			path: database/migrations/2020_12_10_000300_update_reviews_table.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Location not found\\.$#"
-			count: 1
-			path: resources/models/review.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:query\\(\\)\\.$#"
-			count: 1
-			path: src/AutomationRules/Conditions/ReviewCount.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\CartConditions\\\\Delivery\\:\\:\\$calculatedValue\\.$#"
-			count: 1
-			path: src/CartConditions/Delivery.php
-
-		-
-			message: "#^Access to constant DELIVERY on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Facades\\\\Cart\\:\\:subtotal\\(\\)\\.$#"
 			count: 1
 			path: src/CartConditions/Delivery.php
 
@@ -51,116 +21,6 @@ parameters:
 			path: src/CartConditions/Delivery.php
 
 		-
-			message: "#^Call to static method subtotal\\(\\) on an unknown class Igniter\\\\Cart\\\\Facades\\\\Cart\\.$#"
-			count: 1
-			path: src/CartConditions/Delivery.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 1
-			path: src/CartConditions/Delivery.php
-
-		-
-			message: "#^Call to method futureOrderDays\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Call to method getOption\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Call to method getOrderLeadTime\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Call to method getOrderTimeInterval\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Call to method getOrderTimeRestriction\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Call to method hasFutureOrder\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 2
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Method Igniter\\\\Local\\\\Classes\\\\AbstractOrderType\\:\\:getSchedule\\(\\) has invalid return type Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Property Igniter\\\\Local\\\\Classes\\\\AbstractOrderType\\:\\:\\$model has unknown class Igniter\\\\Admin\\\\Models\\\\Location as its type\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Property Igniter\\\\Local\\\\Classes\\\\AbstractOrderType\\:\\:\\$schedule has unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule as its type\\.$#"
-			count: 1
-			path: src/Classes/AbstractOrderType.php
-
-		-
-			message: "#^Call to method futureOrderDays\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Call to method getOption\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Call to method getOrderLeadTime\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Call to method getOrderTimeInterval\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Call to method getOrderTimeRestriction\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Call to method hasFutureOrder\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 2
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Method Igniter\\\\Local\\\\Classes\\\\BaseScheduleType\\:\\:getSchedule\\(\\) has invalid return type Igniter\\\\Local\\\\Classes\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Property Igniter\\\\Local\\\\Classes\\\\BaseScheduleType\\:\\:\\$model has unknown class Igniter\\\\Admin\\\\Models\\\\Location as its type\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
-			message: "#^Property Igniter\\\\Local\\\\Classes\\\\BaseScheduleType\\:\\:\\$schedule has unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule as its type\\.$#"
-			count: 1
-			path: src/Classes/BaseScheduleType.php
-
-		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:checkDistance\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/CoveredArea.php
@@ -171,47 +31,7 @@ parameters:
 			path: src/Classes/CoveredArea.php
 
 		-
-			message: "#^Parameter \\$model of method Igniter\\\\Local\\\\Classes\\\\CoveredArea\\:\\:__construct\\(\\) has invalid type Igniter\\\\Flame\\\\Location\\\\Contracts\\\\AreaInterface\\.$#"
-			count: 1
-			path: src/Classes/CoveredArea.php
-
-		-
-			message: "#^Function array_get not found\\.$#"
-			count: 4
-			path: src/Classes/CoveredAreaCondition.php
-
-		-
-			message: "#^Function currency_format not found\\.$#"
-			count: 2
-			path: src/Classes/CoveredAreaCondition.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 4
-			path: src/Classes/CoveredAreaCondition.php
-
-		-
-			message: "#^Function parse_values not found\\.$#"
-			count: 1
-			path: src/Classes/CoveredAreaCondition.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Classes\\\\Location\\:\\:\\$model\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Access to constant COLLECTION on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 2
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Access to constant DELIVERY on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 3
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Access to property \\$location on an unknown class Igniter\\\\Flame\\\\Location\\\\Contracts\\\\AreaInterface\\.$#"
+			message: "#^Access to an undefined property Igniter\\\\Flame\\\\Location\\\\Contracts\\\\AreaInterface\\:\\:\\$location\\.$#"
 			count: 1
 			path: src/Classes/Location.php
 
@@ -221,219 +41,34 @@ parameters:
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\AbstractOrderType\\:\\:getMinimumFutureDays\\(\\)\\.$#"
-			count: 2
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\AbstractOrderType\\:\\:getMinimumOrderTotal\\(\\)\\.$#"
+			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Builder\\:\\:IsEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:fireSystemEvent\\(\\)\\.$#"
-			count: 4
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:forgetSession\\(\\)\\.$#"
-			count: 4
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:getModel\\(\\)\\.$#"
-			count: 5
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:getSession\\(\\)\\.$#"
-			count: 9
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:locationSlugResolver\\(\\)\\.$#"
+			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Location\\\\Contracts\\\\LocationInterface\\:\\:getOption\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:putSession\\(\\)\\.$#"
-			count: 4
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:setCurrent\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:setDefaultLocation\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:workingSchedule\\(\\)\\.$#"
-			count: 6
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to method IsEnabled\\(\\) on an unknown class Igniter\\\\Flame\\\\Database\\\\Builder\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to method formatDistance\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Distance\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to method getCloseTime\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to method getCoordinates\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 2
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to method getTimeslot\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to method isClosed\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to method isOpen\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to method isOpenAt\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to static method createFromArray\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to static method getUser\\(\\) on an unknown class Admin\\\\Facades\\\\AdminAuth\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Location not found\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Class Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Distance not found\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Function controller not found\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Function make_carbon not found\\.$#"
-			count: 2
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Function params not found\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Function setting not found\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:userPosition\\(\\) has invalid return type Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^PHPDoc tag @throws with type Igniter\\\\Flame\\\\Exception\\\\ApplicationException is not subtype of Throwable$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Parameter \\$area of method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:updateNearbyArea\\(\\) has invalid type Igniter\\\\Flame\\\\Location\\\\Contracts\\\\AreaInterface\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Parameter \\$position of method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:updateUserPosition\\(\\) has invalid type Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Parameter \\$query of method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:extendLocationQuery\\(\\) has invalid type Igniter\\\\Flame\\\\Database\\\\Builder\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Parameter \\$userPosition of method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:checkDeliveryCoverage\\(\\) has invalid type Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Class Igniter\\\\System\\\\Classes\\\\ExtensionManager not found\\.$#"
-			count: 1
-			path: src/Classes/OrderTypes.php
-
-		-
-			message: "#^Function array_get not found\\.$#"
-			count: 1
-			path: src/Classes/OrderTypes.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Categories\\:\\:\\$page\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\:\\:isEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Categories.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Categories\\:\\:param\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\Category\\:\\:isEnabled\\(\\)\\.$#"
 			count: 1
-			path: src/Components/Categories.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Categories\\:\\:property\\(\\)\\.$#"
-			count: 3
 			path: src/Components/Categories.php
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:current\\(\\)\\.$#"
 			count: 2
 			path: src/Components/Categories.php
-
-		-
-			message: "#^Call to static method isEnabled\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Category\\.$#"
-			count: 1
-			path: src/Components/Categories.php
-
-		-
-			message: "#^Call to static method with\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Category\\.$#"
-			count: 1
-			path: src/Components/Categories.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Category not found\\.$#"
-			count: 1
-			path: src/Components/Categories.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Gallery\\:\\:\\$alias\\.$#"
-			count: 1
-			path: src/Components/Gallery.php
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Gallery\\:\\:\\$id\\.$#"
@@ -441,24 +76,9 @@ parameters:
 			path: src/Components/Gallery.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Gallery\\:\\:\\$page\\.$#"
-			count: 1
-			path: src/Components/Gallery.php
-
-		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:current\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Gallery.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Info\\:\\:\\$page\\.$#"
-			count: 1
-			path: src/Components/Info.php
-
-		-
-			message: "#^Access to constant OPENING on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Components/Info.php
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:collectionSchedule\\(\\)\\.$#"
@@ -496,63 +116,28 @@ parameters:
 			path: src/Components/Info.php
 
 		-
-			message: "#^Call to static method make\\(\\) on an unknown class Igniter\\\\Local\\\\Components\\\\Working_hours_model\\.$#"
+			message: "#^Call to static method make\\(\\) on an unknown class Igniter\\\\Local\\\\Components\\\\WorkingHour\\.$#"
 			count: 1
 			path: src/Components/Info.php
 
 		-
-			message: "#^Function array_get not found\\.$#"
-			count: 1
-			path: src/Components/Info.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 5
-			path: src/Components/Info.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\LocalBox\\:\\:\\$controller\\.$#"
-			count: 5
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\LocalBox\\:\\:\\$page\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Access to constant DELIVERY on an unknown class Igniter\\\\Local\\\\Components\\\\Locations_model\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:current\\(\\)\\.$#"
-			count: 5
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Classes\\\\Location\\:\\:getSession\\(\\)\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\LocalBox\\:\\:addJs\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
 			count: 2
 			path: src/Components/LocalBox.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\LocalBox\\:\\:getEventHandler\\(\\)\\.$#"
-			count: 3
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:geocode\\(\\)\\.$#"
+			count: 1
 			path: src/Components/LocalBox.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\LocalBox\\:\\:property\\(\\)\\.$#"
-			count: 7
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:getLogs\\(\\)\\.$#"
+			count: 1
 			path: src/Components/LocalBox.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\LocalBox\\:\\:renderPartial\\(\\)\\.$#"
-			count: 4
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:reverse\\(\\)\\.$#"
+			count: 1
 			path: src/Components/LocalBox.php
 
 		-
@@ -581,113 +166,28 @@ parameters:
 			path: src/Components/LocalBox.php
 
 		-
-			message: "#^Call to method getPeriod\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Call to static method geocode\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Call to static method getLogs\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Call to static method getUser\\(\\) on an unknown class Igniter\\\\Admin\\\\Facades\\\\AdminAuth\\.$#"
-			count: 2
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Call to static method reverse\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Class Igniter\\\\Local\\\\Components\\\\Locations_model not found\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Function flash not found\\.$#"
-			count: 4
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Function input not found\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 19
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Function make_carbon not found\\.$#"
-			count: 5
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Function post not found\\.$#"
-			count: 8
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Function restaurant_url not found\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Instantiated class Igniter\\\\Flame\\\\Exception\\\\ApplicationException not found\\.$#"
-			count: 13
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Method Igniter\\\\Local\\\\Components\\\\LocalBox\\:\\:geocodeSearchQuery\\(\\) has invalid return type Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^PHPDoc tag @throws with type Igniter\\\\Flame\\\\Exception\\\\ApplicationException is not subtype of Throwable$#"
-			count: 1
-			path: src/Components/LocalBox.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\LocalList\\:\\:\\$controller\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
 			count: 1
 			path: src/Components/LocalList.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\LocalList\\:\\:\\$page\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\Location\\:\\:withCount\\(\\)\\.$#"
 			count: 1
 			path: src/Components/LocalList.php
 
 		-
-			message: "#^Access to constant COLLECTION on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:geocode\\(\\)\\.$#"
 			count: 1
 			path: src/Components/LocalList.php
 
 		-
-			message: "#^Access to constant DELIVERY on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:getLogs\\(\\)\\.$#"
 			count: 1
 			path: src/Components/LocalList.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\LocalList\\:\\:addJs\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:reverse\\(\\)\\.$#"
 			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\LocalList\\:\\:param\\(\\)\\.$#"
-			count: 5
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\LocalList\\:\\:property\\(\\)\\.$#"
-			count: 13
 			path: src/Components/LocalList.php
 
 		-
@@ -731,113 +231,13 @@ parameters:
 			path: src/Components/LocalList.php
 
 		-
-			message: "#^Call to static method geocode\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Call to static method getLogs\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Call to static method getUser\\(\\) on an unknown class Igniter\\\\Admin\\\\Facades\\\\AdminAuth\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Call to static method reverse\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Call to static method withCount\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function array_except not found\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function array_get not found\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function flash not found\\.$#"
-			count: 2
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function input not found\\.$#"
-			count: 3
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 11
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function make_carbon not found\\.$#"
-			count: 3
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function page_url not found\\.$#"
-			count: 2
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function post not found\\.$#"
-			count: 4
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function restaurant_url not found\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Function setting not found\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Instantiated class Igniter\\\\Flame\\\\Exception\\\\ApplicationException not found\\.$#"
-			count: 6
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Method Igniter\\\\Local\\\\Components\\\\LocalList\\:\\:geocodeSearchQuery\\(\\) has invalid return type Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^PHPDoc tag @throws with type Igniter\\\\Flame\\\\Exception\\\\ApplicationException is not subtype of Throwable$#"
-			count: 1
-			path: src/Components/LocalList.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Menu\\:\\:\\$controller\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\:\\:listFrontEnd\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Menu.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Menu\\:\\:\\$page\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\Location\\:\\:whereSlug\\(\\)\\.$#"
 			count: 1
-			path: src/Components/Menu.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Menu\\:\\:param\\(\\)\\.$#"
-			count: 5
-			path: src/Components/Menu.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Menu\\:\\:property\\(\\)\\.$#"
-			count: 17
 			path: src/Components/Menu.php
 
 		-
@@ -853,26 +253,6 @@ parameters:
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:orderType\\(\\)\\.$#"
 			count: 1
-			path: src/Components/Menu.php
-
-		-
-			message: "#^Call to static method whereSlug\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Components/Menu.php
-
-		-
-			message: "#^Call to static method with\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Menu\\.$#"
-			count: 1
-			path: src/Components/Menu.php
-
-		-
-			message: "#^Function is_single_location not found\\.$#"
-			count: 1
-			path: src/Components/Menu.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 3
 			path: src/Components/Menu.php
 
 		-
@@ -892,11 +272,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Review\\:\\:\\$location_id\\.$#"
-			count: 1
-			path: src/Components/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Review\\:\\:\\$page\\.$#"
 			count: 1
 			path: src/Components/Review.php
 
@@ -931,32 +306,17 @@ parameters:
 			path: src/Components/Review.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Review\\:\\:addCss\\(\\)\\.$#"
-			count: 2
-			path: src/Components/Review.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Review\\:\\:addJs\\(\\)\\.$#"
-			count: 2
-			path: src/Components/Review.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Review\\:\\:param\\(\\)\\.$#"
-			count: 2
-			path: src/Components/Review.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Review\\:\\:property\\(\\)\\.$#"
-			count: 5
-			path: src/Components/Review.php
-
-		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Review\\:\\:save\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Review.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Review\\:\\:validate\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\:\\:isApproved\\(\\)\\.$#"
+			count: 1
+			path: src/Components/Review.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getRatingOptions\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Review.php
 
@@ -966,17 +326,7 @@ parameters:
 			path: src/Components/Review.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:make\\(\\)\\.$#"
-			count: 1
-			path: src/Components/Review.php
-
-		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:whereReviewable\\(\\)\\.$#"
-			count: 1
-			path: src/Components/Review.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:with\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Review.php
 
@@ -986,13 +336,8 @@ parameters:
 			path: src/Components/Review.php
 
 		-
-			message: "#^Call to static method customer\\(\\) on an unknown class Igniter\\\\Main\\\\Facades\\\\Auth\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Main\\\\Facades\\\\Auth\\:\\:customer\\(\\)\\.$#"
 			count: 4
-			path: src/Components/Review.php
-
-		-
-			message: "#^Class Igniter\\\\Cart\\\\Classes\\\\OrderManager not found\\.$#"
-			count: 1
 			path: src/Components/Review.php
 
 		-
@@ -1001,53 +346,18 @@ parameters:
 			path: src/Components/Review.php
 
 		-
-			message: "#^Function array_get not found\\.$#"
-			count: 4
-			path: src/Components/Review.php
-
-		-
-			message: "#^Function flash not found\\.$#"
-			count: 2
-			path: src/Components/Review.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 6
-			path: src/Components/Review.php
-
-		-
-			message: "#^Function post not found\\.$#"
-			count: 1
-			path: src/Components/Review.php
-
-		-
-			message: "#^Instantiated class Igniter\\\\Flame\\\\Exception\\\\ApplicationException not found\\.$#"
-			count: 4
-			path: src/Components/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Search\\:\\:\\$controller\\.$#"
-			count: 2
-			path: src/Components/Search.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Components\\\\Search\\:\\:\\$page\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:geocode\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Search.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Search\\:\\:addJs\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:getLogs\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Search.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Search\\:\\:getEventHandler\\(\\)\\.$#"
-			count: 2
-			path: src/Components/Search.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Components\\\\Search\\:\\:property\\(\\)\\.$#"
-			count: 3
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:reverse\\(\\)\\.$#"
+			count: 1
 			path: src/Components/Search.php
 
 		-
@@ -1096,103 +406,18 @@ parameters:
 			path: src/Components/Search.php
 
 		-
-			message: "#^Call to method getCoordinates\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 2
-			path: src/Components/Search.php
-
-		-
-			message: "#^Call to method toArray\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Address\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Call to static method customer\\(\\) on an unknown class Igniter\\\\Main\\\\Facades\\\\Auth\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Main\\\\Facades\\\\Auth\\:\\:customer\\(\\)\\.$#"
 			count: 4
 			path: src/Components/Search.php
 
 		-
-			message: "#^Call to static method geocode\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Call to static method getLogs\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Call to static method reverse\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Call to static method withoutEvents\\(\\) on an unknown class Igniter\\\\Main\\\\Models\\\\Customer\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Address not found\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Function flash not found\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Function format_address not found\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 8
-			path: src/Components/Search.php
-
-		-
-			message: "#^Function post not found\\.$#"
-			count: 5
-			path: src/Components/Search.php
-
-		-
-			message: "#^Function restaurant_url not found\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Instantiated class Igniter\\\\Flame\\\\Exception\\\\ApplicationException not found\\.$#"
-			count: 8
-			path: src/Components/Search.php
-
-		-
-			message: "#^Method Igniter\\\\Local\\\\Components\\\\Search\\:\\:geocodeSearchQuery\\(\\) has invalid return type Igniter\\\\Flame\\\\Geolite\\\\Model\\\\Location\\.$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^PHPDoc tag @throws with type Igniter\\\\Flame\\\\Exception\\\\ApplicationException is not subtype of Throwable$#"
-			count: 1
-			path: src/Components/Search.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Extension\\:\\:\\$app\\.$#"
-			count: 2
-			path: src/Extension.php
-
-		-
-			message: "#^Access to constant COLLECTION on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\LocationArea\\:\\:find\\(\\)\\.$#"
 			count: 1
 			path: src/Extension.php
 
 		-
-			message: "#^Access to constant DELIVERY on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:geocode\\(\\)\\.$#"
 			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Access to property \\$contextDefinitions on an unknown class Igniter\\\\Admin\\\\DashboardWidgets\\\\Charts\\.$#"
-			count: 2
 			path: src/Extension.php
 
 		-
@@ -1211,177 +436,27 @@ parameters:
 			path: src/Extension.php
 
 		-
-			message: "#^Call to static method addSortingColumns\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to static method customer\\(\\) on an unknown class Igniter\\\\Main\\\\Facades\\\\Auth\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Main\\\\Facades\\\\Auth\\:\\:customer\\(\\)\\.$#"
 			count: 2
 			path: src/Extension.php
 
 		-
-			message: "#^Call to static method extend\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to static method extend\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Order\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to static method extend\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Reservation\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to static method find\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\LocationArea\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to static method geocode\\(\\) on an unknown class Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\DashboardWidgets\\\\Charts not found\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Class Igniter\\\\Automation\\\\AutomationRules\\\\Actions\\\\SendMailTemplate not found\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Class Igniter\\\\Automation\\\\AutomationRules\\\\Events\\\\OrderSchedule not found\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Class Igniter\\\\Cart\\\\AutomationRules\\\\Conditions\\\\OrderAttribute not found\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Function admin_url not found\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Function array_get not found\\.$#"
-			count: 2
-			path: src/Extension.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\FormWidgets\\\\StarRating\\:\\:\\$formField\\.$#"
-			count: 2
-			path: src/FormWidgets/StarRating.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\FormWidgets\\\\StarRating\\:\\:\\$vars\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getRatingOptions\\(\\)\\.$#"
 			count: 1
 			path: src/FormWidgets/StarRating.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\FormWidgets\\\\StarRating\\:\\:addCss\\(\\)\\.$#"
-			count: 2
-			path: src/FormWidgets/StarRating.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\FormWidgets\\\\StarRating\\:\\:addJs\\(\\)\\.$#"
-			count: 2
-			path: src/FormWidgets/StarRating.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\FormWidgets\\\\StarRating\\:\\:fillFromConfig\\(\\)\\.$#"
-			count: 1
-			path: src/FormWidgets/StarRating.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\FormWidgets\\\\StarRating\\:\\:getLoadValue\\(\\)\\.$#"
-			count: 1
-			path: src/FormWidgets/StarRating.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\FormWidgets\\\\StarRating\\:\\:makePartial\\(\\)\\.$#"
-			count: 1
-			path: src/FormWidgets/StarRating.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:make\\(\\)\\.$#"
-			count: 1
-			path: src/FormWidgets/StarRating.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Http\\\\Controllers\\\\Reviews\\:\\:\\$hiddenActions\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getRatingOptions\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Controllers/Reviews.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Http\\\\Controllers\\\\Reviews\\:\\:addJs\\(\\)\\.$#"
-			count: 2
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Http\\\\Controllers\\\\Reviews\\:\\:asExtension\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Facades\\\\AdminMenu\\:\\:setContext\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Controllers/Reviews.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:make\\(\\)\\.$#"
-			count: 1
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Call to static method setContext\\(\\) on an unknown class Igniter\\\\Admin\\\\Facades\\\\AdminMenu\\.$#"
-			count: 1
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Http\\\\Actions\\\\FormController not found\\.$#"
-			count: 1
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Http\\\\Actions\\\\ListController not found\\.$#"
-			count: 1
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Http\\\\Actions\\\\LocationAwareController not found\\.$#"
-			count: 1
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 1
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Igniter\\\\Local\\\\Http\\\\Controllers\\\\Reviews\\:\\:__construct\\(\\) calls parent\\:\\:__construct\\(\\) but Igniter\\\\Local\\\\Http\\\\Controllers\\\\Reviews does not extend any class\\.$#"
-			count: 1
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Class Admin\\\\Requests\\\\Location not found\\.$#"
-			count: 1
-			path: src/Listeners/ExtendLocationOptions.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 23
-			path: src/Listeners/ExtendLocationOptions.php
-
-		-
-			message: "#^Access to constant OPENING on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\Order\\:\\:where\\(\\)\\.$#"
 			count: 1
 			path: src/Listeners/MaxOrderPerTimeslotReached.php
 
@@ -1396,31 +471,6 @@ parameters:
 			path: src/Listeners/MaxOrderPerTimeslotReached.php
 
 		-
-			message: "#^Call to static method where\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Order\\.$#"
-			count: 1
-			path: src/Listeners/MaxOrderPerTimeslotReached.php
-
-		-
-			message: "#^Function array_has not found\\.$#"
-			count: 1
-			path: src/Listeners/MaxOrderPerTimeslotReached.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 1
-			path: src/Listeners/MaxOrderPerTimeslotReached.php
-
-		-
-			message: "#^Function setting not found\\.$#"
-			count: 3
-			path: src/Listeners/MaxOrderPerTimeslotReached.php
-
-		-
-			message: "#^Instantiated class Igniter\\\\Flame\\\\Exception\\\\ApplicationException not found\\.$#"
-			count: 1
-			path: src/Listeners/MaxOrderPerTimeslotReached.php
-
-		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\MenuExport\\:\\:\\$menu_categories\\.$#"
 			count: 1
 			path: src/Models/MenuExport.php
@@ -1431,112 +481,32 @@ parameters:
 			path: src/Models/MenuExport.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\MenuExport\\:\\:encodeArrayValue\\(\\)\\.$#"
-			count: 2
-			path: src/Models/MenuExport.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\MenuExport\\:\\:getFirstMedia\\(\\)\\.$#"
-			count: 1
-			path: src/Models/MenuExport.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\MenuExport\\:\\:hasMedia\\(\\)\\.$#"
-			count: 1
-			path: src/Models/MenuExport.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\MenuExport\\:\\:make\\(\\)\\.$#"
-			count: 1
-			path: src/Models/MenuExport.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Category not found\\.$#"
-			count: 1
-			path: src/Models/MenuExport.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Mealtime not found\\.$#"
-			count: 1
-			path: src/Models/MenuExport.php
-
-		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\MenuImport\\:\\:\\$update_existing\\.$#"
 			count: 1
 			path: src/Models/MenuImport.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\MenuImport\\:\\:decodeArrayValue\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\Category\\:\\:firstOrCreate\\(\\)\\.$#"
 			count: 1
 			path: src/Models/MenuImport.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\MenuImport\\:\\:logCreated\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\Mealtime\\:\\:where\\(\\)\\.$#"
 			count: 1
 			path: src/Models/MenuImport.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\MenuImport\\:\\:logError\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\Menu\\:\\:find\\(\\)\\.$#"
 			count: 1
 			path: src/Models/MenuImport.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\MenuImport\\:\\:logSkipped\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Models\\\\Menu\\:\\:where\\(\\)\\.$#"
 			count: 1
 			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\MenuImport\\:\\:logUpdated\\(\\)\\.$#"
-			count: 1
-			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Call to static method find\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Menu\\.$#"
-			count: 1
-			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Call to static method firstOrCreate\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Category\\.$#"
-			count: 1
-			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Call to static method make\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Menu\\.$#"
-			count: 1
-			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Call to static method where\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Mealtime\\.$#"
-			count: 1
-			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Call to static method where\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Menu\\.$#"
-			count: 1
-			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Function array_except not found\\.$#"
-			count: 1
-			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Function array_get not found\\.$#"
-			count: 5
-			path: src/Models/MenuImport.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Review\\:\\:fireEvent\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Review.php
 
 		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Review\\:\\:pluckDates\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:make\\(\\)\\.$#"
 			count: 1
 			path: src/Models/Review.php
 
@@ -1547,56 +517,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\ReviewSettings\\:\\:get\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Call to method getKey\\(\\) on an unknown class Igniter\\\\Flame\\\\Auth\\\\Models\\\\User\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Call to method getKey\\(\\) on an unknown class Igniter\\\\Flame\\\\Database\\\\Model\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Location not found\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Order not found\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Class Igniter\\\\Admin\\\\Models\\\\Reservation not found\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Class Igniter\\\\Flame\\\\Auth\\\\Models\\\\User not found\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Class Igniter\\\\Main\\\\Models\\\\Customer not found\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Function array_get not found\\.$#"
-			count: 2
-			path: src/Models/Review.php
-
-		-
-			message: "#^Parameter \\$customer of method Igniter\\\\Local\\\\Models\\\\Review\\:\\:checkReviewed\\(\\) has invalid type Igniter\\\\Flame\\\\Database\\\\Model\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Parameter \\$object of method Igniter\\\\Local\\\\Models\\\\Review\\:\\:checkReviewed\\(\\) has invalid type Igniter\\\\Flame\\\\Database\\\\Model\\.$#"
 			count: 1
 			path: src/Models/Review.php
 
@@ -1631,49 +551,14 @@ parameters:
 			path: src/Models/Review.php
 
 		-
-			message: "#^Class Igniter\\\\System\\\\Actions\\\\SettingsModel not found\\.$#"
-			count: 1
-			path: src/Models/ReviewSettings.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Requests\\\\Review\\:\\:inputWith\\(\\)\\.$#"
-			count: 2
-			path: src/Requests/Review.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 9
-			path: src/Requests/Review.php
-
-		-
-			message: "#^Function str_singular not found\\.$#"
-			count: 1
-			path: src/Requests/Review.php
-
-		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:orderType\\(\\)\\.$#"
 			count: 1
 			path: src/ScheduleTypes/Collection.php
 
 		-
-			message: "#^Call to method getOpenTime\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Facades\\\\Cart\\:\\:subtotal\\(\\)\\.$#"
 			count: 1
-			path: src/ScheduleTypes/Collection.php
-
-		-
-			message: "#^Call to method hasCollection\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Collection.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 7
-			path: src/ScheduleTypes/Collection.php
-
-		-
-			message: "#^Function make_carbon not found\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Collection.php
+			path: src/ScheduleTypes/Delivery.php
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:coveredArea\\(\\)\\.$#"
@@ -1682,35 +567,5 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:orderType\\(\\)\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Delivery.php
-
-		-
-			message: "#^Call to method getMinimumOrderTotal\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Delivery.php
-
-		-
-			message: "#^Call to method getOpenTime\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingSchedule\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Delivery.php
-
-		-
-			message: "#^Call to method hasDelivery\\(\\) on an unknown class Igniter\\\\Admin\\\\Models\\\\Location\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Delivery.php
-
-		-
-			message: "#^Call to static method subtotal\\(\\) on an unknown class Igniter\\\\Local\\\\ScheduleTypes\\\\Cart\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Delivery.php
-
-		-
-			message: "#^Function lang not found\\.$#"
-			count: 7
-			path: src/ScheduleTypes/Delivery.php
-
-		-
-			message: "#^Function make_carbon not found\\.$#"
 			count: 1
 			path: src/ScheduleTypes/Delivery.php
