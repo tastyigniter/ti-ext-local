@@ -196,7 +196,7 @@ class LocalList extends \System\Classes\BaseComponent
 
     protected function getOrderTypes()
     {
-        return Location::current()->getOrderTypeOptions();
+        return optional(Location::current())->getOrderTypeOptions() ?? [];
     }
 
     protected function mapIntoObjects($collection)
