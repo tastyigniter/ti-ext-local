@@ -240,18 +240,17 @@ class Extension extends \System\Classes\BaseExtension
 
     protected function extendDashboardChartsDatasets()
     {
-        Event::listen('admin.charts.extendDatasets', function ($widget) {
-            if (!$widget instanceof Charts)
-                return;
-
+        Charts::registertsDatase(function () {
             if (!ReviewSettings::get('allow_reviews', false))
-                return;
+                return [];
 
-            $widget->contextDefinitions['reviews'] = [
-                'label' => 'lang:igniter.local::default.reviews.text_title',
-                'color' => '#FFB74D',
-                'model' => Reviews_model::class,
-                'column' => 'created_at',
+            return [
+                'reviews' => [
+                    'label' => 'lang:igniter.local::default.reviews.text_title',
+                    'color' => '#FFB74D',
+                    'model' => Reviews_model::class,
+                    'column' => 'created_at',
+                ],
             ];
         });
     }
@@ -323,8 +322,7 @@ class Extension extends \System\Classes\BaseExtension
                 if ($areaId && $area = Location_areas_model::find($areaId)) {
                     LocationFacade::updateNearbyArea($area);
                 }
-            }
-            catch (\Exception $exception) {
+            } catch (\Exception $exception) {
             }
         });
     }
