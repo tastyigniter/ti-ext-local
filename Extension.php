@@ -240,7 +240,7 @@ class Extension extends \System\Classes\BaseExtension
 
     protected function extendDashboardChartsDatasets()
     {
-        Charts::registertsDatase(function () {
+        Charts::registerDatasets(function () {
             if (!ReviewSettings::get('allow_reviews', false))
                 return [];
 
