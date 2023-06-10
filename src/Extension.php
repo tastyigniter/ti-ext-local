@@ -288,9 +288,8 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             $model->addDynamicMethod('reviews_score', function () use ($model) {
                 return Review::getScoreForLocation($model->getKey());
             });
+            $model->queryModifierAddSorts(['reviews_count asc', 'reviews_count desc']);
         });
-
-        LocationModel::addSortingColumns(['reviews_count asc', 'reviews_count desc']);
     }
 
     protected function bindRememberLocationAreaEvents(): void

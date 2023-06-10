@@ -68,7 +68,6 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
             'pageLimit' => null,
             'search' => $this->getSearchTerm(),
             'sort' => $sortBy,
-            'paginate' => false,
         ];
 
         if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations')) {
@@ -76,8 +75,8 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
         }
 
         if ($coordinates = Location::userPosition()->getCoordinates()) {
-            $options['latitude'] = $coordinates->getLatitude();
-            $options['longitude'] = $coordinates->getLongitude();
+            $options['position']['latitude'] = $coordinates->getLatitude();
+            $options['position']['longitude'] = $coordinates->getLongitude();
         }
 
         $query = LocationModel::withCount([
@@ -98,7 +97,7 @@ class LocalList extends \Igniter\System\Classes\BaseComponent
             });
         }
 
-        $query->listFrontEnd($options);
+        $query->applyFilters($options);
 
         $page = $this->param('page', 1);
         $pageLimit = $this->param('pageLimit', $this->property('pageLimit', 20));
