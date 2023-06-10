@@ -47,7 +47,7 @@ class Categories extends \Igniter\System\Classes\BaseComponent
 
     protected function loadCategories()
     {
-        $query = Category::with(['children', 'children.children'])->isEnabled()->sorted();
+        $query = Category::with(['children', 'children.children'])->whereIsEnabled()->sorted();
 
         if ($location = Location::current()) {
             $query->whereHasOrDoesntHaveLocation($location->getKey());
@@ -63,7 +63,7 @@ class Categories extends \Igniter\System\Classes\BaseComponent
             return null;
         }
 
-        $query = Category::isEnabled()->where('permalink_slug', $slug);
+        $query = Category::whereIsEnabled()->where('permalink_slug', $slug);
 
         if ($location = Location::current()) {
             $query->whereHasOrDoesntHaveLocation($location->getKey());

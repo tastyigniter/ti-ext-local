@@ -209,7 +209,7 @@ class Menu extends \Igniter\System\Classes\BaseComponent
             return;
         }
 
-        if (LocationModel::whereSlug($param)->isEnabled()->exists()) {
+        if (LocationModel::whereSlug($param)->whereIsEnabled()->exists()) {
             return;
         }
 

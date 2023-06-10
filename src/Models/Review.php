@@ -3,8 +3,8 @@
 namespace Igniter\Local\Models;
 
 use Igniter\Admin\Traits\Locationable;
-use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Database\Model;
+use Igniter\System\Models\Concerns\Switchable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\DB;
 class Review extends Model
 {
     use Locationable;
+    use Switchable;
+
+    public const SWITCHABLE_COLUMN = 'review_status';
 
     /**
      * @var string The database table name
@@ -129,7 +132,7 @@ class Review extends Model
 
     public function scopeIsApproved($query)
     {
-        return $query->where('review_status', 1);
+        return $query->whereIsEnabled();
     }
 
     public function scopeHasBeenReviewed($query, $sale, $customerId)
