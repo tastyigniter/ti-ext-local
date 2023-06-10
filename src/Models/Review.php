@@ -55,7 +55,12 @@ class Review extends Model
         ],
     ];
 
-    public static $allowedSortingColumns = ['created_at asc', 'created_at desc'];
+    protected array $queryModifierSorts = ['created_at asc', 'created_at desc'];
+
+    protected array $queryModifierFilters = [
+        'location' => 'whereHasLocation',
+        'customer' => 'applyCustomer',
+    ];
 
     public static $relatedSaleTypes = [
         'orders' => \Igniter\Admin\Models\Order::class,
@@ -87,48 +92,6 @@ class Review extends Model
     //
     // Scopes
     //
-
-    public function scopeListFrontEnd($query, $options = [])
-    {
-        extract(array_merge([
-            'page' => 1,
-            'pageLimit' => 20,
-            'sort' => null,
-            'location' => null,
-            'customer' => null,
-        ], $options));
-
-        if (is_numeric($location)) {
-            $query->where('location_id', $location);
-        }
-
-        if ($customer instanceof User) {
-            $query->where('customer_id', $customer->getKey());
-        } elseif (strlen($customer)) {
-            $query->where('customer_id', $customer);
-        } else {
-            $query->has('customer');
-        }
-
-        if (!is_array($sort)) {
-            $sort = [$sort];
-        }
-
-        foreach ($sort as $_sort) {
-            if (in_array($_sort, self::$allowedSortingColumns)) {
-                $parts = explode(' ', $_sort);
-                if (count($parts) < 2) {
-                    array_push($parts, 'desc');
-                }
-                [$sortField, $sortDirection] = $parts;
-                $query->orderBy($sortField, $sortDirection);
-            }
-        }
-
-        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
-
-        return $query->paginate($pageLimit, $page);
-    }
 
     public function scopeIsApproved($query)
     {
