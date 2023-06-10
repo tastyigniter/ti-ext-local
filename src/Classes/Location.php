@@ -22,7 +22,7 @@ class Location extends Manager
 
     const OPENING = 'opening';
 
-    protected $locationModel = \Igniter\Admin\Models\Location::class;
+    protected $locationModel = LocationModel::class;
 
     /**
      * @var \Igniter\Local\Classes\CoveredArea
@@ -40,7 +40,7 @@ class Location extends Manager
 
     public function __construct()
     {
-        $this->setDefaultLocation(params('default_location_id'));
+        $this->setDefaultLocation(LocationModel::getDefaultKey());
 
         $this->locationSlugResolver(function () {
             return controller()->param('location');
