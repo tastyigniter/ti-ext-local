@@ -2,10 +2,10 @@
 
 namespace Igniter\Local\Components;
 
-use Igniter\Admin\Facades\AdminAuth;
-use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Local\Facades\Location;
+use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Traits\SearchesNearby;
+use Igniter\User\Facades\AdminAuth;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Event;
 

@@ -2,41 +2,71 @@
 
 namespace Igniter\Local;
 
+use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
-use Igniter\Admin\Models\Location as LocationModel;
-use Igniter\Admin\Models\LocationArea;
-use Igniter\Admin\Models\Order;
-use Igniter\Admin\Models\Reservation;
+use Igniter\Admin\Facades\AdminMenu;
+use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Igniter;
+use Igniter\Local\Classes\AdminLocation;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Classes\OrderTypes;
+use Igniter\Local\Facades\AdminLocation as AdminLocationFacade;
 use Igniter\Local\Facades\Location as LocationFacade;
+use Igniter\Local\Listeners\ExtendLocationOptions;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
+use Igniter\Local\Models\Location as LocationModel;
+use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
 use Igniter\Local\Models\ReviewSettings;
-use Igniter\Main\Facades\Auth;
+use Igniter\Local\Models\Scopes\LocationScope;
+use Igniter\Local\Subscribers\DefineOptionsFormFieldsSubscriber;
+use Igniter\Reservation\Models\Reservation;
+use Igniter\User\Facades\Auth;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
 class Extension extends \Igniter\System\Classes\BaseExtension
 {
+    protected array $scopes = [
+        LocationModel::class => LocationScope::class,
+    ];
+
+    protected $subscribe = [
+        DefineOptionsFormFieldsSubscriber::class,
+    ];
+
+    protected array $morphMap = [
+        'location_areas' => \Igniter\Local\Models\LocationArea::class,
+        'locations' => \Igniter\Local\Models\Location::class,
+        'working_hours' => \Igniter\Local\Models\WorkingHour::class,
+    ];
+
     public function register()
     {
+        parent::register();
+
         $this->app->singleton('location', Location::class);
+        $this->app->singleton('admin.location', AdminLocation::class);
         $this->app->singleton(OrderTypes::class);
 
         $aliasLoader = AliasLoader::getInstance();
-        $aliasLoader->alias('Location', Facades\Location::class);
+        $aliasLoader->alias('Location', LocationFacade::class);
+        $aliasLoader->alias('AdminLocation', AdminLocationFacade::class);
+
+        Route::pushMiddlewareToGroup('igniter', \Igniter\Local\Http\Middleware\CheckLocation::class);
     }
 
     public function boot()
     {
+        Event::subscribe(ExtendLocationOptions::class);
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
-        Event::listen('router.beforeRoute', function ($url, $router) {
-            View::share('showReviews', (bool)ReviewSettings::get('allow_reviews', false));
+        View::share('showReviews', function () {
+            return (bool)ReviewSettings::get('allow_reviews', false);
         });
 
         $this->bindRememberLocationAreaEvents();
@@ -44,7 +74,11 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();
         $this->extendDashboardChartsDatasets();
-        $this->extendLocationOptionsFields();
+
+        if (Igniter::runningInAdmin()) {
+            $this->replaceLocationsNavMenuItem();
+            $this->registerLocationsMainMenuItems();
+        }
     }
 
     public function registerAutomationRules()
@@ -110,16 +144,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 'name' => 'lang:igniter.local::default.search.component_title',
                 'description' => 'lang:igniter.local::default.search.component_desc',
             ],
-            \Igniter\Local\Components\Menu::class => [
-                'code' => 'localMenu',
-                'name' => 'lang:igniter.local::default.menu.component_title',
-                'description' => 'lang:igniter.local::default.menu.component_desc',
-            ],
-            \Igniter\Local\Components\Categories::class => [
-                'code' => 'categories',
-                'name' => 'lang:igniter.local::default.categories.component_title',
-                'description' => 'lang:igniter.local::default.categories.component_desc',
-            ],
             \Igniter\Local\Components\Review::class => [
                 'code' => 'localReview',
                 'name' => 'lang:igniter.local::default.review.component_title',
@@ -143,26 +167,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    public function registerImportExport()
-    {
-        return [
-            'import' => [
-                'menus' => [
-                    'label' => 'Import Menu Items',
-                    'model' => \Igniter\Local\Models\MenuImport::class,
-                    'configFile' => '$/igniter/local/models/config/menuimport',
-                ],
-            ],
-            'export' => [
-                'menus' => [
-                    'label' => 'Export Menu Items',
-                    'model' => \Igniter\Local\Models\MenuExport::class,
-                    'configFile' => '$/igniter/local/models/config/menuexport',
-                ],
-            ],
-        ];
-    }
-
     public function registerMailTemplates()
     {
         return [
@@ -173,6 +177,17 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function registerNavigation()
     {
         return [
+            'restaurant' => [
+                'child' => [
+                    'locations' => [
+                        'priority' => 10,
+                        'class' => 'locations',
+                        'href' => admin_url('locations'),
+                        'title' => lang('igniter.local::default.text_side_menu_location'),
+                        'permission' => 'Admin.Locations',
+                    ],
+                ],
+            ],
             'marketing' => [
                 'child' => [
                     'reviews' => [
@@ -190,9 +205,13 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function registerPermissions()
     {
         return [
+            'Admin.Locations' => [
+                'label' => 'lang:igniter.local::default.locations_permissions',
+                'group' => 'location',
+            ],
             'Admin.Reviews' => [
                 'description' => 'lang:igniter.local::default.reviews.permissions',
-                'group' => 'module',
+                'group' => 'location',
             ],
         ];
     }
@@ -217,6 +236,18 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 'label' => 'Star Rating',
                 'code' => 'starrating',
             ],
+            \Igniter\Local\FormWidgets\MapArea::class => [
+                'label' => 'Map Area',
+                'code' => 'maparea',
+            ],
+            \Igniter\Local\FormWidgets\MapView::class => [
+                'label' => 'Map View',
+                'code' => 'mapview',
+            ],
+            \Igniter\Local\FormWidgets\ScheduleEditor::class => [
+                'label' => 'Schedule Editor',
+                'code' => 'scheduleeditor',
+            ],
         ];
     }
 
@@ -230,6 +261,20 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             \Igniter\Local\ScheduleTypes\Collection::class => [
                 'code' => LocationModel::COLLECTION,
                 'name' => 'lang:igniter.local::default.text_collection',
+            ],
+        ];
+    }
+
+    public function registerOnboardingSteps()
+    {
+        return [
+            'igniter.local::locations' => [
+                'label' => 'igniter.local::default.onboarding_locations',
+                'description' => 'igniter.local::default.help_onboarding_locations',
+                'icon' => 'fa-store',
+                'url' => admin_url('locations'),
+                'priority' => 15,
+                'complete' => [\Igniter\Local\Models\Location::class, 'onboardingIsComplete'],
             ],
         ];
     }
@@ -341,248 +386,33 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ]);
     }
 
-    protected function extendLocationOptionsFields()
+    protected function replaceLocationsNavMenuItem()
     {
-        Event::listen('admin.locations.defineOptionsFormFields', function () {
-            return [
-                'limit_orders' => [
-                    'label' => 'lang:igniter.local::default.label_limit_orders',
-                    'accordion' => 'lang:igniter::admin.locations.text_tab_general_options',
-                    'type' => 'switch',
-                    'default' => 0,
-                    'comment' => 'lang:igniter.local::default.help_limit_orders',
-                    'span' => 'left',
-                ],
-                'limit_orders_count' => [
-                    'label' => 'lang:igniter.local::default.label_limit_orders_count',
-                    'accordion' => 'lang:igniter::admin.locations.text_tab_general_options',
-                    'type' => 'number',
-                    'default' => 50,
-                    'span' => 'right',
-                    'comment' => 'lang:igniter.local::default.help_limit_orders_interval',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'limit_orders',
-                        'condition' => 'checked',
-                    ],
-                ],
-
-                'offer_delivery' => [
-                    'label' => 'lang:igniter.local::default.label_offer_delivery',
-                    'accordion' => 'lang:igniter.local::default.text_tab_delivery_order',
-                    'default' => 1,
-                    'type' => 'switch',
-                    'span' => 'left',
-                ],
-                'future_orders[enable_delivery]' => [
-                    'label' => 'lang:igniter.local::default.label_future_delivery_order',
-                    'accordion' => 'lang:igniter.local::default.text_tab_delivery_order',
-                    'type' => 'switch',
-                    'span' => 'right',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'offer_delivery',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'delivery_time_interval' => [
-                    'label' => 'lang:igniter.local::default.label_delivery_time_interval',
-                    'accordion' => 'lang:igniter.local::default.text_tab_delivery_order',
-                    'default' => 15,
-                    'type' => 'number',
-                    'span' => 'left',
-                    'comment' => 'lang:igniter.local::default.help_delivery_time_interval',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'offer_delivery',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'future_orders[delivery_days]' => [
-                    'label' => 'lang:igniter.local::default.label_future_delivery_days',
-                    'accordion' => 'lang:igniter.local::default.text_tab_delivery_order',
-                    'type' => 'number',
-                    'default' => 5,
-                    'span' => 'right',
-                    'comment' => 'lang:igniter.local::default.help_future_delivery_days',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'future_orders[enable_delivery]',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'delivery_lead_time' => [
-                    'label' => 'lang:igniter.local::default.label_delivery_lead_time',
-                    'accordion' => 'lang:igniter.local::default.text_tab_delivery_order',
-                    'default' => 25,
-                    'type' => 'number',
-                    'span' => 'left',
-                    'comment' => 'lang:igniter.local::default.help_delivery_lead_time',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'offer_delivery',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'delivery_time_restriction' => [
-                    'label' => 'lang:igniter.local::default.label_delivery_time_restriction',
-                    'accordion' => 'lang:igniter.local::default.text_tab_delivery_order',
-                    'type' => 'radiotoggle',
-                    'span' => 'right',
-                    'comment' => 'lang:igniter.local::default.help_delivery_time_restriction',
-                    'options' => [
-                        'lang:admin::lang.text_none',
-                        'lang:admin::lang.locations.text_asap_only',
-                        'lang:admin::lang.locations.text_later_only',
-                    ],
-                ],
-                'delivery_cancellation_timeout' => [
-                    'label' => 'lang:igniter.local::default.label_delivery_cancellation_timeout',
-                    'accordion' => 'lang:igniter.local::default.text_tab_delivery_order',
-                    'type' => 'number',
-                    'span' => 'left',
-                    'default' => 0,
-                    'comment' => 'lang:igniter.local::default.help_delivery_cancellation_timeout',
-                ],
-                'delivery_add_lead_time' => [
-                    'label' => 'lang:igniter.local::default.label_delivery_add_lead_time',
-                    'accordion' => 'lang:igniter.local::default.text_tab_delivery_order',
-                    'type' => 'switch',
-                    'span' => 'right',
-                    'default' => 0,
-                    'comment' => 'lang:igniter.local::default.help_delivery_add_lead_time',
-                ],
-
-                'offer_collection' => [
-                    'label' => 'lang:igniter.local::default.label_offer_collection',
-                    'accordion' => 'lang:igniter.local::default.text_tab_collection_order',
-                    'default' => 1,
-                    'type' => 'switch',
-                    'span' => 'left',
-                ],
-                'future_orders[enable_collection]' => [
-                    'label' => 'lang:igniter.local::default.label_future_collection_order',
-                    'accordion' => 'lang:igniter.local::default.text_tab_collection_order',
-                    'type' => 'switch',
-                    'span' => 'right',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'offer_collection',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'collection_time_interval' => [
-                    'label' => 'lang:igniter.local::default.label_collection_time_interval',
-                    'accordion' => 'lang:igniter.local::default.text_tab_collection_order',
-                    'default' => 15,
-                    'type' => 'number',
-                    'span' => 'left',
-                    'comment' => 'lang:igniter.local::default.help_collection_time_interval',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'offer_collection',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'future_orders[collection_days]' => [
-                    'label' => 'lang:igniter.local::default.label_future_collection_days',
-                    'accordion' => 'lang:igniter.local::default.text_tab_collection_order',
-                    'type' => 'number',
-                    'default' => 5,
-                    'span' => 'right',
-                    'comment' => 'lang:igniter.local::default.help_future_collection_days',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'future_orders[enable_collection]',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'collection_lead_time' => [
-                    'label' => 'lang:igniter.local::default.label_collection_lead_time',
-                    'accordion' => 'lang:igniter.local::default.text_tab_collection_order',
-                    'default' => 25,
-                    'type' => 'number',
-                    'span' => 'left',
-                    'comment' => 'lang:igniter.local::default.help_collection_lead_time',
-                    'trigger' => [
-                        'action' => 'enable',
-                        'field' => 'offer_collection',
-                        'condition' => 'checked',
-                    ],
-                ],
-                'collection_time_restriction' => [
-                    'label' => 'lang:igniter.local::default.label_collection_time_restriction',
-                    'accordion' => 'lang:igniter.local::default.text_tab_collection_order',
-                    'type' => 'radiotoggle',
-                    'span' => 'right',
-                    'comment' => 'lang:igniter.local::default.help_collection_time_restriction',
-                    'options' => [
-                        'lang:admin::lang.text_none',
-                        'lang:admin::lang.locations.text_asap_only',
-                        'lang:admin::lang.locations.text_later_only',
-                    ],
-                ],
-                'collection_cancellation_timeout' => [
-                    'label' => 'lang:igniter.local::default.label_collection_cancellation_timeout',
-                    'accordion' => 'lang:igniter.local::default.text_tab_collection_order',
-                    'type' => 'number',
-                    'span' => 'left',
-                    'default' => 0,
-                    'comment' => 'lang:igniter.local::default.help_collection_cancellation_timeout',
-                ],
-                'collection_add_lead_time' => [
-                    'label' => 'lang:igniter.local::default.label_collection_add_lead_time',
-                    'accordion' => 'lang:igniter.local::default.text_tab_collection_order',
-                    'type' => 'switch',
-                    'span' => 'right',
-                    'default' => 0,
-                    'comment' => 'lang:igniter.local::default.help_collection_add_lead_time',
-                ],
-            ];
+        AdminMenu::registerCallback(function (Navigation $manager) {
+            // Change nav menu if single location mode is activated
+            if (AdminLocationFacade::check()) {
+                $manager->mergeNavItem('locations', [
+                    'href' => admin_url('locations/settings'),
+                    'title' => lang('igniter.local::default.text_form_name'),
+                ], 'restaurant');
+            }
         });
+    }
 
-        Event::listen('system.formRequest.extendValidator', function ($formRequest, $dataHolder) {
-            if (!$formRequest instanceof \Igniter\Admin\Requests\Location)
+    protected function registerLocationsMainMenuItems()
+    {
+        AdminMenu::registerCallback(function (Navigation $manager) {
+            if (AdminLocationFacade::listLocations()->isEmpty()) {
                 return;
+            }
 
-            $dataHolder->attributes = array_merge($dataHolder->attributes, [
-                'options.limit_orders' => lang('igniter.local::default.label_limit_orders'),
-                'options.limit_orders_count' => lang('igniter.local::default.label_limit_orders_count'),
-                'options.offer_delivery' => lang('igniter.local::default.label_offer_delivery'),
-                'options.offer_collection' => lang('igniter.local::default.label_offer_collection'),
-                'options.offer_reservation' => lang('igniter.local::default.label_offer_collection'),
-                'options.delivery_time_interval' => lang('igniter.local::default.label_delivery_time_interval'),
-                'options.collection_time_interval' => lang('igniter.local::default.label_collection_time_interval'),
-                'options.delivery_lead_time' => lang('igniter.local::default.label_delivery_lead_time'),
-                'options.collection_lead_time' => lang('igniter.local::default.label_collection_lead_time'),
-                'options.future_orders.enable_delivery' => lang('igniter.local::default.label_future_delivery_order'),
-                'options.future_orders.enable_collection' => lang('igniter.local::default.label_future_collection_order'),
-                'options.future_orders.delivery_days' => lang('igniter.local::default.label_future_delivery_days'),
-                'options.future_orders.collection_days' => lang('igniter.local::default.label_future_collection_days'),
-                'options.delivery_time_restriction' => lang('igniter.local::default.label_delivery_time_restriction'),
-                'options.collection_time_restriction' => lang('igniter.local::default.label_collection_time_restriction'),
-                'options.delivery_cancellation_timeout' => lang('igniter.local::default.label_delivery_cancellation_timeout'),
-                'options.collection_cancellation_timeout' => lang('igniter.local::default.label_collection_cancellation_timeout'),
-            ]);
-
-            $dataHolder->rules = array_merge($dataHolder->rules, [
-                'options.limit_orders' => ['boolean'],
-                'options.limit_orders_count' => ['integer', 'min:1', 'max:999'],
-                'options.offer_delivery' => ['boolean'],
-                'options.offer_collection' => ['boolean'],
-                'options.offer_reservation' => ['boolean'],
-                'options.delivery_time_interval' => ['integer', 'min:5'],
-                'options.collection_time_interval' => ['integer', 'min:5'],
-                'options.delivery_lead_time' => ['integer', 'min:5'],
-                'options.collection_lead_time' => ['integer', 'min:5'],
-                'options.future_orders.enable_delivery' => ['boolean'],
-                'options.future_orders.enable_collection' => ['boolean'],
-                'options.future_orders.delivery_days' => ['integer'],
-                'options.future_orders.collection_days' => ['integer'],
-                'options.delivery_time_restriction' => ['nullable', 'integer', 'max:2'],
-                'options.collection_time_restriction' => ['nullable', 'integer', 'max:2'],
-                'options.delivery_cancellation_timeout' => ['integer', 'min:0', 'max:999'],
-                'options.collection_cancellation_timeout' => ['integer', 'min:0', 'max:999'],
+            $manager->registerMainItems([
+                'locations' => [
+                    'type' => 'partial',
+                    'path' => 'locations/picker',
+                    'priority' => 15,
+                    'options' => [\Igniter\Local\Classes\AdminLocation::class, 'listLocationsForMainMenuPicker'],
+                ],
             ]);
         });
     }

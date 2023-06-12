@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\Classes;
 
-use Igniter\Flame\Location\Contracts\AreaInterface;
+use Igniter\Local\Contracts\AreaInterface;
 use Igniter\Local\Facades\Location;
 
 /**

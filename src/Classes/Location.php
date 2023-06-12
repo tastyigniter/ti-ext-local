@@ -3,13 +3,12 @@
 namespace Igniter\Local\Classes;
 
 use Carbon\Carbon;
-use Igniter\Admin\Facades\AdminAuth;
-use Igniter\Admin\Models\Location as LocationModel;
-use Igniter\Admin\Models\LocationArea;
 use Igniter\Flame\Geolite\Model\Distance;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
-use Igniter\Flame\Location\Contracts\AreaInterface;
-use Igniter\Flame\Location\Manager;
+use Igniter\Local\Contracts\AreaInterface;
+use Igniter\Local\Models\Location as LocationModel;
+use Igniter\Local\Models\LocationArea;
+use Igniter\User\Facades\AdminAuth;
 
 /**
  * Location Class

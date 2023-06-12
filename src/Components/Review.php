@@ -9,9 +9,9 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\Review as ReviewModel;
 use Igniter\Local\Models\ReviewSettings;
-use Igniter\Main\Facades\Auth;
 use Igniter\Main\Traits\UsesPage;
 use Igniter\Reservation\Classes\BookingManager;
+use Igniter\User\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class Review extends \Igniter\System\Classes\BaseComponent

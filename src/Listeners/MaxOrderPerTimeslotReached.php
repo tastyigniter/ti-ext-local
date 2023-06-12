@@ -3,10 +3,10 @@
 namespace Igniter\Local\Listeners;
 
 use Carbon\Carbon;
-use Igniter\Admin\Models\Location;
-use Igniter\Admin\Models\Order;
+use Igniter\Cart\Models\Order;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Facades\Location as LocationFacade;
+use Igniter\Local\Models\Location;
 use Illuminate\Contracts\Events\Dispatcher;
 
 class MaxOrderPerTimeslotReached
