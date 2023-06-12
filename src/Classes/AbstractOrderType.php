@@ -2,7 +2,6 @@
 
 namespace Igniter\Local\Classes;
 
-use Igniter\Flame\Location\WorkingSchedule;
 use Igniter\Local\Contracts\OrderTypeInterface;
 
 abstract class AbstractOrderType implements OrderTypeInterface
@@ -12,7 +11,7 @@ abstract class AbstractOrderType implements OrderTypeInterface
     public const LATER_ONLY = 2;
 
     /**
-     * @var \Igniter\Admin\Models\Location
+     * @var \Igniter\Local\Models\Location
      */
     protected $model;
 
@@ -23,7 +22,7 @@ abstract class AbstractOrderType implements OrderTypeInterface
     protected $name;
 
     /**
-     * @var \Igniter\Flame\Location\WorkingSchedule
+     * @var \Igniter\Local\Classes\WorkingSchedule
      */
     protected $schedule;
 

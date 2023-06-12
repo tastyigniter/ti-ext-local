@@ -25,16 +25,16 @@ return new class extends Migration
     protected function updateMorphsOnReviews()
     {
         if (DB::table('igniter_reviews')
-            ->where('sale_type', \Igniter\Admin\Models\Order::class)
-            ->orWhere('sale_type', \Igniter\Admin\Models\Reservation::class)
+            ->where('sale_type', \Igniter\Cart\Models\Order::class)
+            ->orWhere('sale_type', \Igniter\Reservation\Models\Reservation::class)
             ->count()
         ) {
             return;
         }
 
         $morphs = [
-            'order' => \Igniter\Admin\Models\Order::class,
-            'reservation' => \Igniter\Admin\Models\Reservation::class,
+            'order' => \Igniter\Cart\Models\Order::class,
+            'reservation' => \Igniter\Reservation\Models\Reservation::class,
         ];
 
         DB::table('igniter_reviews')->get()->each(function ($model) use ($morphs) {

@@ -2,10 +2,10 @@
 
 namespace Igniter\Local\CartConditions;
 
-use Igniter\Admin\Models\Location as LocationModel;
 use Igniter\Cart\CartCondition;
 use Igniter\Cart\Facades\Cart;
 use Igniter\Local\Facades\Location;
+use Igniter\Local\Models\Location as LocationModel;
 
 class Delivery extends CartCondition
 {

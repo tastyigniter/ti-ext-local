@@ -3,11 +3,11 @@
 namespace Igniter\Local\Components;
 
 use Exception;
-use Igniter\Admin\Models\Address;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Facades\Location;
-use Igniter\Main\Facades\Auth;
-use Igniter\Main\Models\Customer;
+use Igniter\User\Facades\Auth;
+use Igniter\User\Models\Address;
+use Igniter\User\Models\Customer;
 
 class Search extends \Igniter\System\Classes\BaseComponent
 {

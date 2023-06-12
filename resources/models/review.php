@@ -10,7 +10,7 @@ $config['list']['filter'] = [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'selectlist',
             'scope' => 'whereHasLocation',
-            'modelClass' => \Igniter\Admin\Models\Location::class,
+            'modelClass' => \Igniter\Local\Models\Location::class,
             'nameFrom' => 'location_name',
             'locationAware' => true,
         ],

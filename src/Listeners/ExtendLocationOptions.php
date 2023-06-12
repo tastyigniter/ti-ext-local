@@ -8,14 +8,14 @@ class ExtendLocationOptions
 {
     public function subscribe(Dispatcher $dispatcher)
     {
-        $dispatcher->listen('admin.locations.defineOptionsFormFields', __CLASS__.'@fields');
+        $dispatcher->listen('admin.location.defineOptionsFormFields', __CLASS__.'@fields');
 
         $dispatcher->listen('system.formRequest.extendValidator', __CLASS__.'@extendValidator');
     }
 
     public function extendValidator($formRequest, $dataHolder)
     {
-        if (!$formRequest instanceof \Igniter\Admin\Requests\LocationRequest) {
+        if (!$formRequest instanceof \Igniter\Local\Requests\LocationRequest) {
             return;
         }
 
@@ -29,7 +29,7 @@ class ExtendLocationOptions
         return [
             'limit_orders' => [
                 'label' => 'lang:igniter.local::default.label_limit_orders',
-                'accordion' => 'lang:admin::lang.locations.text_tab_general_options',
+                'accordion' => 'lang:igniter.local::default.text_tab_general_options',
                 'type' => 'switch',
                 'default' => 0,
                 'comment' => 'lang:igniter.local::default.help_limit_orders',
@@ -37,7 +37,7 @@ class ExtendLocationOptions
             ],
             'limit_orders_count' => [
                 'label' => 'lang:igniter.local::default.label_limit_orders_count',
-                'accordion' => 'lang:admin::lang.locations.text_tab_general_options',
+                'accordion' => 'lang:igniter.local::default.text_tab_general_options',
                 'type' => 'number',
                 'default' => 50,
                 'span' => 'right',
@@ -103,8 +103,8 @@ class ExtendLocationOptions
                 'comment' => 'lang:igniter.local::default.help_delivery_time_restriction',
                 'options' => [
                     'lang:admin::lang.text_none',
-                    'lang:admin::lang.locations.text_asap_only',
-                    'lang:admin::lang.locations.text_later_only',
+                    'lang:igniter.local::default.text_asap_only',
+                    'lang:igniter.local::default.text_later_only',
                 ],
                 'trigger' => [
                     'action' => 'enable',
@@ -231,8 +231,8 @@ class ExtendLocationOptions
                 'comment' => 'lang:igniter.local::default.help_collection_time_restriction',
                 'options' => [
                     'lang:admin::lang.text_none',
-                    'lang:admin::lang.locations.text_asap_only',
-                    'lang:admin::lang.locations.text_later_only',
+                    'lang:igniter.local::default.text_asap_only',
+                    'lang:igniter.local::default.text_later_only',
                 ],
                 'trigger' => [
                     'action' => 'disable',

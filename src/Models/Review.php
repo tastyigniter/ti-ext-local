@@ -2,8 +2,8 @@
 
 namespace Igniter\Local\Models;
 
-use Igniter\Admin\Traits\Locationable;
 use Igniter\Flame\Database\Model;
+use Igniter\Local\Models\Concerns\Locationable;
 use Igniter\System\Models\Concerns\Switchable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -47,8 +47,8 @@ class Review extends Model
 
     public $relation = [
         'belongsTo' => [
-            'location' => [\Igniter\Admin\Models\Location::class, 'scope' => 'isEnabled'],
-            'customer' => \Igniter\Main\Models\Customer::class,
+            'location' => [\Igniter\Local\Models\Location::class, 'scope' => 'isEnabled'],
+            'customer' => \Igniter\User\Models\Customer::class,
         ],
         'morphTo' => [
             'reviewable' => ['name' => 'sale'],
@@ -63,8 +63,8 @@ class Review extends Model
     ];
 
     public static $relatedSaleTypes = [
-        'orders' => \Igniter\Admin\Models\Order::class,
-        'reservations' => \Igniter\Admin\Models\Reservation::class,
+        'orders' => \Igniter\Cart\Models\Order::class,
+        'reservations' => \Igniter\Reservation\Models\Reservation::class,
     ];
 
     public static $ratingScoreCache = [];

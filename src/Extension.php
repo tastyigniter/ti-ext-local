@@ -2,34 +2,62 @@
 
 namespace Igniter\Local;
 
+use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
-use Igniter\Admin\Models\Location as LocationModel;
-use Igniter\Admin\Models\LocationArea;
-use Igniter\Admin\Models\Order;
-use Igniter\Admin\Models\Reservation;
+use Igniter\Admin\Facades\AdminMenu;
+use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Igniter;
+use Igniter\Local\Classes\AdminLocation;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Classes\OrderTypes;
+use Igniter\Local\Facades\AdminLocation as AdminLocationFacade;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\ExtendLocationOptions;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
+use Igniter\Local\Models\Location as LocationModel;
+use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
 use Igniter\Local\Models\ReviewSettings;
-use Igniter\Main\Facades\Auth;
+use Igniter\Local\Models\Scopes\LocationScope;
+use Igniter\Local\Subscribers\DefineOptionsFormFieldsSubscriber;
+use Igniter\Reservation\Models\Reservation;
+use Igniter\User\Facades\Auth;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
 class Extension extends \Igniter\System\Classes\BaseExtension
 {
+    protected array $scopes = [
+        LocationModel::class => LocationScope::class,
+    ];
+
+    protected $subscribe = [
+        DefineOptionsFormFieldsSubscriber::class,
+    ];
+
+    protected array $morphMap = [
+        'location_areas' => \Igniter\Local\Models\LocationArea::class,
+        'locations' => \Igniter\Local\Models\Location::class,
+        'working_hours' => \Igniter\Local\Models\WorkingHour::class,
+    ];
+
     public function register()
     {
+        parent::register();
+
         $this->app->singleton('location', Location::class);
+        $this->app->singleton('admin.location', AdminLocation::class);
         $this->app->singleton(OrderTypes::class);
 
         $aliasLoader = AliasLoader::getInstance();
-        $aliasLoader->alias('Location', Facades\Location::class);
+        $aliasLoader->alias('Location', LocationFacade::class);
+        $aliasLoader->alias('AdminLocation', AdminLocationFacade::class);
+
+        Route::pushMiddlewareToGroup('igniter', \Igniter\Local\Http\Middleware\CheckLocation::class);
     }
 
     public function boot()
@@ -37,8 +65,8 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         Event::subscribe(ExtendLocationOptions::class);
         Event::subscribe(MaxOrderPerTimeslotReached::class);
 
-        Event::listen('router.beforeRoute', function ($url, $router) {
-            View::share('showReviews', (bool)ReviewSettings::get('allow_reviews', false));
+        View::share('showReviews', function () {
+            return (bool)ReviewSettings::get('allow_reviews', false);
         });
 
         $this->bindRememberLocationAreaEvents();
@@ -46,6 +74,11 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();
         $this->extendDashboardChartsDatasets();
+
+        if (Igniter::runningInAdmin()) {
+            $this->replaceLocationsNavMenuItem();
+            $this->registerLocationsMainMenuItems();
+        }
     }
 
     public function registerAutomationRules()
@@ -111,16 +144,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 'name' => 'lang:igniter.local::default.search.component_title',
                 'description' => 'lang:igniter.local::default.search.component_desc',
             ],
-            \Igniter\Local\Components\Menu::class => [
-                'code' => 'localMenu',
-                'name' => 'lang:igniter.local::default.menu.component_title',
-                'description' => 'lang:igniter.local::default.menu.component_desc',
-            ],
-            \Igniter\Local\Components\Categories::class => [
-                'code' => 'categories',
-                'name' => 'lang:igniter.local::default.categories.component_title',
-                'description' => 'lang:igniter.local::default.categories.component_desc',
-            ],
             \Igniter\Local\Components\Review::class => [
                 'code' => 'localReview',
                 'name' => 'lang:igniter.local::default.review.component_title',
@@ -144,26 +167,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    public function registerImportExport()
-    {
-        return [
-            'import' => [
-                'menus' => [
-                    'label' => 'Import Menu Items',
-                    'model' => \Igniter\Local\Models\MenuImport::class,
-                    'configFile' => '$/igniter/local/models/config/menuimport',
-                ],
-            ],
-            'export' => [
-                'menus' => [
-                    'label' => 'Export Menu Items',
-                    'model' => \Igniter\Local\Models\MenuExport::class,
-                    'configFile' => '$/igniter/local/models/config/menuexport',
-                ],
-            ],
-        ];
-    }
-
     public function registerMailTemplates()
     {
         return [
@@ -174,6 +177,17 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function registerNavigation()
     {
         return [
+            'restaurant' => [
+                'child' => [
+                    'locations' => [
+                        'priority' => 10,
+                        'class' => 'locations',
+                        'href' => admin_url('locations'),
+                        'title' => lang('igniter.local::default.text_side_menu_location'),
+                        'permission' => 'Admin.Locations',
+                    ],
+                ],
+            ],
             'marketing' => [
                 'child' => [
                     'reviews' => [
@@ -191,9 +205,13 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function registerPermissions()
     {
         return [
+            'Admin.Locations' => [
+                'label' => 'lang:igniter.local::default.locations_permissions',
+                'group' => 'location',
+            ],
             'Admin.Reviews' => [
                 'description' => 'lang:igniter.local::default.reviews.permissions',
-                'group' => 'module',
+                'group' => 'location',
             ],
         ];
     }
@@ -218,6 +236,18 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 'label' => 'Star Rating',
                 'code' => 'starrating',
             ],
+            \Igniter\Local\FormWidgets\MapArea::class => [
+                'label' => 'Map Area',
+                'code' => 'maparea',
+            ],
+            \Igniter\Local\FormWidgets\MapView::class => [
+                'label' => 'Map View',
+                'code' => 'mapview',
+            ],
+            \Igniter\Local\FormWidgets\ScheduleEditor::class => [
+                'label' => 'Schedule Editor',
+                'code' => 'scheduleeditor',
+            ],
         ];
     }
 
@@ -231,6 +261,20 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             \Igniter\Local\ScheduleTypes\Collection::class => [
                 'code' => LocationModel::COLLECTION,
                 'name' => 'lang:igniter.local::default.text_collection',
+            ],
+        ];
+    }
+
+    public function registerOnboardingSteps()
+    {
+        return [
+            'igniter.local::locations' => [
+                'label' => 'igniter.local::default.onboarding_locations',
+                'description' => 'igniter.local::default.help_onboarding_locations',
+                'icon' => 'fa-store',
+                'url' => admin_url('locations'),
+                'priority' => 15,
+                'complete' => [\Igniter\Local\Models\Location::class, 'onboardingIsComplete'],
             ],
         ];
     }
@@ -340,5 +384,36 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $customer->update([
             'last_location_area' => json_encode($lastArea),
         ]);
+    }
+
+    protected function replaceLocationsNavMenuItem()
+    {
+        AdminMenu::registerCallback(function (Navigation $manager) {
+            // Change nav menu if single location mode is activated
+            if (AdminLocationFacade::check()) {
+                $manager->mergeNavItem('locations', [
+                    'href' => admin_url('locations/settings'),
+                    'title' => lang('igniter.local::default.text_form_name'),
+                ], 'restaurant');
+            }
+        });
+    }
+
+    protected function registerLocationsMainMenuItems()
+    {
+        AdminMenu::registerCallback(function (Navigation $manager) {
+            if (AdminLocationFacade::listLocations()->isEmpty()) {
+                return;
+            }
+
+            $manager->registerMainItems([
+                'locations' => [
+                    'type' => 'partial',
+                    'path' => 'locations/picker',
+                    'priority' => 15,
+                    'options' => [\Igniter\Local\Classes\AdminLocation::class, 'listLocationsForMainMenuPicker'],
+                ],
+            ]);
+        });
     }
 }
