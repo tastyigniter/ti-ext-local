@@ -80,10 +80,6 @@ class Location extends Model implements LocationInterface
         'belongsTo' => [
             'country' => [\Igniter\System\Models\Country::class, 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
-        'morphedByMany' => [
-            'users' => [\Igniter\User\Models\User::class, 'name' => 'locationable'],
-            'tables' => [\Igniter\Reservation\Models\Table::class, 'name' => 'locationable'],
-        ],
     ];
 
     protected $purgeable = ['options'];
@@ -224,7 +220,7 @@ class Location extends Model implements LocationInterface
         return collect($result);
     }
 
-    public function getDefaultableName()
+    public function defaultableName(): string
     {
         return $this->location_name;
     }

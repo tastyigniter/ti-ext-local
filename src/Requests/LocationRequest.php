@@ -44,11 +44,8 @@ class LocationRequest extends FormRequest
             'location_lng' => ['sometimes', 'numeric'],
             'description' => ['max:3028'],
             'location_status' => ['boolean'],
+            'is_default' => ['boolean'],
             'permalink_slug' => ['alpha_dash', 'max:255'],
-            'options.gallery.title' => ['string', 'max:255'],
-            'options.gallery.description' => ['string', 'max:255'],
-            'delivery_areas' => ['array'],
-            'working_hours' => ['array'],
         ];
     }
 }
