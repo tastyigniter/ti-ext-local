@@ -35,6 +35,8 @@ return [
     'text_multi' => 'Multi',
     'text_at' => 'at ',
     'text_starts' => ' starts %s',
+    'text_select_location' => 'Select a location',
+    'text_add_location' => 'New location',
     'text_condition_all_orders' => '{amount} on all orders',
     'text_condition_above_total' => '{amount} above {total}',
     'text_condition_below_total' => '{amount} below {total}',
@@ -191,8 +193,7 @@ return [
     'text_settings' => 'Review Settings',
     'text_settings_description' => 'Manage local review settings',
 
-    'text_title' => 'Locations',
-    'text_form_name' => 'Location',
+    'text_form_name' => 'Settings',
     'text_tab_general' => 'Details',
     'text_tab_schedules' => 'Schedules',
     'text_tab_options' => 'Options',
@@ -392,4 +393,16 @@ return [
         'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
         'error_not_found_in_reservation' => 'The sale ID entered can not be found in reservations',
     ],
+
+    'picker' => [
+        'text_form_name' => 'Location',
+        'text_new_location' => 'New Location',
+        'text_edit_location' => 'Edit Location',
+
+        'text_location_not_found' => 'No location selected',
+        'help_location_not_found' => 'To access this page, you must first select a location from the location picker.',
+        'alert_location_required' => 'Please select a location',
+        'alert_location_not_found' => 'Selected location could not be found',
+        'alert_location_not_allowed' => 'You do not have permission to view this location',
+    ]
 ];

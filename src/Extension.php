@@ -2,6 +2,7 @@
 
 namespace Igniter\Local;
 
+use Igniter\Admin\Classes\MainMenuItem;
 use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
 use Igniter\Admin\Facades\AdminMenu;
@@ -15,6 +16,7 @@ use Igniter\Local\Facades\AdminLocation as AdminLocationFacade;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\ExtendLocationOptions;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
+use Igniter\Local\MainMenuWidgets\LocationPicker;
 use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
@@ -402,17 +404,13 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     protected function registerLocationsMainMenuItems()
     {
         AdminMenu::registerCallback(function (Navigation $manager) {
-            if (AdminLocationFacade::listLocations()->isEmpty()) {
-                return;
-            }
-
             $manager->registerMainItems([
-                'locations' => [
-                    'type' => 'partial',
-                    'path' => 'locations/picker',
-                    'priority' => 15,
-                    'options' => [\Igniter\Local\Classes\AdminLocation::class, 'listLocationsForMainMenuPicker'],
-                ],
+                MainMenuItem::widget('locations', LocationPicker::class)
+                    ->priority(0)
+                    ->permission('Admin.Locations')
+                    ->mergeConfig([
+                        'form' => 'igniter.local::/models/location',
+                    ]),
             ]);
         });
     }
