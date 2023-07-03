@@ -42,7 +42,7 @@ class MaxOrderPerTimeslotReached
     protected function execute($timeslot, $orderType)
     {
         $locationModel = LocationFacade::current();
-        if (!(bool)$locationModel->getOption('limit_orders')) {
+        if (!(bool)$locationModel->getSettings('checkout.limit_orders')) {
             return;
         }
 
@@ -60,7 +60,7 @@ class MaxOrderPerTimeslotReached
             return $orderTime->between($startTime, $endTime);
         })->count();
 
-        return $orderCount >= (int)$locationModel->getOption('limit_orders_count', 50);
+        return $orderCount >= (int)$locationModel->getSettings('checkout.limit_orders_count', 50);
     }
 
     protected function getOrders($timeslot)

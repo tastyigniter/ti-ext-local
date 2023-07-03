@@ -36,7 +36,7 @@ trait HasDeliveryAreas
 
     protected function geocodeAddressOnSave()
     {
-        if (!array_get($this->options, 'auto_lat_lng', true)) {
+        if (!$this->is_auto_lat_lng) {
             return;
         }
 

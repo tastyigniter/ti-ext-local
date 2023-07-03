@@ -17,9 +17,7 @@ class LocationFactory extends Factory
             'location_country_id' => $this->faker->numberBetween(1, 200),
             'location_lat' => $this->faker->latitude,
             'location_lng' => $this->faker->longitude,
-            'options' => [
-                'auto_lat_lng' => false,
-            ],
+            'is_auto_lat_lng' => false,
         ];
     }
 }

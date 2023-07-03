@@ -4,8 +4,6 @@ return [
     'text_tab_texts' => 'Text',
     'text_info_heading' => 'More info about %s local restaurant',
     'text_gallery_heading' => 'Gallery of %s',
-    'text_tab_delivery_order' => 'Delivery options',
-    'text_tab_collection_order' => 'Pick-up options',
 
     'text_find' => 'Find',
     'text_order_summary' => 'Find a restaurant near you',
@@ -200,6 +198,7 @@ return [
     'text_tab_general_options' => 'General options',
     'text_tab_delivery' => 'Delivery Areas',
     'text_tab_gallery' => 'Gallery',
+    'text_tab_more' => 'More...',
     'text_tab_title_address' => 'Address',
     'text_empty' => 'There are no locations available.',
     'text_24_7' => '24/7',
@@ -284,6 +283,7 @@ return [
     'alert_missing_map_center' => 'Map is missing center coordinates, please enter an address then click save.',
     'alert_missing_map_config' => 'Missing Google Maps Javascript Library, please provide your maps api key on the general system settings page.',
     'alert_invalid_area' => 'Invalid area selected.',
+    'alert_settings_not_loaded' => 'Location settings not loaded.',
     'alert_schedule_not_loaded' => 'Schedule not loaded.',
     'alert_invalid_schedule_type' => "Defined parameter '%s' is not a valid working type.",
 
@@ -404,5 +404,5 @@ return [
         'alert_location_required' => 'Please select a location',
         'alert_location_not_found' => 'Selected location could not be found',
         'alert_location_not_allowed' => 'You do not have permission to view this location',
-    ]
+    ],
 ];

@@ -22,7 +22,6 @@ use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Local\Models\Scopes\LocationScope;
-use Igniter\Local\Subscribers\DefineOptionsFormFieldsSubscriber;
 use Igniter\Reservation\Models\Reservation;
 use Igniter\User\Facades\Auth;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -38,7 +37,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     ];
 
     protected $subscribe = [
-        DefineOptionsFormFieldsSubscriber::class,
+        MaxOrderPerTimeslotReached::class,
     ];
 
     protected array $morphMap = [
@@ -47,13 +46,16 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         'working_hours' => \Igniter\Local\Models\WorkingHour::class,
     ];
 
+    public $singletons = [
+        OrderTypes::class,
+    ];
+
     public function register()
     {
         parent::register();
 
         $this->app->singleton('location', Location::class);
         $this->app->singleton('admin.location', AdminLocation::class);
-        $this->app->singleton(OrderTypes::class);
 
         $aliasLoader = AliasLoader::getInstance();
         $aliasLoader->alias('Location', LocationFacade::class);
@@ -64,9 +66,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     public function boot()
     {
-        Event::subscribe(ExtendLocationOptions::class);
-        Event::subscribe(MaxOrderPerTimeslotReached::class);
-
         View::share('showReviews', function () {
             return (bool)ReviewSettings::get('allow_reviews', false);
         });
@@ -78,7 +77,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $this->extendDashboardChartsDatasets();
 
         if (Igniter::runningInAdmin()) {
-            $this->replaceLocationsNavMenuItem();
             $this->registerLocationsMainMenuItems();
         }
     }
@@ -181,11 +179,11 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         return [
             'restaurant' => [
                 'child' => [
-                    'locations' => [
+                    'locationsettings' => [
                         'priority' => 10,
-                        'class' => 'locations',
-                        'href' => admin_url('locations'),
-                        'title' => lang('igniter.local::default.text_side_menu_location'),
+                        'class' => 'locationsettings',
+                        'href' => admin_url('locations/settings'),
+                        'title' => lang('igniter.local::default.text_form_name'),
                         'permission' => 'Admin.Locations',
                     ],
                 ],
@@ -249,6 +247,10 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             \Igniter\Local\FormWidgets\ScheduleEditor::class => [
                 'label' => 'Schedule Editor',
                 'code' => 'scheduleeditor',
+            ],
+            \Igniter\Local\FormWidgets\SettingsEditor::class => [
+                'label' => 'Settings Editor',
+                'code' => 'settingseditor',
             ],
         ];
     }
@@ -386,19 +388,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $customer->update([
             'last_location_area' => json_encode($lastArea),
         ]);
-    }
-
-    protected function replaceLocationsNavMenuItem()
-    {
-        AdminMenu::registerCallback(function (Navigation $manager) {
-            // Change nav menu if single location mode is activated
-            if (AdminLocationFacade::check()) {
-                $manager->mergeNavItem('locations', [
-                    'href' => admin_url('locations/settings'),
-                    'title' => lang('igniter.local::default.text_form_name'),
-                ], 'restaurant');
-            }
-        });
     }
 
     protected function registerLocationsMainMenuItems()
