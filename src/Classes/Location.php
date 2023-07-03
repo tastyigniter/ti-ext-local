@@ -315,7 +315,7 @@ class Location extends Manager
             return $this->scheduleCache[$orderType];
         }
 
-        $leadMinutes = $this->model->getOption($orderType.'_add_lead_time')
+        $leadMinutes = $this->model->shouldAddLeadTime($orderType)
             ? $this->orderLeadTime() : 0;
 
         $result = $this->getOrderType($orderType)->getSchedule()->getTimeslot(
@@ -332,7 +332,7 @@ class Location extends Manager
 
     public function asapScheduleTimeslot()
     {
-        if ($this->isClosed() || (bool)$this->getModel()->getOption('limit_orders')) {
+        if ($this->isClosed() || (bool)$this->getModel()->getSettings('checkout.limit_orders')) {
             return $this->firstScheduleTimeslot();
         }
 

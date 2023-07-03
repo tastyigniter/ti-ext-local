@@ -127,7 +127,7 @@ trait HasWorkingHours
             throw new InvalidArgumentException(sprintf(lang('igniter.local::default.alert_invalid_schedule_type'), $type));
         }
 
-        $scheduleData = array_get($this->getOption('hours', []), $type, []);
+        $scheduleData = array_get($this->getSettings('hours', []), $type, []);
 
         return new ScheduleItem($type, $scheduleData);
     }
@@ -136,11 +136,8 @@ trait HasWorkingHours
     {
         $this->addOpeningHours($type, $scheduleData);
 
-        $locationHours = $this->getOption('hours');
-        array_set($locationHours, $type, $scheduleData);
-        $this->setOption('hours', $locationHours);
-
-        $this->save();
+        $locationHours = $this->findSettings('hours');
+        $locationHours->fill([$type => $scheduleData])->save();
     }
 
     /**

@@ -8,7 +8,7 @@ it('has required rule for location_name, location_email and ...', function () {
     expect('required')->toBeIn(array_get((new LocationRequest)->rules(), 'location_name'))
         ->and('required')->toBeIn(array_get((new LocationRequest)->rules(), 'location_email'))
         ->and('required')->toBeIn(array_get((new LocationRequest)->rules(), 'location_address_1'))
-        ->and('required')->toBeIn(array_get((new LocationRequest)->rules(), 'options.auto_lat_lng'));
+        ->and('required')->toBeIn(array_get((new LocationRequest)->rules(), 'is_auto_lat_lng'));
 });
 
 it('has sometimes rule for inputs', function () {

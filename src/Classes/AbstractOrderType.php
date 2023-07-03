@@ -88,7 +88,7 @@ abstract class AbstractOrderType implements OrderTypeInterface
 
     public function getScheduleRestriction(): int
     {
-        if ($this->model->getOption('limit_orders')) {
+        if ($this->model->getSettings('checkout.limit_orders')) {
             return static::LATER_ONLY;
         }
 

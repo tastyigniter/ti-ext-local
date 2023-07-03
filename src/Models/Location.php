@@ -9,10 +9,9 @@ use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Local\Contracts\LocationInterface;
 use Igniter\Local\Models\Concerns\HasDeliveryAreas;
-use Igniter\Local\Models\Concerns\HasLocationOptions;
+use Igniter\Local\Models\Concerns\HasLocationSettings;
 use Igniter\Local\Models\Concerns\HasWorkingHours;
 use Igniter\Local\Models\Concerns\LocationHelpers;
-use Igniter\PayRegister\Models\Payment;
 use Igniter\System\Models\Concerns\Defaultable;
 use Igniter\System\Models\Concerns\HasCountry;
 use Igniter\System\Models\Concerns\Switchable;
@@ -28,7 +27,7 @@ class Location extends Model implements LocationInterface
     use HasFactory;
     use HasPermalink;
     use HasMedia;
-    use HasLocationOptions;
+    use HasLocationSettings;
     use LocationHelpers;
     use Purgeable;
     use Switchable;
@@ -74,7 +73,7 @@ class Location extends Model implements LocationInterface
 
     public $relation = [
         'hasMany' => [
-            'all_options' => [\Igniter\Local\Models\LocationOption::class, 'delete' => true],
+            'settings' => [\Igniter\Local\Models\LocationSettings::class, 'delete' => true],
             'working_hours' => [\Igniter\Local\Models\WorkingHour::class, 'delete' => true],
         ],
         'belongsTo' => [
@@ -82,16 +81,16 @@ class Location extends Model implements LocationInterface
         ],
     ];
 
-    protected $purgeable = ['options'];
+    protected array $purgeable = ['options'];
 
-    public $permalinkable = [
+    public array $permalinkable = [
         'permalink_slug' => [
             'source' => 'location_name',
             'controller' => 'local',
         ],
     ];
 
-    public $mediable = [
+    public array $mediable = [
         'thumb',
         'gallery' => ['multiple' => true],
     ];
@@ -147,26 +146,6 @@ class Location extends Model implements LocationInterface
         return $this->hasMedia() ? $this->getThumb() : null;
     }
 
-    public function getDeliveryTimeAttribute($value)
-    {
-        return (int)$this->getOption('delivery_time_interval');
-    }
-
-    public function getCollectionTimeAttribute($value)
-    {
-        return (int)$this->getOption('collection_time_interval');
-    }
-
-    public function getFutureOrdersAttribute($value)
-    {
-        return (bool)$value;
-    }
-
-    public function getReservationTimeIntervalAttribute($value)
-    {
-        return (int)$this->getOption('reservation_time_interval');
-    }
-
     //
     // Helpers
     //
@@ -177,7 +156,7 @@ class Location extends Model implements LocationInterface
             $suffix = '/menus';
         }
 
-        $this->url = site_url($this->permalink_slug.$suffix);
+        $this->url = page_url($this->permalink_slug.$suffix);
     }
 
     public function hasGallery()
@@ -191,33 +170,6 @@ class Location extends Model implements LocationInterface
         $gallery['images'] = $this->getMedia('gallery');
 
         return $gallery;
-    }
-
-    public function allowGuestOrder()
-    {
-        if (($allowGuestOrder = (int)$this->getOption('guest_order', -1)) === -1) {
-            $allowGuestOrder = (int)setting('guest_order', 1);
-        }
-
-        return (bool)$allowGuestOrder;
-    }
-
-    public function listAvailablePayments()
-    {
-        $result = [];
-
-        $payments = array_get($this->options, 'payments', []);
-        $paymentGateways = Payment::listPayments();
-
-        foreach ($paymentGateways as $payment) {
-            if ($payments && !in_array($payment->code, $payments)) {
-                continue;
-            }
-
-            $result[$payment->code] = $payment;
-        }
-
-        return collect($result);
     }
 
     public function defaultableName(): string

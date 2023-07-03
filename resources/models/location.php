@@ -55,7 +55,7 @@ $config['form']['fields'] = [
         'useAttachment' => true,
         'comment' => 'lang:igniter.local::default.help_image',
     ],
-    'options[auto_lat_lng]' => [
+    'is_auto_lat_lng' => [
         'label' => 'lang:igniter.local::default.label_auto_lat_lng',
         'type' => 'switch',
         'default' => true,
@@ -83,7 +83,7 @@ $config['form']['fields'] = [
         'span' => 'left',
         'trigger' => [
             'action' => 'hide',
-            'field' => 'options[auto_lat_lng]',
+            'field' => 'is_auto_lat_lng',
             'condition' => 'checked',
         ],
     ],
@@ -93,7 +93,7 @@ $config['form']['fields'] = [
         'span' => 'right',
         'trigger' => [
             'action' => 'hide',
-            'field' => 'options[auto_lat_lng]',
+            'field' => 'is_auto_lat_lng',
             'condition' => 'checked',
         ],
     ],

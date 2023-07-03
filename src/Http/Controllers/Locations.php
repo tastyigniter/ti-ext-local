@@ -2,54 +2,27 @@
 
 namespace Igniter\Local\Http\Controllers;
 
-use Exception;
 use Igniter\Admin\Facades\AdminMenu;
+use Igniter\Admin\Widgets\Form;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Facades\AdminLocation;
-use Igniter\Local\Models\Location;
-use Igniter\Local\Models\LocationOption;
+use Illuminate\Support\Facades\Event;
 
 class Locations extends \Igniter\Admin\Classes\AdminController
 {
     public $implement = [
-        \Igniter\Admin\Http\Actions\ListController::class,
         \Igniter\Admin\Http\Actions\FormController::class,
-    ];
-
-    public $listConfig = [
-        'list' => [
-            'model' => \Igniter\Local\Models\Location::class,
-            'title' => 'lang:igniter.local::default.text_title',
-            'emptyMessage' => 'lang:igniter.local::default.text_empty',
-            'defaultSort' => ['location_id', 'DESC'],
-            'configFile' => 'location',
-        ],
+        \Igniter\Local\Http\Actions\LocationAwareController::class,
     ];
 
     public $formConfig = [
         'name' => 'lang:igniter.local::default.text_form_name',
         'model' => \Igniter\Local\Models\Location::class,
-        'request' => \Igniter\Local\Requests\LocationRequest::class,
-        'create' => [
-            'title' => 'lang:igniter::admin.form.create_title',
-            'redirect' => 'locations/edit/{location_id}',
-            'redirectClose' => 'locations',
-            'redirectNew' => 'locations/create',
-        ],
-        'edit' => [
+        'settings' => [
             'title' => 'lang:igniter::admin.form.edit_title',
-            'redirect' => 'locations/edit/{location_id}',
-            'redirectClose' => 'locations',
-            'redirectNew' => 'locations/create',
+            'redirect' => 'locations/settings',
         ],
-        'preview' => [
-            'title' => 'lang:igniter::admin.form.preview_title',
-            'redirect' => 'locations',
-        ],
-        'delete' => [
-            'redirect' => 'locations',
-        ],
-        'configFile' => 'location',
+        'configFile' => 'locationsettings',
     ];
 
     protected $requiredPermissions = 'Admin.Locations';
@@ -63,101 +36,39 @@ class Locations extends \Igniter\Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('locations', 'restaurant');
-    }
-
-    public function remap(string $action, array $params): mixed
-    {
-        if ($action != 'settings' && AdminLocation::check()) {
-            return $this->redirect('locations/settings');
-        }
-
-        return parent::remap($action, $params);
+        AdminMenu::setContext('locationsettings', 'restaurant');
     }
 
     public function settings($context = null)
     {
         if (!AdminLocation::check()) {
-            return $this->redirect('locations');
+            return $this->makeView('igniter.local::404');
         }
 
-        $this->asExtension('FormController')->edit('edit', $this->getLocationId());
-    }
+        $this->defaultView = 'edit';
 
-    public function index_onSetDefault($context = null)
-    {
-        $defaultId = post('default');
+        Event::listen('admin.form.extendFieldsBefore', function (Form $widget) {
+            if ($widget->alias !== 'form') {
+                return;
+            }
 
-        if (Location::updateDefault($defaultId)) {
-            flash()->success(sprintf(lang('igniter::admin.alert_success'), lang('igniter.local::default.alert_set_default')));
-        }
+            $widget->tabs['fields']['_more'] = [
+                'tab' => 'lang:igniter.local::default.text_tab_more',
+                'type' => 'settingseditor',
+            ];
+        });
 
-        return $this->refreshList('list');
+        $this->asExtension('FormController')->edit($context, $this->getLocationId());
     }
 
     public function settings_onSave($context = null)
     {
-        try {
-            $this->asExtension('FormController')->edit_onSave('edit', $this->getLocationId());
-
-            return $this->refresh();
-        } catch (Exception $ex) {
-            $this->handleError($ex);
-        }
-    }
-
-    public function listOverrideColumnValue($record, $column, $alias = null)
-    {
-        if ($column->type != 'button') {
-            return null;
-        }
-
-        if ($column->columnName != 'default') {
-            return null;
-        }
-
-        $attributes = $column->attributes;
-        $column->iconCssClass = 'fa fa-star-o';
-        if ($record->isDefault()) {
-            $column->iconCssClass = 'fa fa-star';
-        }
-
-        return $attributes;
-    }
-
-    public function listExtendQuery($query)
-    {
-        if (!is_null($ids = AdminLocation::getAll())) {
-            $query->whereIn('location_id', $ids);
-        }
-    }
-
-    public function formExtendQuery($query)
-    {
-        if (!is_null($ids = AdminLocation::getAll())) {
-            $query->whereIn('location_id', $ids);
-        }
-    }
-
-    public function formExtendFields($form)
-    {
-        if ($form->model->exists && $form->context != 'create') {
-            $form->addTabFields(LocationOption::getFieldsConfig());
-        }
-    }
-
-    public function getAccordionFields($fields)
-    {
-        return collect($fields)->mapToGroups(function ($field) {
-            $key = array_get($field->config, 'accordion');
-
-            return [$key => $field];
-        })->all();
+        return $this->asExtension('FormController')->edit_onSave($context, $this->getLocationId());
     }
 
     public function formAfterSave($model)
     {
-        if (post('Location.options.auto_lat_lng')) {
+        if ($model->is_auto_lat_lng) {
             if ($logs = Geocoder::getLogs()) {
                 flash()->error(implode(PHP_EOL, $logs))->important();
             }

@@ -16,9 +16,5 @@ interface LocationInterface
 
     public function getAddress();
 
-    public function hasDelivery();
-
-    public function hasCollection();
-
     public function calculateDistance(CoordinatesInterface $position);
 }
