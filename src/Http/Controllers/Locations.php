@@ -3,10 +3,8 @@
 namespace Igniter\Local\Http\Controllers;
 
 use Igniter\Admin\Facades\AdminMenu;
-use Igniter\Admin\Widgets\Form;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Facades\AdminLocation;
-use Illuminate\Support\Facades\Event;
 
 class Locations extends \Igniter\Admin\Classes\AdminController
 {
@@ -46,17 +44,6 @@ class Locations extends \Igniter\Admin\Classes\AdminController
         }
 
         $this->defaultView = 'edit';
-
-        Event::listen('admin.form.extendFieldsBefore', function (Form $widget) {
-            if ($widget->alias !== 'form') {
-                return;
-            }
-
-            $widget->tabs['fields']['_more'] = [
-                'tab' => 'lang:igniter.local::default.text_tab_more',
-                'type' => 'settingseditor',
-            ];
-        });
 
         $this->asExtension('FormController')->edit($context, $this->getLocationId());
     }

@@ -14,6 +14,10 @@ $config['form']['toolbar'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:igniter.local::default.text_tab_general',
     'fields' => [
+        '_general' => [
+            'tab' => 'lang:igniter.local::default.text_tab_general',
+            'type' => 'settingseditor',
+        ],
         '_working_hours' => [
             'tab' => 'lang:igniter.local::default.text_tab_schedules',
             'type' => 'scheduleeditor',
