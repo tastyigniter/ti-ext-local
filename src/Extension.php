@@ -6,15 +6,14 @@ use Igniter\Admin\Classes\MainMenuItem;
 use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
 use Igniter\Admin\Facades\AdminMenu;
+use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Igniter;
 use Igniter\Local\Classes\AdminLocation;
 use Igniter\Local\Classes\Location;
-use Igniter\Local\Classes\OrderTypes;
 use Igniter\Local\Facades\AdminLocation as AdminLocationFacade;
 use Igniter\Local\Facades\Location as LocationFacade;
-use Igniter\Local\Listeners\ExtendLocationOptions;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\MainMenuWidgets\LocationPicker;
 use Igniter\Local\Models\Location as LocationModel;
@@ -251,20 +250,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             \Igniter\Local\FormWidgets\SettingsEditor::class => [
                 'label' => 'Settings Editor',
                 'code' => 'settingseditor',
-            ],
-        ];
-    }
-
-    public function registerScheduleTypes()
-    {
-        return [
-            \Igniter\Local\ScheduleTypes\Delivery::class => [
-                'code' => LocationModel::DELIVERY,
-                'name' => 'lang:igniter.local::default.text_delivery',
-            ],
-            \Igniter\Local\ScheduleTypes\Collection::class => [
-                'code' => LocationModel::COLLECTION,
-                'name' => 'lang:igniter.local::default.text_collection',
             ],
         ];
     }

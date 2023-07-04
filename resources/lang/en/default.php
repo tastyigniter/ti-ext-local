@@ -18,9 +18,6 @@ return [
     'text_closed' => '<span class="text-close text-danger">CLOSED</span>',
     'text_is_closed' => '<span class="text-close text-danger">is CLOSED</span>',
     'text_opening_time' => 'Opening <b>%s</b>',
-    'text_delivery_time_info' => 'Delivery %s',
-    'text_collection_time_info' => 'Pick-up %s',
-    'text_collection_time' => 'Pick-up Time',
     'text_last_order_time' => 'Last Order Time',
     'text_payments' => 'Payments',
     'text_offer' => 'Service Offered',
@@ -46,9 +43,6 @@ return [
 
     'text_categories' => 'Categories',
     'text_all_categories' => 'All Categories',
-
-    'text_delivery_is_disabled' => 'Delivery is not available.',
-    'text_collection_is_disabled' => 'Pick-up is not available.',
 
     'text_locations_filter_title' => 'Filters',
     'text_filter_distance' => 'Distance',
@@ -192,13 +186,12 @@ return [
     'text_settings_description' => 'Manage local review settings',
 
     'text_form_name' => 'Settings',
-    'text_tab_general' => 'Details',
+    'text_tab_general' => 'General',
     'text_tab_schedules' => 'Schedules',
     'text_tab_options' => 'Options',
     'text_tab_general_options' => 'General options',
     'text_tab_delivery' => 'Delivery Areas',
     'text_tab_gallery' => 'Gallery',
-    'text_tab_more' => 'More...',
     'text_tab_title_address' => 'Address',
     'text_empty' => 'There are no locations available.',
     'text_24_7' => '24/7',

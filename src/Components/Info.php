@@ -2,9 +2,9 @@
 
 namespace Igniter\Local\Components;
 
+use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
-use Igniter\Local\Classes\OrderTypes;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\Location as LocationModel;
 

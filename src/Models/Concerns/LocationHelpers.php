@@ -3,7 +3,6 @@
 namespace Igniter\Local\Models\Concerns;
 
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
-use Igniter\Local\Classes\OrderTypes;
 
 trait LocationHelpers
 {
@@ -45,16 +44,6 @@ trait LocationHelpers
             'iso_code_3' => $country->iso_code_3,
             'format' => $country->format,
         ];
-    }
-
-    public function availableOrderTypes()
-    {
-        return resolve(OrderTypes::class)->makeOrderTypes($this);
-    }
-
-    public static function getOrderTypeOptions()
-    {
-        return collect(resolve(OrderTypes::class)->listOrderTypes())->pluck('name', 'code');
     }
 
     public function calculateDistance(CoordinatesInterface $position)
