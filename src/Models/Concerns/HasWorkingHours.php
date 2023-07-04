@@ -4,7 +4,7 @@ namespace Igniter\Local\Models\Concerns;
 
 use Carbon\Carbon;
 use Exception;
-use Igniter\Local\Classes\OrderTypes;
+use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Local\Classes\ScheduleItem;
 use Igniter\Local\Classes\WorkingSchedule;
 use Igniter\Local\Events\WorkingScheduleCreatedEvent;
