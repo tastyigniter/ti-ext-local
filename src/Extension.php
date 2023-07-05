@@ -10,9 +10,7 @@ use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Igniter;
-use Igniter\Local\Classes\AdminLocation;
 use Igniter\Local\Classes\Location;
-use Igniter\Local\Facades\AdminLocation as AdminLocationFacade;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\MainMenuWidgets\LocationPicker;
@@ -23,8 +21,8 @@ use Igniter\Local\Models\ReviewSettings;
 use Igniter\Local\Models\Scopes\LocationScope;
 use Igniter\Reservation\Models\Reservation;
 use Igniter\User\Facades\Auth;
+use Igniter\User\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -47,18 +45,16 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     public $singletons = [
         OrderTypes::class,
+        'location' => Location::class
     ];
 
     public function register()
     {
         parent::register();
 
-        $this->app->singleton('location', Location::class);
-        $this->app->singleton('admin.location', AdminLocation::class);
-
-        $aliasLoader = AliasLoader::getInstance();
-        $aliasLoader->alias('Location', LocationFacade::class);
-        $aliasLoader->alias('AdminLocation', AdminLocationFacade::class);
+        $this->callAfterResolving('location', function (Location $location) {
+            $location->setSessionKey(Igniter::runningInAdmin() ? 'admin_location' : 'location');
+        });
 
         Route::pushMiddlewareToGroup('igniter', \Igniter\Local\Http\Middleware\CheckLocation::class);
     }
@@ -74,6 +70,24 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $this->addReviewsRelationship();
         $this->addAssetsToReviewsSettingsPage();
         $this->extendDashboardChartsDatasets();
+
+        User::extend(function ($model) {
+            $model->addDynamicMethod('getAvailableLocations', function () use ($model) {
+                if ($model->locations->isEmpty() && $model->isSuperUser()) {
+                    return $model->locations()->getModel()->query()->get();
+                }
+
+                return $model->locations;
+            });
+
+            $model->addDynamicMethod('isAssignedLocation', function ($location) use ($model) {
+                if ($model->locations->isEmpty()) {
+                    return $model->isSuperUser();
+                }
+
+                return $model->locations->contains($location);
+            });
+        });
 
         if (Igniter::runningInAdmin()) {
             $this->registerLocationsMainMenuItems();
@@ -182,7 +196,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                         'priority' => 10,
                         'class' => 'locationsettings',
                         'href' => admin_url('locations/settings'),
-                        'title' => lang('igniter.local::default.text_form_name'),
+                        'title' => lang('igniter.local::default.text_settings'),
                         'permission' => 'Admin.Locations',
                     ],
                 ],

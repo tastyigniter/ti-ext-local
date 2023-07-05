@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\Http\Actions;
 
-use Igniter\Local\Facades\AdminLocation;
+use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\System\Classes\ControllerAction;
 use Illuminate\Support\Facades\Event;
 
@@ -57,7 +57,7 @@ class LocationAwareController extends ControllerAction
             return;
         }
 
-        if (is_null($ids = AdminLocation::getIdOrAll())) {
+        if (empty($ids = LocationFacade::currentOrAssigned())) {
             return;
         }
 

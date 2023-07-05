@@ -88,11 +88,6 @@ trait HasWorkingHours
         return $this->working_hours;
     }
 
-    public function loadWorkingHours()
-    {
-        traceLog('Deprecated function. Use getWorkingHours() instead.');
-    }
-
     public function newWorkingSchedule($type, $days = null)
     {
         $types = $this->availableWorkingTypes();
@@ -101,9 +96,7 @@ trait HasWorkingHours
         }
 
         if (is_null($days)) {
-            $days = $this->hasFutureOrder($type)
-                ? (int)$this->futureOrderDays($type)
-                : 0;
+            $days = $this->hasFutureOrder($type) ? (int)$this->futureOrderDays($type) : 0;
         }
 
         $schedule = WorkingSchedule::create($days,
@@ -121,15 +114,15 @@ trait HasWorkingHours
     //
     //
 
-    public function createScheduleItem($type)
+    public function createScheduleItem(string $type, ?array $scheduleData = null)
     {
-        if (is_null($type) || !in_array($type, $this->availableWorkingTypes())) {
+        if (!in_array($type, $this->availableWorkingTypes())) {
             throw new InvalidArgumentException(sprintf(lang('igniter.local::default.alert_invalid_schedule_type'), $type));
         }
 
-        $scheduleData = array_get($this->getSettings('hours', []), $type, []);
+        $scheduleData = $scheduleData ?? array_get($this->getSettings('hours', []), $type, []);
 
-        return new ScheduleItem($type, $scheduleData);
+        return ScheduleItem::create($type, $scheduleData);
     }
 
     public function updateSchedule($type, $scheduleData)
@@ -166,7 +159,7 @@ trait HasWorkingHours
 
         $this->working_hours()->where('type', $type)->delete();
 
-        $scheduleItem = new ScheduleItem($type, $data);
+        $scheduleItem = $this->createScheduleItem($type, $data);
         foreach ($scheduleItem->getHours() as $hours) {
             foreach ($hours as $hour) {
                 $this->working_hours()->create([

@@ -42,8 +42,6 @@ class WorkingHour extends Model implements WorkingHourInterface
         'closing_time' => '23:59',
     ];
 
-    public $fillable = ['location_id', 'weekday', 'opening_time', 'closing_time', 'type'];
-
     protected $casts = [
         'weekday' => 'integer',
         'opening_time' => 'time',

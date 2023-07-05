@@ -182,10 +182,8 @@ return [
     'text_mealtime' => 'Available during %s (%s - %s)',
     'text_price_form' => 'From %s',
 
-    'text_settings' => 'Review Settings',
-    'text_settings_description' => 'Manage local review settings',
-
-    'text_form_name' => 'Settings',
+    'text_form_name' => 'Location Settings',
+    'text_settings' => 'Settings',
     'text_tab_general' => 'General',
     'text_tab_schedules' => 'Schedules',
     'text_tab_options' => 'Options',
@@ -391,6 +389,7 @@ return [
         'text_form_name' => 'Location',
         'text_new_location' => 'New Location',
         'text_edit_location' => 'Edit Location',
+        'text_no_location' => 'You have no assigned location. <br> Please contact the site administrator.',
 
         'text_location_not_found' => 'No location selected',
         'help_location_not_found' => 'To access this page, you must first select a location from the location picker.',

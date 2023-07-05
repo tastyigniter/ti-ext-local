@@ -4,7 +4,6 @@ namespace Igniter\Local\Models\Concerns;
 
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Igniter;
-use Igniter\Local\Facades\AdminLocation;
 use Igniter\Local\Models\Scopes\LocationableScope;
 use Igniter\User\Facades\AdminAuth;
 
@@ -33,20 +32,6 @@ trait Locationable
         static::deleting(function (self $model) {
             $model->detachLocationsOnDelete();
         });
-    }
-
-    public function locationableScopeEnabled()
-    {
-        if ($this->locationScopeEnabled) {
-            return true;
-        }
-
-        return AdminLocation::check();
-    }
-
-    public function locationableGetUserLocation()
-    {
-        return AdminLocation::getId();
     }
 
     //
