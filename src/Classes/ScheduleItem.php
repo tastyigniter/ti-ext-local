@@ -25,17 +25,23 @@ class ScheduleItem
      */
     protected $data;
 
-    public function __construct($name, array $data = [])
+    public function __construct(string $name)
     {
         $this->name = $name;
-        $this->type = array_get($data, 'type', '24_7');
-        $this->days = array_get($data, 'days') ?: [];
-        $this->open = array_get($data, 'open', '00:00');
-        $this->close = array_get($data, 'close', '23:59');
-        $this->timesheet = $this->timesheet(array_get($data, 'timesheet', []));
-        $this->flexible = $this->flexible(array_get($data, 'flexible', []));
+    }
 
-        $this->data = $data;
+    public static function create(string $name, array $data = [])
+    {
+        $instance = resolve(static::class, ['name' => $name]);
+        $instance->data = $data;
+        $instance->type = array_get($data, 'type', '24_7');
+        $instance->days = array_get($data, 'days') ?: [];
+        $instance->open = array_get($data, 'open', '00:00');
+        $instance->close = array_get($data, 'close', '23:59');
+        $instance->timesheet = $instance->timesheet(array_get($data, 'timesheet', []));
+        $instance->flexible = $instance->flexible(array_get($data, 'flexible', []));
+
+        return $instance;
     }
 
     public function getHours()
@@ -43,20 +49,23 @@ class ScheduleItem
         $result = [];
 
         for ($day = 0; $day <= 6; $day++) {
-            if ($this->type == '24_7') {
-                $result[] = [['day' => $day, 'open' => '00:00', 'close' => '23:59', 'status' => 1]];
-            } elseif ($this->type == 'daily') {
-                $result[] = [[
+            $result[] = match ($this->type) {
+                '24_7' => [[
+                    'day' => $day,
+                    'open' => '00:00',
+                    'close' => '23:59',
+                    'status' => 1
+                ]],
+                'daily' => [[
                     'day' => $day,
                     'open' => $this->open,
                     'close' => $this->close,
-                    'status' => (int)in_array($day, $this->days),
-                ]];
-            } elseif ($this->type == 'timesheet') {
-                $result[] = $this->createHours($day, $this->timesheet[$day]);
-            } elseif ($this->type == 'flexible') {
-                $result[] = $this->createHours($day, $this->flexible[$day]);
-            }
+                    'status' => (int)in_array($day, $this->days)
+                ]],
+                'timesheet' => $this->createHours($day, $this->timesheet[$day]),
+                'flexible' => $this->createHours($day, $this->flexible[$day]),
+                default => [],
+            };
         }
 
         return $result;
@@ -109,7 +118,7 @@ class ScheduleItem
         $result = [];
         foreach (WorkingHour::$weekDays as $key => $weekDay) {
             $hour = array_get($data, $key, []);
-            if (isset($hour['open']) && isset($hour['close'])) {
+            if (isset($hour['open'], $hour['close'])) {
                 $hour['hours'] = sprintf('%s-%s', $hour['open'], $hour['close']);
                 unset($hour['open'], $hour['close']);
             }

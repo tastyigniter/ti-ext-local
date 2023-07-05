@@ -44,8 +44,15 @@ class LocationableScope extends Scope
         return function (Builder $builder, $locationId) {
             $builder->withoutGlobalScope($this);
 
-            return $builder->whereHasLocation($locationId)
-                ->orDoesntHave($builder->getModel()->locationableRelationName());
+            return $builder->where(function (Builder $builder) use ($locationId) {
+                $builder->whereHasLocation($locationId);
+
+                if ($builder->getModel()->locationableIsSingleRelationType()) {
+                    return $builder->orWhereNull($builder->getModel()->getLocationableRelationObject()->getRelated()->getKeyName());
+                }
+
+                return $builder->orDoesntHave($builder->getModel()->locationableRelationName());
+            });
         };
     }
 }

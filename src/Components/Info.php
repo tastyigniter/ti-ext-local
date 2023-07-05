@@ -7,6 +7,7 @@ use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\Location as LocationModel;
+use Igniter\Local\Models\WorkingHour;
 
 class Info extends \Igniter\System\Classes\BaseComponent
 {

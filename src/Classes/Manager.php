@@ -5,7 +5,11 @@ namespace Igniter\Local\Classes;
 use Closure;
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Traits\EventEmitter;
-use Illuminate\Support\Facades\Session;
+use Igniter\Local\Contracts\LocationInterface;
+use Igniter\System\Traits\SessionMaker;
+use Igniter\User\Facades\AdminAuth;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 /**
  * Location Manager Class
@@ -13,113 +17,90 @@ use Illuminate\Support\Facades\Session;
 abstract class Manager
 {
     use EventEmitter;
+    use SessionMaker;
 
-    protected $sessionKey = 'local_info';
+    protected string $sessionKey = 'local_info';
 
-    /**
-     * @var \Igniter\Local\Contracts\LocationInterface
-     */
-    protected $model;
+    protected ?LocationInterface $model = null;
 
-    protected $defaultLocation;
+    protected string $locationModel = \Igniter\Local\Models\Location::class;
 
-    protected $locationModel = \Igniter\Local\Models\Location::class;
-
-    protected $loaded;
-
-    protected static $schedulesCache;
+    protected static array $schedulesCache = [];
 
     /**
      * The route parameter resolver callback.
-     *
-     * @var \Closure
      */
-    protected static $locationSlugResolver;
+    protected static Closure $locationSlugResolver;
 
     /**
-     * Helper to get the current location instance.
-     *
-     * @return \Igniter\Flame\Location\Manager
+     * Resolve the location from route parameter.
      */
-    public function instance()
-    {
-        return $this;
-    }
-
-    /**
-     * Resolve the location slug from route parameter.
-     *
-     * @return string
-     */
-    public function resolveLocationSlug()
+    public function resolveLocationSlug(): ?string
     {
         if (isset(static::$locationSlugResolver)) {
             return call_user_func(static::$locationSlugResolver);
         }
+
+        return request()->route('location');
     }
 
     /**
      * Set the location route parameter resolver callback.
-     *
-     * @return void
      */
     public function locationSlugResolver(Closure $resolver)
     {
         static::$locationSlugResolver = $resolver;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDefaultLocation()
+    public function check(): bool
     {
-        return $this->defaultLocation;
+        return !is_null($this->current());
     }
 
-    /**
-     * @param string $defaultLocation
-     */
-    public function setDefaultLocation($defaultLocation)
-    {
-        $this->defaultLocation = $defaultLocation;
-    }
-
-    public function getDefault()
-    {
-        return $this->getById($this->getDefaultLocation());
-    }
-
-    public function check()
-    {
-        return (bool)$this->current();
-    }
-
-    public function current()
+    public function current(): ?LocationInterface
     {
         if (!is_null($this->model)) {
             return $this->model;
         }
 
-        $model = null;
-        if ($slug = $this->resolveLocationSlug()) {
-            $model = $this->getBySlug($slug);
-        }
-
-        if (!$model) {
+        $slug = $this->resolveLocationSlug();
+        if ($slug && $model = $this->getBySlug($slug)) {
+            $this->setModel($model);
+        } else {
             $id = $this->getSession('id');
-            if (!$id || !$model = $this->getById($id)) {
-                $model = $this->getById($this->getDefaultLocation());
+            if ($id && $model = $this->getById($id)) {
+                $this->setModel($model);
             }
         }
 
-        if ($model) {
-            $this->setCurrent($model);
+        if (is_null($this->model) && is_single_location() && $defaultLocation = $this->locationModel::getDefault()) {
+            $this->setCurrent($defaultLocation);
         }
 
         return $this->model;
     }
 
-    public function setCurrent(\Igniter\Local\Contracts\LocationInterface $locationModel)
+    public function currentOrDefault(): ?LocationInterface
+    {
+        if ($model = $this->current()) {
+            return $model;
+        }
+
+        if ($defaultLocation = $this->locationModel::getDefault()) {
+            $this->setCurrent($defaultLocation);
+        }
+
+        return $defaultLocation;
+    }
+
+    public function currentOrAssigned(): array
+    {
+        return $this->check()
+            ? [$this->getId()]
+            : AdminAuth::user()->locations->pluck('location_id')->all();
+    }
+
+    public function setCurrent(LocationInterface $locationModel)
     {
         $this->setModel($locationModel);
 
@@ -128,50 +109,42 @@ abstract class Manager
         $this->fireSystemEvent('location.current.updated', [$locationModel]);
     }
 
-    public function getModel()
+    public function getModel(): ?LocationInterface
     {
-        if (is_null($this->model)) {
-            $this->current();
-        }
-
         return $this->model;
     }
 
-    public function setModel(\Igniter\Local\Contracts\LocationInterface $model)
+    public function setModel(LocationInterface $model): self
     {
         $this->model = $model;
 
         return $this;
     }
 
-    public function setModelById($id)
+    public function getId(): ?int
     {
-        $this->model = $this->getById($id);
-
-        return $this;
+        return $this->model?->getKey();
     }
 
-    public function setModelClass($className)
+    public function getName(): ?string
     {
-        $this->locationModel = $className;
+        return $this->model?->getName();
     }
 
     /**
      * Creates a new instance of the location model
      * @return \Igniter\Local\Contracts\LocationInterface
      */
-    public function createLocationModel()
+    public function createLocationModel(): LocationInterface
     {
         $class = '\\'.ltrim($this->locationModel, '\\');
-        $model = new $class();
-
-        return $model;
+        return new $class();
     }
 
     /**
      * Prepares a query derived from the location model.
      */
-    protected function createLocationModelQuery()
+    protected function createLocationModelQuery(): Builder
     {
         $model = $this->createLocationModel();
         $query = $model->newQuery();
@@ -187,20 +160,21 @@ abstract class Manager
      *
      * @return void
      */
-    public function extendLocationQuery($query)
+    public function extendLocationQuery(Builder $query)
     {
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations')) {
+            $query->IsEnabled();
+        }
     }
 
     /**
      * Retrieve a location by their unique identifier.
-     *
-     * @param mixed $identifier
-     *
-     * @return \Illuminate\Database\Eloquent\Model|\Igniter\Local\Contracts\LocationInterface|null
      */
-    public function getById($identifier)
+    public function getById(string|int $identifier): ?LocationInterface
     {
         $query = $this->createLocationModelQuery();
+
+        /** @var LocationInterface $location */
         $location = $query->find($identifier);
 
         return $location ?: null;
@@ -208,21 +182,19 @@ abstract class Manager
 
     /**
      * Retrieve a location by their unique slug.
-     *
-     * @param string $slug
-     *
-     * @return \Illuminate\Database\Eloquent\Model|\Igniter\Local\Contracts\LocationInterface|null
      */
-    public function getBySlug($slug)
+    public function getBySlug(string $slug): ?LocationInterface
     {
         $model = $this->createLocationModel();
         $query = $this->createLocationModelQuery();
+
+        /** @var LocationInterface $location */
         $location = $query->where($model->getSlugKeyName(), $slug)->first();
 
         return $location ?: null;
     }
 
-    public function searchByCoordinates(CoordinatesInterface $coordinates, $limit = 20)
+    public function searchByCoordinates(CoordinatesInterface $coordinates, int $limit = 20): Collection
     {
         $query = $this->createLocationModelQuery();
         $query->select('*')->selectDistance(
@@ -230,14 +202,10 @@ abstract class Manager
             $coordinates->getLongitude()
         );
 
-        return $query->orderBy('distance', 'asc')->whereIsEnabled()->limit($limit)->get();
+        return $query->orderBy('distance')->whereIsEnabled()->limit($limit)->get();
     }
 
-    /**
-     * @param null $days
-     * @return \Igniter\Local\Classes\WorkingSchedule
-     */
-    public function workingSchedule($type, $days = null)
+    public function workingSchedule(string $type, ?int $days = null): WorkingSchedule
     {
         $cacheKey = sprintf('%s.%s', $this->getModel()->getKey(), $type);
 
@@ -250,47 +218,5 @@ abstract class Manager
         self::$schedulesCache[$cacheKey] = $schedule;
 
         return $schedule;
-    }
-
-    //
-    // Session
-    //
-
-    /**
-     * Retrieves key/value pair from session data.
-     *
-     * @param string $key Unique key for the data store.
-     * @param string $default A default value to use when value is not found.
-     *
-     * @return mixed
-     */
-    public function getSession($key = null, $default = null)
-    {
-        $sessionData = Session::get($this->sessionKey);
-
-        return is_null($key) ? $sessionData : array_get($sessionData, $key, $default);
-    }
-
-    public function putSession($key, $value)
-    {
-        $sessionData = $this->getSession();
-        $sessionData[$key] = $value;
-
-        Session::put($this->sessionKey, $sessionData);
-    }
-
-    public function forgetSession($key = null)
-    {
-        if (is_null($key)) {
-            Session::forget($this->sessionKey);
-
-            return;
-        }
-
-        $sessionData = $this->getSession();
-        unset($sessionData[$key]);
-
-        Session::put($this->sessionKey, $sessionData);
-        Session::save();
     }
 }

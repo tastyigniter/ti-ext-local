@@ -4,7 +4,7 @@ namespace Igniter\Local\Http\Controllers;
 
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Flame\Geolite\Facades\Geocoder;
-use Igniter\Local\Facades\AdminLocation;
+use Igniter\Local\Facades\Location as LocationFacade;
 
 class Locations extends \Igniter\Admin\Classes\AdminController
 {
@@ -39,18 +39,18 @@ class Locations extends \Igniter\Admin\Classes\AdminController
 
     public function settings($context = null)
     {
-        if (!AdminLocation::check()) {
+        if (!LocationFacade::check()) {
             return $this->makeView('igniter.local::404');
         }
 
         $this->defaultView = 'edit';
 
-        $this->asExtension('FormController')->edit($context, $this->getLocationId());
+        $this->asExtension('FormController')->edit($context, LocationFacade::getId());
     }
 
     public function settings_onSave($context = null)
     {
-        return $this->asExtension('FormController')->edit_onSave($context, $this->getLocationId());
+        return $this->asExtension('FormController')->edit_onSave($context, LocationFacade::getId());
     }
 
     public function formAfterSave($model)

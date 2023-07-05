@@ -2,7 +2,8 @@
 
 namespace Igniter\Local\Traits;
 
-use Igniter\Local\Facades\AdminLocation;
+use Igniter\Local\Facades\Location as LocationFacade;
+use Igniter\Local\Models\Concerns\Locationable;
 use Igniter\Local\Models\Location;
 
 trait LocationAwareWidget
@@ -11,7 +12,7 @@ trait LocationAwareWidget
     {
         $locationAware = $config['locationAware'] ?? false;
 
-        return $locationAware && $this->controller->getUserLocation();
+        return $locationAware && LocationFacade::check();
     }
 
     /**
@@ -19,21 +20,17 @@ trait LocationAwareWidget
      */
     protected function locationApplyScope($query)
     {
-        if (is_null($ids = AdminLocation::getAll())) {
-            return;
-        }
-
         $model = $query->getModel();
-        if ($model instanceof Location) {
-            $query->whereIn('location_id', $ids);
-
+        if (!$model instanceof Location && !in_array(Locationable::class, class_uses($model))) {
             return;
         }
 
-        if (!in_array(\Igniter\Local\Models\Concerns\Locationable::class, class_uses($model))) {
+        if (empty($ids = LocationFacade::currentOrAssigned())) {
             return;
         }
 
-        $query->whereHasLocation($ids);
+        $model instanceof Location
+            ? $query->whereIn('location_id', $ids)
+            : $query->whereHasLocation($ids);
     }
 }

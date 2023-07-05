@@ -6,9 +6,10 @@ use Igniter\Admin\Traits\FormModelWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
 use Igniter\Flame\Exception\ApplicationException;
-use Igniter\Local\Facades\AdminLocation;
+use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Requests\LocationRequest;
+use Igniter\User\Facades\AdminAuth;
 use Illuminate\Support\Facades\DB;
 
 class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
@@ -38,7 +39,8 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
     public function prepareVars()
     {
         $this->vars['locations'] = $this->listLocations();
-        $this->vars['activeLocation'] = AdminLocation::current();
+        $this->vars['activeLocation'] = LocationFacade::current();
+        $this->vars['canCreateLocation'] = AdminAuth::user()->hasPermission('Admin.Locations');
     }
 
     public function onLoadForm()
@@ -67,15 +69,15 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
         );
 
         throw_unless(
-            AdminLocation::hasAccess($location),
+            $this->getController()->getUser()->isAssignedLocation($location),
             new ApplicationException(lang('igniter.local::default.picker.alert_location_not_allowed'))
         );
 
-        $currentLocation = AdminLocation::current();
-        if ($currentLocation and $currentLocation->getKey() === $location->getKey()) {
-            AdminLocation::clearCurrent();
+        $currentLocation = LocationFacade::current();
+        if ($currentLocation && $currentLocation->getKey() === $location->getKey()) {
+            LocationFacade::resetSession();
         } else {
-            AdminLocation::setCurrent($location);
+            LocationFacade::setCurrent($location);
         }
 
         return $this->controller->redirectBack();
@@ -138,9 +140,6 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
     protected function listLocations()
     {
-        $user = $this->getController()->getUser();
-        return $user->isSuperUser()
-            ? $this->createFormModel()->get()
-            : $user->locations()->get();
+        return $this->getController()->getUser()->getAvailableLocations();
     }
 }

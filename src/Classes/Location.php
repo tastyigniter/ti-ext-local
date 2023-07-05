@@ -3,12 +3,13 @@
 namespace Igniter\Local\Classes;
 
 use Carbon\Carbon;
+use Igniter\Cart\Classes\AbstractOrderType;
 use Igniter\Flame\Geolite\Model\Distance;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Local\Contracts\AreaInterface;
 use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\LocationArea;
-use Igniter\User\Facades\AdminAuth;
+use Illuminate\Support\Collection;
 
 /**
  * Location Class
@@ -21,30 +22,11 @@ class Location extends Manager
 
     const OPENING = 'opening';
 
-    protected $locationModel = LocationModel::class;
+    protected ?CoveredArea $coveredArea = null;
 
-    /**
-     * @var \Igniter\Local\Classes\CoveredArea
-     */
-    protected $coveredArea;
+    protected ?Collection $orderTypes = null;
 
-    /**
-     * @var \Illuminate\Support\Collection
-     */
-    protected $orderTypes;
-
-    protected $scheduleCache = [];
-
-    protected $distanceCache;
-
-    public function __construct()
-    {
-        $this->setDefaultLocation(LocationModel::getDefaultKey());
-
-        $this->locationSlugResolver(function () {
-            return controller()->param('location');
-        });
-    }
+    protected array $scheduleTimeslotCache = [];
 
     //
     // BOOT METHODS
@@ -100,28 +82,9 @@ class Location extends Manager
         $this->fireSystemEvent('location.timeslot.updated', [$slot, $oldSlot]);
     }
 
-    /**
-     * Extend the query used for finding the location.
-     *
-     * @param \Igniter\Flame\Database\Builder $query
-     *
-     * @return void
-     */
-    public function extendLocationQuery($query)
-    {
-        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations')) {
-            $query->IsEnabled();
-        }
-    }
-
     //
     // HELPER METHODS
     //
-
-    public function getId()
-    {
-        return $this->getModel()->getKey();
-    }
 
     public function orderType()
     {
@@ -167,7 +130,7 @@ class Location extends Manager
 
     /**
      * @param null $code
-     * @return \Igniter\Local\Classes\AbstractOrderType
+     * @return \Igniter\Cart\Classes\AbstractOrderType
      */
     public function getOrderType($code = null)
     {
@@ -182,7 +145,7 @@ class Location extends Manager
             return $this->orderTypes;
         }
 
-        return $this->orderTypes = $this->getModel()->availableOrderTypes();
+        return $this->orderTypes = $this->getModel()?->availableOrderTypes();
     }
 
     public function minimumOrderTotal($orderType = null)
@@ -311,8 +274,8 @@ class Location extends Manager
             $orderType = $this->orderType();
         }
 
-        if (array_key_exists($orderType, $this->scheduleCache)) {
-            return $this->scheduleCache[$orderType];
+        if (array_key_exists($orderType, $this->scheduleTimeslotCache)) {
+            return $this->scheduleTimeslotCache[$orderType];
         }
 
         $leadMinutes = $this->model->shouldAddLeadTime($orderType)
@@ -322,7 +285,7 @@ class Location extends Manager
             $this->orderTimeInterval(), null, $leadMinutes
         );
 
-        return $this->scheduleCache[$orderType] = $result;
+        return $this->scheduleTimeslotCache[$orderType] = $result;
     }
 
     public function firstScheduleTimeslot()
