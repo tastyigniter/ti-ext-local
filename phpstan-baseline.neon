@@ -26,16 +26,6 @@ parameters:
 			path: src/CartConditions/Delivery.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:whereIsEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/AdminLocation.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:hasLocationAccess\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/AdminLocation.php
-
-		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:checkDistance\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/CoveredArea.php
@@ -56,23 +46,43 @@ parameters:
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Builder\\:\\:IsEnabled\\(\\)\\.$#"
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:availableOrderTypes\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:getOption\\(\\)\\.$#"
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:findDeliveryArea\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:getDistanceUnit\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Location.php
+
+		-
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:getSettings\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Location.php
+
+		-
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:listDeliveryAreas\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Location.php
+
+		-
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:searchOrDefaultDeliveryArea\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Location.php
+
+		-
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:shouldAddLeadTime\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Location.php
 
 		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:getKey\\(\\)\\.$#"
-			count: 1
+			count: 3
 			path: src/Classes/Manager.php
 
 		-
@@ -86,7 +96,32 @@ parameters:
 			path: src/Classes/Manager.php
 
 		-
-			message: "#^Method Igniter\\\\Local\\\\Classes\\\\Manager\\:\\:instance\\(\\) has invalid return type Igniter\\\\Flame\\\\Location\\\\Manager\\.$#"
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:newWorkingSchedule\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Manager.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\:\\:IsEnabled\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Manager.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:selectDistance\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Manager.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereIsEnabled\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Manager.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Manager.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Manager.php
 
@@ -191,6 +226,11 @@ parameters:
 			path: src/Components/Gallery.php
 
 		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getWeekDaysOptions\\(\\)\\.$#"
+			count: 1
+			path: src/Components/Info.php
+
+		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:collectionSchedule\\(\\)\\.$#"
 			count: 1
 			path: src/Components/Info.php
@@ -222,11 +262,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:openingSchedule\\(\\)\\.$#"
-			count: 1
-			path: src/Components/Info.php
-
-		-
-			message: "#^Call to static method make\\(\\) on an unknown class Igniter\\\\Local\\\\Components\\\\WorkingHour\\.$#"
 			count: 1
 			path: src/Components/Info.php
 
@@ -272,7 +307,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/Components/LocalBox.php
 
 		-
@@ -497,21 +532,11 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Facades\\\\AdminMenu\\:\\:registerCallback\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/Extension.php
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:geocode\\(\\)\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:check\\(\\)\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:listLocations\\(\\)\\.$#"
 			count: 1
 			path: src/Extension.php
 
@@ -561,6 +586,16 @@ parameters:
 			path: src/FormWidgets/ScheduleEditor.php
 
 		-
+			message: "#^Access to an undefined property Igniter\\\\Admin\\\\Classes\\\\BaseWidget\\:\\:\\$previewMode\\.$#"
+			count: 1
+			path: src/FormWidgets/SettingsEditor.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:listRegisteredSettings\\(\\)\\.$#"
+			count: 1
+			path: src/FormWidgets/SettingsEditor.php
+
+		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getRatingOptions\\(\\)\\.$#"
 			count: 1
 			path: src/FormWidgets/StarRating.php
@@ -581,17 +616,12 @@ parameters:
 			path: src/Http/Actions/LocationAwareController.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:getIdOrAll\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:currentOrAssigned\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Actions/LocationAwareController.php
 
 		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Http\\\\Controllers\\\\Locations\\:\\:getFormModel\\(\\)\\.$#"
-			count: 1
-			path: src/Http/Controllers/Locations.php
-
-		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Http\\\\Controllers\\\\Locations\\:\\:refreshList\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Controllers/Locations.php
 
@@ -606,12 +636,12 @@ parameters:
 			path: src/Http/Controllers/Locations.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:check\\(\\)\\.$#"
-			count: 2
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:check\\(\\)\\.$#"
+			count: 1
 			path: src/Http/Controllers/Locations.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:getAll\\(\\)\\.$#"
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:getId\\(\\)\\.$#"
 			count: 2
 			path: src/Http/Controllers/Locations.php
 
@@ -626,17 +656,32 @@ parameters:
 			path: src/Http/Controllers/Reviews.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:current\\(\\)\\.$#"
-			count: 1
-			path: src/Http/Middleware/CheckLocation.php
-
-		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:current\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Middleware/CheckLocation.php
 
 		-
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:currentOrDefault\\(\\)\\.$#"
+			count: 1
+			path: src/Http/Middleware/CheckLocation.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:resetSession\\(\\)\\.$#"
+			count: 1
+			path: src/Http/Middleware/CheckLocation.php
+
+		-
 			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:check\\(\\)\\.$#"
+			count: 1
+			path: src/Http/Middleware/CheckLocation.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: src/Http/Middleware/CheckLocation.php
+
+		-
+			message: "#^Cannot call method hasParameter\\(\\) on object\\|string\\.$#"
 			count: 1
 			path: src/Http/Middleware/CheckLocation.php
 
@@ -661,9 +706,39 @@ parameters:
 			path: src/Listeners/MaxOrderPerTimeslotReached.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$all_options\\.$#"
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\MainMenuWidgets\\\\LocationPicker\\:\\:\\$formName\\.$#"
 			count: 1
-			path: src/Models/Location.php
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:current\\(\\)\\.$#"
+			count: 2
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:resetSession\\(\\)\\.$#"
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:setCurrent\\(\\)\\.$#"
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Location\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: "#^Function array_except invoked with 3 parameters, 2 required\\.$#"
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$country\\.$#"
@@ -677,6 +752,16 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$description\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$grouped_settings\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$is_auto_lat_lng\\.$#"
 			count: 1
 			path: src/Models/Location.php
 
@@ -737,11 +822,16 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$options\\.$#"
-			count: 7
+			count: 2
 			path: src/Models/Location.php
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$permalink_slug\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$settings\\.$#"
 			count: 1
 			path: src/Models/Location.php
 
@@ -753,6 +843,21 @@ parameters:
 		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Location\\:\\:delivery_areas\\(\\)\\.$#"
 			count: 2
+			path: src/Models/Location.php
+
+		-
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Location\\:\\:futureOrderDays\\(\\)\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Location\\:\\:hasFutureOrder\\(\\)\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Location\\:\\:settings\\(\\)\\.$#"
+			count: 1
 			path: src/Models/Location.php
 
 		-
@@ -781,13 +886,8 @@ parameters:
 			path: src/Models/Location.php
 
 		-
-			message: "#^Class Igniter\\\\Reservation\\\\Models\\\\Table not found\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
 			message: "#^Function traceLog invoked with 1 parameter, 0 required\\.$#"
-			count: 3
+			count: 2
 			path: src/Models/Location.php
 
 		-
@@ -826,47 +926,12 @@ parameters:
 			path: src/Models/LocationArea.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_id\\.$#"
-			count: 6
-			path: src/Models/LocationOption.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:current\\(\\)\\.$#"
-			count: 1
-			path: src/Models/LocationOption.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\LocationOption\\:\\:upsert\\(\\)\\.$#"
-			count: 1
-			path: src/Models/LocationOption.php
-
-		-
-			message: "#^Call to an undefined static method static\\(Igniter\\\\Local\\\\Models\\\\LocationOption\\)\\:\\:applyItemAndLocation\\(\\)\\.$#"
-			count: 1
-			path: src/Models/LocationOption.php
-
-		-
-			message: "#^Call to an undefined static method static\\(Igniter\\\\Local\\\\Models\\\\LocationOption\\)\\:\\:where\\(\\)\\.$#"
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\LocationSettings\\:\\:\\$data\\.$#"
 			count: 2
-			path: src/Models/LocationOption.php
-
-		-
-			message: "#^Unsafe usage of new static\\(\\)\\.$#"
-			count: 2
-			path: src/Models/LocationOption.php
+			path: src/Models/LocationSettings.php
 
 		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Review\\:\\:pluckDates\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:check\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\AdminLocation\\:\\:getId\\(\\)\\.$#"
 			count: 1
 			path: src/Models/Review.php
 
@@ -907,7 +972,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getLocationableRelationObject\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: src/Models/Scopes/LocationableScope.php
 
 		-
@@ -917,7 +982,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableIsSingleRelationType\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: src/Models/Scopes/LocationableScope.php
 
 		-
@@ -969,23 +1034,3 @@ parameters:
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Requests\\\\Review\\:\\:inputWith\\(\\)\\.$#"
 			count: 2
 			path: src/Requests/Review.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:orderType\\(\\)\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Collection.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Facades\\\\Cart\\:\\:subtotal\\(\\)\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Delivery.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:coveredArea\\(\\)\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Delivery.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:orderType\\(\\)\\.$#"
-			count: 1
-			path: src/ScheduleTypes/Delivery.php

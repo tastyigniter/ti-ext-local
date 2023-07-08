@@ -13,8 +13,8 @@ it('has required rule for location_name, location_email and ...', function () {
 
 it('has sometimes rule for inputs', function () {
     expect('sometimes')->toBeIn(array_get((new LocationRequest)->rules(), 'location_telephone'))
-        ->and('sometimes')->toBeIn(array_get((new LocationRequest)->rules(), 'location_lat'))
-        ->and('sometimes')->toBeIn(array_get((new LocationRequest)->rules(), 'location_lng'));
+        ->and('required_if:is_auto_lat_lng,0')->toBeIn(array_get((new LocationRequest)->rules(), 'location_lat'))
+        ->and('required_if:is_auto_lat_lng,0')->toBeIn(array_get((new LocationRequest)->rules(), 'location_lng'));
 });
 
 it('has max characters rule for inputs', function () {
@@ -25,7 +25,5 @@ it('has max characters rule for inputs', function () {
         ->and('max:255')->toBeIn(array_get((new LocationRequest)->rules(), 'location_state'))
         ->and('max:15')->toBeIn(array_get((new LocationRequest)->rules(), 'location_postcode'))
         ->and('max:3028')->toBeIn(array_get((new LocationRequest)->rules(), 'description'))
-        ->and('max:255')->toBeIn(array_get((new LocationRequest)->rules(), 'permalink_slug'))
-        ->and('max:255')->toBeIn(array_get((new LocationRequest)->rules(), 'options.gallery.title'))
-        ->and('max:255')->toBeIn(array_get((new LocationRequest)->rules(), 'options.gallery.description'));
+        ->and('max:255')->toBeIn(array_get((new LocationRequest)->rules(), 'permalink_slug'));
 });
