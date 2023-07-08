@@ -7,7 +7,7 @@ use Igniter\System\Classes\ExtensionManager;
 
 class LocationSettings extends Model
 {
-    public $timestamps = FALSE;
+    public $timestamps = false;
 
     protected $casts = [
         'data' => 'array',

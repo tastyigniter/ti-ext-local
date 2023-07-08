@@ -45,7 +45,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     public $singletons = [
         OrderTypes::class,
-        'location' => Location::class
+        'location' => Location::class,
     ];
 
     public function register()
