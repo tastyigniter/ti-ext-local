@@ -12,7 +12,6 @@ use Igniter\User\Facades\AdminAuth;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
 
 class LocalBox extends \Igniter\System\Classes\BaseComponent
 {
@@ -134,11 +133,8 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
                 ? Redirect::to($this->controller->pageUrl($redirectUrl))
                 : Redirect::back();
         } catch (Exception $ex) {
-            if (Request::ajax()) {
-                throw $ex;
-            } else {
-                flash()->danger($ex->getMessage())->now();
-            }
+            throw_if(request()->ajax(), $ex);
+            flash()->danger($ex->getMessage())->now();
         }
     }
 
@@ -177,11 +173,8 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
 
             return $this->fetchPartials();
         } catch (Exception $ex) {
-            if (Request::ajax()) {
-                throw $ex;
-            } else {
-                flash()->danger($ex->getMessage())->now();
-            }
+            throw_if(request()->ajax(), $ex);
+            flash()->danger($ex->getMessage())->now();
         }
     }
 
@@ -285,12 +278,5 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
         if ($defaultOrderType) {
             $this->location->updateOrderType($defaultOrderType);
         }
-    }
-
-    protected function checkAdminAccess()
-    {
-        $adminUser = AdminAuth::getUser();
-
-        return $adminUser && $adminUser->hasAccess('Admin.Locations');
     }
 }
