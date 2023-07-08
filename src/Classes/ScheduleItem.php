@@ -54,13 +54,13 @@ class ScheduleItem
                     'day' => $day,
                     'open' => '00:00',
                     'close' => '23:59',
-                    'status' => 1
+                    'status' => 1,
                 ]],
                 'daily' => [[
                     'day' => $day,
                     'open' => $this->open,
                     'close' => $this->close,
-                    'status' => (int)in_array($day, $this->days)
+                    'status' => (int)in_array($day, $this->days),
                 ]],
                 'timesheet' => $this->createHours($day, $this->timesheet[$day]),
                 'flexible' => $this->createHours($day, $this->flexible[$day]),

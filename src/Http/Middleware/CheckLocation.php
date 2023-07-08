@@ -15,6 +15,7 @@ class CheckLocation
         if (Igniter::runningInAdmin()) {
             if (($location = $this->checkAdminLocation()) === false) {
                 Location::resetSession();
+
                 return redirect()->back();
             }
 

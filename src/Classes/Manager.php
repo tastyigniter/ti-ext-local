@@ -133,11 +133,11 @@ abstract class Manager
 
     /**
      * Creates a new instance of the location model
-     * @return \Igniter\Local\Contracts\LocationInterface
      */
     public function createLocationModel(): LocationInterface
     {
         $class = '\\'.ltrim($this->locationModel, '\\');
+
         return new $class();
     }
 
@@ -155,8 +155,6 @@ abstract class Manager
 
     /**
      * Extend the query used for finding the location.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return void
      */
