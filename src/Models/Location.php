@@ -132,8 +132,6 @@ class Location extends Model implements LocationInterface
 
         return isset($model->getAddress()['location_lat'])
             && isset($model->getAddress()['location_lng'])
-            && ($model->hasDelivery() || $model->hasCollection())
-            && isset($model->options['hours'])
             && $model->delivery_areas()->whereIsDefault()->count() > 0;
     }
 
