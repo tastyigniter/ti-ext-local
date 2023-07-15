@@ -354,7 +354,7 @@ class WorkingSchedule
         return collect($timeslots);
     }
 
-    public function generateTimeslot(DateTime $date, DateInterval $interval, ?DateInterval $leadTime = null)
+    public function generateTimeslot(DateTime $date, DateInterval $interval, DateInterval $leadTime = null)
     {
         if (is_null($leadTime)) {
             $leadTime = $interval;

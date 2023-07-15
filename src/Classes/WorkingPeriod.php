@@ -142,7 +142,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         return false;
     }
 
-    public function timeslot(DateTimeInterface $dateTime, DateInterval $interval, ?DateInterval $leadTime = null)
+    public function timeslot(DateTimeInterface $dateTime, DateInterval $interval, DateInterval $leadTime = null)
     {
         return WorkingTimeslot::make($this->ranges)->generate(
             $dateTime, $interval, $leadTime
