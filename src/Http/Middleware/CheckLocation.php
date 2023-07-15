@@ -12,7 +12,9 @@ class CheckLocation
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Igniter::runningInAdmin()) {
+        if (!Igniter::hasDatabase()) {
+            $location = null;
+        } elseif (Igniter::runningInAdmin()) {
             if (($location = $this->checkAdminLocation()) === false) {
                 Location::resetSession();
 
