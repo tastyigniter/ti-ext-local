@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 
 class WorkingTimeslot extends Collection
 {
-    public function generate(DateTimeInterface $date, DateInterval $interval, ?DateInterval $leadTime = null)
+    public function generate(DateTimeInterface $date, DateInterval $interval, DateInterval $leadTime = null)
     {
         $items = [];
 

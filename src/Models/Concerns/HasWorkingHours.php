@@ -114,7 +114,7 @@ trait HasWorkingHours
     //
     //
 
-    public function createScheduleItem(string $type, ?array $scheduleData = null)
+    public function createScheduleItem(string $type, array $scheduleData = null)
     {
         if (!in_array($type, $this->availableWorkingTypes())) {
             throw new InvalidArgumentException(sprintf(lang('igniter.local::default.alert_invalid_schedule_type'), $type));

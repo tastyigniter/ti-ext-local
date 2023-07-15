@@ -203,7 +203,7 @@ abstract class Manager
         return $query->orderBy('distance')->whereIsEnabled()->limit($limit)->get();
     }
 
-    public function workingSchedule(string $type, ?int $days = null): WorkingSchedule
+    public function workingSchedule(string $type, int $days = null): WorkingSchedule
     {
         $cacheKey = sprintf('%s.%s', $this->getModel()->getKey(), $type);
 
