@@ -7,7 +7,7 @@
         <div class="btn-group">
             <button
                 type="button"
-                class="btn btn-default"
+                class="btn btn-light"
                 data-control="load-area"
             ><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ $prompt ? lang($prompt) : '' }}</button>
         </div>

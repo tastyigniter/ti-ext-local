@@ -10,7 +10,7 @@
         @endforeach
     </div>
 @else
-    <div class="card shadow-sm bg-light border-warning text-warning">
+    <div class="card shadow-sm border-warning text-warning">
         <div class="card-body">
             <b>@lang('igniter.local::default.alert_delivery_area')</b>
         </div>
