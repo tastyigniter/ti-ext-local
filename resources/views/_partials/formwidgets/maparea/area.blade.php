@@ -1,6 +1,6 @@
 <div
     id="{{ $this->getId('area-'.$area->area_id) }}"
-    class="map-area card bg-light shadow-sm mb-2"
+    class="map-area card shadow-sm mb-2"
     data-control="area"
     data-area-id="{{ $area->area_id }}"
     data-item-index="{{ $index }}"
@@ -15,7 +15,7 @@
                 <input type="hidden" name="{{ $sortableInputName }}[]" value="{{ $area->area_id }}">
                 <div class="align-self-center">
                     <a
-                        class="btn handle {{ $this->getId('areas') }}-handle mt-1"
+                        class="btn shadow-none handle {{ $this->getId('areas') }}-handle mt-1"
                         role="button">
                         <i class="fa fa-arrows-alt-v text-black-50"></i>
                     </a>

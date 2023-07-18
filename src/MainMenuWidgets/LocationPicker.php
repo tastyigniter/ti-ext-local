@@ -17,6 +17,8 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
     use FormModelWidget;
     use ValidatesForm;
 
+    public string $popupSize = 'modal-lg';
+
     public string|array $form = [];
 
     public $modelClass = Location::class;
@@ -49,7 +51,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
             ? $this->findFormModel($recordId)
             : $this->createFormModel();
 
-        return $this->makePartial('locationpicker/form', [
+        return $this->makePartial('formwidgets/recordeditor/form', [
             'formRecordId' => $recordId,
             'formTitle' => lang($model->exists ? 'igniter.local::default.picker.text_edit_location' : 'igniter.local::default.picker.text_new_location'),
             'formWidget' => $this->makeLocationFormWidget($model),
