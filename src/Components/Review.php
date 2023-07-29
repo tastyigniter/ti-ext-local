@@ -2,7 +2,6 @@
 
 namespace Igniter\Local\Components;
 
-use Exception;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Cart\Classes\OrderManager;
 use Igniter\Flame\Exception\ApplicationException;
@@ -81,57 +80,51 @@ class Review extends \Igniter\System\Classes\BaseComponent
 
     public function onLeaveReview()
     {
-        try {
-            if (!(bool)ReviewSettings::get('allow_reviews', false)) {
-                throw new ApplicationException(lang('igniter.local::default.review.alert_review_disabled'));
-            }
-
-            if (!$customer = Auth::customer()) {
-                throw new ApplicationException(lang('igniter.local::default.review.alert_expired_login'));
-            }
-
-            $reviewable = $this->getReviewable();
-            if (!$reviewable || !$reviewable->isCompleted()) {
-                throw new ApplicationException(lang('igniter.local::default.review.alert_review_status_history'));
-            }
-
-            if ($this->checkReviewableExists($reviewable)) {
-                throw new ApplicationException(lang('igniter.local::default.review.alert_review_duplicate'));
-            }
-
-            $data = post();
-
-            $rules = [
-                ['rating.quality', 'lang:igniter.local::default.review.label_quality', 'required|integer'],
-                ['rating.delivery', 'lang:igniter.local::default.review.label_delivery', 'required|integer'],
-                ['rating.service', 'lang:igniter.local::default.review.label_service', 'required|integer'],
-                ['review_text', 'lang:igniter.local::default.review.label_review', 'required|min:2|max:1028'],
-            ];
-
-            $this->validate($data, $rules);
-
-            $model = new Review();
-            $model->location_id = $reviewable->location_id;
-            $model->customer_id = $customer->customer_id;
-            $model->author = $customer->full_name;
-            $model->sale_id = $reviewable->getKey();
-            $model->sale_type = $reviewable->getMorphClass();
-            $model->quality = array_get($data, 'rating.quality');
-            $model->delivery = array_get($data, 'rating.delivery');
-            $model->service = array_get($data, 'rating.service');
-            $model->review_text = array_get($data, 'review_text');
-            $model->review_status = !(bool)ReviewSettings::get('approve_reviews', false) ? 1 : 0;
-
-            $model->save();
-
-            flash()->success(lang('igniter.local::default.review.alert_review_success'))->now();
-
-            return Redirect::back();
-        } catch (Exception $ex) {
-            flash()->warning($ex->getMessage());
-
-            return Redirect::back()->withInput();
+        if (!(bool)ReviewSettings::get('allow_reviews', false)) {
+            throw new ApplicationException(lang('igniter.local::default.review.alert_review_disabled'));
         }
+
+        if (!$customer = Auth::customer()) {
+            throw new ApplicationException(lang('igniter.local::default.review.alert_expired_login'));
+        }
+
+        $reviewable = $this->getReviewable();
+        if (!$reviewable || !$reviewable->isCompleted()) {
+            throw new ApplicationException(lang('igniter.local::default.review.alert_review_status_history'));
+        }
+
+        if ($this->checkReviewableExists($reviewable)) {
+            throw new ApplicationException(lang('igniter.local::default.review.alert_review_duplicate'));
+        }
+
+        $data = post();
+
+        $rules = [
+            ['rating.quality', 'lang:igniter.local::default.review.label_quality', 'required|integer'],
+            ['rating.delivery', 'lang:igniter.local::default.review.label_delivery', 'required|integer'],
+            ['rating.service', 'lang:igniter.local::default.review.label_service', 'required|integer'],
+            ['review_text', 'lang:igniter.local::default.review.label_review', 'required|min:2|max:1028'],
+        ];
+
+        $this->validate($data, $rules);
+
+        $model = new Review();
+        $model->location_id = $reviewable->location_id;
+        $model->customer_id = $customer->customer_id;
+        $model->author = $customer->full_name;
+        $model->sale_id = $reviewable->getKey();
+        $model->sale_type = $reviewable->getMorphClass();
+        $model->quality = array_get($data, 'rating.quality');
+        $model->delivery = array_get($data, 'rating.delivery');
+        $model->service = array_get($data, 'rating.service');
+        $model->review_text = array_get($data, 'review_text');
+        $model->review_status = !(bool)ReviewSettings::get('approve_reviews', false) ? 1 : 0;
+
+        $model->save();
+
+        flash()->success(lang('igniter.local::default.review.alert_review_success'))->now();
+
+        return Redirect::back();
     }
 
     /**

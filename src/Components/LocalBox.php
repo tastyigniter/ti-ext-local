@@ -4,7 +4,6 @@ namespace Igniter\Local\Components;
 
 use Carbon\Carbon;
 use DateTime;
-use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Igniter\Local\Models\Location;
@@ -115,67 +114,57 @@ class LocalBox extends \Igniter\System\Classes\BaseComponent
 
     public function onChangeOrderType()
     {
-        try {
-            if (!$this->location->current()) {
-                throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
-            }
-
-            $orderType = $this->location->getOrderType(post('type'));
-            if ($orderType->isDisabled()) {
-                throw new ApplicationException($orderType->getDisabledDescription());
-            }
-
-            $this->location->updateOrderType($orderType->getCode());
-
-            $this->controller->pageCycle();
-
-            return ($redirectUrl = input('redirect'))
-                ? Redirect::to($this->controller->pageUrl($redirectUrl))
-                : Redirect::back();
-        } catch (Exception $ex) {
-            throw_if(request()->ajax(), $ex);
-            flash()->danger($ex->getMessage())->now();
+        if (!$this->location->current()) {
+            throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
         }
+
+        $orderType = $this->location->getOrderType(post('type'));
+        if ($orderType->isDisabled()) {
+            throw new ApplicationException($orderType->getDisabledDescription());
+        }
+
+        $this->location->updateOrderType($orderType->getCode());
+
+        $this->controller->pageCycle();
+
+        return ($redirectUrl = input('redirect'))
+            ? Redirect::to($this->controller->pageUrl($redirectUrl))
+            : Redirect::back();
     }
 
     public function onSetOrderTime()
     {
-        try {
-            if (!is_numeric($timeIsAsap = post('asap'))) {
-                throw new ApplicationException(lang('igniter.local::default.alert_slot_type_required'));
-            }
-
-            if (!strlen($timeSlotDate = post('date')) && !$timeIsAsap) {
-                throw new ApplicationException(lang('igniter.local::default.alert_slot_date_required'));
-            }
-
-            if (!strlen($timeSlotTime = post('time')) && !$timeIsAsap) {
-                throw new ApplicationException(lang('igniter.local::default.alert_slot_time_required'));
-            }
-
-            if (!$this->location->current()) {
-                throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
-            }
-
-            $timeSlotDateTime = $timeIsAsap
-                ? Carbon::now()
-                : make_carbon($timeSlotDate.' '.$timeSlotTime);
-
-            if (!$this->location->checkOrderTime($timeSlotDateTime)) {
-                throw new ApplicationException(sprintf(lang('igniter.local::default.alert_order_is_unavailable'),
-                    $this->location->getOrderType()->getLabel()
-                ));
-            }
-
-            $this->location->updateScheduleTimeSlot($timeSlotDateTime, $timeIsAsap);
-
-            $this->controller->pageCycle();
-
-            return $this->fetchPartials();
-        } catch (Exception $ex) {
-            throw_if(request()->ajax(), $ex);
-            flash()->danger($ex->getMessage())->now();
+        if (!is_numeric($timeIsAsap = post('asap'))) {
+            throw new ApplicationException(lang('igniter.local::default.alert_slot_type_required'));
         }
+
+        if (!strlen($timeSlotDate = post('date')) && !$timeIsAsap) {
+            throw new ApplicationException(lang('igniter.local::default.alert_slot_date_required'));
+        }
+
+        if (!strlen($timeSlotTime = post('time')) && !$timeIsAsap) {
+            throw new ApplicationException(lang('igniter.local::default.alert_slot_time_required'));
+        }
+
+        if (!$this->location->current()) {
+            throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
+        }
+
+        $timeSlotDateTime = $timeIsAsap
+            ? Carbon::now()
+            : make_carbon($timeSlotDate.' '.$timeSlotTime);
+
+        if (!$this->location->checkOrderTime($timeSlotDateTime)) {
+            throw new ApplicationException(sprintf(lang('igniter.local::default.alert_order_is_unavailable'),
+                $this->location->getOrderType()->getLabel()
+            ));
+        }
+
+        $this->location->updateScheduleTimeSlot($timeSlotDateTime, $timeIsAsap);
+
+        $this->controller->pageCycle();
+
+        return $this->fetchPartials();
     }
 
     protected function prepareVars()
