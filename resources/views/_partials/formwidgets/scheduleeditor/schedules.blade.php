@@ -3,7 +3,7 @@
         <div class="col-lg-3 {{ $loop->first ? 'py-2 pr-2 pl-0' : 'p-2' }}">
             <div
                 id="{{ $this->getId('item-'.$loop->iteration) }}"
-                class="card"
+                class="card shadow-sm card-hover"
                 data-editor-control="load-schedule"
                 data-schedule-code="{{ $scheduleCode }}"
                 role="button"

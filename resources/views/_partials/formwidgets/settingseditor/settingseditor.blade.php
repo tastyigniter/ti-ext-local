@@ -12,8 +12,8 @@
                 @endif
                 role="button"
             >
-                <div class="card h-100">
-                    <div class="card-body d-flex align-items-center">
+                <div class="card shadow-sm card-hover h-100">
+                    <div class="card-body p-3 d-flex align-items-center">
                         <div class="pr-3">
                             @if ($setting->icon)
                                 <i class="text-muted {{ $setting->icon }} fa-fw"></i>
@@ -22,7 +22,7 @@
                             @endif
                         </div>
                         <div class="">
-                            <h5>@lang($setting->label)</h5>
+                            <h5 class="mb-1">@lang($setting->label)</h5>
                             <p class="no-margin text-muted">{!! $setting->description ? lang($setting->description) : '' !!}</p>
                         </div>
                     </div>
