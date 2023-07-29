@@ -17,7 +17,7 @@
         <input type="hidden" name="areaId" value="{{ $formAreaId }}">
         <input type="hidden" data-map-shape {!! $this->getMapShapeAttributes($formWidget->model) !!}>
         <div class="modal-body p-3">
-            <div class="form-fields">
+            <div class="form-fields row g-3">
                 @foreach($formWidget->getFields() as $field)
                     {!! $formWidget->renderField($field) !!}
                 @endforeach
