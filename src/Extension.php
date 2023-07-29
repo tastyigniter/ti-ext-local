@@ -220,11 +220,11 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         return [
             'Admin.Locations' => [
                 'label' => 'lang:igniter.local::default.locations_permissions',
-                'group' => 'location',
+                'group' => 'admin',
             ],
             'Admin.Reviews' => [
                 'description' => 'lang:igniter.local::default.reviews.permissions',
-                'group' => 'location',
+                'group' => 'order',
             ],
         ];
     }
