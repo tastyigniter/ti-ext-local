@@ -133,11 +133,11 @@ abstract class Manager
 
     /**
      * Creates a new instance of the location model
+     * @return \Igniter\Local\Contracts\LocationInterface
      */
     public function createLocationModel(): LocationInterface
     {
         $class = '\\'.ltrim($this->locationModel, '\\');
-
         return new $class();
     }
 
@@ -155,6 +155,8 @@ abstract class Manager
 
     /**
      * Extend the query used for finding the location.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return void
      */
@@ -203,7 +205,7 @@ abstract class Manager
         return $query->orderBy('distance')->whereIsEnabled()->limit($limit)->get();
     }
 
-    public function workingSchedule(string $type, int $days = null): WorkingSchedule
+    public function workingSchedule(string $type, ?int $days = null): WorkingSchedule
     {
         $cacheKey = sprintf('%s.%s', $this->getModel()->getKey(), $type);
 
