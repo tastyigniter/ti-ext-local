@@ -1,6 +1,6 @@
 <div
     id="{{ $this->getId('area-'.$area->area_id) }}"
-    class="map-area card shadow-sm mb-2"
+    class="map-area card shadow-sm card-hover mb-2"
     data-control="area"
     data-area-id="{{ $area->area_id }}"
     data-item-index="{{ $index }}"
