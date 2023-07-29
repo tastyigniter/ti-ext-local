@@ -4,15 +4,15 @@
             <a
                 class="text-reset d-block p-2 h-100"
                 @if($setting->url)
-          href="{{ $setting->url }}"
+                href="{{ $setting->url }}"
                 @else
-                    data-toggle="record-editor"
+                data-toggle="record-editor"
                 data-handler="{{ $this->getEventHandler('onLoadRecord') }}"
                 data-record-data='{"code": "{{$setting->code}}"}'
                 @endif
                 role="button"
             >
-                <div class="card shadow-sm h-100">
+                <div class="card h-100">
                     <div class="card-body d-flex align-items-center">
                         <div class="pr-3">
                             @if ($setting->icon)
