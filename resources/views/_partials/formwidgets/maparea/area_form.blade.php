@@ -16,7 +16,7 @@
         </div>
         <input type="hidden" name="areaId" value="{{ $formAreaId }}">
         <input type="hidden" data-map-shape {!! $this->getMapShapeAttributes($formWidget->model) !!}>
-        <div class="modal-body p-0">
+        <div class="modal-body p-3">
             <div class="form-fields">
                 @foreach($formWidget->getFields() as $field)
                     {!! $formWidget->renderField($field) !!}
@@ -26,7 +26,7 @@
         <div class="modal-footer text-right">
             <button
                 type="button"
-                class="btn btn-link"
+                class="btn btn-link text-danger fw-bold text-decoration-none"
                 data-bs-dismiss="modal"
             >@lang('igniter::admin.button_close')</button>
             <button
