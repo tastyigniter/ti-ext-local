@@ -41,7 +41,7 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
-            'redirect' => 'igniter/local/reviews',
+            'back' => 'igniter/local/reviews',
         ],
         'delete' => [
             'redirect' => 'igniter/local/reviews',

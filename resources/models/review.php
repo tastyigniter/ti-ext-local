@@ -116,11 +116,6 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'back' => [
-            'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-outline-secondary',
-            'href' => 'igniter/local/reviews',
-        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
             'partial' => 'form/toolbar_save_button',
