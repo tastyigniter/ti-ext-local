@@ -24,7 +24,6 @@
           >
             <i @class([
               'fa fa-fw fa-location-dot',
-              'text-muted' => !$location->is_default,
               'text-warning' => $location->is_default
             ])></i>
             <span>{{ $location->location_name }}</span>
