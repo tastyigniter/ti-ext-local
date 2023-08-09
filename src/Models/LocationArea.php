@@ -87,7 +87,7 @@ class LocationArea extends Model implements AreaInterface
     public function getConditionsAttribute($value)
     {
         // backward compatibility v2.0
-        if (!is_array($conditions = json_decode($value, true))) {
+        if (!is_array($conditions = json_decode($value ?? '', true))) {
             $conditions = [];
         }
 
