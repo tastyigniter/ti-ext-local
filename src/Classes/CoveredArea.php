@@ -39,6 +39,13 @@ class CoveredArea
             ->mapInto(CoveredAreaCondition::class);
     }
 
+    public function getConditionLabels()
+    {
+        return $this->listConditions()->map(function (CoveredAreaCondition $condition) {
+            return ucfirst(strtolower($condition->getLabel()));
+        })->all();
+    }
+
     protected function getConditionValue($type, $cartTotal)
     {
         if (!$condition = $this->checkConditions($cartTotal, $type)) {

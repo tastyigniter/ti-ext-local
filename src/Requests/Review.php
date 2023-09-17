@@ -25,7 +25,7 @@ class Review extends FormRequest
     {
         return [
             'sale_type' => ['required'],
-            'sale_id' => ['required', 'integer', 'saleIdExists'],
+            'sale_id' => ['required', 'integer', sprintf('exists:%s,%s_id', $this->sale_type, str_singular($this->sale_type))],
             'location_id' => ['required', 'integer'],
             'customer_id' => ['required', 'integer'],
             'quality' => ['required', 'integer', 'min:1', 'max:5'],
@@ -34,10 +34,5 @@ class Review extends FormRequest
             'review_text' => ['required', 'between:2,1028'],
             'review_status' => ['required', 'boolean'],
         ];
-    }
-
-    protected function prepareSaleIdExistsRule($parameters, $field)
-    {
-        return sprintf('exists:%s,%s_id', $this->inputWith('sale_type', ''), str_singular($this->inputWith('sale_type', '')));
     }
 }
