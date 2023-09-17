@@ -23,6 +23,7 @@ use Igniter\Reservation\Models\Reservation;
 use Igniter\User\Facades\Auth;
 use Igniter\User\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -57,6 +58,8 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         });
 
         Route::pushMiddlewareToGroup('igniter', \Igniter\Local\Http\Middleware\CheckLocation::class);
+
+        AliasLoader::getInstance()->alias('Location', LocationFacade::class);
     }
 
     public function boot()
