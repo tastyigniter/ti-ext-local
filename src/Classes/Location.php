@@ -129,7 +129,6 @@ class Location extends Manager
     }
 
     /**
-     * @param null $code
      * @return \Igniter\Cart\Classes\AbstractOrderType
      */
     public function getOrderType($code = null)

@@ -34,8 +34,6 @@ trait HasWorkingHours
     }
 
     /**
-     * @param null $hourType
-     *
      * @return mixed 24_7, daily or flexible
      */
     public function workingHourType($hourType = null)

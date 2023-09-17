@@ -35,7 +35,6 @@ class WorkingSchedule
     protected $maxDays;
 
     /**
-     * @param null $timezone
      * @param int|array $days
      */
     public function __construct($timezone = null, $days = 5)
@@ -132,7 +131,6 @@ class WorkingSchedule
     //
 
     /**
-     * @return \Igniter\Local\Classes\WorkingPeriod
      * @throws \Igniter\Local\Exceptions\WorkingHourException
      */
     public function forDay(string $day): WorkingPeriod
@@ -142,9 +140,6 @@ class WorkingSchedule
         return $this->periods[$day];
     }
 
-    /**
-     * @return \Igniter\Local\Classes\WorkingPeriod
-     */
     public function forDate(DateTimeInterface $date): WorkingPeriod
     {
         $date = $this->applyTimezone($date);

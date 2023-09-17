@@ -21,17 +21,17 @@ use Igniter\System\Models\Concerns\Switchable;
  */
 class Location extends Model implements LocationInterface
 {
+    use Defaultable;
     use HasCountry;
-    use HasWorkingHours;
     use HasDeliveryAreas;
     use HasFactory;
-    use HasPermalink;
-    use HasMedia;
     use HasLocationSettings;
+    use HasMedia;
+    use HasPermalink;
+    use HasWorkingHours;
     use LocationHelpers;
     use Purgeable;
     use Switchable;
-    use Defaultable;
 
     public const SWITCHABLE_COLUMN = 'location_status';
 
