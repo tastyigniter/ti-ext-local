@@ -19,10 +19,10 @@ use InvalidArgumentException;
  */
 class LocationArea extends Model implements AreaInterface
 {
-    use HasFactory;
-    use Validation;
-    use Sortable;
     use Defaultable;
+    use HasFactory;
+    use Sortable;
+    use Validation;
 
     const VERTEX = 'vertex';
 

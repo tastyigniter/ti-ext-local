@@ -63,7 +63,6 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param \Igniter\Local\Classes\WorkingTime $time
      * @return bool|\Igniter\Local\Classes\WorkingTime
      */
     public function nextOpenAt(WorkingTime $time)
@@ -91,7 +90,6 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @param \Igniter\Local\Classes\WorkingTime $time
      * @return bool|\Igniter\Local\Classes\WorkingTime
      */
     public function nextCloseAt(WorkingTime $time)

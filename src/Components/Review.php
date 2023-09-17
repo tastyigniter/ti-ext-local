@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class Review extends \Igniter\System\Classes\BaseComponent
 {
-    use ValidatesForm;
     use UsesPage;
+    use ValidatesForm;
 
     public function defineProperties()
     {
