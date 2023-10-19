@@ -40,7 +40,7 @@ class Locations extends \Igniter\Admin\Classes\AdminController
     public function settings($context = null)
     {
         if (!LocationFacade::check()) {
-            return $this->makeView('igniter.local::404');
+            return $this->makeView('select_location');
         }
 
         $this->defaultView = 'edit';
