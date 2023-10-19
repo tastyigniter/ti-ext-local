@@ -866,11 +866,6 @@ parameters:
 			path: src/Models/Location.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:delivery_areas\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
 			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:geocode\\(\\)\\.$#"
 			count: 1
 			path: src/Models/Location.php
@@ -1031,6 +1026,6 @@ parameters:
 			path: src/Models/WorkingHour.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Requests\\\\Review\\:\\:inputWith\\(\\)\\.$#"
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\Requests\\\\Review\\:\\:\\$sale_type\\.$#"
 			count: 2
 			path: src/Requests/Review.php
