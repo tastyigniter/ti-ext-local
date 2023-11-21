@@ -123,7 +123,7 @@ abstract class Manager
 
     public function getId(): ?int
     {
-        return $this->model?->getKey();
+        return $this->current()?->getKey();
     }
 
     public function getName(): ?string
