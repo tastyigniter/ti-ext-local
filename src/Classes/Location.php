@@ -464,7 +464,7 @@ class Location extends Manager
         return $distance->formatDistance($this->getModel()->getDistanceUnit());
     }
 
-    public function checkDeliveryCoverage(UserLocation $userPosition = null)
+    public function checkDeliveryCoverage(?UserLocation $userPosition = null)
     {
         if (is_null($userPosition)) {
             $userPosition = $this->userPosition();

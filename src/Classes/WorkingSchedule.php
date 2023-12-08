@@ -318,7 +318,7 @@ class WorkingSchedule
      * @return Collection
      * @throws \Exception
      */
-    public function getTimeslot(int $interval = 15, DateTime $dateTime = null, int $leadTimeMinutes = 25)
+    public function getTimeslot(int $interval = 15, ?DateTime $dateTime = null, int $leadTimeMinutes = 25)
     {
         $dateTime = Carbon::instance($this->parseDate($dateTime));
         $interval = new DateInterval('PT'.($interval ?: 15).'M');
@@ -349,7 +349,7 @@ class WorkingSchedule
         return collect($timeslots);
     }
 
-    public function generateTimeslot(DateTime $date, DateInterval $interval, DateInterval $leadTime = null)
+    public function generateTimeslot(DateTime $date, DateInterval $interval, ?DateInterval $leadTime = null)
     {
         if (is_null($leadTime)) {
             $leadTime = $interval;
