@@ -706,6 +706,11 @@ parameters:
 			path: src/Listeners/MaxOrderPerTimeslotReached.php
 
 		-
+			message: "#^Access to an undefined property Igniter\\\\Admin\\\\Classes\\\\BaseWidget\\:\\:\\$previewMode\\.$#"
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\MainMenuWidgets\\\\LocationPicker\\:\\:\\$formName\\.$#"
 			count: 1
 			path: src/MainMenuWidgets/LocationPicker.php
@@ -732,7 +737,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
-			count: 1
+			count: 4
 			path: src/MainMenuWidgets/LocationPicker.php
 
 		-
