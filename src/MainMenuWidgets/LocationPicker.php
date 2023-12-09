@@ -43,6 +43,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
         $this->vars['locations'] = $this->listLocations();
         $this->vars['activeLocation'] = LocationFacade::current();
         $this->vars['canCreateLocation'] = AdminAuth::user()->hasPermission('Admin.Locations');
+        $this->vars['isSingleMode'] = is_single_location();
     }
 
     public function onLoadForm()
@@ -87,6 +88,10 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
     public function onSaveRecord()
     {
+        if (!AdminAuth::user()->hasPermission('Admin.Locations')) {
+            throw new ApplicationException(lang('igniter.local::default.picker.alert_user_restricted'));
+        }
+
         $model = strlen($recordId = post('recordId'))
             ? $this->findFormModel($recordId)
             : $this->createFormModel();
@@ -112,9 +117,11 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
     public function onDeleteRecord()
     {
-        $model = $this->findFormModel(post('recordId'));
+        if (!AdminAuth::user()->hasPermission('Admin.Locations')) {
+            throw new ApplicationException(lang('igniter.local::default.picker.alert_user_restricted'));
+        }
 
-        $form = $this->makeLocationFormWidget($model);
+        $model = $this->findFormModel(post('recordId'));
 
         $model->delete();
 
@@ -126,6 +133,9 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
     protected function makeLocationFormWidget($model)
     {
         $context = $model->exists ? 'edit' : 'create';
+        if (!AdminAuth::user()->hasPermission('Admin.Locations')) {
+            $context = 'preview';
+        }
 
         $formConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig = array_except($formConfig, 'toolbar', []);
@@ -134,6 +144,10 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
         $widgetConfig['arrayName'] = 'LocationData';
         $widgetConfig['context'] = $context;
         $widget = $this->makeWidget(Form::class, $widgetConfig);
+
+        if ($context === 'preview') {
+            $widget->previewMode = true;
+        }
 
         $widget->bindToController();
 

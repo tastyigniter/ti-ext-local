@@ -395,6 +395,6 @@ return [
         'help_location_not_found' => 'To access this page, you must first select a location from the location picker.',
         'alert_location_required' => 'Please select a location',
         'alert_location_not_found' => 'Selected location could not be found',
-        'alert_location_not_allowed' => 'You do not have permission to view this location',
+        'alert_location_not_allowed' => 'You do not have permission to edit this location',
     ],
 ];

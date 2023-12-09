@@ -3,6 +3,19 @@
   class="nav-item dropdown"
   data-control="location-picker"
 >
+@if($isSingleMode)
+<a
+    role="button"
+    class="nav-link location"
+    data-alias="locationpicker"
+    data-toggle="record-editor"
+    data-handler="{{ $this->getEventHandler('onLoadForm') }}"
+    data-record-data='{"location": "{{ $activeLocation->location_id }}"}'
+>
+    <i class="fa fa-fw fa-location-dot"></i>
+    <span>{{ $activeLocation->location_name }}</span>
+</a>
+    @else
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span
       class="fw-bold"
@@ -28,7 +41,6 @@
             ])></i>
             <span>{{ $location->location_name }}</span>
           </a>
-          @if($canCreateLocation)
           <a
             class="fw-bold text-reset text-sm cursor-pointer"
             data-alias="locationpicker"
@@ -38,7 +50,6 @@
           >
             <span>@lang('igniter::admin.text_edit')</span>
           </a>
-          @endif
         </div>
       </li>
     @empty
@@ -59,4 +70,5 @@
     </li>
     @endif
   </ul>
+    @endif
 </li>
