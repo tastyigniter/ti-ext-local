@@ -19,6 +19,7 @@ use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Local\Models\Scopes\LocationScope;
+use Igniter\Main\Classes\MainController;
 use Igniter\Reservation\Models\Reservation;
 use Igniter\User\Facades\Auth;
 use Igniter\User\Models\User;
@@ -64,8 +65,8 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     public function boot()
     {
-        View::composer('*', function ($view) {
-            $view->with('showReviews', (bool)ReviewSettings::get('allow_reviews', false));
+        Event::listen('main.page.init', function (MainController $controller) {
+            View::share('showReviews', (bool)ReviewSettings::get('allow_reviews', false));
         });
 
         $this->bindRememberLocationAreaEvents();
