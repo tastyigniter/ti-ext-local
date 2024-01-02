@@ -18,7 +18,7 @@ trait LocationAwareWidget
     /**
      * Apply location scope where required
      */
-    protected function locationApplyScope($query)
+    protected function locationApplyScope($query, $config = [])
     {
         $model = $query->getModel();
         if (!$model instanceof Location && !in_array(Locationable::class, class_uses($model))) {
@@ -29,8 +29,12 @@ trait LocationAwareWidget
             return;
         }
 
-        $model instanceof Location
-            ? $query->whereIn('location_id', $ids)
-            : $query->whereHasLocation($ids);
+        if ($model instanceof Location) {
+            $query->whereIn('location_id', $ids);
+        } else if (array_get($config, 'locationAware') === 'assignedOnly') {
+            $query->whereHasLocation($ids);
+        } else {
+            $query->whereHasOrDoesntHaveLocation($ids);
+        }
     }
 }
