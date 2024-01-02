@@ -31,7 +31,7 @@ trait LocationAwareWidget
 
         if ($model instanceof Location) {
             $query->whereIn('location_id', $ids);
-        } else if (array_get($config, 'locationAware') === 'assignedOnly') {
+        } elseif (array_get($config, 'locationAware') === 'assignedOnly') {
             $query->whereHasLocation($ids);
         } else {
             $query->whereHasOrDoesntHaveLocation($ids);
