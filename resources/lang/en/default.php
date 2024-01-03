@@ -145,8 +145,6 @@ return [
     'alert_slot_type_required' => 'Please select a slot type.',
     'alert_max_guest_reached' => 'We\'ve reached the maximum number of orders allowed for the selected timeslot, please choose another timeslot.',
 
-    'component_title' => 'Local Box Component',
-    'component_desc' => 'Displays local information box',
     'text_heading' => 'Restaurants',
     'text_local_heading' => '%s - Restaurant',
     'text_delivery_time' => 'Delivery Time',
@@ -288,16 +286,11 @@ return [
     'help_delivery_distance' => 'Add additional charges based on the delivery distance per unit. These will be in addition to delivery condition charges. Rules are applied in the order in which they appear.',
 
     'search' => [
-        'component_title' => 'Local Search Component',
-        'component_desc' => 'Displays a standalone local search form',
-
         'text_change' => 'change',
         'text_saved_addresses' => 'Saved addresses',
     ],
 
     'review' => [
-        'component_title' => 'Local Review Component',
-        'component_desc' => 'Displays a list of local reviews',
         'text_review_heading' => 'Customer Reviews of %s',
         'text_total_review' => '(%s)',
         'text_no_review' => 'There are no reviews yet.',
@@ -317,21 +310,6 @@ return [
         'alert_review_error' => 'An error has occurred, please try again.',
         'alert_review_duplicate' => 'Sorry. Either you\'ve already left a review for this order, or an error has occurred.',
         'alert_review_status_history' => 'Review can not be added because order/reservation is not completed',
-    ],
-
-    'info' => [
-        'component_title' => 'Local Info Component',
-        'component_desc' => 'Displays the local information box',
-    ],
-
-    'gallery' => [
-        'component_title' => 'Local Gallery Component',
-        'component_desc' => 'Displays local images',
-    ],
-
-    'list' => [
-        'component_title' => 'Local List Component',
-        'component_desc' => 'Displays a list of locations',
     ],
 
     'reviews' => [

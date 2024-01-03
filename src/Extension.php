@@ -148,42 +148,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    public function registerComponents()
-    {
-        return [
-            \Igniter\Local\Components\LocalBox::class => [
-                'code' => 'localBox',
-                'name' => 'lang:igniter.local::default.component_title',
-                'description' => 'lang:igniter.local::default.component_desc',
-            ],
-            \Igniter\Local\Components\Search::class => [
-                'code' => 'localSearch',
-                'name' => 'lang:igniter.local::default.search.component_title',
-                'description' => 'lang:igniter.local::default.search.component_desc',
-            ],
-            \Igniter\Local\Components\Review::class => [
-                'code' => 'localReview',
-                'name' => 'lang:igniter.local::default.review.component_title',
-                'description' => 'lang:igniter.local::default.review.component_desc',
-            ],
-            \Igniter\Local\Components\Info::class => [
-                'code' => 'localInfo',
-                'name' => 'lang:igniter.local::default.info.component_title',
-                'description' => 'lang:igniter.local::default.info.component_desc',
-            ],
-            \Igniter\Local\Components\Gallery::class => [
-                'code' => 'localGallery',
-                'name' => 'lang:igniter.local::default.gallery.component_title',
-                'description' => 'lang:igniter.local::default.gallery.component_desc',
-            ],
-            \Igniter\Local\Components\LocalList::class => [
-                'code' => 'localList',
-                'name' => 'lang:igniter.local::default.list.component_title',
-                'description' => 'lang:igniter.local::default.list.component_desc',
-            ],
-        ];
-    }
-
     public function registerMailTemplates()
     {
         return [
