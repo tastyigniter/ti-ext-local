@@ -2,7 +2,7 @@
 
 namespace Igniter\Local\Models\Concerns;
 
-use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Igniter;
 use Igniter\Local\Models\Scopes\LocationableScope;
 use Igniter\User\Facades\AdminAuth;
@@ -47,7 +47,7 @@ trait Locationable
         $locationable = $this->getLocationableRelationObject();
 
         if (Igniter::runningInAdmin() && !AdminAuth::isSuperUser() && $locationable->count() > 1) {
-            throw new ApplicationException(lang('igniter::admin.alert_warning_locationable_delete'));
+            throw new SystemException(lang('igniter::admin.alert_warning_locationable_delete'));
         }
 
         $locationable->detach();
