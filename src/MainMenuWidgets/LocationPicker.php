@@ -6,6 +6,7 @@ use Igniter\Admin\Traits\FormModelWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\FlashException;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Requests\LocationRequest;
@@ -88,9 +89,9 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
     public function onSaveRecord()
     {
-        if (!AdminAuth::user()->hasPermission('Admin.Locations')) {
-            throw new ApplicationException(lang('igniter.local::default.picker.alert_user_restricted'));
-        }
+        throw_unless($this->getController()->authorize('Admin.Locations'),
+            FlashException::error(lang('igniter.local::default.picker.alert_user_restricted'))
+        );
 
         $model = strlen($recordId = post('recordId'))
             ? $this->findFormModel($recordId)
@@ -117,9 +118,9 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
     public function onDeleteRecord()
     {
-        if (!AdminAuth::user()->hasPermission('Admin.Locations')) {
-            throw new ApplicationException(lang('igniter.local::default.picker.alert_user_restricted'));
-        }
+        throw_unless($this->getController()->authorize('Admin.Locations'),
+            FlashException::error(lang('igniter.local::default.picker.alert_user_restricted'))
+        );
 
         $model = $this->findFormModel(post('recordId'));
 

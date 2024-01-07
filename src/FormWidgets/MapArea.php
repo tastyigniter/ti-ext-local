@@ -6,7 +6,7 @@ use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Classes\FormField;
 use Igniter\Admin\Traits\FormModelWidget;
 use Igniter\Admin\Traits\ValidatesForm;
-use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\FlashException;
 use Igniter\Flame\Html\HtmlFacade as Html;
 use Igniter\Local\Models\LocationArea;
 use Illuminate\Database\Eloquent\Collection;
@@ -198,14 +198,13 @@ class MapArea extends BaseFormWidget
 
     public function onDeleteArea()
     {
-        if (!strlen($areaId = post('areaId'))) {
-            throw new ApplicationException(lang('igniter.local::default.alert_invalid_area'));
-        }
+        throw_unless(strlen($areaId = post('areaId')),
+            FlashException::error(lang('igniter.local::default.alert_invalid_area'))
+        );
 
-        $model = $this->getRelationModel()->find($areaId);
-        if (!$model) {
-            throw new ApplicationException(sprintf(lang('igniter::admin.form.not_found'), $areaId));
-        }
+        throw_unless($model = $this->getRelationModel()->find($areaId),
+            FlashException::error(sprintf(lang('igniter::admin.form.not_found'), $areaId))
+        );
 
         $model->delete();
 

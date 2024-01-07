@@ -6,7 +6,7 @@ use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
 use Igniter\Cart\Classes\OrderTypes;
-use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\FlashException;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\WorkingHour;
 use Illuminate\Support\Facades\DB;
@@ -112,9 +112,9 @@ class ScheduleEditor extends BaseFormWidget
 
     protected function getSchedule($scheduleCode)
     {
-        if (!$schedule = array_get($this->listSchedules(), $scheduleCode)) {
-            throw new ApplicationException(lang('igniter.local::default.alert_schedule_not_loaded'));
-        }
+        throw_unless($schedule = array_get($this->listSchedules(), $scheduleCode),
+            FlashException::error(lang('igniter.local::default.alert_schedule_not_loaded'))
+        );
 
         return $schedule;
     }

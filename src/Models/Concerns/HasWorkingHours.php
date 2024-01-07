@@ -3,11 +3,11 @@
 namespace Igniter\Local\Models\Concerns;
 
 use Carbon\Carbon;
-use Exception;
 use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Local\Classes\ScheduleItem;
 use Igniter\Local\Classes\WorkingSchedule;
 use Igniter\Local\Events\WorkingScheduleCreatedEvent;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
@@ -73,10 +73,7 @@ trait HasWorkingHours
     public function getWorkingHours()
     {
         if (!$this->hasRelation('working_hours')) {
-            throw new Exception(sprintf(lang('igniter::admin.alert_missing_model_definition'),
-                get_class($this),
-                'working_hours',
-            ));
+            throw RelationNotFoundException::make($this, 'working_hours');
         }
 
         if (!$this->working_hours || $this->working_hours->isEmpty()) {

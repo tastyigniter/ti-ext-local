@@ -12,7 +12,6 @@ use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Contracts\AreaInterface;
 use Igniter\System\Models\Concerns\Defaultable;
 use Illuminate\Database\Eloquent\Builder;
-use InvalidArgumentException;
 
 /**
  * LocationArea Model Class
@@ -182,15 +181,8 @@ class LocationArea extends Model implements AreaInterface
         return $this->attributes['location_id'];
     }
 
-    public function checkBoundary($coordinate)
+    public function checkBoundary(CoordinatesInterface $coordinate)
     {
-        if (!$coordinate instanceof CoordinatesInterface) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid class "%s" given, expected: %s',
-                get_class($coordinate), CoordinatesInterface::class
-            ));
-        }
-
         if ($this->isAddressBoundary()) {
             $position = Geocoder::reverse(
                 $coordinate->getLatitude(), $coordinate->getLongitude()

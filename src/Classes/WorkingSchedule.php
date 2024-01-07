@@ -10,9 +10,9 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Igniter\Local\Events\WorkingScheduleTimeslotValidEvent;
+use Igniter\Local\Exceptions\WorkingHourException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
 
 class WorkingSchedule
 {
@@ -395,7 +395,7 @@ class WorkingSchedule
             return $start;
         }
 
-        throw new InvalidArgumentException('The datetime must be an instance of DateTime.');
+        throw new WorkingHourException('The datetime must be an instance of DateTime.');
     }
 
     protected function parsePeriods($periods)
