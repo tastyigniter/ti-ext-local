@@ -16,7 +16,7 @@ class StarRating extends BaseFormWidget
      */
     public static $hints = [];
 
-    protected $defaultAlias = 'starrating';
+    protected string $defaultAlias = 'starrating';
 
     public function initialize()
     {
@@ -56,7 +56,7 @@ class StarRating extends BaseFormWidget
         $this->addJs('js/starrating.js', 'starrating-js');
     }
 
-    public function getSaveValue($value)
+    public function getSaveValue(mixed $value): mixed
     {
         return $value ? (int)$value : 0;
     }

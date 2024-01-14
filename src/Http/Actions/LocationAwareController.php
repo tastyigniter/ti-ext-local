@@ -17,14 +17,11 @@ class LocationAwareController extends ControllerAction
      *  ];
      * @var array
      */
-    public $locationConfig;
+    public array $locationConfig = [];
 
-    public $requiredProperties = [];
+    public array $requiredProperties = [];
 
-    /**
-     * @var array Required controller configuration array keys
-     */
-    protected $requiredConfig = [];
+    protected array $requiredConfig = [];
 
     /**
      * List_Controller constructor.
@@ -37,7 +34,7 @@ class LocationAwareController extends ControllerAction
     {
         parent::__construct($controller);
 
-        $this->locationConfig = $controller->locationConfig;
+        $this->locationConfig = $controller->locationConfig ?? [];
 
         // Build configuration
         $this->setConfig($controller->locationConfig, $this->requiredConfig);
