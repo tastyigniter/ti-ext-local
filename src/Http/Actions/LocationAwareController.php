@@ -15,7 +15,6 @@ class LocationAwareController extends ControllerAction
      *      'applyScopeOnFormQuery'  => true',
      *      'addAbsenceConstraint'  => false',
      *  ];
-     * @var array
      */
     public array $locationConfig = [];
 
