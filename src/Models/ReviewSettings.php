@@ -6,11 +6,11 @@ use Igniter\Flame\Database\Model;
 
 class ReviewSettings extends Model
 {
-    public $implement = [\Igniter\System\Actions\SettingsModel::class];
+    public array $implement = [\Igniter\System\Actions\SettingsModel::class];
 
     // A unique code
-    public $settingsCode = 'igniter_review_settings';
+    public string $settingsCode = 'igniter_review_settings';
 
     // Reference to field configuration
-    public $settingsFieldsConfig = 'reviewsettings';
+    public string $settingsFieldsConfig = 'reviewsettings';
 }

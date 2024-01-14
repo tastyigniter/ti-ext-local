@@ -48,7 +48,7 @@ class MapArea extends BaseFormWidget
     // Object properties
     //
 
-    protected $defaultAlias = 'maparea';
+    protected string $defaultAlias = 'maparea';
 
     protected $areaColors;
 
@@ -125,7 +125,7 @@ class MapArea extends BaseFormWidget
         $this->vars['prompt'] = $this->prompt;
     }
 
-    public function getSaveValue($value)
+    public function getSaveValue(mixed $value): mixed
     {
         if (!$this->sortable) {
             return FormField::NO_SAVE_DATA;

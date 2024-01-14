@@ -8,12 +8,12 @@ use Igniter\Local\Facades\Location as LocationFacade;
 
 class Locations extends \Igniter\Admin\Classes\AdminController
 {
-    public $implement = [
+    public array $implement = [
         \Igniter\Admin\Http\Actions\FormController::class,
         \Igniter\Local\Http\Actions\LocationAwareController::class,
     ];
 
-    public $formConfig = [
+    public array $formConfig = [
         'name' => 'lang:igniter.local::default.text_form_name',
         'model' => \Igniter\Local\Models\Location::class,
         'settings' => [
@@ -23,7 +23,7 @@ class Locations extends \Igniter\Admin\Classes\AdminController
         'configFile' => 'locationsettings',
     ];
 
-    protected $requiredPermissions = 'Admin.Locations';
+    protected null|string|array $requiredPermissions = 'Admin.Locations';
 
     public static function getSlug()
     {

@@ -148,14 +148,14 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    public function registerMailTemplates()
+    public function registerMailTemplates(): array
     {
         return [
             'igniter.local::mail.review_chase' => 'lang:igniter.local::default.reviews.text_chase_email',
         ];
     }
 
-    public function registerNavigation()
+    public function registerNavigation(): array
     {
         return [
             'restaurant' => [
@@ -183,7 +183,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    public function registerPermissions()
+    public function registerPermissions(): array
     {
         return [
             'Admin.Locations' => [
@@ -197,7 +197,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    public function registerSettings()
+    public function registerSettings(): array
     {
         return [
             'reviewsettings' => [
@@ -210,7 +210,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    public function registerFormWidgets()
+    public function registerFormWidgets(): array
     {
         return [
             \Igniter\Local\FormWidgets\StarRating::class => [

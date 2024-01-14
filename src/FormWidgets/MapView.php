@@ -22,7 +22,7 @@ class MapView extends BaseFormWidget
 
     public $shapeSelector = '[data-map-shape]';
 
-    protected $defaultAlias = 'mapview';
+    protected string $defaultAlias = 'mapview';
 
     /**
      * @var array List of CSS classes to apply to the map container element

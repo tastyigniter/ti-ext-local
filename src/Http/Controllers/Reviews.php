@@ -7,13 +7,13 @@ use Igniter\Local\Models\Review;
 
 class Reviews extends \Igniter\Admin\Classes\AdminController
 {
-    public $implement = [
+    public array $implement = [
         \Igniter\Admin\Http\Actions\ListController::class,
         \Igniter\Admin\Http\Actions\FormController::class,
         \Igniter\Local\Http\Actions\LocationAwareController::class,
     ];
 
-    public $listConfig = [
+    public array $listConfig = [
         'list' => [
             'model' => \Igniter\Local\Models\Review::class,
             'title' => 'lang:igniter.local::default.reviews.text_title',
@@ -23,7 +23,7 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
         ],
     ];
 
-    public $formConfig = [
+    public array $formConfig = [
         'name' => 'lang:igniter.local::default.reviews.text_form_name',
         'model' => \Igniter\Local\Models\Review::class,
         'request' => \Igniter\Local\Requests\Review::class,
@@ -49,7 +49,7 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
         'configFile' => 'review',
     ];
 
-    protected $requiredPermissions = 'Admin.Reviews';
+    protected null|string|array $requiredPermissions = 'Admin.Reviews';
 
     protected static $reviewHints;
 
