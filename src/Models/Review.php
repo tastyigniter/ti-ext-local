@@ -28,9 +28,6 @@ class Review extends Model
      */
     protected $primaryKey = 'review_id';
 
-    /**
-     * @var array The model table column to convert to dates on insert/update
-     */
     public $timestamps = true;
 
     protected $guarded = [];
