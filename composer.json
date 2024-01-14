@@ -1,58 +1,59 @@
 {
-	"name": "tastyigniter/ti-ext-local",
-	"type": "tastyigniter-package",
-	"description": "This extension allows your customers find and view menu items of their nearest location.",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Sam Poyigi",
-			"email": "sam@sampoyigi.com"
-		}
-	],
-	"require-dev": {
-		"laravel/pint": "^1.2",
-		"nunomaduro/larastan": "^2.4.0",
-		"orchestra/testbench": "^8.5",
-		"pestphp/pest-plugin-laravel": "^2.0",
-		"tastyigniter/core": "dev-master",
-		"tastyigniter/ti-ext-automation": "v4.x-dev as 4.0",
-		"tastyigniter/ti-ext-cart": "v4.x-dev as 4.0",
-		"igniterlabs/ti-ext-importexport": "v4.x-dev as 4.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"Igniter\\Local\\": "src/"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Igniter\\Local\\Tests\\": "tests/"
-		}
-	},
-	"extra": {
-		"tastyigniter-extension": {
-			"name": "Local",
-			"icon": {
-				"class": "fa fa-map-marker",
-				"backgroundColor": "#CD4341",
-				"color": "#fff"
-			},
-			"homepage": "https://tastyigniter.com/marketplace/item/igniter-local"
-		}
-	},
-	"scripts": {
-		"test": "vendor/bin/pest",
-		"test-coverage": "vendor/bin/pest --coverage",
-		"format": "vendor/bin/pint",
-		"static": "vendor/bin/phpstan analyse --ansi --memory-limit 1056M"
-	},
-	"config": {
-		"allow-plugins": {
-			"pestphp/pest-plugin": true,
-			"php-http/discovery": true,
-			"composer/installers": true
-		},
-		"sort-packages": true
-	},
-	"minimum-stability": "dev"
+  "name": "tastyigniter/ti-ext-local",
+  "type": "tastyigniter-package",
+  "description": "This extension allows your customers find and view menu items of their nearest location.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sam Poyigi",
+      "email": "sam@sampoyigi.com"
+    }
+  ],
+  "require-dev": {
+    "laravel/pint": "^1.2",
+    "nunomaduro/larastan": "^2.4.0",
+    "orchestra/testbench": "^8.5",
+    "pestphp/pest-plugin-laravel": "^2.0",
+    "tastyigniter/core": "dev-master",
+    "tastyigniter/ti-ext-automation": "v4.x-dev as 4.0",
+    "tastyigniter/ti-ext-cart": "v4.x-dev as 4.0",
+    "tastyigniter/ti-ext-reservation": "v4.x-dev as 4.0",
+    "igniterlabs/ti-ext-importexport": "v4.x-dev as 4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Igniter\\Local\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Igniter\\Local\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "tastyigniter-extension": {
+      "name": "Local",
+      "icon": {
+        "class": "fa fa-map-marker",
+        "backgroundColor": "#CD4341",
+        "color": "#fff"
+      },
+      "homepage": "https://tastyigniter.com/marketplace/item/igniter-local"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/pest",
+    "test-coverage": "vendor/bin/pest --coverage",
+    "format": "vendor/bin/pint",
+    "static": "vendor/bin/phpstan analyse --ansi --memory-limit 1056M"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "php-http/discovery": true,
+      "composer/installers": true
+    },
+    "sort-packages": true
+  },
+  "minimum-stability": "dev"
 }
