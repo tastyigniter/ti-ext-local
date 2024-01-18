@@ -199,11 +199,11 @@ class MapArea extends BaseFormWidget
     public function onDeleteArea()
     {
         throw_unless(strlen($areaId = post('areaId')),
-            FlashException::error(lang('igniter.local::default.alert_invalid_area'))
+            new FlashException(lang('igniter.local::default.alert_invalid_area'))
         );
 
         throw_unless($model = $this->getRelationModel()->find($areaId),
-            FlashException::error(sprintf(lang('igniter::admin.form.not_found'), $areaId))
+            new FlashException(sprintf(lang('igniter::admin.form.not_found'), $areaId))
         );
 
         $model->delete();

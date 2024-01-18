@@ -90,7 +90,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
     public function onSaveRecord()
     {
         throw_unless($this->getController()->authorize('Admin.Locations'),
-            FlashException::error(lang('igniter.local::default.picker.alert_user_restricted'))
+            new FlashException(lang('igniter.local::default.picker.alert_user_restricted'))
         );
 
         $model = strlen($recordId = post('recordId'))
@@ -119,7 +119,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
     public function onDeleteRecord()
     {
         throw_unless($this->getController()->authorize('Admin.Locations'),
-            FlashException::error(lang('igniter.local::default.picker.alert_user_restricted'))
+            new FlashException(lang('igniter.local::default.picker.alert_user_restricted'))
         );
 
         $model = $this->findFormModel(post('recordId'));
