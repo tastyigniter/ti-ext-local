@@ -113,7 +113,7 @@ class ScheduleEditor extends BaseFormWidget
     protected function getSchedule($scheduleCode)
     {
         throw_unless($schedule = array_get($this->listSchedules(), $scheduleCode),
-            FlashException::error(lang('igniter.local::default.alert_schedule_not_loaded'))
+            new FlashException(lang('igniter.local::default.alert_schedule_not_loaded'))
         );
 
         return $schedule;
