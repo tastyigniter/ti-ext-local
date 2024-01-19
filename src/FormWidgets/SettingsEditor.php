@@ -5,6 +5,7 @@ namespace Igniter\Local\FormWidgets;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Models\LocationSettings;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +14,7 @@ class SettingsEditor extends BaseFormWidget
 {
     use ValidatesForm;
 
-    /**
-     * @var \Igniter\Local\Models\Location Form model object.
-     */
-    public $model;
+    public ?Model $model;
 
     public $form;
 
