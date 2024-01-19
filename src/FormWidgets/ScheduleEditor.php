@@ -6,6 +6,7 @@ use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
 use Igniter\Cart\Classes\OrderTypes;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\FlashException;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\WorkingHour;
@@ -18,7 +19,7 @@ class ScheduleEditor extends BaseFormWidget
     /**
      * @var \Igniter\Local\Models\Location Form model object.
      */
-    public $model;
+    public ?Model $model;
 
     public $form;
 
