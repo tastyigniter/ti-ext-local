@@ -95,9 +95,11 @@ abstract class Manager
 
     public function currentOrAssigned(): array
     {
-        return $this->check()
-            ? [$this->getId()]
-            : AdminAuth::user()->locations->pluck('location_id')->all();
+        if ($this->check()) {
+            return [$this->getId()];
+        }
+
+        return AdminAuth::user()?->locations?->pluck('location_id')->all() ?? [];
     }
 
     public function setCurrent(LocationInterface $locationModel)
