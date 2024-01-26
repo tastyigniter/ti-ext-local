@@ -19,7 +19,7 @@ class ScheduleEditor extends BaseFormWidget
     /**
      * @var \Igniter\Local\Models\Location Form model object.
      */
-    public ?Model $model;
+    public ?Model $model = null;
 
     public $form;
 
