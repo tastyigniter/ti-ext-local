@@ -14,7 +14,10 @@ class SettingsEditor extends BaseFormWidget
 {
     use ValidatesForm;
 
-    public ?Model $model;
+    /**
+     * @var \Igniter\Local\Models\Location Form model object.
+     */
+    public ?Model $model = null;
 
     public $form;
 
