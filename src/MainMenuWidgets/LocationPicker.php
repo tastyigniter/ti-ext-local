@@ -55,6 +55,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
         return $this->makePartial('formwidgets/recordeditor/form', [
             'formRecordId' => $recordId,
+            'showDeleteButton' => $model->exists,
             'formTitle' => lang($model->exists ? 'igniter.local::default.picker.text_edit_location' : 'igniter.local::default.picker.text_new_location'),
             'formWidget' => $this->makeLocationFormWidget($model),
         ]);
@@ -122,11 +123,11 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
             new FlashException(lang('igniter.local::default.picker.alert_user_restricted'))
         );
 
-        $model = $this->findFormModel(post('recordId'));
+        $model = $this->findFormModel((string)post('recordId'));
 
         $model->delete();
 
-        flash()->success(sprintf(lang('igniter::admin.alert_success'), lang($this->formName).' deleted'))->now();
+        flash()->success(sprintf(lang('igniter::admin.alert_success'), lang('igniter.local::default.picker.text_form_name').' deleted'))->now();
 
         return $this->reload();
     }
