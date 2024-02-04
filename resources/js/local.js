@@ -69,7 +69,7 @@
 
             if (!params || !params.menuId) return;
 
-            const $button = $('<button type="button" data-cart-control="load-item" data-menu-id="' + params.menuId + '"></button>');
+            const $button = $('<button type="button" data-cart-control="load-item" data-menu-id="'+params.menuId+'"></button>');
 
             $body.prepend($button);
             $button.trigger('click');
