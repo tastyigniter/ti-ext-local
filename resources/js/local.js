@@ -60,4 +60,24 @@
         window.location.href = pageUrl+$input.attr('name')+'='+$input.val()
     })
 
+    $(document).render(function () {
+        setTimeout(function () {
+            const $body = $('body'),
+                params = new Proxy(new URLSearchParams(window.location.search), {
+                    get: (searchParams, prop) => searchParams.get(prop),
+                });
+
+            if (!params || !params.menuId) return;
+
+            const $button = $('<button type="button" data-cart-control="load-item" data-menu-id="'+params.menuId+'"></button>');
+
+            $body.prepend($button);
+            $button.trigger('click');
+
+            const uri = window.location.href.toString(),
+                cleanUri = uri.substring(0, uri.indexOf("?"));
+
+            window.history.replaceState({}, document.title, cleanUri);
+        }, 500);
+    });
 }(jQuery)

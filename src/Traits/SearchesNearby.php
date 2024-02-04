@@ -50,9 +50,9 @@ trait SearchesNearby
         } catch (Exception $ex) {
             if (Request::ajax()) {
                 throw $ex;
-            } else {
-                flash()->danger($ex->getMessage());
             }
+
+            flash()->danger($ex->getMessage());
         }
     }
 
