@@ -57,7 +57,7 @@ class ScheduleEditor extends BaseFormWidget
 
     public function loadAssets()
     {
-        $this->addJs('build/js/vendor.datetime.js', 'vendor-datetime-js');
+        $this->addJs('js/vendor.datetime.js', 'vendor-datetime-js');
         $this->addJs('vendor/timesheet/timesheet.js', 'timesheet-js');
         $this->addJs('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');
         $this->addJs('scheduleeditor.js', 'scheduleeditor-js');
