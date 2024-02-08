@@ -13,4 +13,9 @@ class ReviewSettings extends Model
 
     // Reference to field configuration
     public string $settingsFieldsConfig = 'reviewsettings';
+
+    public static function allowReviews()
+    {
+        return (bool)self::get('allow_reviews', TRUE);
+    }
 }

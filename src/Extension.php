@@ -66,7 +66,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function boot()
     {
         Event::listen('main.page.init', function (MainController $controller) {
-            View::share('showReviews', (bool)ReviewSettings::get('allow_reviews', false));
+            View::share('showReviews', ReviewSettings::allowReviews());
         });
 
         $this->bindRememberLocationAreaEvents();
@@ -253,7 +253,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     protected function extendDashboardChartsDatasets()
     {
         Charts::registerDatasets(function () {
-            if (!ReviewSettings::get('allow_reviews', false)) {
+            if (!ReviewSettings::allowReviews()) {
                 return [];
             }
 
