@@ -16,6 +16,6 @@ class ReviewSettings extends Model
 
     public static function allowReviews()
     {
-        return (bool)self::get('allow_reviews', TRUE);
+        return (bool)self::get('allow_reviews', true);
     }
 }
