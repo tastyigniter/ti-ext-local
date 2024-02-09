@@ -66,7 +66,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function boot()
     {
         Event::listen('main.page.init', function (MainController $controller) {
-            View::share('showReviews', ReviewSettings::allowReviews());
+            View::share('allowReviews', ReviewSettings::allowReviews());
         });
 
         $this->bindRememberLocationAreaEvents();
