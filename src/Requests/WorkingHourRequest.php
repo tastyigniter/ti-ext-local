@@ -25,8 +25,8 @@ class WorkingHourRequest extends FormRequest
         return [
             'type' => ['alpha_dash', 'in:24_7,daily,timesheet,flexible'],
             'days.*' => ['required_if:type,daily', 'integer', 'between:0,7'],
-            'open' => ['required_if:type,daily', 'valid_time'],
-            'close' => ['required_if:type,daily', 'valid_time'],
+            'open' => ['required_if:type,daily', 'date_format:H:i'],
+            'close' => ['required_if:type,daily', 'date_format:H:i'],
             'timesheet' => ['required_if:type,timesheet', 'string'],
             'flexible' => ['required_if:type,flexible', 'array'],
             'flexible.*.day' => ['required_if:type,flexible', 'numeric'],
