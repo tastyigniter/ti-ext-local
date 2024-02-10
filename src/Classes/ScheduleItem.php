@@ -35,7 +35,7 @@ class ScheduleItem
         $instance = resolve(static::class, ['name' => $name]);
         $instance->data = $data;
         $instance->type = array_get($data, 'type', '24_7');
-        $instance->days = array_get($data, 'days') ?: [];
+        $instance->days = array_get($data, 'days') ?: range(0, 6);
         $instance->open = array_get($data, 'open', '00:00');
         $instance->close = array_get($data, 'close', '23:59');
         $instance->timesheet = $instance->timesheet(array_get($data, 'timesheet', []));
