@@ -65,7 +65,7 @@ abstract class Manager
 
         $slug = $this->resolveLocationSlug();
         if ($slug && $model = $this->getBySlug($slug)) {
-            $this->setModel($model);
+            $this->setCurrent($model);
         } else {
             $id = $this->getSession('id');
             if ($id && $model = $this->getById($id)) {
@@ -97,6 +97,10 @@ abstract class Manager
     {
         if ($this->check()) {
             return [$this->getId()];
+        }
+
+        if (AdminAuth::isSuperUser()) {
+            return [];
         }
 
         return AdminAuth::user()?->locations?->pluck('location_id')->all() ?? [];

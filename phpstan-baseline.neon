@@ -116,6 +116,11 @@ parameters:
 			path: src/Classes/Manager.php
 
 		-
+			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:isSuperUser\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Manager.php
+
+		-
 			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Manager.php
@@ -236,17 +241,12 @@ parameters:
 			path: src/Extension.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\ReviewSettings\\:\\:get\\(\\)\\.$#"
-			count: 2
-			path: src/Extension.php
-
-		-
 			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\Auth\\:\\:customer\\(\\)\\.$#"
 			count: 2
 			path: src/Extension.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:find\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:find\\(\\)\\.$#"
 			count: 1
 			path: src/FormWidgets/MapArea.php
 
@@ -292,11 +292,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Admin\\\\Facades\\\\AdminMenu\\:\\:setContext\\(\\)\\.$#"
-			count: 1
-			path: src/Http/Controllers/Locations.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:getLogs\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Controllers/Locations.php
 
@@ -372,6 +367,11 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Admin\\\\Classes\\\\BaseWidget\\:\\:\\$previewMode\\.$#"
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:getLogs\\(\\)\\.$#"
 			count: 1
 			path: src/MainMenuWidgets/LocationPicker.php
 
@@ -457,12 +457,12 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_lat\\.$#"
-			count: 3
+			count: 4
 			path: src/Models/Location.php
 
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_lng\\.$#"
-			count: 3
+			count: 4
 			path: src/Models/Location.php
 
 		-
@@ -614,6 +614,11 @@ parameters:
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
 			path: src/Models/Review.php
+
+		-
+			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\ReviewSettings\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: src/Models/ReviewSettings.php
 
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\:\\:selectDistance\\(\\)\\.$#"

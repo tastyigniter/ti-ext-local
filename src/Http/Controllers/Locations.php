@@ -3,7 +3,6 @@
 namespace Igniter\Local\Http\Controllers;
 
 use Igniter\Admin\Facades\AdminMenu;
-use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Facades\Location as LocationFacade;
 
 class Locations extends \Igniter\Admin\Classes\AdminController
@@ -51,15 +50,6 @@ class Locations extends \Igniter\Admin\Classes\AdminController
     public function settings_onSave($context = null)
     {
         return $this->asExtension('FormController')->edit_onSave($context, LocationFacade::getId());
-    }
-
-    public function formAfterSave($model)
-    {
-        if ($model->is_auto_lat_lng) {
-            if ($logs = Geocoder::getLogs()) {
-                flash()->error(implode(PHP_EOL, $logs))->important();
-            }
-        }
     }
 
     public function mapViewCenterCoords()

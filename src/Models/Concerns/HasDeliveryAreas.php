@@ -40,15 +40,19 @@ trait HasDeliveryAreas
             return;
         }
 
-        if (!$this->isDirty([
-            'location_address_1',
-            'location_address_2',
-            'location_city',
-            'location_state',
-            'location_postcode',
-            'location_country_id',
-        ])) {
-            return;
+        if ($this->location_lat && $this->location_lng) {
+            if (!$this->isDirty([
+                'location_address_1',
+                'location_address_2',
+                'location_city',
+                'location_state',
+                'location_postcode',
+                'location_country_id',
+                'location_lat',
+                'location_lng',
+            ])) {
+                return;
+            }
         }
 
         $address = format_address($this->getAddress(), false);

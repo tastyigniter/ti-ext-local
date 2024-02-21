@@ -43,7 +43,7 @@ class LocationAreaRequest extends FormRequest
             'boundaries.distance.*.type' => ['sometimes', 'required', 'string'],
             'boundaries.distance.*.distance' => ['sometimes', 'required', 'numeric'],
             'boundaries.distance.*.charge' => ['sometimes', 'required', 'numeric'],
-            'conditions' => ['sometimes', 'required'],
+            'conditions' => ['sometimes'],
             'conditions.*.amount' => ['sometimes', 'required', 'numeric'],
             'conditions.*.type' => ['sometimes', 'required', 'alpha_dash'],
             'conditions.*.total' => ['sometimes', 'required', 'numeric'],

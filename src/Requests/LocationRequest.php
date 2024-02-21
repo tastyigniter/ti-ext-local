@@ -32,6 +32,7 @@ class LocationRequest extends FormRequest
     {
         return [
             'location_name' => ['required', 'string', 'between:2,32'],
+            'permalink_slug' => ['nullable', 'alpha_dash', 'max:255'],
             'location_email' => ['required', 'email:filter', 'max:96'],
             'location_telephone' => ['sometimes', 'string'],
             'location_address_1' => ['required', 'string', 'between:2,255'],
@@ -45,7 +46,6 @@ class LocationRequest extends FormRequest
             'description' => ['max:3028'],
             'location_status' => ['boolean'],
             'is_default' => ['boolean'],
-            'permalink_slug' => ['alpha_dash', 'max:255'],
         ];
     }
 }

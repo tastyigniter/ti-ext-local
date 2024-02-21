@@ -14,6 +14,14 @@ class ReviewSettings extends Model
     // Reference to field configuration
     public string $settingsFieldsConfig = 'reviewsettings';
 
+    public static array $defaultHints = [
+        ['value' => 'Poor'],
+        ['value' => 'Average'],
+        ['value' => 'Good'],
+        ['value' => 'Very Good'],
+        ['value' => 'Excellent'],
+    ];
+
     public static function allowReviews()
     {
         return (bool)self::get('allow_reviews', true);

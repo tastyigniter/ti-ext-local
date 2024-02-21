@@ -448,7 +448,7 @@ class Location extends Manager
      */
     public function checkMinimumOrder($cartTotal)
     {
-        return $cartTotal >= $this->minimumOrderTotal();
+        return $this->checkMinimumOrderTotal($cartTotal);
     }
 
     public function checkDistance()

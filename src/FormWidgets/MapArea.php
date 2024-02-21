@@ -104,8 +104,8 @@ class MapArea extends BaseFormWidget
             );
         }
 
-        $this->addJs('formwidgets/mapview.js', 'mapview-js');
-        $this->addJs('formwidgets/mapview.shape.js', 'mapview-shape-js');
+        $this->addJs('mapview.js', 'mapview-js');
+        $this->addJs('mapview.shape.js', 'mapview-shape-js');
     }
 
     public function render()

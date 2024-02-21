@@ -4,7 +4,6 @@ namespace Igniter\Local\Models\Scopes;
 
 use Igniter\Flame\Database\Scope;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class LocationScope extends Scope
 {
@@ -27,7 +26,7 @@ class LocationScope extends Scope
             $sql .= ' cos( radians( location_lng ) - radians(?) ) + sin( radians(?) ) *';
             $sql .= ' sin( radians( location_lat ) ) ) ) AS distance';
 
-            return $builder->select(DB::raw($sql), [$latitude, $longitude, $latitude]);
+            return $builder->selectRaw($sql, [$latitude, $longitude, $latitude]);
         };
     }
 }
