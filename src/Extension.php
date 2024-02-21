@@ -19,7 +19,7 @@ use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Local\Models\Scopes\LocationScope;
-use Igniter\Main\Classes\MainController;
+use Igniter\Local\Requests\LocationRequest;
 use Igniter\Reservation\Models\Reservation;
 use Igniter\User\Facades\Auth;
 use Igniter\User\Models\User;
@@ -27,7 +27,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
 
 class Extension extends \Igniter\System\Classes\BaseExtension
 {
@@ -65,10 +64,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     public function boot()
     {
-        Event::listen('main.page.init', function (MainController $controller) {
-            View::share('allowReviews', ReviewSettings::allowReviews());
-        });
-
         $this->bindRememberLocationAreaEvents();
 
         $this->addReviewsRelationship();
@@ -77,7 +72,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
         User::extend(function ($model) {
             $model->addDynamicMethod('getAvailableLocations', function () use ($model) {
-                if ($model->locations->isEmpty() && $model->isSuperUser()) {
+                if ($model->isSuperUser()) {
                     return $model->locations()->getModel()->query()->get();
                 }
 
@@ -85,11 +80,11 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             });
 
             $model->addDynamicMethod('isAssignedLocation', function ($location) use ($model) {
-                if ($model->locations->isEmpty()) {
-                    return $model->isSuperUser();
+                if ($model->isSuperUser()) {
+                    return true;
                 }
 
-                return $model->locations->contains($location);
+                return $model->locations?->contains($location);
             });
         });
 
@@ -308,6 +303,10 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     protected function bindRememberLocationAreaEvents(): void
     {
         Event::listen('location.position.updated', function ($location, $position, $oldPosition) {
+            if ($position->format() === $oldPosition->format()) {
+                return;
+            }
+
             $this->updateCustomerLastArea([
                 'query' => $position->format(),
             ]);
@@ -350,7 +349,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $lastArea = @json_decode($customer->last_location_area, true) ?: [];
         $lastArea = array_merge($lastArea, $value);
 
-        $customer->update([
+        $customer->updateQuietly([
             'last_location_area' => json_encode($lastArea),
         ]);
     }
@@ -364,6 +363,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                     ->permission('Admin.Locations')
                     ->mergeConfig([
                         'form' => 'igniter.local::/models/location',
+                        'request' => LocationRequest::class,
                     ]),
             ]);
         });

@@ -74,13 +74,15 @@ class CoveredArea
 
     protected function calculateDistanceCharges()
     {
-        if (!Location::userPosition()->isValid()) {
+        $distanceCharges = collect($this->model->boundaries['distance'] ?? []);
+
+        if (!Location::userPosition()->isValid() || $distanceCharges->isEmpty()) {
             return 0;
         }
 
         $distanceFromLocation = round(Location::checkDistance(), 2);
 
-        $condition = collect($this->model->boundaries['distance'] ?? [])
+        $condition = $distanceCharges
             ->sortBy('priority')
             ->map(function ($condition) {
                 return new CoveredAreaCondition([

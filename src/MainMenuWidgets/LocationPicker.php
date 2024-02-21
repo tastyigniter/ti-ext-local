@@ -7,9 +7,9 @@ use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\FlashException;
+use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location;
-use Igniter\Local\Requests\LocationRequest;
 use Igniter\User\Facades\AdminAuth;
 use Illuminate\Support\Facades\DB;
 
@@ -100,7 +100,6 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
         $form = $this->makeLocationFormWidget($model);
 
-        $this->config['request'] = LocationRequest::class;
         $saveData = $this->validateFormWidget($form, $form->getSaveData());
 
         $modelsToSave = $this->prepareModelsToSave($model, $saveData);
@@ -110,6 +109,10 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
                 $modelToSave->saveOrFail();
             }
         });
+
+        if ($logs = Geocoder::getLogs()) {
+            flash()->error(implode(PHP_EOL, $logs))->important()->now();
+        }
 
         flash()->success(sprintf(lang('igniter::admin.alert_success'),
             lang('igniter.local::default.picker.text_form_name').' '.($form->context == 'create' ? 'created' : 'updated')))->now();

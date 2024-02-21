@@ -4,6 +4,8 @@
  * Model configuration options for settings model.
  */
 
+use Igniter\Local\Models\ReviewSettings;
+
 return [
     'form' => [
         'toolbar' => [
@@ -40,11 +42,18 @@ return [
                     'condition' => 'checked',
                 ],
             ],
-            'ratings[ratings]' => [
+            'hints' => [
                 'label' => 'lang:igniter.local::default.reviews.label_hints',
                 'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
-                'type' => 'partial',
-                'path' => 'igniter.local::_partials/reviews/ratings',
+                'type' => 'repeater',
+                'default' => ReviewSettings::$defaultHints,
+                'form' => [
+                    'fields' => [
+                        'value' => [
+                            'type' => 'text',
+                        ],
+                    ],
+                ],
                 'commentAbove' => 'lang:igniter.local::default.reviews.help_hints',
             ],
         ],
