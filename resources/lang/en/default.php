@@ -2,8 +2,7 @@
 
 return [
     'text_tab_texts' => 'Text',
-    'text_info_heading' => 'More info about %s local restaurant',
-    'text_gallery_heading' => 'Gallery of %s',
+    'text_gallery' => 'Gallery',
 
     'text_find' => 'Find',
     'text_order_summary' => 'Find a restaurant near you',
@@ -136,7 +135,7 @@ return [
     'alert_no_search_setting' => 'Location Search By setting has not been specified.',
     'alert_no_search_query' => 'Please type in a address or postcode to check if we can deliver to you.',
     'alert_invalid_search_query' => 'We couldn\'t locate the entered address or postcode, please enter a valid address or postcode.',
-    'alert_missing_street_address' => 'Please enter your street address.',
+    'alert_missing_street_address' => 'Please enter a valid street address.',
     'alert_no_found_restaurant' => 'We do not have any local restaurant near you.',
     'alert_location_required' => 'No location found or selected',
     'alert_order_type_required' => 'There\'s no active online ordering option for this location',

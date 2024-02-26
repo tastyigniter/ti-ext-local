@@ -74,6 +74,7 @@ class Location extends Model implements LocationInterface
     public $relation = [
         'hasMany' => [
             'settings' => [\Igniter\Local\Models\LocationSettings::class, 'delete' => true],
+            'reviews' => [\Igniter\Local\Models\Review::class],
             'working_hours' => [\Igniter\Local\Models\WorkingHour::class, 'delete' => true],
         ],
         'belongsTo' => [
@@ -104,6 +105,7 @@ class Location extends Model implements LocationInterface
         'distance asc', 'distance desc',
         'location_id asc', 'location_id desc',
         'location_name asc', 'location_name desc',
+        'reviews_count asc', 'reviews_count desc',
     ];
 
     protected array $queryModifierSearchableFields = [
@@ -164,14 +166,16 @@ class Location extends Model implements LocationInterface
 
     public function getGallery()
     {
-        $gallery = array_get($this->options, 'gallery');
-        $gallery['images'] = $this->getMedia('gallery');
-
-        return $gallery;
+        return $this->getMedia('gallery');
     }
 
     public function defaultableName(): string
     {
         return $this->location_name;
+    }
+
+    public function getMorphClass()
+    {
+        return 'locations';
     }
 }

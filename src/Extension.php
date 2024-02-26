@@ -7,7 +7,6 @@ use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Cart\Classes\OrderTypes;
-use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Igniter;
 use Igniter\Local\Classes\Location;
@@ -282,28 +281,15 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             'reviews' => \Igniter\Local\Models\Review::class,
         ]);
 
-        Order::extend(function ($model) {
-            $model->relation['morphMany']['review'] = [\Igniter\Local\Models\Review::class];
-        });
-
         Reservation::extend(function ($model) {
             $model->relation['morphMany']['review'] = [\Igniter\Local\Models\Review::class];
-        });
-
-        LocationModel::extend(function ($model) {
-            $model->relation['hasMany']['reviews'] = [\Igniter\Local\Models\Review::class];
-
-            $model->addDynamicMethod('reviews_score', function () use ($model) {
-                return Review::getScoreForLocation($model->getKey());
-            });
-            $model->queryModifierAddSorts(['reviews_count asc', 'reviews_count desc']);
         });
     }
 
     protected function bindRememberLocationAreaEvents(): void
     {
         Event::listen('location.position.updated', function ($location, $position, $oldPosition) {
-            if ($position->format() === $oldPosition->format()) {
+            if ($position->format() === $oldPosition?->format()) {
                 return;
             }
 

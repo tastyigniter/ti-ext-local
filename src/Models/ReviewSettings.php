@@ -26,4 +26,14 @@ class ReviewSettings extends Model
     {
         return (bool)self::get('allow_reviews', true);
     }
+
+    public static function autoApproveReviews()
+    {
+        return self::get('approve_reviews', false);
+    }
+
+    public static function getHints()
+    {
+        return collect(self::get('hints', self::$defaultHints))->pluck('value')->all();
+    }
 }

@@ -34,16 +34,6 @@ $config['form']['tabs'] = [
             'commentAbove' => 'lang:igniter.local::default.help_delivery_areas',
         ],
 
-        'options[gallery][title]' => [
-            'label' => 'lang:igniter.local::default.label_gallery_title',
-            'tab' => 'lang:igniter.local::default.text_tab_gallery',
-            'type' => 'text',
-        ],
-        'options[gallery][description]' => [
-            'label' => 'lang:igniter::admin.label_description',
-            'tab' => 'lang:igniter.local::default.text_tab_gallery',
-            'type' => 'textarea',
-        ],
         'gallery' => [
             'label' => 'lang:igniter.local::default.label_gallery_add_image',
             'tab' => 'lang:igniter.local::default.text_tab_gallery',
