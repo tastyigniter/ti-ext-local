@@ -43,7 +43,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         'working_hours' => \Igniter\Local\Models\WorkingHour::class,
     ];
 
-    public $singletons = [
+    public array $singletons = [
         OrderTypes::class,
         'location' => Location::class,
     ];
