@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'text_title' => 'Locations',
     'text_tab_texts' => 'Text',
     'text_gallery' => 'Gallery',
 
@@ -181,7 +182,8 @@ return [
     'text_mealtime' => 'Available during %s (%s - %s)',
     'text_price_form' => 'From %s',
 
-    'text_form_name' => 'Location Settings',
+    'text_form_name' => 'Location',
+    'text_settings_form_name' => 'Location Settings',
     'text_settings' => 'Settings',
     'text_tab_general' => 'General',
     'text_tab_schedules' => 'Schedules',
@@ -218,6 +220,7 @@ return [
     'text_asap_only' => 'ASAP only',
     'text_later_only' => 'Later only',
     'text_side_menu_location' => 'Locations',
+    'text_tab_desc_location' => 'Manage your restaurant locations.',
 
     'column_city' => 'City',
     'column_state' => 'State',

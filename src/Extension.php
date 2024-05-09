@@ -20,6 +20,7 @@ use Igniter\Local\Models\ReviewSettings;
 use Igniter\Local\Models\Scopes\LocationScope;
 use Igniter\Local\Requests\LocationRequest;
 use Igniter\Reservation\Models\Reservation;
+use Igniter\System\Models\Settings;
 use Igniter\User\Facades\Auth;
 use Igniter\User\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -59,6 +60,8 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         Route::pushMiddlewareToGroup('igniter', \Igniter\Local\Http\Middleware\CheckLocation::class);
 
         AliasLoader::getInstance()->alias('Location', LocationFacade::class);
+
+        $this->registerSystemSettings();
     }
 
     public function boot()
@@ -157,7 +160,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                     'locationsettings' => [
                         'priority' => 10,
                         'class' => 'locationsettings',
-                        'href' => admin_url('locations/settings'),
+                        'href' => admin_url('locationsettings'),
                         'title' => lang('igniter.local::default.text_settings'),
                         'permission' => 'Admin.Locations',
                     ],
@@ -351,6 +354,22 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                         'form' => 'igniter.local::/models/location',
                         'request' => LocationRequest::class,
                     ]),
+            ]);
+        });
+    }
+
+    protected function registerSystemSettings()
+    {
+        Settings::registerCallback(function (Settings $manager) {
+            $manager->registerSettingItems('core', [
+                'locations' => [
+                    'label' => 'lang:igniter.local::default.text_side_menu_location',
+                    'description' => 'lang:igniter.local::default.text_tab_desc_location',
+                    'icon' => 'fa fa-map-pin',
+                    'priority' => 45,
+                    'permission' => ['Admin.Locations'],
+                    'url' => admin_url('locations'),
+                ],
             ]);
         });
     }

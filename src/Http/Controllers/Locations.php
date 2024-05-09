@@ -3,23 +3,49 @@
 namespace Igniter\Local\Http\Controllers;
 
 use Igniter\Admin\Facades\AdminMenu;
-use Igniter\Local\Facades\Location as LocationFacade;
 
 class Locations extends \Igniter\Admin\Classes\AdminController
 {
     public array $implement = [
+        \Igniter\Admin\Http\Actions\ListController::class,
         \Igniter\Admin\Http\Actions\FormController::class,
-        \Igniter\Local\Http\Actions\LocationAwareController::class,
+    ];
+
+    public array $listConfig = [
+        'list' => [
+            'model' => \Igniter\Local\Models\Location::class,
+            'title' => 'lang:igniter.local::default.text_title',
+            'emptyMessage' => 'lang:igniter.local::default.text_empty',
+            'defaultSort' => ['location_id', 'DESC'],
+            'configFile' => 'location',
+            'back' => 'settings',
+        ],
     ];
 
     public array $formConfig = [
         'name' => 'lang:igniter.local::default.text_form_name',
         'model' => \Igniter\Local\Models\Location::class,
-        'settings' => [
-            'title' => 'lang:igniter::admin.form.edit_title',
-            'redirect' => 'locations/settings',
+        'request' => \Igniter\Local\Requests\LocationRequest::class,
+        'create' => [
+            'title' => 'lang:igniter::admin.form.create_title',
+            'redirect' => 'locations/edit/{location_id}',
+            'redirectClose' => 'locations',
+            'redirectNew' => 'locations/create',
         ],
-        'configFile' => 'locationsettings',
+        'edit' => [
+            'title' => 'lang:igniter::admin.form.edit_title',
+            'redirect' => 'locations/edit/{location_id}',
+            'redirectClose' => 'locations',
+            'redirectNew' => 'locations/create',
+        ],
+        'preview' => [
+            'title' => 'lang:igniter::admin.form.preview_title',
+            'redirect' => 'locations',
+        ],
+        'delete' => [
+            'redirect' => 'locations',
+        ],
+        'configFile' => 'location',
     ];
 
     protected null|string|array $requiredPermissions = 'Admin.Locations';
@@ -33,23 +59,7 @@ class Locations extends \Igniter\Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('locationsettings', 'restaurant');
-    }
-
-    public function settings($context = null)
-    {
-        if (!LocationFacade::check()) {
-            return $this->makeView('select_location');
-        }
-
-        $this->defaultView = 'edit';
-
-        $this->asExtension('FormController')->edit($context, LocationFacade::getId());
-    }
-
-    public function settings_onSave($context = null)
-    {
-        return $this->asExtension('FormController')->edit_onSave($context, LocationFacade::getId());
+        AdminMenu::setContext('settings', 'system');
     }
 
     public function mapViewCenterCoords()
