@@ -13,8 +13,6 @@ class Delivery extends CartCondition
 
     protected $deliveryCharge = 0;
 
-    protected $minimumOrder = 0;
-
     public function beforeApply()
     {
         // Do not apply condition when orderType is not delivery

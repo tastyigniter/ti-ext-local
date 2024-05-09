@@ -3,8 +3,9 @@
 namespace Igniter\Local\AutomationRules\Conditions;
 
 use Igniter\Automation\Classes\BaseModelAttributesCondition;
+use Igniter\Cart\Models\Order;
 use Igniter\Local\Models\Review;
-use Illuminate\Database\Eloquent\Model;
+use Igniter\Reservation\Models\Reservation;
 
 class ReviewCount extends BaseModelAttributesCondition
 {
@@ -31,7 +32,7 @@ class ReviewCount extends BaseModelAttributesCondition
 
     public function getReviewCountAttribute($value, $object)
     {
-        if (!$object instanceof Model) {
+        if (!$object instanceof Order && !$object instanceof Reservation) {
             return false;
         }
 

@@ -39,6 +39,8 @@ class ScheduleEditor extends BaseFormWidget
     {
         $this->fillFromConfig([
             'form',
+            'popupSize',
+            'formTitle',
         ]);
     }
 
