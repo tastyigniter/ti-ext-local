@@ -9,11 +9,6 @@ class MapView extends BaseFormWidget
 {
     use FormModelWidget;
 
-    /**
-     * @var string Partial name containing the toolbar buttons
-     */
-    public $buttons;
-
     public $height = 500;
 
     public $zoom;
