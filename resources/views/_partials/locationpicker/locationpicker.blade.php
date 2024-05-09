@@ -44,9 +44,7 @@
           <a
             class="fw-bold text-reset text-sm cursor-pointer"
             data-alias="locationpicker"
-            data-toggle="record-editor"
-            data-handler="{{ $this->getEventHandler('onLoadForm') }}"
-            data-record-data='{"location": "{{ $location->location_id }}"}'
+            href="{{ admin_url('locations/edit/'.$location->location_id) }}"
           >
             <span>@lang('igniter::admin.text_edit')</span>
           </a>
@@ -60,13 +58,10 @@
         <hr class="dropdown-divider">
       </li>
       <li class="dropdown-footer">
-        <button
-          type="button"
-          class="dropdown-item"
-          data-alias="locationpicker"
-          data-toggle="record-editor"
-          data-handler="{{ $this->getEventHandler('onLoadForm') }}"
-      ><i class="fa fa-fw fa-plus-circle"></i>@lang('igniter.local::default.text_add_location')</button>
+        <a
+          class="dropdown-item border-0 text-left py-2 px-3"
+          href="{{ admin_url('locations/create') }}"
+      ><i class="fa fa-fw fa-plus-circle"></i>@lang('igniter.local::default.text_add_location')</a>
     </li>
     @endif
   </ul>
