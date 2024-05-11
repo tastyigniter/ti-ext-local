@@ -82,7 +82,7 @@ class Review extends Model
         return $saleTypeModel->find($saleId);
     }
 
-    public static function leaveReview(Model $reviewable = null, array $data = [])
+    public static function leaveReview(?Model $reviewable = null, array $data = [])
     {
         throw_unless($reviewable->isCompleted(), new ApplicationException(
             lang('igniter.local::default.review.alert_review_status_history')
@@ -103,8 +103,9 @@ class Review extends Model
         $review->service = array_get($data, 'service', 0);
         $review->review_text = array_get($data, 'review_text', '');
 
-        if (!array_get($data, 'review_status') && ReviewSettings::autoApproveReviews())
+        if (!array_get($data, 'review_status') && ReviewSettings::autoApproveReviews()) {
             $review->review_status = true;
+        }
 
         $review->save();
 
