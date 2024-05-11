@@ -3,6 +3,7 @@
 namespace Igniter\Local\Models;
 
 use Igniter\Flame\Database\Model;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Models\Concerns\Locationable;
 use Igniter\System\Models\Concerns\Switchable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -79,6 +80,35 @@ class Review extends Model
         $saleTypeModel = (new static)->getSaleTypeModel($saleType);
 
         return $saleTypeModel->find($saleId);
+    }
+
+    public static function leaveReview(Model $reviewable = null, array $data = [])
+    {
+        throw_unless($reviewable->isCompleted(), new ApplicationException(
+            lang('igniter.local::default.review.alert_review_status_history')
+        ));
+
+        throw_if($reviewable->customer && self::checkReviewed($reviewable, $reviewable->customer), new ApplicationException(
+            lang('igniter.local::default.review.alert_review_duplicate')
+        ));
+
+        $review = new static;
+        $review->location_id = $reviewable->location_id;
+        $review->customer_id = $reviewable->customer_id;
+        $review->author = $reviewable->customer_name;
+        $review->sale_id = $reviewable->getKey();
+        $review->sale_type = $reviewable->getMorphClass();
+        $review->quality = array_get($data, 'quality', 0);
+        $review->delivery = array_get($data, 'delivery', 0);
+        $review->service = array_get($data, 'service', 0);
+        $review->review_text = array_get($data, 'review_text', '');
+
+        if (!array_get($data, 'review_status') && ReviewSettings::autoApproveReviews())
+            $review->review_status = true;
+
+        $review->save();
+
+        return $review;
     }
 
     public function getRatingOptions()
