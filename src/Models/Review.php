@@ -53,7 +53,10 @@ class Review extends Model
         ],
     ];
 
-    protected array $queryModifierSorts = ['created_at asc', 'created_at desc'];
+    protected array $queryModifierSorts = [
+        'created_at asc', 'created_at desc',
+        'created_at asc', 'created_at desc',
+    ];
 
     protected array $queryModifierFilters = [
         'location' => 'whereHasLocation',
