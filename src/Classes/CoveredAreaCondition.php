@@ -22,7 +22,7 @@ class CoveredAreaCondition
 
     public function getLabel()
     {
-        $condition['amount'] = lang('main::lang.text_free');
+        $condition['amount'] = lang('igniter::main.text_free');
         if ($this->amount < 0) {
             $condition['amount'] = lang('igniter.local::default.text_delivery_not_available');
         } elseif ($this->amount > 0) {
