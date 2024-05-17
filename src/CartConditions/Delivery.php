@@ -40,6 +40,6 @@ class Delivery extends CartCondition
 
     public function getValue()
     {
-        return $this->calculatedValue > 0 ? $this->calculatedValue : lang('main::lang.text_free');
+        return $this->calculatedValue > 0 ? $this->calculatedValue : lang('igniter::main.text_free');
     }
 }

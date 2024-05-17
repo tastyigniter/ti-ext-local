@@ -29,6 +29,16 @@ class CheckLocation
             $request->route()->setParameter('location', $location->permalink_slug);
         }
 
+        if ($request->route()->parameter('location') !== Location::current()->permalink_slug) {
+            return redirect()->to(page_url('home'));
+        }
+
+        if ((!$location?->isEnabled() && !AdminAuth::getUser()?->hasPermission('Admin.Locations'))) {
+            flash()->error(lang('igniter.local::default.alert_location_required'));
+
+            return redirect()->to(page_url('home'));
+        }
+
         return $next($request);
     }
 
