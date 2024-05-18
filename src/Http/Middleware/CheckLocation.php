@@ -29,7 +29,7 @@ class CheckLocation
             $request->route()->setParameter('location', $location->permalink_slug);
         }
 
-        if ($request->route()->parameter('location') !== Location::current()->permalink_slug) {
+        if ($location && $request->route()->parameter('location') !== $location?->permalink_slug) {
             return redirect()->to(page_url('home'));
         }
 

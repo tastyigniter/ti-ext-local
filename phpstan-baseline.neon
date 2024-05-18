@@ -346,12 +346,22 @@ parameters:
 			path: src/Http/Middleware/CheckLocation.php
 
 		-
+			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
+			count: 1
+			path: src/Http/Middleware/CheckLocation.php
+
+		-
 			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Middleware/CheckLocation.php
 
 		-
 			message: "#^Cannot call method hasParameter\\(\\) on object\\|string\\.$#"
+			count: 1
+			path: src/Http/Middleware/CheckLocation.php
+
+		-
+			message: "#^Cannot call method parameter\\(\\) on object\\|string\\.$#"
 			count: 1
 			path: src/Http/Middleware/CheckLocation.php
 
