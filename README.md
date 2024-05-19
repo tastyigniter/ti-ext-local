@@ -170,6 +170,10 @@ The settings definition array should contain the following keys:
 - `form`: An array of form fields or path to the form definition file to be used for the settings section.
 - `request`: The form request class to be used for the settings section.
 
+#### The `Locationable` model trait
+
+The `Locationable` model trait allows you to associate a model with a location. 
+
 ### Delivery areas
 
 #### Adding delivery areas

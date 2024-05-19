@@ -20,7 +20,6 @@ use Igniter\Local\Models\ReviewSettings;
 use Igniter\Local\Models\Scopes\LocationScope;
 use Igniter\Local\Requests\LocationRequest;
 use Igniter\Reservation\Models\Reservation;
-use Igniter\System\Models\Settings;
 use Igniter\User\Facades\Auth;
 use Igniter\User\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -53,15 +52,13 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     {
         parent::register();
 
-        $this->callAfterResolving('location', function (Location $location) {
+        $this->callAfterResolving('location', function(Location $location) {
             $location->setSessionKey(Igniter::runningInAdmin() ? 'admin_location' : 'location');
         });
 
         Route::pushMiddlewareToGroup('igniter', \Igniter\Local\Http\Middleware\CheckLocation::class);
 
         AliasLoader::getInstance()->alias('Location', LocationFacade::class);
-
-        $this->registerSystemSettings();
     }
 
     public function boot()
@@ -72,8 +69,8 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $this->addAssetsToReviewsSettingsPage();
         $this->extendDashboardChartsDatasets();
 
-        User::extend(function ($model) {
-            $model->addDynamicMethod('getAvailableLocations', function () use ($model) {
+        User::extend(function($model) {
+            $model->addDynamicMethod('getAvailableLocations', function() use ($model) {
                 if ($model->isSuperUser()) {
                     return $model->locations()->getModel()->query()->get();
                 }
@@ -81,7 +78,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 return $model->locations;
             });
 
-            $model->addDynamicMethod('isAssignedLocation', function ($location) use ($model) {
+            $model->addDynamicMethod('isAssignedLocation', function($location) use ($model) {
                 if ($model->isSuperUser()) {
                     return true;
                 }
@@ -155,17 +152,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function registerNavigation(): array
     {
         return [
-            'restaurant' => [
-                'child' => [
-                    'locationsettings' => [
-                        'priority' => 10,
-                        'class' => 'locationsettings',
-                        'href' => admin_url('locationsettings'),
-                        'title' => lang('igniter.local::default.text_settings'),
-                        'permission' => 'Admin.Locations',
-                    ],
-                ],
-            ],
             'marketing' => [
                 'child' => [
                     'reviews' => [
@@ -174,6 +160,17 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                         'href' => admin_url('igniter/local/reviews'),
                         'title' => lang('lang:igniter.local::default.reviews.side_menu'),
                         'permission' => 'Admin.Reviews',
+                    ],
+                ],
+            ],
+            'system' => [
+                'child' => [
+                    'locations' => [
+                        'priority' => 0,
+                        'class' => 'locations',
+                        'href' => admin_url('locations'),
+                        'title' => lang('igniter.local::default.text_title'),
+                        'permission' => 'Admin.Locations',
                     ],
                 ],
             ],
@@ -249,7 +246,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     protected function extendDashboardChartsDatasets()
     {
-        Charts::registerDatasets(function () {
+        Charts::registerDatasets(function() {
             if (!ReviewSettings::allowReviews()) {
                 return [];
             }
@@ -267,7 +264,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     protected function addAssetsToReviewsSettingsPage()
     {
-        Event::listen('admin.form.extendFieldsBefore', function ($form) {
+        Event::listen('admin.form.extendFieldsBefore', function($form) {
             if (!$form->model instanceof ReviewSettings) {
                 return;
             }
@@ -284,14 +281,14 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             'reviews' => \Igniter\Local\Models\Review::class,
         ]);
 
-        Reservation::extend(function ($model) {
+        Reservation::extend(function($model) {
             $model->relation['morphMany']['review'] = [\Igniter\Local\Models\Review::class];
         });
     }
 
     protected function bindRememberLocationAreaEvents(): void
     {
-        Event::listen('location.position.updated', function ($location, $position, $oldPosition) {
+        Event::listen('location.position.updated', function($location, $position, $oldPosition) {
             if ($position->format() === $oldPosition?->format()) {
                 return;
             }
@@ -301,13 +298,13 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             ]);
         });
 
-        Event::listen('location.area.updated', function ($location, $coveredArea) {
+        Event::listen('location.area.updated', function($location, $coveredArea) {
             $this->updateCustomerLastArea([
                 'areaId' => $coveredArea->getKey(),
             ]);
         });
 
-        Event::listen(['igniter.user.login', 'igniter.socialite.login'], function () {
+        Event::listen(['igniter.user.login', 'igniter.socialite.login'], function() {
             try {
                 if (!strlen($lastArea = Auth::customer()->last_location_area)) {
                     return;
@@ -345,7 +342,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     protected function registerLocationsMainMenuItems()
     {
-        AdminMenu::registerCallback(function (Navigation $manager) {
+        AdminMenu::registerCallback(function(Navigation $manager) {
             $manager->registerMainItems([
                 MainMenuItem::widget('locations', LocationPicker::class)
                     ->priority(0)
@@ -354,22 +351,6 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                         'form' => 'igniter.local::/models/location',
                         'request' => LocationRequest::class,
                     ]),
-            ]);
-        });
-    }
-
-    protected function registerSystemSettings()
-    {
-        Settings::registerCallback(function (Settings $manager) {
-            $manager->registerSettingItems('core', [
-                'locations' => [
-                    'label' => 'lang:igniter.local::default.text_side_menu_location',
-                    'description' => 'lang:igniter.local::default.text_tab_desc_location',
-                    'icon' => 'fa fa-map-pin',
-                    'priority' => 45,
-                    'permission' => ['Admin.Locations'],
-                    'url' => admin_url('locations'),
-                ],
             ]);
         });
     }

@@ -53,6 +53,8 @@ class ScheduleEditor extends BaseFormWidget
 
     public function prepareVars()
     {
+        $this->model->getWorkingHours();
+
         $this->vars['field'] = $this->formField;
         $this->vars['schedules'] = $this->listSchedules();
     }
@@ -90,7 +92,7 @@ class ScheduleEditor extends BaseFormWidget
 
         $saveData = $this->validateFormWidget($form, $form->getSaveData());
 
-        DB::transaction(function () use ($scheduleCode, $saveData) {
+        DB::transaction(function() use ($scheduleCode, $saveData) {
             $this->model->updateSchedule($scheduleCode, $saveData);
 
             // Check overlaps
@@ -128,7 +130,7 @@ class ScheduleEditor extends BaseFormWidget
 
         $schedules = collect(resolve(OrderTypes::class)->listOrderTypes())
             ->prepend(['name' => 'igniter::admin.text_opening'], Location::OPENING)
-            ->mapWithKeys(function ($definition, $code) {
+            ->mapWithKeys(function($definition, $code) {
                 $scheduleItem = $this->model->createScheduleItem($code);
                 $scheduleItem->name = array_get($definition, 'name');
 

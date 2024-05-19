@@ -48,8 +48,6 @@ class Location extends Manager
         }
 
         if (strlen($code)) {
-            $this->forgetSession('order-timeslot');
-
             $this->putSession('orderType', $code);
             $this->fireSystemEvent('location.orderType.updated', [$code, $oldOrderType]);
         }
@@ -68,15 +66,16 @@ class Location extends Manager
 
     public function updateScheduleTimeSlot($dateTime, $isAsap = true)
     {
-        $oldSlot = $this->getSession('order-timeslot');
+        $orderType = $this->orderType();
+        $oldSlot = $this->getSession($orderType.'-timeslot');
 
         $slot['dateTime'] = (!$isAsap && !is_null($dateTime)) ? make_carbon($dateTime) : null;
         $slot['isAsap'] = $isAsap;
 
         if (!$slot) {
-            $this->forgetSession('order-timeslot');
+            $this->forgetSession($orderType.'-timeslot');
         } else {
-            $this->putSession('order-timeslot', $slot);
+            $this->putSession($orderType.'-timeslot', $slot);
         }
 
         $this->fireSystemEvent('location.timeslot.updated', [$slot, $oldSlot]);
@@ -238,8 +237,9 @@ class Location extends Manager
             return false;
         }
 
-        $dateTime = $this->getSession('order-timeslot.dateTime');
-        $orderTimeIsAsap = (bool)$this->getSession('order-timeslot.isAsap', true);
+        $orderType = $this->orderType();
+        $dateTime = $this->getSession($orderType.'-timeslot.dateTime');
+        $orderTimeIsAsap = (bool)$this->getSession($orderType.'-timeslot.isAsap', true);
 
         if (!$this->isOpened()) {
             return false;
@@ -253,7 +253,7 @@ class Location extends Manager
      */
     public function orderDateTime()
     {
-        $dateTime = $this->getSession('order-timeslot.dateTime');
+        $dateTime = $this->getSession($this->orderType().'-timeslot.dateTime');
         if ($this->orderTimeIsAsap()) {
             $dateTime = $this->asapScheduleTimeslot();
         }
@@ -332,7 +332,7 @@ class Location extends Manager
 
     public function checkNoOrderTypeAvailable()
     {
-        return $this->getOrderTypes()->filter(function ($orderType) {
+        return $this->getOrderTypes()->filter(function($orderType) {
             return !$orderType->isDisabled();
         })->isEmpty();
     }
