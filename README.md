@@ -174,6 +174,8 @@ The settings definition array should contain the following keys:
 
 The `Locationable` model trait allows you to associate a model with a location. 
 
+
+
 ### Delivery areas
 
 #### Adding delivery areas
