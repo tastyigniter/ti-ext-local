@@ -29,11 +29,16 @@ class CheckLocation
             $request->route()->setParameter('location', $location->permalink_slug);
         }
 
-        if ($location && $request->route()->parameter('location') !== $location?->permalink_slug) {
+        if (Igniter::runningInAdmin() || !$location) {
+            return $next($request);
+        }
+
+        $locationParam = $request->route()->parameter('location');
+        if ($locationParam && $locationParam !== $location->permalink_slug) {
             return redirect()->to(page_url('home'));
         }
 
-        if ((!$location?->isEnabled() && !AdminAuth::getUser()?->hasPermission('Admin.Locations'))) {
+        if (!$location->isEnabled() && !AdminAuth::getUser()?->hasPermission('Admin.Locations')) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
 
             return redirect()->to(page_url('home'));
