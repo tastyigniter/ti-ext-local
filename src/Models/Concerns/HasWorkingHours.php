@@ -131,11 +131,9 @@ trait HasWorkingHours
     /**
      * Create a new or update existing location working hours
      *
-     * @param array $data
-     *
      * @return bool
      */
-    public function addOpeningHours(null|string|array $type, null|array $data = [])
+    public function addOpeningHours(null|string|array $type, ?array $data = [])
     {
         if (is_array($type)) {
             $data = $type;

@@ -12,7 +12,7 @@ return new class extends Migration
             return;
         }
 
-        Schema::table('igniter_reviews', function (Blueprint $table) {
+        Schema::table('igniter_reviews', function(Blueprint $table) {
             $table->timestamp('date_added')->change();
             $table->renameColumn('date_added', 'created_at');
             $table->timestamp('updated_at');

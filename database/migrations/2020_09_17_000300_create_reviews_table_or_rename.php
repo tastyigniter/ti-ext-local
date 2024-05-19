@@ -14,7 +14,7 @@ return new class extends Migration
         }
 
         if (!Schema::hasTable('igniter_reviews')) {
-            Schema::create('igniter_reviews', function (Blueprint $table) {
+            Schema::create('igniter_reviews', function(Blueprint $table) {
                 $table->engine = 'InnoDB';
                 $table->integer('review_id', true);
                 $table->integer('customer_id');

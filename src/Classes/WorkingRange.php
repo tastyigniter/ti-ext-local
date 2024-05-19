@@ -39,7 +39,7 @@ class WorkingRange
             throw new WorkingHourException('The given ranges must contain at least one range.');
         }
 
-        array_walk($ranges, function ($range) {
+        array_walk($ranges, function($range) {
             if (!$range instanceof self) {
                 throw new WorkingHourException('The given ranges is not a valid list of TimeRange instance containing.');
             }

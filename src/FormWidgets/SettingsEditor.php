@@ -75,7 +75,7 @@ class SettingsEditor extends BaseFormWidget
 
         $saveData = $this->validateFormWidget($form, $form->getSaveData());
 
-        DB::transaction(function () use ($model, $saveData) {
+        DB::transaction(function() use ($model, $saveData) {
             $model->fill($saveData)->save();
         });
 

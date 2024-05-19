@@ -104,7 +104,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
         $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
-        DB::transaction(function () use ($modelsToSave) {
+        DB::transaction(function() use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
                 $modelToSave->saveOrFail();
             }

@@ -10,7 +10,7 @@ class LocationableScope extends Scope
 {
     public function addWhereHasLocation()
     {
-        return function (Builder $builder, $locationId) {
+        return function(Builder $builder, $locationId) {
             $builder->withoutGlobalScope($this);
 
             $locationId = $locationId instanceof Model
@@ -33,7 +33,7 @@ class LocationableScope extends Scope
                 ? $relationObject->getTable().'.'.$locationModel->getKeyName()
                 : $relationObject->getParent()->getTable().'.'.$locationModel->getKeyName();
 
-            return $builder->whereHas($relationName, function ($query) use ($qualifiedColumnName, $locationId) {
+            return $builder->whereHas($relationName, function($query) use ($qualifiedColumnName, $locationId) {
                 $query->whereIn($qualifiedColumnName, $locationId);
             });
         };
@@ -41,10 +41,10 @@ class LocationableScope extends Scope
 
     public function addWhereHasOrDoesntHaveLocation()
     {
-        return function (Builder $builder, $locationId) {
+        return function(Builder $builder, $locationId) {
             $builder->withoutGlobalScope($this);
 
-            return $builder->where(function (Builder $builder) use ($locationId) {
+            return $builder->where(function(Builder $builder) use ($locationId) {
                 $builder->whereHasLocation($locationId);
 
                 if ($builder->getModel()->locationableIsSingleRelationType()) {

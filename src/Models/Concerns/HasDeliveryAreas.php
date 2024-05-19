@@ -15,17 +15,17 @@ trait HasDeliveryAreas
 
     public static function bootHasDeliveryAreas()
     {
-        static::extend(function (self $model) {
+        static::extend(function(self $model) {
             $model->relation['hasMany']['delivery_areas'] = [LocationArea::class, 'delete' => true];
 
             $model->addPurgeable(['delivery_areas']);
         });
 
-        static::saving(function (self $model) {
+        static::saving(function(self $model) {
             $model->geocodeAddressOnSave();
         });
 
-        static::saved(function (self $model) {
+        static::saved(function(self $model) {
             $model->restorePurgedValues();
 
             if (array_key_exists('delivery_areas', $model->getAttributes())) {
@@ -115,7 +115,7 @@ trait HasDeliveryAreas
 
         return $this->delivery_areas
             ->sortBy('priority')
-            ->first(function (AreaInterface $model) use ($coordinates) {
+            ->first(function(AreaInterface $model) use ($coordinates) {
                 return $model->checkBoundary($coordinates);
             });
     }

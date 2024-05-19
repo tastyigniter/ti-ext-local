@@ -12,7 +12,7 @@ return new class extends Migration
             return;
         }
 
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table('customers', function(Blueprint $table) {
             $table->text('last_location_area');
         });
     }

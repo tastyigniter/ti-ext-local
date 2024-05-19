@@ -54,7 +54,7 @@ class MaxOrderPerTimeslotReached
         $startTime = Carbon::parse($timeslot);
         $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($orderType))->subMinute();
 
-        $orderCount = $ordersOnThisDay->filter(function ($time) use ($startTime, $endTime) {
+        $orderCount = $ordersOnThisDay->filter(function($time) use ($startTime, $endTime) {
             $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $startTime->format('Y-m-d').' '.$time);
 
             return $orderTime->between($startTime, $endTime);
