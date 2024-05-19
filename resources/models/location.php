@@ -59,11 +59,19 @@ $config['list']['columns'] = [
             'href' => 'locations/edit/{location_id}',
         ],
     ],
+    'settings' => [
+        'type' => 'button',
+        'iconCssClass' => 'fa fa-cog',
+        'attributes' => [
+            'class' => 'btn btn-edit',
+            'href' => 'locations/settings/{location_id}',
+        ],
+    ],
     'default' => [
         'type' => 'button',
         'iconCssClass' => 'fa fa-star-o',
         'attributes' => [
-            'class' => 'btn btn-outline-warning bg-transparent',
+            'class' => 'btn btn-light text-warning',
             'data-request' => 'onSetDefault',
             'data-request-data' => 'default:{location_id}',
         ],

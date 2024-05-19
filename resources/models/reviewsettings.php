@@ -42,10 +42,36 @@ return [
                     'condition' => 'checked',
                 ],
             ],
+            'score_types' => [
+                'label' => 'lang:igniter.local::default.reviews.label_score_types',
+                'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
+                'type' => 'repeater',
+                'sortable' => true,
+                'showAddButton' => false,
+                'showRemoveButton' => false,
+                'default' => ReviewSettings::$defaultScoreTypes,
+                'form' => [
+                    'fields' => [
+                        'value' => [
+                            'type' => 'text',
+                        ],
+                        'code' => [
+                            'type' => 'text',
+                            'attributes' => [
+                                'readonly' => true,
+                            ],
+                        ],
+                    ],
+                ],
+                'commentAbove' => 'lang:igniter.local::default.reviews.help_score_types',
+            ],
             'hints' => [
                 'label' => 'lang:igniter.local::default.reviews.label_hints',
                 'tab' => 'lang:igniter.local::default.reviews.text_tab_title_reviews',
                 'type' => 'repeater',
+                'sortable' => true,
+                'showAddButton' => false,
+                'showRemoveButton' => false,
                 'default' => ReviewSettings::$defaultHints,
                 'form' => [
                     'fields' => [

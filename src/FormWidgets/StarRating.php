@@ -25,7 +25,7 @@ class StarRating extends BaseFormWidget
         ]);
 
         if (!self::$hints) {
-            self::$hints = $this->getHints();
+            self::$hints = Review::make()->getRatingOptions();
         }
     }
 
@@ -59,13 +59,5 @@ class StarRating extends BaseFormWidget
     public function getSaveValue(mixed $value): mixed
     {
         return $value ? (int)$value : 0;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getHints()
-    {
-        return Review::make()->getRatingOptions();
     }
 }

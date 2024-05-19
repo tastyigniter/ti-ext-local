@@ -115,7 +115,7 @@ trait HasWorkingHours
             throw new InvalidArgumentException(sprintf(lang('igniter.local::default.alert_invalid_schedule_type'), $type));
         }
 
-        $scheduleData = $scheduleData ?? array_get($this->getSettings('hours', []), $type, []);
+        $scheduleData = $scheduleData ?: array_get($this->getSettings('hours', []), $type, []);
 
         return ScheduleItem::create($type, $scheduleData);
     }
@@ -135,7 +135,7 @@ trait HasWorkingHours
      *
      * @return bool
      */
-    public function addOpeningHours($type, $data = [])
+    public function addOpeningHours(null|string|array $type, null|array $data = [])
     {
         if (is_array($type)) {
             $data = $type;
@@ -150,6 +150,8 @@ trait HasWorkingHours
 
                 $this->addOpeningHours($hourType, $scheduleData);
             }
+
+            return true;
         }
 
         $this->working_hours()->where('type', $type)->delete();
@@ -209,7 +211,7 @@ trait HasWorkingHours
     protected function createDefaultWorkingHours()
     {
         foreach (['opening', 'delivery', 'collection'] as $hourType) {
-            $this->addOpeningHours($hourType, []);
+            $this->addOpeningHours($hourType);
         }
 
         $this->reloadRelations('working_hours');

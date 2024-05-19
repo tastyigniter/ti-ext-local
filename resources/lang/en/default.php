@@ -195,6 +195,7 @@ return [
     'text_empty' => 'There are no locations available.',
     'text_24_7' => '24/7',
     'text_daily' => 'Daily',
+    'settings_title' => 'Settings',
     'text_flexible' => 'Flexible',
     'text_timesheet' => 'Timesheet',
     'text_schedule' => 'Schedule',
@@ -219,8 +220,6 @@ return [
     'text_below_order_total' => 'below',
     'text_asap_only' => 'ASAP only',
     'text_later_only' => 'Later only',
-    'text_side_menu_location' => 'Locations',
-    'text_tab_desc_location' => 'Manage your restaurant locations.',
 
     'column_city' => 'City',
     'column_state' => 'State',
@@ -349,6 +348,7 @@ return [
         'label_delivery' => 'Delivery Rating',
         'label_service' => 'Service Rating',
         'label_text' => 'Review Text',
+        'label_score_types' => 'Score Types',
         'label_hints' => 'Rating Hints',
 
         'label_allow_reviews' => 'Allow Reviews',
@@ -361,6 +361,7 @@ return [
         'help_allow_reviews' => 'Enable or disable new customer review entry and display of reviews on storefront',
         'help_approve_reviews' => 'Approve new review entry automatically or manually',
         'help_hints' => 'Used when adding reviews.',
+        'help_score_types' => 'Rename score types for rating',
         'help_chase_reviews' => 'Send a follow up email when a review has not been submitted',
 
         'error_not_found_in_order' => 'The sale ID entered can not be found in orders',
