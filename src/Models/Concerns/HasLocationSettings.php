@@ -18,7 +18,7 @@ trait HasLocationSettings
 
     public function getGroupedSettingsAttribute(): mixed
     {
-        return $this->settings->mapWithKeys(function ($setting) {
+        return $this->settings->mapWithKeys(function($setting) {
             return [$setting->item => $setting->data];
         })->all();
     }

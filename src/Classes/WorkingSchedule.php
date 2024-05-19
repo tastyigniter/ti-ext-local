@@ -42,7 +42,7 @@ class WorkingSchedule
         $this->timezone = $timezone ? new DateTimeZone($timezone) : null;
         [$this->minDays, $this->maxDays] = is_array($days) ? $days : [0, (int)$days];
 
-        $this->periods = WorkingDay::mapDays(function () {
+        $this->periods = WorkingDay::mapDays(function() {
             return new WorkingPeriod;
         });
     }
@@ -332,10 +332,10 @@ class WorkingSchedule
 
             $periodTimeslot = $this->forDate($date)
                 ->timeslot($date, $interval, $leadTime)
-                ->filter(function ($timeslot) use ($dateTime, $leadTimeMinutes) {
+                ->filter(function($timeslot) use ($dateTime, $leadTimeMinutes) {
                     return $this->isTimeslotValid($timeslot, $dateTime, $leadTimeMinutes);
                 })
-                ->mapWithKeys(function ($timeslot) {
+                ->mapWithKeys(function($timeslot) {
                     return [$timeslot->getTimestamp() => $timeslot];
                 });
 
@@ -357,12 +357,12 @@ class WorkingSchedule
 
         return $this->forDate($date)
             ->timeslot($date, $interval, $leadTime)
-            ->filter(function ($timeslot) use ($date, $leadTime) {
+            ->filter(function($timeslot) use ($date, $leadTime) {
                 $dateTime = $date->copy()->setTimeFromTimeString($timeslot->format('H:i'));
 
                 return $this->isTimeslotValid($timeslot, $dateTime, $leadTime->i);
             })
-            ->mapWithKeys(function ($timeslot) {
+            ->mapWithKeys(function($timeslot) {
                 return [$timeslot->getTimestamp() => $timeslot];
             });
     }

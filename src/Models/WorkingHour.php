@@ -52,7 +52,7 @@ class WorkingHour extends Model implements WorkingHourInterface
 
     public function getWeekDaysOptions()
     {
-        return collect(self::$weekDays)->map(function ($day, $index) {
+        return collect(self::$weekDays)->map(function($day, $index) {
             return now()->startOfWeek()->addDays($index)->isoFormat(lang('igniter::system.moment.weekday_format'));
         })->all();
     }

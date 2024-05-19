@@ -9,14 +9,14 @@ class LocationScope extends Scope
 {
     public function addApplyPosition()
     {
-        return function (Builder $builder, array $position) {
+        return function(Builder $builder, array $position) {
             return $builder->selectDistance($position['latitude'], $position['longitude']);
         };
     }
 
     public function addSelectDistance()
     {
-        return function (Builder $builder, $latitude = null, $longitude = null) {
+        return function(Builder $builder, $latitude = null, $longitude = null) {
             if (setting('distance_unit') === 'km') {
                 $sql = '( 6371 * acos( cos( radians(?) ) * cos( radians( location_lat ) ) *';
             } else {

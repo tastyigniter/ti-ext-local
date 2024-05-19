@@ -90,7 +90,7 @@ $config['list']['columns'] = [
         'label' => 'lang:igniter.local::default.reviews.column_sale_type',
         'type' => 'select',
         'searchable' => true,
-        'formatter' => function ($record, $column, $value) {
+        'formatter' => function($record, $column, $value) {
             return ucwords($value);
         },
     ],

@@ -29,7 +29,7 @@ trait Locationable
     {
         static::addGlobalScope(new LocationableScope);
 
-        static::deleting(function (self $model) {
+        static::deleting(function(self $model) {
             $model->detachLocationsOnDelete();
         });
     }

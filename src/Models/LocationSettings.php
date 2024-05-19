@@ -119,7 +119,7 @@ class LocationSettings extends Model
             $this->registerSettingItems($extensionCode, $definitions);
         }
 
-        uasort(static::$registeredSettings, function ($a, $b) {
+        uasort(static::$registeredSettings, function($a, $b) {
             return $a->priority - $b->priority;
         });
     }

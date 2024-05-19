@@ -28,7 +28,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     {
         $period = new static();
 
-        $timeRanges = array_map(function ($times) {
+        $timeRanges = array_map(function($times) {
             return WorkingRange::create($times);
         }, $times);
 
@@ -248,7 +248,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
 
     public function __toString()
     {
-        $values = array_map(function ($range) {
+        $values = array_map(function($range) {
             return (string)$range;
         }, $this->ranges);
 

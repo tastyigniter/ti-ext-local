@@ -41,7 +41,7 @@ class CoveredArea
 
     public function getConditionLabels()
     {
-        return $this->listConditions()->map(function (CoveredAreaCondition $condition) {
+        return $this->listConditions()->map(function(CoveredAreaCondition $condition) {
             return ucfirst(strtolower($condition->getLabel()));
         })->all();
     }
@@ -67,7 +67,7 @@ class CoveredArea
 
     protected function checkConditions($cartTotal, $value = 'total')
     {
-        return $this->listConditions()->first(function (CoveredAreaCondition $condition) use ($cartTotal) {
+        return $this->listConditions()->first(function(CoveredAreaCondition $condition) use ($cartTotal) {
             return $condition->isValid($cartTotal);
         });
     }
@@ -84,14 +84,14 @@ class CoveredArea
 
         $condition = $distanceCharges
             ->sortBy('priority')
-            ->map(function ($condition) {
+            ->map(function($condition) {
                 return new CoveredAreaCondition([
                     'type' => $condition['type'],
                     'amount' => $condition['charge'],
                     'total' => $condition['distance'],
                 ]);
             })
-            ->first(function (CoveredAreaCondition $condition) use ($distanceFromLocation) {
+            ->first(function(CoveredAreaCondition $condition) use ($distanceFromLocation) {
                 return $condition->isValid($distanceFromLocation);
             });
 

@@ -145,7 +145,7 @@ class LocationArea extends Model implements AreaInterface
     public function getPolygon()
     {
         $geolite = app('geolite');
-        $vertices = array_map(function ($coordinates) use ($geolite) {
+        $vertices = array_map(function($coordinates) use ($geolite) {
             return $geolite->coordinates($coordinates->lat, $coordinates->lng);
         }, $this->vertices);
 

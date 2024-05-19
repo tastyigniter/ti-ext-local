@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('igniter_reviews', function (Blueprint $table) {
+        Schema::table('igniter_reviews', function(Blueprint $table) {
             $table->integer('customer_id')->nullable()->change();
             $table->string('author')->nullable()->change();
             $table->text('review_text')->nullable()->change();
@@ -37,7 +37,7 @@ return new class extends Migration
             'reservation' => \Igniter\Reservation\Models\Reservation::class,
         ];
 
-        DB::table('igniter_reviews')->get()->each(function ($model) use ($morphs) {
+        DB::table('igniter_reviews')->get()->each(function($model) use ($morphs) {
             if (!isset($morphs[$model->sale_type])) {
                 return false;
             }
