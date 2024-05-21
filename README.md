@@ -37,15 +37,15 @@ By default, the location mode is set to `multiple` which allows you to manage mu
 ### GeoCoder
 
 The Local extension uses the `Igniter\Flame\Geolite\Facades\Geocoder` facade to geocode addresses. You can configure the geocoder provider by setting the 
-**Default Geocoder** field to the desired provider in the _System > Settings > General_ admin settings page.
+**Default Geocoder** field to the desired provider in the _Manage > Settings > General_ admin settings page.
 
 #### Google Maps API Key
 
-To use the Google Maps geocoder provider, you need to set the Google Maps API key in the _System > Settings > General_ admin settings page. Follow the instructions on the page to get your API key.
+To use the Google Maps geocoder provider, you need to set the Google Maps API key in the _Manage > Settings > General_ admin settings page. Follow the instructions on the page to get your API key.
 
 ### Review Settings
 
-You can enable or disable reviews by navigating to the _System > Settings > Review settings_ admin settings page.
+You can enable or disable reviews by navigating to the _Manage > Settings > Review settings_ admin settings page.
 
 ## Usage
 
@@ -53,7 +53,7 @@ You can enable or disable reviews by navigating to the _System > Settings > Revi
 
 #### Creating locations
 
-To create a location, navigate to *System > Settings > Locations* in the admin area. Click on the **New** button, fill in the required details such as name, address, and description, and save your changes.
+To create a location, navigate to *Manage > Settings > Locations* in the admin area. Click on the **New** button, fill in the required details such as name, address, and description, and save your changes.
 
 #### Setting current location
 
@@ -169,12 +169,6 @@ The settings definition array should contain the following keys:
 - `permissions`: The permissions required to access the settings section.
 - `form`: An array of form fields or path to the form definition file to be used for the settings section.
 - `request`: The form request class to be used for the settings section.
-
-#### The `Locationable` model trait
-
-The `Locationable` model trait allows you to associate a model with a location. 
-
-
 
 ### Delivery areas
 
@@ -480,7 +474,7 @@ Location::updateScheduleTimeSlot($dateTime, $isAsap);
 
 #### Reviewing orders and reservations
 
-To enable users to review orders and reservations, navigate to _System > Settings > Review settings_ in the admin area and enable the **Allow Reviews** option.
+To enable users to review orders and reservations, navigate to _Manage > Settings > Review settings_ in the admin area and enable the **Allow Reviews** option.
 
 Programmatically, you can create reviews for an order or reservation using the `Igniter\Local\Models\Review` model instance.
 
@@ -508,7 +502,7 @@ $review = Review::create([
 
 #### Review chase automation rule
 
-This extension provides a review chase automation rule that sends an email to customers to remind them to leave a review after an order. To enable this rule, navigate to _System > Settings > Automation Rules_ in the admin area and enable the **Send a message to leave a review after 24 hours** rule.
+This extension provides a review chase automation rule that sends an email to customers to remind them to leave a review after an order. To enable this rule, navigate to _Tools > Automations_ in the admin area and enable the **Send a message to leave a review after 24 hours** rule.
 
 #### Review count automation condition
 
