@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\Models;
 
+use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Models\Concerns\Locationable;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
  */
 class Review extends Model
 {
+    use HasFactory;
     use Locationable;
     use Switchable;
 
