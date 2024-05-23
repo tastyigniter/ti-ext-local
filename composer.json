@@ -34,6 +34,7 @@
   },
   "extra": {
     "tastyigniter-extension": {
+      "code": "igniter.local",
       "name": "Local",
       "icon": {
         "class": "fa fa-map-marker",
