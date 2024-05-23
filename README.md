@@ -1,6 +1,6 @@
 ## Introduction
 
-The TastyIgniter Local extension enhances your TastyIgniter application with location-based features. It allows you to manage multiple locations, set delivery areas, define opening hours, and much more. 
+The TastyIgniter Local extension enhances your TastyIgniter application with location-based features. It allows you to manage multiple locations, set delivery areas, define opening hours, and much more.
 
 ## Features
 
@@ -36,7 +36,7 @@ By default, the location mode is set to `multiple` which allows you to manage mu
 
 ### GeoCoder
 
-The Local extension uses the `Igniter\Flame\Geolite\Facades\Geocoder` facade to geocode addresses. You can configure the geocoder provider by setting the 
+The Local extension uses the `Igniter\Flame\Geolite\Facades\Geocoder` facade to geocode addresses. You can configure the geocoder provider by setting the
 **Default Geocoder** field to the desired provider in the _Manage > Settings > General_ admin settings page.
 
 #### Google Maps API Key
@@ -53,11 +53,11 @@ You can enable or disable reviews by navigating to the _Manage > Settings > Revi
 
 #### Creating locations
 
-To create a location, navigate to *Manage > Settings > Locations* in the admin area. Click on the **New** button, fill in the required details such as name, address, and description, and save your changes.
+To create a location, navigate to _Manage > Settings > Locations_ in the admin area. Click on the **New** button, fill in the required details such as name, address, and description, and save your changes.
 
 #### Setting current location
 
-To set the current location, use the `Location` facade's `setCurrent` method. Pass the location model instance as the argument. This will store the location in session and make it the current location for the user. 
+To set the current location, use the `Location` facade's `setCurrent` method. Pass the location model instance as the argument. This will store the location in session and make it the current location for the user.
 
 ```php
 use Igniter\Local\Facades\Location;
@@ -178,10 +178,10 @@ To add a delivery area, navigate to _Restaurant > Settings > Delivery Areas_ in 
 
 #### Defining delivery area boundary
 
-To define a delivery area boundary, use the MapView form widget in your delivery area form. This widget allows you to draw the boundary on a map. You can also define area boundary using address components such as country, state, city, and postal code. 
+To define a delivery area boundary, use the MapView form widget in your delivery area form. This widget allows you to draw the boundary on a map. You can also define area boundary using address components such as country, state, city, and postal code.
 
 You can programmatically set the boundary using the `boundaries` attribute on the `Igniter\Local\Models\LocationArea` model instance.
-    
+
 ```php
 $locationArea->type = 'address'; // or 'circle' or 'polygon'
 
@@ -241,7 +241,7 @@ $locationArea = Location::checkDeliveryCoverage($userLocation);
 
 #### Defining delivery area charges
 
-To set delivery charges for a delivery area, use the delivery area form. You can set a fixed charge or a charge based on the order total. 
+To set delivery charges for a delivery area, use the delivery area form. You can set a fixed charge or a charge based on the order total.
 
 You can programmatically set the delivery charges using the `conditions` attribute on the `Igniter\Local\Models\LocationArea` model instance.
 
@@ -310,7 +310,7 @@ $deliveryFee = $deliveryCondition->getValue();
 
 #### Creating working hours
 
-To create working hours, navigate to _Restaurant > Settings > Schedules_ in the admin panel. Click on the Add button, fill in the required details such as day, open time, and close time, and save your changes. 
+To create working hours, navigate to _Restaurant > Settings > Schedules_ in the admin panel. Click on the Add button, fill in the required details such as day, open time, and close time, and save your changes.
 
 You can programmatically set the location's working hours using the `addOpeningHours` method on the `Igniter\Local\Models\Location` model instance. The first argument is an array of working hours where the key is the type of working hours (e.g., opening, delivery, collection) and the value is an array of working hours.
 
@@ -650,7 +650,6 @@ The Local extension provides the following events:
 | `location.area.updated` |    When the location's delivery area is updated.    |  The `Location` class instance and the `CoveredArea` class instance   |
 | `admin.workingSchedule.created` |   When a working schedule is created.    |  The `Location` model instance and the `WorkingSchedule` instance   |
 | `admin.workingSchedule.timeslotValid` |   When a working schedule timeslot is validated.    |  The `WorkingSchedule` instance and the `DateTime` instance  |
-
 
 Here is an example of hooking an event in the `boot` method of an extension class:
 
