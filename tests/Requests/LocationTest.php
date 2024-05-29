@@ -2,7 +2,7 @@
 
 namespace Tests\Admin\Requests;
 
-use Igniter\Local\Requests\LocationRequest;
+use Igniter\Local\Http\Requests\LocationRequest;
 
 it('has required rule for location_name, location_email and ...', function() {
     expect('required')->toBeIn(array_get((new LocationRequest)->rules(), 'location_name'))

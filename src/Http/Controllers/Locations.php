@@ -32,14 +32,14 @@ class Locations extends \Igniter\Admin\Classes\AdminController
             'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
             'redirectNew' => 'locations/create',
-            'request' => \Igniter\Local\Requests\LocationRequest::class,
+            'request' => \Igniter\Local\Http\Requests\LocationRequest::class,
         ],
         'edit' => [
             'title' => 'lang:igniter::admin.form.edit_title',
             'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
             'redirectNew' => 'locations/create',
-            'request' => \Igniter\Local\Requests\LocationRequest::class,
+            'request' => \Igniter\Local\Http\Requests\LocationRequest::class,
         ],
         'settings' => [
             'title' => 'lang:igniter.local::default.settings_title',

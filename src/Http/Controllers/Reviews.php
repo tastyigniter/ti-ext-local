@@ -26,7 +26,7 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
     public array $formConfig = [
         'name' => 'lang:igniter.local::default.reviews.text_form_name',
         'model' => \Igniter\Local\Models\Review::class,
-        'request' => \Igniter\Local\Requests\Review::class,
+        'request' => \Igniter\Local\Http\Requests\ReviewRequest::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'igniter/local/reviews/edit/{review_id}',
