@@ -540,7 +540,7 @@ Add the following code to your [form definition file](https://tastyigniter.com/d
     'label' => 'Map Area',
     'type' => 'maparea',
     'form' => 'locationarea',
-    'request' => \Igniter\Local\Requests\LocationAreaRequest::class,
+    'request' => \Igniter\Local\Http\Requests\LocationAreaRequest::class,
  ],
 ```
 

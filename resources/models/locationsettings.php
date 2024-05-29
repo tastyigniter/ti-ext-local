@@ -22,7 +22,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:igniter.local::default.text_tab_schedules',
             'type' => 'scheduleeditor',
             'form' => 'workinghour',
-            'request' => \Igniter\Local\Requests\WorkingHourRequest::class,
+            'request' => \Igniter\Local\Http\Requests\WorkingHourRequest::class,
         ],
 
         'delivery_areas' => [
@@ -30,7 +30,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:igniter.local::default.text_delivery_area',
             'type' => 'maparea',
             'form' => 'locationarea',
-            'request' => \Igniter\Local\Requests\LocationAreaRequest::class,
+            'request' => \Igniter\Local\Http\Requests\LocationAreaRequest::class,
             'commentAbove' => 'lang:igniter.local::default.help_delivery_areas',
         ],
 

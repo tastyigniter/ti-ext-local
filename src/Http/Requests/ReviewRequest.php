@@ -1,10 +1,10 @@
 <?php
 
-namespace Igniter\Local\Requests;
+namespace Igniter\Local\Http\Requests;
 
 use Igniter\System\Classes\FormRequest;
 
-class Review extends FormRequest
+class ReviewRequest extends FormRequest
 {
     public function attributes()
     {
