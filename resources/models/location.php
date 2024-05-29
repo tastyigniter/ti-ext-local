@@ -157,6 +157,10 @@ $config['form']['tabs'] = [
             'type' => 'permalink',
             'span' => 'right',
             'comment' => 'lang:igniter::admin.help_permalink',
+            'preset' => [
+                'field' => 'location_name',
+                'type' => 'slug',
+            ],
         ],
         'location_email' => [
             'label' => 'lang:igniter::admin.label_email',
