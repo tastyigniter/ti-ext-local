@@ -692,7 +692,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\ReviewSettings\\:\\:get\\(\\)\\.$#"
-			count: 4
+			count: 3
 			path: src/Models/ReviewSettings.php
 
 		-

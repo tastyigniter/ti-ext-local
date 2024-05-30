@@ -22,12 +22,6 @@ class ReviewSettings extends Model
         ['value' => 'Excellent'],
     ];
 
-    public static array $defaultScoreTypes = [
-        ['code' => 'delivery', 'value' => 'Delivery'],
-        ['code' => 'quality', 'value' => 'Quality'],
-        ['code' => 'service', 'value' => 'Service'],
-    ];
-
     public static function allowReviews()
     {
         return (bool)self::get('allow_reviews', true);
@@ -36,11 +30,6 @@ class ReviewSettings extends Model
     public static function autoApproveReviews()
     {
         return self::get('approve_reviews', false);
-    }
-
-    public static function getScoreTypes()
-    {
-        return collect(self::get('score_types', self::$defaultScoreTypes))->pluck('value', 'code')->all();
     }
 
     public static function getHints()
