@@ -7,6 +7,7 @@ use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Local\Classes\ScheduleItem;
 use Igniter\Local\Classes\WorkingSchedule;
 use Igniter\Local\Events\WorkingScheduleCreatedEvent;
+use Igniter\Local\Exceptions\WorkingHourException;
 use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
@@ -87,7 +88,7 @@ trait HasWorkingHours
     {
         $types = $this->availableWorkingTypes();
         if (is_null($type) || !in_array($type, $types)) {
-            throw new InvalidArgumentException(sprintf(lang('igniter.local::default.alert_invalid_schedule_type'), $type));
+            throw new WorkingHourException(sprintf(lang('igniter.local::default.alert_invalid_schedule_type'), $type));
         }
 
         if (is_null($days)) {
