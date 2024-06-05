@@ -15,9 +15,10 @@ class LocationFactory extends Factory
             'location_email' => $this->faker->email,
             'location_address_1' => $this->faker->streetAddress,
             'location_country_id' => $this->faker->numberBetween(1, 200),
+            'is_auto_lat_lng' => false,
             'location_lat' => $this->faker->latitude,
             'location_lng' => $this->faker->longitude,
-            'is_auto_lat_lng' => false,
+            'location_status' => true,
         ];
     }
 }

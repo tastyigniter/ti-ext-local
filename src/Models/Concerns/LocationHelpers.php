@@ -3,6 +3,7 @@
 namespace Igniter\Local\Models\Concerns;
 
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
+use Igniter\Local\Models\LocationSettings;
 
 trait LocationHelpers
 {
@@ -71,5 +72,41 @@ trait LocationHelpers
     public function makeDistance()
     {
         return app('geolite')->distance();
+    }
+
+    public function setUrl($suffix = null)
+    {
+        if (is_single_location()) {
+            $suffix = '/menus';
+        }
+
+        $this->url = page_url($this->permalink_slug.$suffix);
+    }
+
+    public function hasGallery()
+    {
+        return $this->hasMedia('gallery');
+    }
+
+    public function getGallery()
+    {
+        return $this->getMedia('gallery');
+    }
+
+    public function getSettings(string $item, mixed $default = null): mixed
+    {
+        return array_get($this->grouped_settings, $item, $default);
+    }
+
+    public function findSettings(string $item): LocationSettings
+    {
+        return $this->settings()->firstOrNew(['item' => $item]);
+    }
+
+    public function getGroupedSettingsAttribute(): mixed
+    {
+        return $this->settings->mapWithKeys(function($setting) {
+            return [$setting->item => $setting->data];
+        })->all();
     }
 }

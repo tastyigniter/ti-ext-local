@@ -15,7 +15,7 @@ class WorkingTime
     /** @var int */
     protected $minutes;
 
-    protected function __construct(int $hours, int $minutes)
+    public function __construct(int $hours, int $minutes)
     {
         $this->hours = $hours;
         $this->minutes = $minutes;

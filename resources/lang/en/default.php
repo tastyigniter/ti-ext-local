@@ -277,6 +277,7 @@ return [
     'alert_invalid_area' => 'Invalid area selected.',
     'alert_settings_not_loaded' => 'Location settings not loaded.',
     'alert_schedule_not_loaded' => 'Schedule not loaded.',
+    'alert_schedule_not_found' => 'Schedule not found.',
     'alert_invalid_schedule_type' => "Defined parameter '%s' is not a valid working type.",
 
     'help_permalink_disabled' => 'Permalink is disabled when single location mode is activated.',
@@ -335,12 +336,12 @@ return [
 
         'column_location' => 'Location',
         'column_author' => 'Author',
-        'column_sale_id' => 'Sale ID',
-        'column_sale_type' => 'Sale Type',
+        'column_reviewable_id' => 'Reviewable ID',
+        'column_reviewable_type' => 'Reviewable Type',
         'column_text' => 'Review Text',
 
-        'label_sale_type' => 'Sale Type',
-        'label_sale_id' => 'Sale ID',
+        'label_reviewable_type' => 'Reviewable Type',
+        'label_reviewable_id' => 'Reviewable ID',
         'label_location' => 'Location',
         'label_customer' => 'Customer',
         'label_author' => 'Author',

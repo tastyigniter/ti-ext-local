@@ -28,11 +28,6 @@ class WorkingRange
         );
     }
 
-    /**
-     * @param \Igniter\Flame\Location\WorkingRange[] $ranges
-     * @return \Igniter\Flame\Location\WorkingRange
-     * @throws \Igniter\Local\Exceptions\WorkingHourException
-     */
     public static function fromRanges(array $ranges): self
     {
         if (count($ranges) === 0) {
@@ -82,7 +77,7 @@ class WorkingRange
     {
         $diffInHours = $this->start()->diff($this->end());
 
-        return $diffInHours >= 23 || $diffInHours == 0;
+        return ($diffInHours->h == 23 && $diffInHours->i == 59) || $diffInHours == 0;
     }
 
     public function containsTime(WorkingTime $time): bool

@@ -13,8 +13,8 @@ class ReviewFactory extends Factory
         return [
             'location_id' => $this->faker->numberBetween(1, 200),
             'customer_id' => $this->faker->numberBetween(1, 200),
-            'sale_id' => $this->faker->numberBetween(1, 200),
-            'sale_type' => 'orders',
+            'reviewable_id' => $this->faker->numberBetween(1, 200),
+            'reviewable_type' => 'orders',
             'author' => $this->faker->name,
             'quality' => $this->faker->numberBetween(0, 6),
             'delivery' => $this->faker->numberBetween(0, 6),

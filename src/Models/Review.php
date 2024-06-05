@@ -37,7 +37,7 @@ class Review extends Model
 
     protected $casts = [
         'customer_id' => 'integer',
-        'sale_id' => 'integer',
+        'reviewable_id' => 'integer',
         'location_id' => 'integer',
         'quality' => 'integer',
         'service' => 'integer',
@@ -72,7 +72,7 @@ class Review extends Model
 
     public static $ratingScoreCache = [];
 
-    public static function getSaleTypeOptions()
+    public static function getReviewableTypeOptions()
     {
         return [
             'orders' => 'lang:igniter.local::default.reviews.text_order',
@@ -101,8 +101,8 @@ class Review extends Model
         $review->location_id = $reviewable->location_id;
         $review->customer_id = $reviewable->customer_id;
         $review->author = $reviewable->customer_name;
-        $review->sale_id = $reviewable->getKey();
-        $review->sale_type = $reviewable->getMorphClass();
+        $review->reviewable_id = $reviewable->getKey();
+        $review->reviewable_type = $reviewable->getMorphClass();
         $review->quality = array_get($data, 'quality', 0);
         $review->delivery = array_get($data, 'delivery', 0);
         $review->service = array_get($data, 'service', 0);
@@ -133,16 +133,16 @@ class Review extends Model
 
     public function scopeHasBeenReviewed($query, $sale, $customerId)
     {
-        return $query->where('sale_type', $sale->getMorphClass())
-            ->where('sale_id', $sale->getKey())
+        return $query->where('reviewable_type', $sale->getMorphClass())
+            ->where('reviewable_id', $sale->getKey())
             ->where('customer_id', $customerId);
     }
 
     public function scopeWhereReviewable($query, $causer)
     {
         return $query
-            ->where('sale_type', $causer->getMorphClass())
-            ->where('sale_id', $causer->getKey());
+            ->where('reviewable_type', $causer->getMorphClass())
+            ->where('reviewable_id', $causer->getKey());
     }
 
     //

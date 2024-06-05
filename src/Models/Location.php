@@ -9,7 +9,6 @@ use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Local\Contracts\LocationInterface;
 use Igniter\Local\Models\Concerns\HasDeliveryAreas;
-use Igniter\Local\Models\Concerns\HasLocationSettings;
 use Igniter\Local\Models\Concerns\HasWorkingHours;
 use Igniter\Local\Models\Concerns\LocationHelpers;
 use Igniter\System\Models\Concerns\Defaultable;
@@ -25,7 +24,6 @@ class Location extends Model implements LocationInterface
     use HasCountry;
     use HasDeliveryAreas;
     use HasFactory;
-    use HasLocationSettings;
     use HasMedia;
     use HasPermalink;
     use HasWorkingHours;
@@ -136,36 +134,9 @@ class Location extends Model implements LocationInterface
             && $model->delivery_areas()->whereIsDefault()->count() > 0;
     }
 
-    //
-    // Accessors & Mutators
-    //
-
     public function getLocationThumbAttribute()
     {
         return $this->hasMedia() ? $this->getThumb() : null;
-    }
-
-    //
-    // Helpers
-    //
-
-    public function setUrl($suffix = null)
-    {
-        if (is_single_location()) {
-            $suffix = '/menus';
-        }
-
-        $this->url = page_url($this->permalink_slug.$suffix);
-    }
-
-    public function hasGallery()
-    {
-        return $this->hasMedia('gallery');
-    }
-
-    public function getGallery()
-    {
-        return $this->getMedia('gallery');
     }
 
     public function defaultableName(): string

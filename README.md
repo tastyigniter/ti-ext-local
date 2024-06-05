@@ -486,16 +486,10 @@ use Igniter\Cart\Models\Order;
 $record = Order::find(1);
 // $record = Reservation::find(1);
 
-$review = Review::create([
-    'location_id' => $record->location_id,
-    'customer_id' => $record->customer_id,
-    'sale_id' => $record->getKey(),
-    'sale_type' => $record->getMorphClass(),
+$review = $record->leaveReview([
     'quality' => 5,
     'delivery' => 5,
     'service' => 5,
-    'review_status' => true,
-    'author' => 'John Doe',
     'review_text' => 'Great food and service!',
 ]);
 ```

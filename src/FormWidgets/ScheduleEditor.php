@@ -71,7 +71,10 @@ class ScheduleEditor extends BaseFormWidget
 
     public function onLoadRecord()
     {
-        $scheduleCode = post('recordId');
+        throw_unless($scheduleCode = post('recordId'),
+            new FlashException(lang('igniter.local::default.alert_schedule_not_found'))
+        );
+
         $scheduleItem = $this->getSchedule($scheduleCode);
 
         $formTitle = sprintf(lang($this->formTitle), lang($scheduleItem->name));

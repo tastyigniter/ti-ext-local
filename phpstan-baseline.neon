@@ -141,37 +141,7 @@ parameters:
 			path: src/Classes/WorkingPeriod.php
 
 		-
-			message: "#^Call to method end\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingRange\\.$#"
-			count: 2
-			path: src/Classes/WorkingRange.php
-
-		-
-			message: "#^Call to method start\\(\\) on an unknown class Igniter\\\\Flame\\\\Location\\\\WorkingRange\\.$#"
-			count: 2
-			path: src/Classes/WorkingRange.php
-
-		-
 			message: "#^Comparison operation \"\\=\\=\" between DateInterval and 0 results in an error\\.$#"
-			count: 1
-			path: src/Classes/WorkingRange.php
-
-		-
-			message: "#^Comparison operation \"\\>\\=\" between DateInterval and 23 results in an error\\.$#"
-			count: 1
-			path: src/Classes/WorkingRange.php
-
-		-
-			message: "#^Method Igniter\\\\Local\\\\Classes\\\\WorkingRange\\:\\:fromRanges\\(\\) has invalid return type Igniter\\\\Flame\\\\Location\\\\WorkingRange\\.$#"
-			count: 1
-			path: src/Classes/WorkingRange.php
-
-		-
-			message: "#^PHPDoc tag @return with type Igniter\\\\Flame\\\\Location\\\\WorkingRange is not subtype of native type Igniter\\\\Local\\\\Classes\\\\WorkingRange\\.$#"
-			count: 1
-			path: src/Classes/WorkingRange.php
-
-		-
-			message: "#^Parameter \\$ranges of method Igniter\\\\Local\\\\Classes\\\\WorkingRange\\:\\:fromRanges\\(\\) has invalid type Igniter\\\\Flame\\\\Location\\\\WorkingRange\\.$#"
 			count: 1
 			path: src/Classes/WorkingRange.php
 
@@ -179,11 +149,6 @@ parameters:
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/WorkingRange.php
-
-		-
-			message: "#^Call to an undefined method DateTime\\:\\:copy\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/WorkingSchedule.php
 
 		-
 			message: "#^Call to an undefined method DateTimeInterface\\:\\:addDay\\(\\)\\.$#"
@@ -356,7 +321,7 @@ parameters:
 			path: src/Http/Middleware/CheckLocation.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Http\\\\Requests\\\\ReviewRequest\\:\\:\\$sale_type\\.$#"
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\Http\\\\Requests\\\\ReviewRequest\\:\\:\\$reviewable_type\\.$#"
 			count: 2
 			path: src/Http/Requests/ReviewRequest.php
 
@@ -651,12 +616,12 @@ parameters:
 			path: src/Models/Review.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$sale_id\\.$#"
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$reviewable_id\\.$#"
 			count: 1
 			path: src/Models/Review.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$sale_type\\.$#"
+			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$reviewable_type\\.$#"
 			count: 1
 			path: src/Models/Review.php
 

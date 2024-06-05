@@ -9,8 +9,8 @@ class ReviewRequest extends FormRequest
     public function attributes()
     {
         return [
-            'sale_type' => lang('igniter.local::default.reviews.label_sale_type'),
-            'sale_id' => lang('igniter.local::default.reviews.label_sale_id'),
+            'reviewable_type' => lang('igniter.local::default.reviews.label_reviewable_type'),
+            'reviewable_id' => lang('igniter.local::default.reviews.label_reviewable_id'),
             'location_id' => lang('igniter.local::default.reviews.label_location'),
             'customer_id' => lang('igniter.local::default.reviews.label_customer'),
             'quality' => lang('igniter.local::default.reviews.label_quality'),
@@ -24,8 +24,8 @@ class ReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            'sale_type' => ['required'],
-            'sale_id' => ['required', 'integer', sprintf('exists:%s,%s_id', $this->sale_type, str_singular($this->sale_type))],
+            'reviewable_type' => ['required'],
+            'reviewable_id' => ['required', 'integer', sprintf('exists:%s,%s_id', $this->reviewable_type, str_singular($this->reviewable_type))],
             'location_id' => ['required', 'integer'],
             'customer_id' => ['required', 'integer'],
             'quality' => ['required', 'integer', 'min:1', 'max:5'],
