@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\AutomationRules\Conditions;
 
+use Igniter\Automation\AutomationException;
 use Igniter\Automation\Classes\BaseModelAttributesCondition;
 use Igniter\Cart\Models\Order;
 use Igniter\Local\Models\Review;
@@ -37,8 +38,22 @@ class ReviewCount extends BaseModelAttributesCondition
         }
 
         return Review::query()->where([
-            'sale_id' => $object->getKey(),
-            'sale_type' => $object->getMorphClass(),
+            'reviewable_id' => $object->getKey(),
+            'reviewable_type' => $object->getMorphClass(),
         ])->count();
+    }
+
+    /**
+     * Checks whether the condition is TRUE for specified parameters
+     * @param array $params Specifies a list of parameters as an associative array.
+     * @return bool
+     */
+    public function isTrue(&$params)
+    {
+        if (!$orderOrReservation = array_get($params, 'order', array_get($params, 'reservation'))) {
+            throw new AutomationException('Error evaluating the review count condition: the order/reservation object is not found in the condition parameters.');
+        }
+
+        return $this->evalIsTrue($orderOrReservation);
     }
 }

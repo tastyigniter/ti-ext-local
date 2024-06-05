@@ -57,9 +57,9 @@ class CoveredArea
             return $type == 'total' ? $condition->total : -1;
         }
 
-        // At this stage, minimum total is 0 when the matched condition is a below
+        // At this stage, return the minimum total when the matched condition is a below
         if ($type == 'total' && $condition->type == 'below') {
-            return 0;
+            return $condition->total;
         }
 
         return $condition->{$type};

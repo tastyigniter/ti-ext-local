@@ -7,6 +7,7 @@ use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Cart\Classes\OrderTypes;
+use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Igniter;
 use Igniter\Local\Classes\Location;
@@ -14,6 +15,7 @@ use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Http\Requests\LocationRequest;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\MainMenuWidgets\LocationPicker;
+use Igniter\Local\Models\Actions\ReviewAction;
 use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
@@ -86,6 +88,9 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 return $model->locations?->contains($location);
             });
         });
+
+        Order::implement(ReviewAction::class);
+        Reservation::implement(ReviewAction::class);
 
         if (Igniter::runningInAdmin()) {
             $this->registerLocationsMainMenuItems();

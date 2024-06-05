@@ -54,13 +54,13 @@ class ScheduleItem
                     'day' => $day,
                     'open' => '00:00',
                     'close' => '23:59',
-                    'status' => 1,
+                    'status' => true,
                 ]],
                 'daily' => [[
                     'day' => $day,
                     'open' => $this->open,
                     'close' => $this->close,
-                    'status' => (int)in_array($day, $this->days),
+                    'status' => in_array($day, $this->days),
                 ]],
                 'timesheet' => $this->createHours($day, $this->timesheet[$day]),
                 'flexible' => $this->createHours($day, $this->flexible[$day]),
@@ -126,7 +126,7 @@ class ScheduleItem
             $result[$key] = [
                 'day' => $hour['day'] ?? $key,
                 'hours' => $hour['hours'] ?? '00:00-23:59',
-                'status' => $hour['status'] ?? 1,
+                'status' => (bool)($hour['status'] ?? 1),
             ];
         }
 
@@ -147,7 +147,7 @@ class ScheduleItem
                 'day' => $day,
                 'open' => array_get($hour, 0, array_get($hour, 'open')),
                 'close' => array_get($hour, 1, array_get($hour, 'close')),
-                'status' => $data['status'],
+                'status' => (bool)($data['status'] ?? 1),
             ];
         }
 

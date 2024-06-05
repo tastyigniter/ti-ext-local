@@ -156,7 +156,7 @@ class WorkingSchedule
 
     public function isOpening()
     {
-        return $this->nextOpenAt(new DateTime()) ? true : false;
+        return (bool)$this->nextOpenAt(new DateTime());
     }
 
     public function isClosed()
@@ -209,7 +209,12 @@ class WorkingSchedule
             return null;
         }
 
+        $days = 0;
         while ($nextOpenAt === false) {
+            if ($days >= $this->maxDays) {
+                return null;
+            }
+
             $dateTime = $dateTime->modify('+1 day')->setTime(0, 0);
             $workingTime = WorkingTime::fromDateTime($dateTime);
 
@@ -217,6 +222,8 @@ class WorkingSchedule
             $nextOpenAt = !$forDate->isEmpty()
                 ? $forDate->nextOpenAt($workingTime)
                 : false;
+
+            $days++;
         }
 
         return $dateTime->setTime(
@@ -254,12 +261,10 @@ class WorkingSchedule
                 : false;
         }
 
-        $dateTime = $dateTime->setTime(
+        return $dateTime->setTime(
             $nextCloseAt->toDateTime()->format('G'),
             $nextCloseAt->toDateTime()->format('i')
         );
-
-        return $dateTime;
     }
 
     /**
@@ -358,7 +363,7 @@ class WorkingSchedule
         return $this->forDate($date)
             ->timeslot($date, $interval, $leadTime)
             ->filter(function($timeslot) use ($date, $leadTime) {
-                $dateTime = $date->copy()->setTimeFromTimeString($timeslot->format('H:i'));
+                $dateTime = make_carbon($date)->setTimeFromTimeString($timeslot->format('H:i'));
 
                 return $this->isTimeslotValid($timeslot, $dateTime, $leadTime->i);
             })

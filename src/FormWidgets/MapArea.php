@@ -198,7 +198,7 @@ class MapArea extends BaseFormWidget
 
     public function onDeleteArea()
     {
-        throw_unless(strlen($areaId = post('areaId')),
+        throw_unless($areaId = post('areaId'),
             new FlashException(lang('igniter.local::default.alert_invalid_area'))
         );
 
@@ -242,7 +242,7 @@ class MapArea extends BaseFormWidget
 
     protected function getMapAreas()
     {
-        $loadValue = $this->getLoadValue();
+        $loadValue = $this->getLoadValue() ?? [];
 
         $loadValue = $loadValue instanceof Collection
             ? $loadValue->toArray()

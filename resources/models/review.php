@@ -81,13 +81,13 @@ $config['list']['columns'] = [
         'select' => "concat(first_name, ' ', last_name)",
         'searchable' => true,
     ],
-    'sale_id' => [
-        'label' => 'lang:igniter.local::default.reviews.column_sale_id',
+    'reviewable_id' => [
+        'label' => 'lang:igniter.local::default.reviews.column_reviewable_id',
         'type' => 'number',
         'searchable' => true,
     ],
-    'sale_type' => [
-        'label' => 'lang:igniter.local::default.reviews.column_sale_type',
+    'reviewable_type' => [
+        'label' => 'lang:igniter.local::default.reviews.column_reviewable_type',
         'type' => 'select',
         'searchable' => true,
         'formatter' => function($record, $column, $value) {
@@ -152,14 +152,14 @@ $config['form']['fields'] = [
         'span' => 'right',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
-    'sale_type' => [
-        'label' => 'lang:igniter.local::default.reviews.label_sale_type',
+    'reviewable_type' => [
+        'label' => 'lang:igniter.local::default.reviews.label_reviewable_type',
         'type' => 'radiotoggle',
         'span' => 'left',
         'default' => 'orders',
     ],
-    'sale_id' => [
-        'label' => 'lang:igniter.local::default.reviews.label_sale_id',
+    'reviewable_id' => [
+        'label' => 'lang:igniter.local::default.reviews.label_reviewable_id',
         'type' => 'number',
         'span' => 'right',
     ],

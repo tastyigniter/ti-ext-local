@@ -28,6 +28,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
     {
         $this->fillFromConfig([
             'form',
+            'popupSize',
             'modelClass',
         ]);
     }
