@@ -111,7 +111,7 @@ class WorkingHour extends Model implements WorkingHourInterface
             return null;
         }
 
-        $diffInHours = $this->open->diffInHours($this->close);
+        $diffInHours = (int)floor($this->open->diffInHours($this->close));
 
         return $diffInHours >= 23 || $diffInHours == 0;
     }
