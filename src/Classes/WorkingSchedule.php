@@ -443,7 +443,7 @@ class WorkingSchedule
             return false;
         }
 
-        if (Carbon::now()->diffInMinutes($timeslot) < $leadTimeMinutes) {
+        if (floor(Carbon::now()->diffInMinutes($timeslot)) < $leadTimeMinutes) {
             return false;
         }
 
