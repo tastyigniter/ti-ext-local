@@ -198,7 +198,7 @@ class MapArea extends BaseFormWidget
 
     public function onDeleteArea()
     {
-        throw_unless($areaId = post('areaId'),
+        throw_unless($areaId = input('areaId'),
             new FlashException(lang('igniter.local::default.alert_invalid_area'))
         );
 

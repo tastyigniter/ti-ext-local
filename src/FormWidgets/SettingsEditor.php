@@ -50,7 +50,7 @@ class SettingsEditor extends BaseFormWidget
 
     public function onLoadRecord()
     {
-        throw_unless($settingsCode = post('code'), new ApplicationException('Missing settings code'));
+        throw_unless($settingsCode = input('code'), new ApplicationException('Missing settings code'));
 
         $definition = $this->getSettings($settingsCode);
 
@@ -65,7 +65,7 @@ class SettingsEditor extends BaseFormWidget
 
     public function onSaveRecord()
     {
-        throw_unless($settingsCode = post('recordId'), new ApplicationException('Missing settings code'));
+        throw_unless($settingsCode = input('recordId'), new ApplicationException('Missing settings code'));
 
         $definition = $this->getSettings($settingsCode);
 

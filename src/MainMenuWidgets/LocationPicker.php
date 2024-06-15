@@ -65,7 +65,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
     public function onChoose()
     {
         throw_unless(
-            is_numeric($locationId = post('location')),
+            is_numeric($locationId = input('location')),
             new ApplicationException(lang('igniter.local::default.picker.alert_location_required'))
         );
 
@@ -127,7 +127,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
             new FlashException(lang('igniter.local::default.picker.alert_user_restricted'))
         );
 
-        $model = $this->findFormModel((string)post('recordId'));
+        $model = $this->findFormModel((string)input('recordId'));
 
         $model->delete();
 
