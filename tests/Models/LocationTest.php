@@ -23,7 +23,7 @@ it('geocodes address on save', function() {
         \Igniter\Flame\Geolite\Model\Location::createFromArray([
             'latitude' => $lat,
             'longitude' => $lng,
-        ])
+        ]),
     ]));
 
     $location->is_auto_lat_lng = true;

@@ -35,7 +35,6 @@ it('has integer rule for days', function() {
     expect('integer')->toBeIn(array_get($this->rules, 'days.*'));
 });
 
-
 it('has between rule for days', function() {
     expect('between:0,7')->toBeIn(array_get($this->rules, 'days.*'));
 });

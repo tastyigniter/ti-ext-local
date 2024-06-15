@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\HeaderBag;
 
 it('handles request correctly', function() {
     $location = LocationModel::factory()->create([
-        'permalink_slug' => 'test-location'
+        'permalink_slug' => 'test-location',
     ]);
 
     $request = Request::create('/');
@@ -35,7 +35,7 @@ it('handles request correctly', function() {
 
 it('redirects when location route parameter does not match current location slug', function() {
     $location = LocationModel::factory()->create([
-        'permalink_slug' => 'test-location'
+        'permalink_slug' => 'test-location',
     ]);
 
     $request = Request::create('/wrong-location');
@@ -56,7 +56,7 @@ it('redirects when location route parameter does not match current location slug
 it('checks admin location correctly', function() {
     $user = User::factory()->create();
     $location = LocationModel::factory()->create([
-        'permalink_slug' => 'test-location'
+        'permalink_slug' => 'test-location',
     ]);
 
     $mockRequest = $this->mock(\Illuminate\Http\Request::class);
