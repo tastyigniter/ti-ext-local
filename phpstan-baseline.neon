@@ -482,7 +482,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Location\\:\\:delivery_areas\\(\\)\\.$#"
-			count: 2
+			count: 3
 			path: src/Models/Location.php
 
 		-
@@ -512,7 +512,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Location\\:\\:whereIsEnabled\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/Models/Location.php
 
 		-
@@ -726,6 +726,6 @@ parameters:
 			path: src/Models/WorkingHour.php
 
 		-
-			message: "#^Method Carbon\\\\Carbon\\:\\:addDay\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			message: "#^Method Carbon\\\\CarbonInterface\\:\\:addDay\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: src/Models/WorkingHour.php
