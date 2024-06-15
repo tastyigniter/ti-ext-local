@@ -39,7 +39,7 @@ it('redirects when location route parameter does not match current location slug
 it('checks admin location correctly', function() {
     Route::get('admin/test-route', fn() => 'ok')->middleware(CheckLocation::class);
 
-    $user = User::factory()->create();
+    $user = User::factory()->superUser()->create();
     $location = LocationModel::factory()->create([
         'permalink_slug' => 'test-location',
     ]);
