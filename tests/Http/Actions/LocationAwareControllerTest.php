@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Event;
 beforeEach(function() {
     Event::fake();
 
-    $this->controller = new class extends AdminController {
+    $this->controller = new class extends AdminController
+    {
         public array $implement = [
             ListController::class,
             FormController::class,

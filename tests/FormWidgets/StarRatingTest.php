@@ -11,7 +11,7 @@ use Igniter\System\Facades\Assets;
 beforeEach(function() {
     $location = Location::factory()->create();
     $this->controller = resolve(Locations::class);
-//    $this->controller->asExtension(FormController::class)->initForm($this->location);
+    //    $this->controller->asExtension(FormController::class)->initForm($this->location);
 
     $formField = (new FormField('test_field', 'Star rating'))->displayAs('starrating');
     $this->starRatingWidget = new StarRating($this->controller, $formField, [

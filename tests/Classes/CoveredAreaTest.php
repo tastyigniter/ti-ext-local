@@ -16,7 +16,7 @@ it('calculates delivery amount correctly', function() {
         ['type' => 'below', 'amount' => 5, 'total' => 50, 'priority' => 2],
     ]);
     $model->shouldReceive('extendableGet')->with('boundaries')->andReturn([
-        'distance' => []
+        'distance' => [],
     ]);
 
     $coveredArea = new CoveredArea($model);
