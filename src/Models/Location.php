@@ -122,11 +122,7 @@ class Location extends Model implements LocationInterface
 
     public static function onboardingIsComplete()
     {
-        if (!$defaultId = self::getDefaultKey()) {
-            return false;
-        }
-
-        if (!$model = self::whereIsEnabled()->find($defaultId)) {
+        if (!$model = self::getDefault()) {
             return false;
         }
 

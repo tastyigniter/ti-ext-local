@@ -83,6 +83,15 @@ class LocationArea extends Model implements AreaInterface
 
     public $boundary;
 
+    public function defaultable(): Builder
+    {
+        return static::query()->where('location_id', $this->location_id);
+    }
+
+    //
+    // Accessors & Mutators
+    //
+
     public function getConditionsAttribute($value)
     {
         // backward compatibility v2.0
@@ -100,20 +109,6 @@ class LocationArea extends Model implements AreaInterface
         return $conditions;
     }
 
-    public function defaultable(): Builder
-    {
-        return static::query()->where('location_id', $this->location_id);
-    }
-
-    protected function pickColor()
-    {
-        return array_random(self::$areaColors);
-    }
-
-    //
-    // Accessors & Mutators
-    //
-
     public function getVerticesAttribute()
     {
         return isset($this->boundaries['vertices']) ?
@@ -129,7 +124,7 @@ class LocationArea extends Model implements AreaInterface
     public function getColorAttribute($value)
     {
         if (!strlen($value)) {
-            $value = $this->pickColor();
+            $value = array_random(self::$areaColors);
         }
 
         return $value;

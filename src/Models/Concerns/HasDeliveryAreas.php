@@ -21,11 +21,11 @@ trait HasDeliveryAreas
             $model->addPurgeable(['delivery_areas']);
         });
 
-        static::saving(function(self $model) {
+        self::saving(function(self $model) {
             $model->geocodeAddressOnSave();
         });
 
-        static::saved(function(self $model) {
+        self::saved(function(self $model) {
             $model->restorePurgedValues();
 
             if (array_key_exists('delivery_areas', $model->getAttributes())) {
