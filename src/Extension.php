@@ -251,19 +251,24 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     protected function extendDashboardChartsDatasets()
     {
-        Charts::registerDatasets(function() {
-            if (!ReviewSettings::allowReviews()) {
-                return [];
-            }
+        Charts::extend(function($charts) {
+            $charts->bindEvent('charts.extendDatasets', function() use ($charts) {
+                if (!ReviewSettings::allowReviews()) {
+                    return;
+                }
 
-            return [
-                'reviews' => [
-                    'label' => 'lang:igniter.local::default.reviews.text_title',
-                    'color' => '#FFB74D',
-                    'model' => Review::class,
-                    'column' => 'created_at',
-                ],
-            ];
+                $charts->addDataset('reports', [
+                    'sets' => [
+                        'reviews' => [
+                            'label' => 'lang:igniter.local::default.reviews.text_title',
+                            'color' => '#FFB74D',
+                            'model' => Review::class,
+                            'column' => 'created_at',
+                            'priority' => 40,
+                        ],
+                    ],
+                ]);
+            });
         });
     }
 
