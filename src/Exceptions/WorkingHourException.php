@@ -2,6 +2,4 @@
 
 namespace Igniter\Local\Exceptions;
 
-class WorkingHourException extends \Exception
-{
-}
+class WorkingHourException extends \Exception {}

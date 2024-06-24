@@ -18,9 +18,7 @@ return new class extends Migration
         $this->updateMorphsOnReviews();
     }
 
-    public function down()
-    {
-    }
+    public function down() {}
 
     protected function updateMorphsOnReviews()
     {

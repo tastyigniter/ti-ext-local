@@ -9,9 +9,7 @@ class WorkingScheduleTimeslotValidEvent
 {
     use \Igniter\Flame\Traits\EventDispatchable;
 
-    public function __construct(public WorkingSchedule $schedule, public DateTimeInterface $timeslot)
-    {
-    }
+    public function __construct(public WorkingSchedule $schedule, public DateTimeInterface $timeslot) {}
 
     public static function eventName()
     {

@@ -10,9 +10,7 @@ class WorkingScheduleCreatedEvent
 {
     use EventDispatchable;
 
-    public function __construct(public Model $model, public WorkingSchedule $schedule)
-    {
-    }
+    public function __construct(public Model $model, public WorkingSchedule $schedule) {}
 
     public static function eventName()
     {
