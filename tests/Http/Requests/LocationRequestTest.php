@@ -31,7 +31,7 @@ it('has string rule for location_name, location_telephone and ...', function() {
 });
 
 it('has sometimes rule for inputs', function() {
-    expect('sometimes')->toBeIn(array_get($this->rules, 'location_telephone'))
+    expect('nullable')->toBeIn(array_get($this->rules, 'location_telephone'))
         ->and('required_if:is_auto_lat_lng,0')->toBeIn(array_get($this->rules, 'location_lat'))
         ->and('required_if:is_auto_lat_lng,0')->toBeIn(array_get($this->rules, 'location_lng'));
 });

@@ -171,7 +171,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             'system' => [
                 'child' => [
                     'locations' => [
-                        'priority' => 0,
+                        'priority' => 10,
                         'class' => 'locations',
                         'href' => admin_url('locations'),
                         'title' => lang('igniter.local::default.text_title'),
@@ -257,15 +257,13 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                     return;
                 }
 
-                $charts->addDataset('reports', [
-                    'sets' => [
-                        'reviews' => [
-                            'label' => 'lang:igniter.local::default.reviews.text_title',
-                            'color' => '#FFB74D',
-                            'model' => Review::class,
-                            'column' => 'created_at',
-                            'priority' => 40,
-                        ],
+                $charts->mergeDataset('reports', 'sets', [
+                    'reviews' => [
+                        'label' => 'lang:igniter.local::default.reviews.text_title',
+                        'color' => '#FFB74D',
+                        'model' => Review::class,
+                        'column' => 'created_at',
+                        'priority' => 40,
                     ],
                 ]);
             });
