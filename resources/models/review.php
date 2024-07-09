@@ -122,6 +122,7 @@ $config['form']['toolbar'] = [
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
+            'context' => ['create', 'edit'],
         ],
         'delete' => [
             'label' => 'lang:admin::lang.button_icon_delete',

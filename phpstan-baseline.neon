@@ -111,6 +111,11 @@ parameters:
 			path: src/Classes/Manager.php
 
 		-
+			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:hasPermission\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/Manager.php
+
+		-
 			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Manager.php
@@ -132,6 +137,16 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\), Igniter\\\\Local\\\\Classes\\\\WorkingRange\\>\\:\\:generate\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/WorkingPeriod.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:end\\(\\)\\.$#"
+			count: 1
+			path: src/Classes/WorkingPeriod.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:start\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/WorkingPeriod.php
 
@@ -481,6 +496,26 @@ parameters:
 			path: src/Models/Location.php
 
 		-
+			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$country_name\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$format\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$iso_code_2\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$iso_code_3\\.$#"
+			count: 1
+			path: src/Models/Location.php
+
+		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Location\\:\\:delivery_areas\\(\\)\\.$#"
 			count: 3
 			path: src/Models/Location.php
@@ -671,22 +706,22 @@ parameters:
 			path: src/Models/Scopes/LocationableScope.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getLocationableRelationObject\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getLocationableRelationObject\\(\\)\\.$#"
 			count: 2
 			path: src/Models/Scopes/LocationableScope.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableIsMorphRelationType\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableIsMorphRelationType\\(\\)\\.$#"
 			count: 1
 			path: src/Models/Scopes/LocationableScope.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableIsSingleRelationType\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableIsSingleRelationType\\(\\)\\.$#"
 			count: 2
 			path: src/Models/Scopes/LocationableScope.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\|Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableRelationName\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableRelationName\\(\\)\\.$#"
 			count: 2
 			path: src/Models/Scopes/LocationableScope.php
 
