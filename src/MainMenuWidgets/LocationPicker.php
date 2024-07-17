@@ -42,8 +42,9 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
     public function prepareVars()
     {
+        $location = LocationFacade::current();
         $this->vars['locations'] = $this->listLocations();
-        $this->vars['activeLocation'] = LocationFacade::current();
+        $this->vars['activeLocation'] = $location && AdminAuth::user()->isAssignedLocation($location) ? $location : null;
         $this->vars['canCreateLocation'] = AdminAuth::user()->hasPermission('Admin.Locations');
         $this->vars['isSingleMode'] = is_single_location();
     }

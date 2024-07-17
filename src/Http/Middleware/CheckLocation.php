@@ -20,7 +20,6 @@ class CheckLocation
 
                 return redirect()->back();
             }
-
         } else {
             $location = Location::currentOrDefault();
         }
@@ -54,7 +53,7 @@ class CheckLocation
         }
 
         if (!AdminAuth::user()->isAssignedLocation($location)) {
-            return false;
+            return null;
         }
 
         return $location;
