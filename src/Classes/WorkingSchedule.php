@@ -151,17 +151,17 @@ class WorkingSchedule
 
     public function isOpen()
     {
-        return $this->isOpenAt(new DateTime());
+        return $this->isOpenAt(new DateTime);
     }
 
     public function isOpening()
     {
-        return (bool)$this->nextOpenAt(new DateTime());
+        return (bool)$this->nextOpenAt(new DateTime);
     }
 
     public function isClosed()
     {
-        return $this->isClosedAt(new DateTime());
+        return $this->isClosedAt(new DateTime);
     }
 
     public function isOpenOn(string $day): bool
@@ -283,14 +283,14 @@ class WorkingSchedule
 
     public function getOpenTime($format = null)
     {
-        $time = $this->nextOpenAt(new DateTime());
+        $time = $this->nextOpenAt(new DateTime);
 
         return ($time && $format) ? $time->format($format) : $time;
     }
 
     public function getCloseTime($format = null)
     {
-        $time = $this->nextCloseAt(new DateTime());
+        $time = $this->nextCloseAt(new DateTime);
 
         return ($time && $format) ? $time->format($format) : $time;
     }
@@ -389,7 +389,7 @@ class WorkingSchedule
     protected function parseDate($start = null)
     {
         if (!$start) {
-            return new DateTime();
+            return new DateTime;
         }
 
         if (is_string($start)) {

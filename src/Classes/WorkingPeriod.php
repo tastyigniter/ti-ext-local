@@ -26,7 +26,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
 
     public static function create($times)
     {
-        $period = new static();
+        $period = new static;
 
         $timeRanges = array_map(function($times) {
             return WorkingRange::create($times);

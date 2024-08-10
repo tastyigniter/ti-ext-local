@@ -156,7 +156,7 @@ class Review extends Model
             throw new ModelNotFoundException;
         }
 
-        return new $model();
+        return new $model;
     }
 
     /**

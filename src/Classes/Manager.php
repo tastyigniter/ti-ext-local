@@ -144,7 +144,7 @@ abstract class Manager
     {
         $class = '\\'.ltrim($this->locationModel, '\\');
 
-        return new $class();
+        return new $class;
     }
 
     /**
