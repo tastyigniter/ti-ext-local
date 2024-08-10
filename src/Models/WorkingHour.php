@@ -59,7 +59,7 @@ class WorkingHour extends Model implements WorkingHourInterface
 
     public function getTimesheetOptions($value, $data)
     {
-        $result = new \stdClass();
+        $result = new \stdClass;
         $result->timesheet = $value ?? [];
 
         $result->daysOfWeek = [];

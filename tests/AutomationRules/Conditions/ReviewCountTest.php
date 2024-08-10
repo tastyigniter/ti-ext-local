@@ -7,7 +7,7 @@ use Igniter\Cart\Models\Order;
 use Igniter\Local\AutomationRules\Conditions\ReviewCount;
 
 it('defines model attributes correctly', function() {
-    $reviewCount = new ReviewCount();
+    $reviewCount = new ReviewCount;
 
     $attributes = $reviewCount->defineModelAttributes();
 
@@ -19,7 +19,7 @@ it('defines model attributes correctly', function() {
 it('counts reviews correctly', function() {
     $order = Order::factory()->hasReview(1)->create();
 
-    $reviewCount = new ReviewCount();
+    $reviewCount = new ReviewCount;
 
     expect($reviewCount->getReviewCountAttribute(null, $order))->toBe(1);
 });

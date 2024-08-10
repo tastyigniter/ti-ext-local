@@ -86,5 +86,5 @@ it('deletes area correctly', function() {
 });
 
 it('gets map shape attributes correctly', function() {
-    expect($this->mapAreaWidget->getMapShapeAttributes(new LocationArea()))->toBeString();
+    expect($this->mapAreaWidget->getMapShapeAttributes(new LocationArea))->toBeString();
 });

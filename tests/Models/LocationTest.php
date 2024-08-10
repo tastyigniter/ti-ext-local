@@ -64,7 +64,7 @@ it('applies filters to query builder', function() {
 });
 
 it('configures location model correctly', function() {
-    $location = new Location();
+    $location = new Location;
 
     expect(class_uses_recursive($location))
         ->toContain(Defaultable::class)

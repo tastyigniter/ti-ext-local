@@ -389,7 +389,7 @@ class Location extends Manager
         }
 
         if (!$area || !$area instanceof AreaInterface) {
-            return new CoveredArea(new LocationArea());
+            return new CoveredArea(new LocationArea);
         }
 
         $coveredArea = new CoveredArea($area);
