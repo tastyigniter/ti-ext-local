@@ -17,37 +17,36 @@
     </a>
 
     <ul class="dropdown-menu dropdown-menu-start">
-        @forelse($locations as $location)
-            @php($isActive = $location->location_id == $activeLocation?->location_id)
-            <li>
-                <div
-                    @class(['dropdown-item d-flex align-items-center', 'active' => $isActive])
-                >
-                    <a
-                        class="flex-fill text-reset"
-                        data-request="{{ $this->getEventHandler('onChoose') }}"
-                        data-request-data="location: '{{ $location->location_id }}'"
+        <ul class="menu">
+            @forelse($locations as $location)
+                @php($isActive = $location->location_id == $activeLocation?->location_id)
+                <li>
+                    <div
+                        @class(['dropdown-item d-flex align-items-center', 'active' => $isActive])
                     >
-                        <i @class(['fa fa-fw fa-location-dot'])></i>
-                        <span>{{ $location->location_name }}</span>
-                    </a>
-                    <a
-                        class="fw-bold text-reset text-sm cursor-pointer"
-                        data-alias="locationpicker"
-                        href="{{ admin_url('locations/edit/'.$location->location_id) }}"
-                    >
-                        <span>@lang('igniter::admin.text_edit')</span>
-                    </a>
-                </div>
-            </li>
-        @empty
-            <li class="dropdown-item text-center">@lang('igniter.local::default.picker.text_no_location')</li>
-        @endforelse
+                        <a
+                            class="flex-fill text-reset"
+                            data-request="{{ $this->getEventHandler('onChoose') }}"
+                            data-request-data="location: '{{ $location->location_id }}'"
+                        >
+                            <i @class(['fa fa-fw fa-location-dot'])></i>
+                            <span>{{ $location->location_name }}</span>
+                        </a>
+                        <a
+                            class="fw-bold text-reset text-sm cursor-pointer"
+                            data-alias="locationpicker"
+                            href="{{ admin_url('locations/edit/'.$location->location_id) }}"
+                        >
+                            <span>@lang('igniter::admin.text_edit')</span>
+                        </a>
+                    </div>
+                </li>
+            @empty
+                <li class="dropdown-item text-center">@lang('igniter.local::default.picker.text_no_location')</li>
+            @endforelse
+        </ul>
         @if(!$isSingleMode && $canCreateLocation)
-            <li class="divider">
-                <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-footer">
+            <li class="dropdown-footer border-top">
                 <a
                     class="dropdown-item border-0 text-left py-2 px-3"
                     href="{{ admin_url('locations/create') }}"
