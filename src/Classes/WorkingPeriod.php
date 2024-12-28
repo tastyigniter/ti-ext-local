@@ -185,18 +185,16 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     protected function getNextStartTime(WorkingRange $range): ?WorkingTime
     {
         $currentRangeFound = false;
-        foreach ($this->ranges as $currentRange) {
+        return collect($this->ranges)->first(function($currentRange) use ($range, &$currentRangeFound) {
             if ($currentRange === $range) {
                 $currentRangeFound = true;
-                continue; // Skip the current range
+                return false; // Skip the current range
             }
-
+            
             if ($currentRangeFound) {
-                return $currentRange->start(); // Return the next range start
+                return true; // Return the next range start
             }
-        }
-
-        return null;
+        })?->start();
     }
 
     public function isEmpty(): bool
