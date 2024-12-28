@@ -9,7 +9,7 @@ use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
-use Igniter\Flame\Igniter;
+use Igniter\Flame\Support\Facades\Igniter;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Http\Requests\LocationRequest;

@@ -3,7 +3,7 @@
 namespace Igniter\Local\Http\Middleware;
 
 use Closure;
-use Igniter\Flame\Igniter;
+use Igniter\Flame\Support\Facades\Igniter;
 use Igniter\Local\Facades\Location;
 use Igniter\User\Facades\AdminAuth;
 use Illuminate\Http\Request;

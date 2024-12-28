@@ -3,7 +3,7 @@
 namespace Igniter\Local\Models\Concerns;
 
 use Igniter\Flame\Exception\SystemException;
-use Igniter\Flame\Igniter;
+use Igniter\Flame\Support\Facades\Igniter;
 use Igniter\Local\Models\Scopes\LocationableScope;
 use Igniter\User\Facades\AdminAuth;
 
