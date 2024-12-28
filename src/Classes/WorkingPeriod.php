@@ -72,16 +72,13 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
                 if (count($this->ranges) === 1) {
                     return $range->start();
                 }
-                if (next($range) !== $range && $nextOpenTime = next($range)) {
-                    reset($range);
 
+                if ($nextOpenTime = $this->getNextStartTime($range)) {
                     return $nextOpenTime;
                 }
             }
 
             if ($nextOpenTime = $this->findNextTimeInFreeTime('start', $time, $range)) {
-                reset($range);
-
                 return $nextOpenTime;
             }
         }
@@ -143,7 +140,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     public function timeslot(DateTimeInterface $dateTime, DateInterval $interval, ?DateInterval $leadTime = null)
     {
         return WorkingTimeslot::make($this->ranges)->generate(
-            $dateTime, $interval, $leadTime
+            $dateTime, $interval, $leadTime,
         );
     }
 
@@ -156,11 +153,9 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         }
     }
 
-    protected function findNextTimeInFreeTime($type, WorkingTime $time, WorkingRange $timeRange, ?WorkingRange &$prevTimeRange = null)
+    protected function findNextTimeInFreeTime($type, WorkingTime $time, WorkingRange $timeRange)
     {
-        $timeOffRange = $prevTimeRange
-            ? WorkingRange::create([$prevTimeRange->end(), $timeRange->start()])
-            : WorkingRange::create(['00:00', $timeRange->start()]);
+        $timeOffRange = WorkingRange::create(['00:00', $timeRange->start()]);
 
         if (
             $timeOffRange->containsTime($time)
@@ -168,8 +163,6 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         ) {
             return $timeRange->{$type}();
         }
-
-        $prevTimeRange = $timeRange;
     }
 
     /**
@@ -183,10 +176,27 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
             if ($nextRange && $range->overlaps($nextRange)) {
                 throw new WorkingHourException(sprintf(
                     'Time ranges %s and %s overlap.',
-                    $range, $nextRange
+                    $range, $nextRange,
                 ));
             }
         }
+    }
+
+    protected function getNextStartTime(WorkingRange $range): ?WorkingTime
+    {
+        $currentRangeFound = false;
+        foreach ($this->ranges as $currentRange) {
+            if ($currentRange === $range) {
+                $currentRangeFound = true;
+                continue; // Skip the current range
+            }
+
+            if ($currentRangeFound) {
+                return $currentRange->start(); // Return the next range start
+            }
+        }
+
+        return null;
     }
 
     public function isEmpty(): bool

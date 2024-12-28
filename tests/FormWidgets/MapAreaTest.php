@@ -12,9 +12,9 @@ use Igniter\System\Models\Settings;
 
 beforeEach(function() {
     $this->location = Location::factory()->create();
-    $formField = (new FormField('test_field', 'Map area'))
+    $this->formField = (new FormField('test_field', 'Map area'))
         ->displayAs('maparea', ['valueFrom' => 'delivery_areas']);
-    $this->mapAreaWidget = new MapArea(resolve(Locations::class), $formField, [
+    $this->mapAreaWidget = new MapArea(resolve(Locations::class), $this->formField, [
         'model' => $this->location,
     ]);
 });
@@ -49,6 +49,10 @@ it('loads assets correctly', function() {
 });
 
 it('prepares variables correctly', function() {
+    $this->formField->value = [
+        ['area_id' => 1, 'name' => 'Test Area 1'],
+    ];
+
     $this->mapAreaWidget->prepareVars();
 
     expect($this->mapAreaWidget->vars['field'])->toBeInstanceOf(FormField::class)
@@ -58,8 +62,14 @@ it('prepares variables correctly', function() {
         ->and($this->mapAreaWidget->vars)->toHaveKey('prompt');
 });
 
-it('saves value correctly', function() {
+it('gets saves value', function() {
     expect($this->mapAreaWidget->getSaveValue([]))->toBeNull();
+
+    $area = LocationArea::factory()->create();
+    request()->request->set('___dragged_test_field', [$area->getKey()]);
+    $this->formField->value = collect([$area]);
+
+    expect($this->mapAreaWidget->getSaveValue([]))->toBeArray();
 });
 
 it('returns no save value when sortable is disabled correctly', function() {
@@ -68,11 +78,25 @@ it('returns no save value when sortable is disabled correctly', function() {
     expect($this->mapAreaWidget->getSaveValue([]))->toBe(FormField::NO_SAVE_DATA);
 });
 
-it('loads record correctly', function() {
+it('loads new record correctly', function() {
     expect($this->mapAreaWidget->onLoadRecord())->toBeString();
 });
 
-it('saves record correctly', function() {
+it('loads existing record correctly', function() {
+    $area = LocationArea::factory()->create();
+    request()->request->set('recordId', $area->getKey());
+
+    expect($this->mapAreaWidget->onLoadRecord())->toBeString();
+});
+
+it('saves new record correctly', function() {
+    expect($this->mapAreaWidget->onSaveRecord())->toBeArray();
+});
+
+it('saves existing record correctly', function() {
+    $area = LocationArea::factory()->create();
+    request()->request->set('areaId', $area->getKey());
+
     expect($this->mapAreaWidget->onSaveRecord())->toBeArray();
 });
 

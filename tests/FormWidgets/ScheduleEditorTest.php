@@ -33,6 +33,10 @@ it('prepares variables correctly', function() {
 
     expect($this->scheduleEditorWidget->vars['field'])->toBeInstanceOf(FormField::class)
         ->and($this->scheduleEditorWidget->vars['schedules'])->toBeArray();
+
+    // test coverage for cached schedules
+
+    $this->scheduleEditorWidget->prepareVars();
 });
 
 it('loads assets correctly', function() {

@@ -4,12 +4,17 @@ namespace Igniter\Local\Tests\Classes;
 
 use DateTime;
 use Igniter\Local\Classes\WorkingTime;
+use Igniter\Local\Exceptions\WorkingHourException;
 
 it('creates correctly', function() {
     $workingTime = WorkingTime::create('08:00');
 
     expect($workingTime->hours())->toBe(8)
         ->and($workingTime->minutes())->toBe(0);
+});
+
+it('throws exception when creating with invalid date', function() {
+    expect(fn() => WorkingTime::create('invalid'))->toThrow(WorkingHourException::class);
 });
 
 it('creates from DateTime correctly', function() {
@@ -27,8 +32,10 @@ it('checks time correctly', function() {
 
     expect($workingTime1->isSame($workingTime1))->toBeTrue()
         ->and($workingTime1->isSame($workingTime2))->toBeFalse()
+        ->and($workingTime1->isAfter($workingTime1))->toBeFalse()
         ->and($workingTime1->isAfter($workingTime2))->toBeFalse()
         ->and($workingTime1->isBefore($workingTime2))->toBeTrue()
+        ->and($workingTime1->isBefore($workingTime1))->toBeFalse()
         ->and($workingTime1->isSameOrAfter($workingTime1))->toBeTrue()
         ->and($workingTime1->isSameOrAfter($workingTime2))->toBeFalse();
 });

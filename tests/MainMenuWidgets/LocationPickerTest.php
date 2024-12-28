@@ -3,6 +3,8 @@
 namespace Igniter\Local\Tests\MainMenuWidgets;
 
 use Igniter\Admin\Classes\MainMenuItem;
+use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Http\Controllers\Locations;
 use Igniter\Local\MainMenuWidgets\LocationPicker;
 use Igniter\Local\Models\Location;
@@ -13,9 +15,8 @@ use Illuminate\Http\RedirectResponse;
 beforeEach(function() {
     $this->location = Location::factory()->create();
     $menuItem = (new MainMenuItem('test_field', 'Location picker'))->displayAs('locationpicker');
-    $this->locationPickerWidget = new LocationPicker($controller = resolve(Locations::class), $menuItem);
-    $controller->setUser($user = User::factory()->superUser()->create());
-    AdminAuth::shouldReceive('user')->andReturn($user);
+    $this->controller = resolve(Locations::class);
+    $this->locationPickerWidget = new LocationPicker($this->controller, $menuItem);
 });
 
 it('initializes correctly', function() {
@@ -26,6 +27,10 @@ it('initializes correctly', function() {
 });
 
 it('prepares variables correctly', function() {
+    $user = User::factory()->create();
+    $this->controller->setUser($user);
+    $this->actingAs($user, 'igniter-admin');
+
     $this->locationPickerWidget->prepareVars();
 
     expect($this->locationPickerWidget->vars)->toBeArray()
@@ -35,25 +40,76 @@ it('prepares variables correctly', function() {
         ->toHaveKey('isSingleMode');
 });
 
-it('loads form correctly', function() {
+it('loads form with new record correctly', function() {
+    $user = User::factory()->create();
+    AdminAuth::shouldReceive('user')->andReturn($user);
+
+    expect($this->locationPickerWidget->onLoadForm())->toBeString();
+});
+
+it('loads form with existing correctly', function() {
+    $this->actingAs(User::factory()->superUser()->create(), 'igniter-admin');
+    $location = Location::factory()->create();
+    request()->request->set('location', $location->getKey());
+
     expect($this->locationPickerWidget->onLoadForm())->toBeString();
 });
 
 it('chooses location correctly', function() {
-    $this->actingAs($this->locationPickerWidget->getController()->getUser(), 'igniter-admin');
+    $user = User::factory()->superUser()->create();
+    $this->controller->setUser($user);
+    $this->actingAs($user, 'igniter-admin');
     request()->merge(['location' => $this->location->getKey()]);
 
     expect($this->locationPickerWidget->onChoose())->toBeInstanceOf(RedirectResponse::class);
 });
 
-it('saves record correctly', function() {
-    $this->actingAs($this->locationPickerWidget->getController()->getUser(), 'igniter-admin');
+it('chooses location and resets session', function() {
+    $user = User::factory()->superUser()->create();
+    $this->controller->setUser($user);
+    $this->actingAs($user, 'igniter-admin');
+    request()->merge(['location' => $this->location->getKey()]);
+    LocationFacade::shouldReceive('current')->andReturn($this->location);
+    LocationFacade::shouldReceive('resetSession')->once();
+
+    expect($this->locationPickerWidget->onChoose())->toBeInstanceOf(RedirectResponse::class);
+});
+
+it('saves new record correctly', function() {
+    $user = User::factory()->superUser()->create();
+    $this->controller->setUser($user);
+    $this->actingAs($user, 'igniter-admin');
 
     expect($this->locationPickerWidget->onSaveRecord())->toBeArray();
 });
 
+it('saves existing record correctly', function() {
+    $user = User::factory()->superUser()->create();
+    $this->controller->setUser($user);
+    $this->actingAs($user, 'igniter-admin');
+    $location = Location::factory()->create();
+    request()->request->set('recordId', $location->getKey());
+
+    expect($this->locationPickerWidget->onSaveRecord())->toBeArray();
+});
+
+it('flashes error when geocoder fails', function() {
+    $user = User::factory()->superUser()->create();
+    $this->controller->setUser($user);
+    $this->actingAs($user, 'igniter-admin');
+    $location = Location::factory()->create();
+    request()->request->set('recordId', $location->getKey());
+    Geocoder::shouldReceive('getLogs')->andReturn(['Failed to geocode']);
+
+    $result = $this->locationPickerWidget->onSaveRecord();
+
+    expect($result['#notification'])->toContain('Failed to geocode');
+});
+
 it('deletes record correctly', function() {
-    $this->actingAs($this->locationPickerWidget->getController()->getUser(), 'igniter-admin');
+    $user = User::factory()->superUser()->create();
+    $this->controller->setUser($user);
+    $this->actingAs($user, 'igniter-admin');
     request()->merge(['recordId' => $this->location->getKey()]);
 
     expect($this->locationPickerWidget->onDeleteRecord())->toBeArray();

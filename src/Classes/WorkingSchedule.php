@@ -151,17 +151,17 @@ class WorkingSchedule
 
     public function isOpen()
     {
-        return $this->isOpenAt(new DateTime);
+        return $this->isOpenAt(Carbon::now());
     }
 
     public function isOpening()
     {
-        return (bool)$this->nextOpenAt(new DateTime);
+        return (bool)$this->nextOpenAt(Carbon::now());
     }
 
     public function isClosed()
     {
-        return $this->isClosedAt(new DateTime);
+        return $this->isClosedAt(Carbon::now());
     }
 
     public function isOpenOn(string $day): bool
@@ -186,7 +186,7 @@ class WorkingSchedule
         // but are closed the next day and the date range falls
         // inside the late night opening
         return $this->forDate(
-            Carbon::parse($dateTime)->subDay()
+            Carbon::parse($dateTime)->subDay(),
         )->opensLateAt($workingTime);
     }
 
@@ -202,7 +202,7 @@ class WorkingSchedule
         }
 
         $nextOpenAt = $this->forDate($dateTime)->nextOpenAt(
-            WorkingTime::fromDateTime($dateTime)
+            WorkingTime::fromDateTime($dateTime),
         );
 
         if (!$this->hasPeriod()) {
@@ -228,7 +228,7 @@ class WorkingSchedule
 
         return $dateTime->setTime(
             $nextOpenAt->toDateTime()->format('G'),
-            $nextOpenAt->toDateTime()->format('i')
+            $nextOpenAt->toDateTime()->format('i'),
         );
     }
 
@@ -244,7 +244,7 @@ class WorkingSchedule
         }
 
         $nextCloseAt = $this->forDate($dateTime)->nextCloseAt(
-            WorkingTime::fromDateTime($dateTime)
+            WorkingTime::fromDateTime($dateTime),
         );
 
         if (!$this->hasPeriod()) {
@@ -263,7 +263,7 @@ class WorkingSchedule
 
         return $dateTime->setTime(
             $nextCloseAt->toDateTime()->format('G'),
-            $nextCloseAt->toDateTime()->format('i')
+            $nextCloseAt->toDateTime()->format('i'),
         );
     }
 
@@ -283,14 +283,14 @@ class WorkingSchedule
 
     public function getOpenTime($format = null)
     {
-        $time = $this->nextOpenAt(new DateTime);
+        $time = $this->nextOpenAt(Carbon::now());
 
         return ($time && $format) ? $time->format($format) : $time;
     }
 
     public function getCloseTime($format = null)
     {
-        $time = $this->nextCloseAt(new DateTime);
+        $time = $this->nextCloseAt(Carbon::now());
 
         return ($time && $format) ? $time->format($format) : $time;
     }
@@ -310,10 +310,6 @@ class WorkingSchedule
 
         if ($this->nextOpenAt($dateTime)) {
             return WorkingPeriod::OPENING;
-        }
-
-        if ($this->isClosedAt($dateTime)) {
-            return WorkingPeriod::CLOSED;
         }
 
         return WorkingPeriod::CLOSED;
@@ -389,11 +385,11 @@ class WorkingSchedule
     protected function parseDate($start = null)
     {
         if (!$start) {
-            return new DateTime;
+            return Carbon::now();
         }
 
         if (is_string($start)) {
-            return new DateTime($start);
+            return Carbon::parse($start);
         }
 
         if ($start instanceof DateTime) {
@@ -420,7 +416,7 @@ class WorkingSchedule
             } elseif (is_array($period)) {
                 $day = WorkingDay::normalizeName($day);
                 $parsedPeriods[$day] = array_merge(
-                    $parsedPeriods[$day] ?? [], $period
+                    $parsedPeriods[$day] ?? [], $period,
                 );
             }
         }
@@ -452,9 +448,10 @@ class WorkingSchedule
         }
 
         // +2 as we subtracted a day and need to count the current day
-        if (Carbon::instance($dateTime)->addDays($this->maxDays + 2)->lt($timeslot)) {
-            return false;
-        }
+//        if (Carbon::instance($dateTime)->addDays($this->maxDays + 2)->lt($timeslot)) {
+//            return false;
+//        }
+        // Commented out as not necessary. The above condition is already checked in isBetweenPeriodForDays method
 
         $result = WorkingScheduleTimeslotValidEvent::dispatchOnce($this, $timeslot);
 
@@ -502,7 +499,7 @@ class WorkingSchedule
     {
         return Carbon::instance($timeslot)->between(
             now()->startOfDay()->addDays($this->minDays),
-            now()->endOfDay()->addDays($this->maxDays + 2)
+            now()->endOfDay()->addDays($this->maxDays + 2),
         );
     }
 }

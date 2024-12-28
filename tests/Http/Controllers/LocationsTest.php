@@ -40,6 +40,21 @@ it('loads location preview page', function() {
         ->assertOk();
 });
 
+it('sets a default location', function() {
+    $location = Location::factory()->create();
+
+    actingAsSuperUser()
+        ->post(route('igniter.local.locations'), [
+            'default' => $location->getKey(),
+        ], [
+            'X-Requested-With' => 'XMLHttpRequest',
+            'X-IGNITER-REQUEST-HANDLER' => 'onSetDefault',
+        ]);
+
+    Location::$defaultModels = [];
+    expect(Location::getDefaultKey())->toBe($location->getKey());
+});
+
 it('creates location', function() {
     actingAsSuperUser()
         ->post(route('igniter.local.locations', ['slug' => 'create']), [
@@ -92,13 +107,25 @@ it('updates location', function() {
     expect(Location::where('location_name', 'Updated Location')->exists())->toBeTrue();
 });
 
+it('updates location settings', function() {
+    $location = Location::factory()->create();
+
+    actingAsSuperUser()
+        ->post(route('igniter.local.locations', ['slug' => 'settings/'.$location->getKey()]), [
+            'Location' => [
+            ],
+        ], [
+            'X-Requested-With' => 'XMLHttpRequest',
+            'X-IGNITER-REQUEST-HANDLER' => 'onSave',
+        ])
+        ->assertOk();
+});
+
 it('deletes location', function() {
     $location = Location::factory()->create();
 
     actingAsSuperUser()
-        ->post(route('igniter.local.locations', ['slug' => 'edit/'.$location->getKey()]), [
-            'coupon_id' => $location->coupon_id,
-        ], [
+        ->post(route('igniter.local.locations', ['slug' => 'edit/'.$location->getKey()]), [], [
             'X-Requested-With' => 'XMLHttpRequest',
             'X-IGNITER-REQUEST-HANDLER' => 'onDelete',
         ]);

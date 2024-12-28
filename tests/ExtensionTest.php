@@ -2,13 +2,18 @@
 
 namespace Igniter\Local\Tests;
 
+use Igniter\Admin\DashboardWidgets\Charts;
+use Igniter\Admin\Facades\AdminMenu;
+use Igniter\Cart\Http\Controllers\Menus;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Geolite\Model\Location as UserPosition;
+use Igniter\Flame\Support\Facades\Igniter;
 use Igniter\Local\Extension;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
+use Igniter\Local\Models\ReviewSettings;
 use Igniter\Reservation\Models\Reservation;
 use Igniter\User\Facades\Auth;
 use Igniter\User\Models\Customer;
@@ -60,35 +65,33 @@ it('adds reviews relationship to reservation', function() {
 });
 
 it('updates customer last area on location position updated', function() {
+    $customer = Customer::factory()->create();
     $location = Mockery::mock(Location::class);
     $position = Mockery::mock(UserPosition::class);
     $oldPosition = Mockery::mock(UserPosition::class);
-
     $position->shouldReceive('format')->andReturn('new-position');
     $oldPosition->shouldReceive('format')->andReturn('old-position');
-
-    Event::fake();
+    Auth::shouldReceive('customer')->andReturn($customer);
 
     $this->extension->boot();
 
     Event::dispatch('location.position.updated', [$location, $position, $oldPosition]);
 
-    Event::assertDispatched('location.position.updated');
+    expect($customer->last_location_area)->toContain('new-position');
 });
 
 it('updates customer last area on location area updated', function() {
+    $customer = Customer::factory()->create();
     $location = Mockery::mock(Location::class);
     $coveredArea = Mockery::mock(LocationArea::class);
-
     $coveredArea->shouldReceive('getKey')->andReturn(1);
-
-    Event::fake();
+    Auth::shouldReceive('customer')->andReturn($customer);
 
     $this->extension->boot();
 
     Event::dispatch('location.area.updated', [$location, $coveredArea]);
 
-    Event::assertDispatched('location.area.updated');
+    expect($customer->last_location_area)->toContain(1);
 });
 
 it('updates user position and nearby area on user login', function() {
@@ -100,17 +103,114 @@ it('updates user position and nearby area on user login', function() {
         'last_location_area' => json_encode(['query' => 'test-query', 'areaId' => $locationArea->getKey()]),
     ]);
     Auth::shouldReceive('customer')->andReturn($customer);
+    $userLocation = Mockery::mock(UserPosition::class)->makePartial();
+    Geocoder::shouldReceive('geocode')->with('test-query')->andReturn(collect([$userLocation]));
 
-    Geocoder::shouldReceive('geocode')->with('test-query')->andReturnSelf();
-    Geocoder::shouldReceive('first')->andReturn(Mockery::mock(UserPosition::class));
-
-    LocationFacade::shouldReceive('updateNearbyArea')->with($locationArea);
-
-    Event::fake();
+    LocationFacade::shouldReceive('updateUserPosition')->with($userLocation)->twice();
+    LocationFacade::shouldReceive('updateNearbyArea')->twice();
 
     $this->extension->boot();
 
     Event::dispatch('igniter.user.login');
+});
 
-    Event::assertDispatched('igniter.user.login');
+it('does not updates user position on user login when last_location_area is empty', function() {
+    $customer = Customer::factory()->create([
+        'customer_id' => 1,
+        'last_location_area' => '',
+    ]);
+    Auth::shouldReceive('customer')->andReturn($customer);
+
+    LocationFacade::shouldReceive('updateUserPosition')->never();
+    LocationFacade::shouldReceive('updateNearbyArea')->never();
+
+    $this->extension->boot();
+
+    Event::dispatch('igniter.user.login');
+});
+
+it('returns delivery condition with correct attributes', function() {
+    $extension = new \Igniter\Local\Extension(app());
+
+    $result = $extension->registerCartConditions();
+
+    expect($result)->toEqual([
+        \Igniter\Local\CartConditions\Delivery::class => [
+            'name' => 'delivery',
+            'label' => 'lang:igniter.local::default.text_delivery',
+            'description' => 'lang:igniter.local::default.help_delivery_condition',
+        ],
+    ]);
+});
+
+it('returns registered permissions array', function() {
+    $extension = new \Igniter\Local\Extension(app());
+
+    $result = $extension->registerPermissions();
+
+    expect($result)->toEqual([
+        'Admin.Locations' => [
+            'label' => 'lang:igniter.local::default.locations_permissions',
+            'group' => 'igniter::admin.permissions.name',
+        ],
+        'Admin.Reviews' => [
+            'description' => 'lang:igniter.local::default.reviews.permissions',
+            'group' => 'igniter.cart::default.text_permission_order_group',
+        ],
+    ]);
+});
+
+it('returns registered settings array', function() {
+    $extension = new \Igniter\Local\Extension(app());
+
+    $result = $extension->registerSettings();
+
+    expect($result)->toEqual([
+        'reviewsettings' => [
+            'label' => 'lang:igniter.local::default.reviews.text_settings',
+            'icon' => 'fa fa-gear',
+            'description' => 'lang:igniter.local::default.reviews.text_settings_description',
+            'model' => \Igniter\Local\Models\ReviewSettings::class,
+            'permissions' => ['Admin.Reviews'],
+        ],
+    ]);
+});
+
+it('returns registered onboarding steps array', function() {
+    $extension = new \Igniter\Local\Extension(app());
+
+    $result = $extension->registerOnboardingSteps();
+
+    expect($result)->toEqual([
+        'igniter.local::locations' => [
+            'label' => 'igniter.local::default.onboarding_locations',
+            'description' => 'igniter.local::default.help_onboarding_locations',
+            'icon' => 'fa-store',
+            'url' => admin_url('locations'),
+            'priority' => 15,
+            'complete' => [\Igniter\Local\Models\Location::class, 'onboardingIsComplete'],
+        ],
+    ]);
+});
+
+it('returns registered dashboard charts', function() {
+    ReviewSettings::set('allow_reviews', true);
+    $charts = new class(resolve(Menus::class)) extends Charts
+    {
+        public function testDatasets()
+        {
+            return $this->listSets();
+        }
+    };
+    $datasets = $charts->testDatasets();
+
+    expect($datasets['reports']['sets']['reviews']['model'])->toBe(Review::class);
+});
+
+it('registers locations picker admin menus when running in admin', function() {
+    Igniter::partialMock()->shouldReceive('runningInAdmin')->andReturnTrue();
+    $this->extension->boot();
+    $menuItems = AdminMenu::getMainItems();
+
+    expect($menuItems['locations'])->not->toBeNull();
 });

@@ -14,14 +14,6 @@ use InvalidArgumentException;
 
 trait HasWorkingHours
 {
-    /**
-     * @return Carbon
-     */
-    public function getCurrentTime()
-    {
-        traceLog('Deprecated function. No longer supported.');
-    }
-
     public function availableWorkingTypes()
     {
         return array_merge([
@@ -29,17 +21,12 @@ trait HasWorkingHours
         ], collect(resolve(OrderTypes::class)->listOrderTypes())->keys()->all());
     }
 
-    public function listWorkingHours()
-    {
-        traceLog('Deprecated function. Use getWorkingHours() instead.');
-    }
-
     /**
      * @return mixed 24_7, daily or flexible
      */
     public function workingHourType($hourType = null)
     {
-        return array_get($this->options, "hours.{$hourType}.type");
+        return $this->getSettings("hours.{$hourType}.type");
     }
 
     public function getWorkingHoursByType($type)
@@ -66,9 +53,7 @@ trait HasWorkingHours
             $date = make_carbon($date);
         }
 
-        $weekday = $date->format('N') - 1;
-
-        return $this->getWorkingHourByDayAndType($weekday, $type);
+        return $this->getWorkingHourByDayAndType($date->format('N'), $type);
     }
 
     public function getWorkingHours()
@@ -96,7 +81,7 @@ trait HasWorkingHours
         }
 
         $schedule = WorkingSchedule::create($days,
-            $this->getWorkingHoursByType($type) ?? new Collection([])
+            $this->getWorkingHoursByType($type) ?? new Collection([]),
         );
 
         $schedule->setType($type);
@@ -170,41 +155,6 @@ trait HasWorkingHours
         }
 
         return true;
-    }
-
-    protected function parseHoursFromOptions(&$value)
-    {
-        // Rename options array index 'opening_hours' to 'hours'
-        if (isset($value['opening_hours'])) {
-            $hours = $value['opening_hours'];
-            foreach (['opening', 'daily', 'delivery', 'collection'] as $type) {
-                foreach (['type', 'days', 'hours'] as $suffix) {
-                    if (isset($hours["{$type}_{$suffix}"])) {
-                        $valueItem = $hours["{$type}_{$suffix}"];
-                        if ($suffix == 'type') {
-                            $valueItem = $valueItem != '24_7' ? $valueItem : '24_7';
-                        }
-
-                        $typeIndex = $type == 'daily' ? 'opening' : $type;
-
-                        if ($suffix == 'hours') {
-                            $value['hours'][$typeIndex]['open'] = $valueItem['open'] ?? '00:00';
-                            $value['hours'][$typeIndex]['close'] = $valueItem['close'] ?? '23:59';
-                        } else {
-                            $value['hours'][$typeIndex][$suffix] = $valueItem;
-                        }
-                    }
-                }
-            }
-
-            if (isset($hours['flexible_hours']) && is_array($hours['flexible_hours'])) {
-                foreach (['opening', 'delivery', 'collection'] as $type) {
-                    $value['hours'][$type]['flexible'] = $hours['flexible_hours'];
-                }
-            }
-
-            unset($value['opening_hours']);
-        }
     }
 
     protected function createDefaultWorkingHours()

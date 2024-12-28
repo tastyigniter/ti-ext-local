@@ -2,9 +2,22 @@
 
 namespace Igniter\Local\Tests\AutomationRules\Conditions;
 
+use Igniter\Automation\AutomationException;
 use Igniter\Automation\Models\RuleCondition;
 use Igniter\Cart\Models\Order;
 use Igniter\Local\AutomationRules\Conditions\ReviewCount;
+use Igniter\Reservation\Models\Reservation;
+
+it('returns correct condition details', function() {
+    $condition = new ReviewCount();
+
+    $result = $condition->conditionDetails();
+
+    expect($result)->toMatchArray([
+        'name' => 'Review Count',
+        'description' => 'Number of reviews for this order or reservation',
+    ]);
+});
 
 it('defines model attributes correctly', function() {
     $reviewCount = new ReviewCount;
@@ -16,12 +29,28 @@ it('defines model attributes correctly', function() {
     ]);
 });
 
-it('counts reviews correctly', function() {
+it('counts reviews for order object correctly', function() {
     $order = Order::factory()->hasReview(1)->create();
 
     $reviewCount = new ReviewCount;
 
     expect($reviewCount->getReviewCountAttribute(null, $order))->toBe(1);
+});
+
+it('counts reviews for reservation object correctly', function() {
+    $reservation = Reservation::factory()->hasReview(1)->create();
+
+    $reviewCount = new ReviewCount;
+
+    expect($reviewCount->getReviewCountAttribute(null, $reservation))->toBe(1);
+});
+
+it('returns zero when object is not order or reservation', function() {
+    $reviewCount = new ReviewCount;
+
+    $result = $reviewCount->getReviewCountAttribute(null, new \stdClass);
+
+    expect($result)->toBe(0);
 });
 
 it('evaluates isTrue when no reviews correctly', function() {
@@ -61,4 +90,11 @@ it('evaluates isTrue when review count is more than 1 correctly', function() {
 
     $params = ['order' => $order];
     expect($orderAttribute->isTrue($params))->toBeTrue();
+});
+
+it('throws exception when neither order nor reservation object is provided in parameters', function() {
+    $reviewCount = new ReviewCount;
+    $params = [];
+
+    expect(fn() => $reviewCount->isTrue($params))->toThrow(AutomationException::class);
 });

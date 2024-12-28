@@ -62,3 +62,14 @@ it('validates correctly', function() {
     expect($condition->isValid(150))->toBeTrue()
         ->and($condition->isValid(50))->toBeFalse();
 });
+
+it('validates when no matching type', function() {
+    $condition = new CoveredAreaCondition([
+        'type' => 'invalid',
+        'amount' => 10,
+        'total' => 100,
+        'priority' => 1,
+    ]);
+
+    expect($condition->isValid(150))->toBeTrue();
+});

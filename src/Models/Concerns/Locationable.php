@@ -46,7 +46,7 @@ trait Locationable
 
         $locationable = $this->getLocationableRelationObject();
 
-        if (Igniter::runningInAdmin() && !AdminAuth::isSuperUser() && $locationable->count() > 1) {
+        if (Igniter::runningInAdmin() && !AdminAuth::isSuperUser() && $locationable->count()) {
             throw new SystemException(lang('igniter::admin.alert_warning_locationable_delete'));
         }
 

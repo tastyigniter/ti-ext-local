@@ -4,68 +4,43 @@ namespace Igniter\Local\Tests\Http\Requests;
 
 use Igniter\Local\Http\Requests\LocationRequest;
 
-beforeEach(function() {
-    $this->rules = (new LocationRequest)->rules();
+it('returns correct attribute labels', function() {
+    $attributes = (new LocationRequest())->attributes();
+
+    expect($attributes)->toHaveKey('location_name', lang('igniter::admin.label_name'))
+        ->and($attributes)->toHaveKey('location_email', lang('igniter::admin.label_email'))
+        ->and($attributes)->toHaveKey('location_telephone', lang('igniter.local::default.label_telephone'))
+        ->and($attributes)->toHaveKey('location_address_1', lang('igniter.local::default.label_address_1'))
+        ->and($attributes)->toHaveKey('location_address_2', lang('igniter.local::default.label_address_2'))
+        ->and($attributes)->toHaveKey('location_city', lang('igniter.local::default.label_city'))
+        ->and($attributes)->toHaveKey('location_state', lang('igniter.local::default.label_state'))
+        ->and($attributes)->toHaveKey('location_postcode', lang('igniter.local::default.label_postcode'))
+        ->and($attributes)->toHaveKey('options.auto_lat_lng', lang('igniter.local::default.label_auto_lat_lng'))
+        ->and($attributes)->toHaveKey('location_lat', lang('igniter.local::default.label_latitude'))
+        ->and($attributes)->toHaveKey('location_lng', lang('igniter.local::default.label_longitude'))
+        ->and($attributes)->toHaveKey('description', lang('igniter::admin.label_description'))
+        ->and($attributes)->toHaveKey('location_status', lang('igniter::admin.label_status'))
+        ->and($attributes)->toHaveKey('permalink_slug', lang('igniter.local::default.label_permalink_slug'))
+        ->and($attributes)->toHaveKey('gallery.title', lang('igniter.local::default.label_gallery_title'))
+        ->and($attributes)->toHaveKey('gallery.description', lang('igniter::admin.label_description'));
 });
 
-it('has required rule for location_name, location_email and ...', function() {
-    expect('required')->toBeIn(array_get($this->rules, 'location_name'))
-        ->and('required')->toBeIn(array_get($this->rules, 'location_email'))
-        ->and('required')->toBeIn(array_get($this->rules, 'location_address_1'))
-        ->and('required')->toBeIn(array_get($this->rules, 'is_auto_lat_lng'));
-});
+it('returns correct validation rules', function() {
+    $rules = (new LocationRequest())->rules();
 
-it('has required_if rule for location_lat and location_lng', function() {
-    expect('required_if:is_auto_lat_lng,0')->toBeIn(array_get($this->rules, 'location_lat'))
-        ->and('required_if:is_auto_lat_lng,0')->toBeIn(array_get($this->rules, 'location_lng'));
-});
-
-it('has string rule for location_name, location_telephone and ...', function() {
-    expect('string')->toBeIn(array_get($this->rules, 'location_name'))
-        ->and('string')->toBeIn(array_get($this->rules, 'location_telephone'))
-        ->and('string')->toBeIn(array_get($this->rules, 'location_address_1'))
-        ->and('string')->toBeIn(array_get($this->rules, 'location_address_2'))
-        ->and('string')->toBeIn(array_get($this->rules, 'location_city'))
-        ->and('string')->toBeIn(array_get($this->rules, 'location_state'))
-        ->and('string')->toBeIn(array_get($this->rules, 'location_postcode'));
-});
-
-it('has sometimes rule for inputs', function() {
-    expect('nullable')->toBeIn(array_get($this->rules, 'location_telephone'))
-        ->and('required_if:is_auto_lat_lng,0')->toBeIn(array_get($this->rules, 'location_lat'))
-        ->and('required_if:is_auto_lat_lng,0')->toBeIn(array_get($this->rules, 'location_lng'));
-});
-
-it('has max characters rule for inputs', function() {
-    expect('max:96')->toBeIn(array_get($this->rules, 'location_email'))
-        ->and('between:2,255')->toBeIn(array_get($this->rules, 'location_address_1'))
-        ->and('max:255')->toBeIn(array_get($this->rules, 'location_address_2'))
-        ->and('max:255')->toBeIn(array_get($this->rules, 'location_city'))
-        ->and('max:255')->toBeIn(array_get($this->rules, 'location_state'))
-        ->and('max:15')->toBeIn(array_get($this->rules, 'location_postcode'))
-        ->and('max:3028')->toBeIn(array_get($this->rules, 'description'))
-        ->and('max:255')->toBeIn(array_get($this->rules, 'permalink_slug'));
-});
-
-it('has boolean rule for inputs', function() {
-    expect('boolean')->toBeIn(array_get($this->rules, 'is_auto_lat_lng'))
-        ->and('boolean')->toBeIn(array_get($this->rules, 'location_status'))
-        ->and('boolean')->toBeIn(array_get($this->rules, 'is_default'));
-});
-
-it('has alpha_dash rule for permalink_slug', function() {
-    expect('alpha_dash')->toBeIn(array_get($this->rules, 'permalink_slug'));
-});
-
-it('has email rule for location_email', function() {
-    expect('email:filter')->toBeIn(array_get($this->rules, 'location_email'));
-});
-
-it('has numeric rule for location_lat and location_lng', function() {
-    expect('numeric')->toBeIn(array_get($this->rules, 'location_lat'))
-        ->and('numeric')->toBeIn(array_get($this->rules, 'location_lng'));
-});
-
-it('has between rule for location_name', function() {
-    expect('between:2,32')->toBeIn(array_get($this->rules, 'location_name'));
+    expect($rules)->toHaveKey('location_name', ['required', 'string', 'between:2,32'])
+        ->and($rules)->toHaveKey('permalink_slug', ['nullable', 'alpha_dash', 'max:255'])
+        ->and($rules)->toHaveKey('location_email', ['required', 'email:filter', 'max:96'])
+        ->and($rules)->toHaveKey('location_telephone', ['nullable', 'string'])
+        ->and($rules)->toHaveKey('location_address_1', ['required', 'string', 'between:2,255'])
+        ->and($rules)->toHaveKey('location_address_2', ['nullable', 'string', 'max:255'])
+        ->and($rules)->toHaveKey('location_city', ['nullable', 'string', 'max:255'])
+        ->and($rules)->toHaveKey('location_state', ['nullable', 'string', 'max:255'])
+        ->and($rules)->toHaveKey('location_postcode', ['nullable', 'string', 'max:15'])
+        ->and($rules)->toHaveKey('is_auto_lat_lng', ['required', 'boolean'])
+        ->and($rules)->toHaveKey('location_lat', ['required_if:is_auto_lat_lng,0', 'numeric'])
+        ->and($rules)->toHaveKey('location_lng', ['required_if:is_auto_lat_lng,0', 'numeric'])
+        ->and($rules)->toHaveKey('description', ['max:3028'])
+        ->and($rules)->toHaveKey('location_status', ['boolean'])
+        ->and($rules)->toHaveKey('is_default', ['boolean']);
 });

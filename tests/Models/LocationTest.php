@@ -4,48 +4,66 @@ namespace Igniter\Local\Tests\Models;
 
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
-use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Models\Concerns\HasDeliveryAreas;
 use Igniter\Local\Models\Concerns\HasWorkingHours;
 use Igniter\Local\Models\Concerns\LocationHelpers;
 use Igniter\Local\Models\Location;
+use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Scopes\LocationScope;
 use Igniter\System\Models\Concerns\Defaultable;
 use Igniter\System\Models\Concerns\HasCountry;
 use Igniter\System\Models\Concerns\Switchable;
 
-it('geocodes address on save', function() {
-    $location = Location::factory()->create();
+it('returns dropdown options for enabled locations', function() {
+    $location1 = Location::factory()->create(['location_name' => 'Location 1', 'location_status' => true]);
+    $location2 = Location::factory()->create(['location_name' => 'Location 2', 'location_status' => false]);
 
-    $lat = 37.7749295;
-    $lng = -122.4194155;
-    Geocoder::shouldReceive('geocode')->andReturn(collect([
-        \Igniter\Flame\Geolite\Model\Location::createFromArray([
-            'latitude' => $lat,
-            'longitude' => $lng,
-        ]),
-    ]));
+    $result = Location::getDropdownOptions();
 
-    $location->is_auto_lat_lng = true;
-    $location->location_lat = null;
-    $location->location_lng = null;
-    $location->save();
-
-    expect($location->location_lat)->toBe($lat)
-        ->and($location->location_lng)->toBe($lng);
+    expect($result)->toHaveKey($location1->getKey(), 'Location 1')
+        ->and($result)->not->toHaveKey($location2->getKey());
 });
 
-it('adds delivery areas on save', function() {
-    $location = Location::factory()->create();
+it('checks if onboarding is complete with valid default location', function() {
+    Location::$defaultModels = [];
+    $location = Location::factory()->create([
+        'location_lat' => '12.345678',
+        'location_lng' => '98.765432',
+    ]);
+    $location->makeDefault();
+    $location->delivery_areas()->save(LocationArea::factory()->create(['is_default' => true]));
 
-    $location->delivery_areas = [
-        ['area_id' => 1, 'conditions' => ['min_total' => 10]],
-        ['area_id' => 2, 'conditions' => ['min_total' => 20]],
-    ];
+    $result = Location::onboardingIsComplete();
 
-    $location->save();
+    expect($result)->toBeTrue();
+});
 
-    expect($location->delivery_areas()->count())->toBe(2);
+it('checks if onboarding is incomplete without default location', function() {
+    Location::$defaultModels = [];
+    $default = Location::getDefault();
+    $default->delete();
+    Location::$defaultModels = [];
+
+    $result = Location::onboardingIsComplete();
+
+    expect($result)->toBeFalse();
+});
+
+it('checks if onboarding is incomplete with default location missing coordinates', function() {
+    $location = Location::factory()->create(['location_lat' => null, 'location_lng' => null]);
+    $location->delivery_areas()->create(['is_default' => true]);
+
+    $result = Location::onboardingIsComplete();
+
+    expect($result)->toBeFalse();
+});
+
+it('checks if onboarding is incomplete with default location missing delivery areas', function() {
+    Location::factory()->create(['location_lat' => '12.345678', 'location_lng' => '98.765432']);
+
+    $result = Location::onboardingIsComplete();
+
+    expect($result)->toBeFalse();
 });
 
 it('applies filters to query builder', function() {
@@ -65,6 +83,7 @@ it('applies filters to query builder', function() {
 
 it('configures location model correctly', function() {
     $location = new Location;
+    $location->location_name = 'Location Name';
 
     expect(class_uses_recursive($location))
         ->toContain(Defaultable::class)
@@ -93,5 +112,6 @@ it('configures location model correctly', function() {
         ->and($location->mediable)->toBe([
             'thumb',
             'gallery' => ['multiple' => true],
-        ]);
+        ])
+        ->and($location->defaultableName())->toBe('Location Name');
 });

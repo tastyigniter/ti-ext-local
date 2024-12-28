@@ -11,7 +11,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 
 class MaxOrderPerTimeslotReached
 {
-    protected static $ordersCache = [];
+    public static $ordersCache = [];
 
     public function subscribe(Dispatcher $dispatcher)
     {

@@ -9,7 +9,7 @@ use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Flame\Exception\FlashException;
 use Igniter\Flame\Html\HtmlFacade as Html;
 use Igniter\Local\Models\LocationArea;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -100,7 +100,7 @@ class MapArea extends BaseFormWidget
         if (strlen($key = setting('maps_api_key'))) {
             $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
             $this->addJs(sprintf($url, $key),
-                ['name' => 'google-maps-js', 'async' => null, 'defer' => null]
+                ['name' => 'google-maps-js', 'async' => null, 'defer' => null],
             );
         }
 
@@ -182,7 +182,7 @@ class MapArea extends BaseFormWidget
         });
 
         flash()->success(sprintf(lang('igniter::admin.alert_success'),
-            'Area '.($form->context == 'create' ? 'created' : 'updated')
+            'Area '.($form->context == 'create' ? 'created' : 'updated'),
         ))->now();
 
         $this->formField->value = null;
@@ -199,11 +199,11 @@ class MapArea extends BaseFormWidget
     public function onDeleteArea()
     {
         throw_unless($areaId = input('areaId'),
-            new FlashException(lang('igniter.local::default.alert_invalid_area'))
+            new FlashException(lang('igniter.local::default.alert_invalid_area')),
         );
 
         throw_unless($model = $this->getRelationModel()->find($areaId),
-            new FlashException(sprintf(lang('igniter::admin.form.not_found'), $areaId))
+            new FlashException(sprintf(lang('igniter::admin.form.not_found'), $areaId)),
         );
 
         $model->delete();
@@ -266,12 +266,8 @@ class MapArea extends BaseFormWidget
         return $this->mapAreas = $result;
     }
 
-    protected function makeAreaFormWidget($model, $context = null)
+    protected function makeAreaFormWidget($model, $context)
     {
-        if (is_null($context)) {
-            $context = $model->exists ? 'edit' : 'create';
-        }
-
         if (is_null($model->location_id)) {
             $model->location_id = $this->model->getKey();
         }

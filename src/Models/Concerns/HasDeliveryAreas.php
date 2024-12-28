@@ -2,6 +2,7 @@
 
 namespace Igniter\Local\Models\Concerns;
 
+use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Contracts\AreaInterface;
 use Igniter\Local\Models\LocationArea;
@@ -83,7 +84,7 @@ trait HasDeliveryAreas
      */
     public function searchOrDefaultDeliveryArea($coordinates)
     {
-        if ($area = $this->searchDeliveryArea($coordinates)) {
+        if ($coordinates && ($area = $this->searchDeliveryArea($coordinates))) {
             return $area;
         }
 
@@ -96,23 +97,15 @@ trait HasDeliveryAreas
      */
     public function searchOrFirstDeliveryArea($coordinates)
     {
-        if (!$area = $this->searchDeliveryArea($coordinates)) {
-            $area = $this->delivery_areas->first();
+        if ($coordinates && ($area = $this->searchDeliveryArea($coordinates))) {
+            return $area;
         }
 
-        return $area;
+        return $this->delivery_areas->first();
     }
 
-    /**
-     * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
-     * @return \Igniter\Local\Contracts\AreaInterface|null
-     */
-    public function searchDeliveryArea($coordinates)
+    public function searchDeliveryArea(CoordinatesInterface $coordinates): ?AreaInterface
     {
-        if (!$coordinates) {
-            return null;
-        }
-
         return $this->delivery_areas
             ->sortBy('priority')
             ->first(function(AreaInterface $model) use ($coordinates) {
@@ -138,17 +131,8 @@ trait HasDeliveryAreas
      */
     public function addLocationAreas($deliveryAreas)
     {
-        $locationId = $this->getKey();
-        if (!is_numeric($locationId)) {
-            return false;
-        }
-
-        if (!is_array($deliveryAreas)) {
-            return false;
-        }
-
         $idsToKeep = [];
-        foreach ($deliveryAreas as $area) {
+        foreach ($deliveryAreas ?: [] as $area) {
             $locationArea = $this->delivery_areas()->firstOrNew([
                 'area_id' => $area['area_id'] ?? null,
             ])->fill(array_except($area, ['area_id']));

@@ -17,7 +17,8 @@ it('creates correctly', function() {
 
 it('creates from ranges correctly', function() {
     $ranges = [
-        WorkingRange::create(['08:00', '12:00']),
+        WorkingRange::create(['10:00', '12:00']),
+        WorkingRange::create(['08:00', '17:00']),
         WorkingRange::create(['13:00', '17:00']),
     ];
 
@@ -58,6 +59,14 @@ it('checks if contains time', function() {
 
     expect($workingRange->containsTime(new WorkingTime(10, 00)))->toBeTrue()
         ->and($workingRange->containsTime(new WorkingTime(18, 00)))->toBeFalse();
+});
+
+it('checks if contains time when ends the next day', function() {
+    $times = ['15:00', '04:00'];
+
+    $workingRange = WorkingRange::create($times);
+
+    expect($workingRange->containsTime(new WorkingTime(18, 00)))->toBeTrue();
 });
 
 it('checks if overlaps', function() {

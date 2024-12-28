@@ -4,78 +4,44 @@ namespace Igniter\Local\Tests\Http\Requests;
 
 use Igniter\Local\Http\Requests\LocationAreaRequest;
 
-beforeEach(function() {
-    $this->rules = (new LocationAreaRequest)->rules();
+it('returns correct attribute labels', function() {
+    $attributes = (new LocationAreaRequest())->attributes();
+
+    expect($attributes)->toHaveKey('type', lang('igniter.local::default.label_area_type'))
+        ->and($attributes)->toHaveKey('name', lang('igniter.local::default.label_area_name'))
+        ->and($attributes)->toHaveKey('area_id', lang('igniter.local::default.label_area_id'))
+        ->and($attributes)->toHaveKey('boundaries.components', lang('igniter.local::default.label_address_component'))
+        ->and($attributes)->toHaveKey('boundaries.components.*.type', lang('igniter.local::default.label_address_component_type'))
+        ->and($attributes)->toHaveKey('boundaries.components.*.value', lang('igniter.local::default.label_address_component_value'))
+        ->and($attributes)->toHaveKey('boundaries.polygon', lang('igniter.local::default.label_area_shape'))
+        ->and($attributes)->toHaveKey('boundaries.circle', lang('igniter.local::default.label_area_circle'))
+        ->and($attributes)->toHaveKey('boundaries.vertices', lang('igniter.local::default.label_area_vertices'))
+        ->and($attributes)->toHaveKey('boundaries.distance.*.type', lang('igniter.local::default.label_area_distance'))
+        ->and($attributes)->toHaveKey('boundaries.distance.*.distance', lang('igniter.local::default.label_area_distance'))
+        ->and($attributes)->toHaveKey('boundaries.distance.*.charge', lang('igniter.local::default.label_area_charge'))
+        ->and($attributes)->toHaveKey('conditions', lang('igniter.local::default.label_delivery_condition'))
+        ->and($attributes)->toHaveKey('conditions.*.amount', lang('igniter.local::default.label_area_charge'))
+        ->and($attributes)->toHaveKey('conditions.*.type', lang('igniter.local::default.label_charge_condition'))
+        ->and($attributes)->toHaveKey('conditions.*.total', lang('igniter.local::default.label_area_min_amount'));
 });
 
-it('has required rule for name, priority, and status', function() {
-    expect('required')->toBeIn(array_get($this->rules, 'type'))
-        ->and('required')->toBeIn(array_get($this->rules, 'name'))
-        ->and('required')->toBeIn(array_get($this->rules, 'boundaries.components.*.type'))
-        ->and('required')->toBeIn(array_get($this->rules, 'boundaries.components.*.value'))
-        ->and('required')->toBeIn(array_get($this->rules, 'boundaries.distance.*.type'))
-        ->and('required')->toBeIn(array_get($this->rules, 'boundaries.distance.*.distance'))
-        ->and('required')->toBeIn(array_get($this->rules, 'boundaries.distance.*.charge'))
-        ->and('required')->toBeIn(array_get($this->rules, 'conditions.*.amount'))
-        ->and('required')->toBeIn(array_get($this->rules, 'conditions.*.type'))
-        ->and('required')->toBeIn(array_get($this->rules, 'conditions.*.total'));
-});
+it('returns correct validation rules', function() {
+    $rules = (new LocationAreaRequest())->rules();
 
-it('has sometimes rule for inputs', function() {
-    expect('sometimes')->toBeIn(array_get($this->rules, 'type'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'name'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'boundaries.components'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'boundaries.components.*.type'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'boundaries.components.*.value'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'boundaries.polygon'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'boundaries.distance.*.type'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'boundaries.distance.*.distance'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'boundaries.distance.*.charge'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'conditions'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'conditions.*.amount'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'conditions.*.type'))
-        ->and('sometimes')->toBeIn(array_get($this->rules, 'conditions.*.total'));
-});
-
-it('has integer rule for area_id', function() {
-    expect('integer')->toBeIn(array_get($this->rules, 'area_id'));
-});
-
-it('has string rule for type, components, and distance', function() {
-    expect('string')->toBeIn(array_get($this->rules, 'type'))
-        ->and('string')->toBeIn(array_get($this->rules, 'name'))
-        ->and('string')->toBeIn(array_get($this->rules, 'boundaries.components.*.type'))
-        ->and('string')->toBeIn(array_get($this->rules, 'boundaries.components.*.value'))
-        ->and('string')->toBeIn(array_get($this->rules, 'boundaries.distance.*.type'));
-});
-
-it('has numeric rule for distance, charge, amount, and total', function() {
-    expect('numeric')->toBeIn(array_get($this->rules, 'boundaries.distance.*.distance'))
-        ->and('numeric')->toBeIn(array_get($this->rules, 'boundaries.distance.*.charge'))
-        ->and('numeric')->toBeIn(array_get($this->rules, 'conditions.*.amount'))
-        ->and('numeric')->toBeIn(array_get($this->rules, 'conditions.*.total'));
-});
-
-it('has alpha_dash rule for type', function() {
-    expect('alpha_dash')->toBeIn(array_get($this->rules, 'conditions.*.type'));
-});
-
-it('has json rule for circle and vertices', function() {
-    expect('json')->toBeIn(array_get($this->rules, 'boundaries.circle'))
-        ->and('json')->toBeIn(array_get($this->rules, 'boundaries.vertices'));
-});
-
-it('has required_if rule for components, polygon, and circle', function() {
-    expect('required_if:type,address')->toBeIn(array_get($this->rules, 'boundaries.components'))
-        ->and('required_if:type,polygon')->toBeIn(array_get($this->rules, 'boundaries.polygon'))
-        ->and('required_if:type,circle')->toBeIn(array_get($this->rules, 'boundaries.circle'));
-});
-
-it('has required_unless rule for vertices', function() {
-    expect('required_unless:type,address')->toBeIn(array_get($this->rules, 'boundaries.vertices'));
-});
-
-it('has array rule for components, distance, and conditions', function() {
-    expect('array')->toBeIn(array_get($this->rules, 'boundaries.components'))
-        ->and('array')->toBeIn(array_get($this->rules, 'conditions'));
+    expect($rules)->toHaveKey('type', ['sometimes', 'required', 'string'])
+        ->and($rules)->toHaveKey('name', ['sometimes', 'required', 'string'])
+        ->and($rules)->toHaveKey('area_id', ['integer'])
+        ->and($rules)->toHaveKey('boundaries.components', ['sometimes', 'required_if:type,address', 'array'])
+        ->and($rules)->toHaveKey('boundaries.components.*.type', ['sometimes', 'required', 'string'])
+        ->and($rules)->toHaveKey('boundaries.components.*.value', ['sometimes', 'required', 'string'])
+        ->and($rules)->toHaveKey('boundaries.polygon', ['sometimes', 'required_if:type,polygon'])
+        ->and($rules)->toHaveKey('boundaries.circle', ['nullable', 'required_if:type,circle', 'json'])
+        ->and($rules)->toHaveKey('boundaries.vertices', ['nullable', 'required_unless:type,address', 'json'])
+        ->and($rules)->toHaveKey('boundaries.distance.*.type', ['sometimes', 'required', 'string'])
+        ->and($rules)->toHaveKey('boundaries.distance.*.distance', ['sometimes', 'required', 'numeric'])
+        ->and($rules)->toHaveKey('boundaries.distance.*.charge', ['sometimes', 'required', 'numeric'])
+        ->and($rules)->toHaveKey('conditions', ['sometimes', 'array'])
+        ->and($rules)->toHaveKey('conditions.*.amount', ['sometimes', 'required', 'numeric'])
+        ->and($rules)->toHaveKey('conditions.*.type', ['sometimes', 'required', 'alpha_dash'])
+        ->and($rules)->toHaveKey('conditions.*.total', ['sometimes', 'required', 'numeric']);
 });

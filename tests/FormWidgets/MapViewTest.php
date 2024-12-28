@@ -45,6 +45,12 @@ it('loads assets correctly', function() {
     $this->mapViewWidget->loadAssets();
 });
 
+it('renders correctly', function() {
+    $this->mapViewWidget->prepareVars();
+
+    expect($this->mapViewWidget->render())->toBeString();
+});
+
 it('prepares variables correctly', function() {
     $this->mapViewWidget->prepareVars();
 
@@ -53,6 +59,12 @@ it('prepares variables correctly', function() {
         ->and($this->mapViewWidget->vars['mapCenter'])->toBeArray()
         ->and($this->mapViewWidget->vars['shapeSelector'])->toBe('[data-map-shape]')
         ->and($this->mapViewWidget->vars['previewMode'])->toBeFalse();
+
+    $this->mapViewWidget->center = ['lat' => 51.5074, 'lng' => 0.1278];
+
+    $this->mapViewWidget->prepareVars();
+
+    expect($this->mapViewWidget->vars['mapCenter'])->toBe(['lat' => 51.5074, 'lng' => 0.1278]);
 });
 
 it('checks configuration correctly', function() {

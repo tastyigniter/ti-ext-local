@@ -42,6 +42,22 @@ it('creates daily hours correctly', function() {
         ->and($hours[1][0]['status'])->toBeTrue();
 });
 
+it('creates empty hours when no matching type', function() {
+    $data = [
+        'type' => 'invalid',
+        'days' => [1, 2, 3],
+        'open' => '08:00',
+        'close' => '17:00',
+        'timesheet' => [],
+        'flexible' => [],
+    ];
+
+    $scheduleItem = ScheduleItem::create('Test', $data);
+    $hours = $scheduleItem->getHours();
+
+    expect(array_filter($hours))->toBeEmpty();
+});
+
 it('creates timesheet hours correctly', function() {
     $data = [
         'type' => 'timesheet',
@@ -73,6 +89,28 @@ it('creates timesheet hours correctly', function() {
         ->and($hours[0][1]['status'])->toBeTrue();
 });
 
+it('creates timesheet hours from json encoded string', function() {
+    $data = [
+        'type' => 'timesheet',
+        'days' => [],
+        'open' => '08:00',
+        'close' => '17:00',
+        'timesheet' => json_encode([
+            [
+                'hours' => '09:00-12:00,13:00-17:00',
+                'status' => 1,
+            ],
+        ]),
+        'flexible' => [],
+    ];
+
+    $scheduleItem = ScheduleItem::create('Test', $data);
+    $hours = $scheduleItem->getHours();
+
+    expect($scheduleItem->type)->toBe('timesheet')
+        ->and($hours)->toHaveCount(7);
+});
+
 it('creates flexible hours correctly', function() {
     $data = [
         'type' => 'flexible',
@@ -82,6 +120,7 @@ it('creates flexible hours correctly', function() {
         'timesheet' => [],
         'flexible' => [
             ['hours' => '09:00-12:00,13:00-17:00'],
+            ['open' => '09:00', 'close' => '12:00'], // backward compatibility
         ],
     ];
 

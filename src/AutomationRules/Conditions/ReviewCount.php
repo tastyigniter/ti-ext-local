@@ -34,7 +34,7 @@ class ReviewCount extends BaseModelAttributesCondition
     public function getReviewCountAttribute($value, $object)
     {
         if (!$object instanceof Order && !$object instanceof Reservation) {
-            return false;
+            return 0;
         }
 
         return Review::query()->where([

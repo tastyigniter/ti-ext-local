@@ -3,24 +3,39 @@
 namespace Igniter\Local\Classes;
 
 use Carbon\Carbon;
+use Closure;
 use Igniter\Cart\Classes\AbstractOrderType;
-use Igniter\Flame\Geolite\Model\Distance;
+use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
+use Igniter\Flame\Traits\EventEmitter;
 use Igniter\Local\Contracts\AreaInterface;
+use Igniter\Local\Contracts\LocationInterface;
 use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\LocationArea;
+use Igniter\System\Traits\SessionMaker;
+use Igniter\User\Facades\AdminAuth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 /**
  * Location Class
  */
-class Location extends Manager
+class Location
 {
-    const CLOSED = 'closed';
+    use EventEmitter;
+    use SessionMaker;
 
-    const OPEN = 'open';
+    public const CLOSED = 'closed';
 
-    const OPENING = 'opening';
+    public const OPEN = 'open';
+
+    public const OPENING = 'opening';
+
+    protected string $sessionKey = 'local_info';
+
+    protected ?LocationInterface $model = null;
+
+    protected string $locationModel = \Igniter\Local\Models\Location::class;
 
     protected ?CoveredArea $coveredArea = null;
 
@@ -28,29 +43,174 @@ class Location extends Manager
 
     protected array $scheduleTimeslotCache = [];
 
-    //
-    // BOOT METHODS
-    //
+    protected static array $schedulesCache = [];
 
-    public function updateNearbyArea(AreaInterface $area)
+    /**
+     * The route parameter resolver callback.
+     */
+    protected static ?Closure $locationSlugResolver = null;
+
+    /**
+     * Resolve the location from route parameter.
+     */
+    public function resolveLocationSlug(): ?string
     {
-        $this->setCurrent($area->location);
+        if (isset(static::$locationSlugResolver)) {
+            return call_user_func(static::$locationSlugResolver);
+        }
 
-        $this->setCoveredArea(new CoveredArea($area));
+        return request()->route('location');
     }
 
-    public function setCoveredArea(CoveredArea $coveredArea)
+    /**
+     * Set the location route parameter resolver callback.
+     */
+    public function locationSlugResolver(Closure $resolver)
     {
-        $this->coveredArea = $coveredArea;
+        static::$locationSlugResolver = $resolver;
+    }
 
-        $areaId = $this->getSession('area');
-        if ($areaId !== $coveredArea->getKey()) {
-            $this->putSession('area', $coveredArea->getKey());
-            $this->fireSystemEvent('location.area.updated', [$coveredArea]);
+    public function check(): bool
+    {
+        return !is_null($this->current());
+    }
+
+    public function current(): ?LocationInterface
+    {
+        if (!is_null($this->model)) {
+            return $this->model;
         }
+
+        $slug = $this->resolveLocationSlug();
+        if ($slug && $model = $this->getBySlug($slug)) {
+            $this->setCurrent($model);
+        } else {
+            $id = $this->getSession('id');
+            if ($id && $model = $this->getById($id)) {
+                $this->setModel($model);
+            }
+        }
+
+        if (is_null($this->model) && is_single_location() && $defaultLocation = $this->locationModel::getDefault()) {
+            $this->setCurrent($defaultLocation);
+        }
+
+        return $this->model;
+    }
+
+    public function currentOrDefault(): ?LocationInterface
+    {
+        if ($model = $this->current()) {
+            return $model;
+        }
+
+        if ($defaultLocation = $this->locationModel::getDefault()) {
+            $this->setCurrent($defaultLocation);
+        }
+
+        return $defaultLocation;
+    }
+
+    public function currentOrAssigned(): array
+    {
+        if ($this->check()) {
+            return [$this->getId()];
+        }
+
+        if (AdminAuth::isSuperUser()) {
+            return [];
+        }
+
+        return AdminAuth::user()?->locations?->pluck('location_id')->all() ?? [];
+    }
+
+    public function setCurrent(LocationInterface $locationModel)
+    {
+        $this->setModel($locationModel);
+
+        $this->putSession('id', $locationModel->getKey());
+
+        $this->fireSystemEvent('location.current.updated', [$locationModel]);
+    }
+
+    public function getModel(): ?LocationInterface
+    {
+        return $this->model;
+    }
+
+    public function setModel(LocationInterface $model): self
+    {
+        $this->model = $model;
 
         return $this;
     }
+
+    public function getId(): ?int
+    {
+        return $this->current()?->getKey();
+    }
+
+    public function getName(): ?string
+    {
+        return $this->model?->getName();
+    }
+
+    public function createLocationModel(): LocationInterface
+    {
+        $class = '\\'.ltrim($this->locationModel, '\\');
+
+        return new $class;
+    }
+
+    protected function createLocationModelQuery(): Builder
+    {
+        $model = $this->createLocationModel();
+        $query = $model->newQuery();
+        $this->extendLocationQuery($query);
+
+        return $query;
+    }
+
+    public function extendLocationQuery(Builder $query)
+    {
+        if (!optional(AdminAuth::getUser())->hasPermission('Admin.Locations')) {
+            $query->IsEnabled();
+        }
+    }
+
+    public function getById(string|int $identifier): ?LocationInterface
+    {
+        $query = $this->createLocationModelQuery();
+
+        /** @var LocationInterface $location */
+        $location = $query->find($identifier);
+
+        return $location ?: null;
+    }
+
+    public function getBySlug(string $slug): ?LocationInterface
+    {
+        $model = $this->createLocationModel();
+        $query = $this->createLocationModelQuery();
+
+        /** @var LocationInterface $location */
+        $location = $query->where($model->getSlugKeyName(), $slug)->first();
+
+        return $location ?: null;
+    }
+
+    public function clearInternalCache()
+    {
+        $this->model = null;
+        $this->orderTypes = null;
+        $this->coveredArea = null;
+        $this->scheduleTimeslotCache = [];
+        static::$locationSlugResolver = null;
+    }
+
+    //
+    // Order Types
+    //
 
     public function updateOrderType($code = null)
     {
@@ -66,52 +226,9 @@ class Location extends Manager
         }
     }
 
-    public function updateUserPosition(UserLocation $position)
-    {
-        $oldPosition = $this->getSession('position');
-
-        $this->putSession('position', $position);
-
-        $this->clearCoveredArea();
-
-        $this->fireSystemEvent('location.position.updated', [$position, $oldPosition]);
-    }
-
-    //
-    // HELPER METHODS
-    //
-
-    public function clearCoveredArea()
-    {
-        $this->coveredArea = null;
-        $this->forgetSession('area');
-    }
-
-    public function updateScheduleTimeSlot($dateTime, $isAsap = true)
-    {
-        $orderType = $this->orderType();
-        $oldSlot = $this->getSession($orderType.'-timeslot');
-
-        $slot['dateTime'] = (!$isAsap && !is_null($dateTime)) ? make_carbon($dateTime) : null;
-        $slot['isAsap'] = $isAsap;
-
-        if (!$slot) {
-            $this->forgetSession($orderType.'-timeslot');
-        } else {
-            $this->putSession($orderType.'-timeslot', $slot);
-        }
-
-        $this->fireSystemEvent('location.timeslot.updated', [$slot, $oldSlot]);
-    }
-
     public function orderType()
     {
         return $this->getSession('orderType', LocationModel::DELIVERY);
-    }
-
-    public function requiresUserPosition()
-    {
-        return setting('location_order') == 1;
     }
 
     public function checkOrderType($code = null)
@@ -162,14 +279,31 @@ class Location extends Manager
         return collect($this->getOrderTypes() ?? [])->filter(fn($orderType) => !$orderType->isDisabled());
     }
 
+    //
+    // Timeslot
+    //
+
+    public function updateScheduleTimeSlot($dateTime, $isAsap = null)
+    {
+        $orderType = $this->orderType();
+        $oldSlot = $this->getSession($orderType.'-timeslot');
+
+        $slot['dateTime'] = (!$isAsap && !is_null($dateTime)) ? make_carbon($dateTime) : null;
+        $slot['isAsap'] = $isAsap;
+
+        if (!array_filter($slot)) {
+            $this->forgetSession($orderType.'-timeslot');
+        } else {
+            $this->putSession($orderType.'-timeslot', $slot);
+        }
+
+        $this->fireSystemEvent('location.timeslot.updated', [$slot, $oldSlot]);
+    }
+
     public function openingSchedule()
     {
         return $this->workingSchedule(Location::OPENING);
     }
-
-    //
-    // HOURS
-    //
 
     public function deliverySchedule()
     {
@@ -269,10 +403,6 @@ class Location extends Manager
         return $orderTimeIsAsap || ($dateTime && now()->isAfter($dateTime));
     }
 
-    //
-    // Timeslot
-    //
-
     public function hasAsapSchedule()
     {
         if ($this->getOrderType()->getMinimumFutureDays()) {
@@ -320,7 +450,7 @@ class Location extends Manager
             ? $this->orderLeadTime() : 0;
 
         $result = $this->getOrderType($orderType)->getSchedule()->getTimeslot(
-            $this->orderTimeInterval(), null, $leadMinutes
+            $this->orderTimeInterval(), null, $leadMinutes,
         );
 
         return $this->scheduleTimeslotCache[$orderType] = $result;
@@ -348,6 +478,67 @@ class Location extends Manager
         return $this->getOrderType()->getScheduleRestriction() !== AbstractOrderType::ASAP_ONLY;
     }
 
+    public function workingSchedule(string $type, null|int|array $days = null): WorkingSchedule
+    {
+        $cacheKey = sprintf('%s.%s', $this->getModel()->getKey(), $type);
+
+        if (isset(self::$schedulesCache[$cacheKey])) {
+            return self::$schedulesCache[$cacheKey];
+        }
+
+        $schedule = $this->getModel()->newWorkingSchedule($type, $days);
+
+        self::$schedulesCache[$cacheKey] = $schedule;
+
+        return $schedule;
+    }
+
+    //
+    // DELIVERY AREA
+    //
+
+    public function updateNearbyArea(AreaInterface $area)
+    {
+        $this->setCurrent($area->location);
+
+        $this->setCoveredArea(new CoveredArea($area));
+    }
+
+    public function setCoveredArea(CoveredArea $coveredArea)
+    {
+        $this->coveredArea = $coveredArea;
+
+        $areaId = $this->getSession('area');
+        if ($areaId !== $coveredArea->getKey()) {
+            $this->putSession('area', $coveredArea->getKey());
+            $this->fireSystemEvent('location.area.updated', [$coveredArea]);
+        }
+
+        return $this;
+    }
+
+    public function updateUserPosition(UserLocation $position)
+    {
+        $oldPosition = $this->getSession('position');
+
+        $this->putSession('position', $position);
+
+        $this->clearCoveredArea();
+
+        $this->fireSystemEvent('location.position.updated', [$position, $oldPosition]);
+    }
+
+    public function clearCoveredArea()
+    {
+        $this->coveredArea = null;
+        $this->forgetSession('area');
+    }
+
+    public function requiresUserPosition()
+    {
+        return setting('location_order') == 1;
+    }
+
     public function isCurrentAreaId($areaId)
     {
         return $this->getAreaId() == $areaId;
@@ -357,10 +548,6 @@ class Location extends Manager
     {
         return $this->coveredArea()->getKey();
     }
-
-    //
-    // DELIVERY AREA
-    //
 
     /**
      * @return \Igniter\Local\Classes\CoveredArea
@@ -377,14 +564,9 @@ class Location extends Manager
             $area = $this->getModel()->findDeliveryArea($areaId);
         }
 
-        if ($area && $this->getId() !== $area->getLocationId()) {
-            $area = null;
-            $this->clearCoveredArea();
-        }
-
         if (is_null($area)) {
             $area = $this->getModel()->searchOrDefaultDeliveryArea(
-                $this->userPosition()->getCoordinates()
+                $this->userPosition()->getCoordinates(),
             );
         }
 
@@ -450,14 +632,10 @@ class Location extends Manager
     public function checkDistance()
     {
         $distance = $this->getModel()->calculateDistance(
-            $this->userPosition()->getCoordinates()
+            $this->userPosition()->getCoordinates(),
         );
 
-        if (!$distance instanceof Distance) {
-            return $distance;
-        }
-
-        return $distance->formatDistance($this->getModel()->getDistanceUnit());
+        return $distance?->formatDistance($this->getModel()->getDistanceUnit());
     }
 
     public function checkDeliveryCoverage(?UserLocation $userPosition = null)
@@ -469,12 +647,14 @@ class Location extends Manager
         return $this->coveredArea()->checkBoundary($userPosition->getCoordinates());
     }
 
-    protected function workingStatus($type = null, $timestamp = null)
+    public function searchByCoordinates(CoordinatesInterface $coordinates, int $limit = 20): Collection
     {
-        if (is_null($type)) {
-            $type = $this->orderType();
-        }
+        $query = $this->createLocationModelQuery();
+        $query->select('*')->selectDistance(
+            $coordinates->getLatitude(),
+            $coordinates->getLongitude(),
+        );
 
-        return $this->workingSchedule($type)->checkStatus($timestamp);
+        return $query->orderBy('distance')->whereIsEnabled()->limit($limit)->get();
     }
 }

@@ -92,23 +92,6 @@ class LocationArea extends Model implements AreaInterface
     // Accessors & Mutators
     //
 
-    public function getConditionsAttribute($value)
-    {
-        // backward compatibility v2.0
-        if (!is_array($conditions = json_decode($value ?? '', true))) {
-            $conditions = [];
-        }
-
-        foreach ($conditions as $key => &$item) {
-            if (isset($item['condition'])) {
-                $item['type'] = $item['condition'];
-                unset($item['condition']);
-            }
-        }
-
-        return $conditions;
-    }
-
     public function getVerticesAttribute()
     {
         return isset($this->boundaries['vertices']) ?
@@ -155,7 +138,7 @@ class LocationArea extends Model implements AreaInterface
         $geolite = app('geolite');
         $coordinate = $geolite->coordinates(
             $this->circle->lat,
-            $this->circle->lng
+            $this->circle->lng,
         );
 
         return $geolite->circle($coordinate, $this->circle->radius);
@@ -173,14 +156,14 @@ class LocationArea extends Model implements AreaInterface
 
     public function getLocationId()
     {
-        return $this->attributes['location_id'];
+        return $this->location_id;
     }
 
     public function checkBoundary(CoordinatesInterface $coordinate)
     {
         if ($this->isAddressBoundary()) {
             $position = Geocoder::reverse(
-                $coordinate->getLatitude(), $coordinate->getLongitude()
+                $coordinate->getLatitude(), $coordinate->getLongitude(),
             )->first();
 
             if ($position) {
@@ -218,10 +201,7 @@ class LocationArea extends Model implements AreaInterface
 
     public function matchAddressComponents(LocationInterface $position)
     {
-        $components = array_get($this->boundaries, 'components');
-        if (!is_array($components)) {
-            $components = [];
-        }
+        $components = (array)array_get($this->boundaries, 'components');
 
         $groupedComponents = collect($components)->groupBy('type')->all();
 

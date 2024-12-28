@@ -4,43 +4,33 @@ namespace Igniter\Local\Tests\Http\Requests;
 
 use Igniter\Local\Http\Requests\ReviewRequest;
 
-beforeEach(function() {
-    $request = (new ReviewRequest)->merge([
-        'reviewable_type' => 'type',
-        'reviewable_id' => 1,
-    ]);
-    $this->rules = ($request)->rules();
+it('returns correct attribute labels', function() {
+    $attributes = (new ReviewRequest())->attributes();
+
+    expect($attributes)->toHaveKey('reviewable_type', lang('igniter.local::default.reviews.label_reviewable_type'))
+        ->and($attributes)->toHaveKey('reviewable_id', lang('igniter.local::default.reviews.label_reviewable_id'))
+        ->and($attributes)->toHaveKey('location_id', lang('igniter.local::default.reviews.label_location'))
+        ->and($attributes)->toHaveKey('customer_id', lang('igniter.local::default.reviews.label_customer'))
+        ->and($attributes)->toHaveKey('quality', lang('igniter.local::default.reviews.label_quality'))
+        ->and($attributes)->toHaveKey('delivery', lang('igniter.local::default.reviews.label_delivery'))
+        ->and($attributes)->toHaveKey('service', lang('igniter.local::default.reviews.label_service'))
+        ->and($attributes)->toHaveKey('review_text', lang('igniter.local::default.reviews.label_text'))
+        ->and($attributes)->toHaveKey('review_status', lang('admin::lang.label_status'));
 });
 
-it('has required rule for inputs', function() {
-    expect('required')->toBeIn(array_get($this->rules, 'location_id'))
-        ->and('required')->toBeIn(array_get($this->rules, 'customer_id'))
-        ->and('required')->toBeIn(array_get($this->rules, 'reviewable_type'))
-        ->and('required')->toBeIn(array_get($this->rules, 'reviewable_id'))
-        ->and('required')->toBeIn(array_get($this->rules, 'quality'))
-        ->and('required')->toBeIn(array_get($this->rules, 'delivery'))
-        ->and('required')->toBeIn(array_get($this->rules, 'service'))
-        ->and('required')->toBeIn(array_get($this->rules, 'review_text'))
-        ->and('required')->toBeIn(array_get($this->rules, 'review_status'));
-});
+it('returns correct validation rules', function() {
+    $reviewRequest = new ReviewRequest();
+    $reviewRequest->merge(['reviewable_type' => 'locations']);
+    $rules = $reviewRequest->rules();
 
-it('has integer rule for quality, delivery, and service, location_id and customer_id', function() {
-    expect('integer')->toBeIn(array_get($this->rules, 'location_id'))
-        ->and('integer')->toBeIn(array_get($this->rules, 'customer_id'))
-        ->and('integer')->toBeIn(array_get($this->rules, 'quality'))
-        ->and('integer')->toBeIn(array_get($this->rules, 'delivery'))
-        ->and('integer')->toBeIn(array_get($this->rules, 'service'));
-});
-
-it('has between rule for review_text', function() {
-    expect('between:2,1028')->toBeIn(array_get($this->rules, 'review_text'));
-});
-
-it('has boolean rule for review_status', function() {
-    expect('boolean')->toBeIn(array_get($this->rules, 'review_status'));
-});
-
-it('has exists rule for reviewable_id', function() {
-    expect('exists:type,type_id')->toBeIn(array_get($this->rules, 'reviewable_id'));
+    expect($rules)->toHaveKey('reviewable_type', ['required'])
+        ->and($rules)->toHaveKey('reviewable_id', ['required', 'integer', 'exists:locations,location_id'])
+        ->and($rules)->toHaveKey('location_id', ['required', 'integer'])
+        ->and($rules)->toHaveKey('customer_id', ['required', 'integer'])
+        ->and($rules)->toHaveKey('quality', ['required', 'integer', 'min:1', 'max:5'])
+        ->and($rules)->toHaveKey('delivery', ['required', 'integer', 'min:1', 'max:5'])
+        ->and($rules)->toHaveKey('service', ['required', 'integer', 'min:1', 'max:5'])
+        ->and($rules)->toHaveKey('review_text', ['required', 'between:2,1028'])
+        ->and($rules)->toHaveKey('review_status', ['required', 'boolean']);
 });
 

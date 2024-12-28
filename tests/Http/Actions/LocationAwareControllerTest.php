@@ -10,10 +10,14 @@ use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Http\Actions\LocationAwareController;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\Review;
+use Igniter\Local\Models\WorkingHour;
 use Illuminate\Support\Facades\Event;
 
 beforeEach(function() {
-    Event::fake();
+    Event::fakeExcept([
+        'admin.list.extendQuery',
+        'admin.filter.extendQuery',
+    ]);
 
     $this->controller = new class extends AdminController
     {
@@ -32,17 +36,51 @@ beforeEach(function() {
         public $listConfig = [
             'list' => [
                 'model' => Location::class,
-                'configFile' => 'config_file',
+                'configFile' => [
+                    'list' => [
+                        'filter' => [
+                            'scopes' => [
+                                'status' => [
+                                    'label' => 'lang:admin::lang.list.filter_recent',
+                                    'conditions' => 'created_at >= :recent',
+                                    'modelClass' => Location::class,
+                                    'value' => '-30 days',
+                                    'locationAware' => true,
+                                ],
+                            ],
+                        ],
+                        'columns' => [
+                            'location_id' => [
+                                'label' => 'lang:admin::lang.locations.column_id',
+                                'type' => 'number',
+                                'searchable' => true,
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ];
 
         public $formConfig = [
+            'name' => 'lang:admin::lang.locations.text_form_name',
             'model' => Location::class,
-            'configFile' => 'config_file',
+            'configFile' => [
+                'form' => [
+                    'tabs' => [
+                        'fields' => [
+                            'location_id' => [
+                                'label' => 'lang:admin::lang.locations.label_id',
+                                'type' => 'text',
+                                'span' => 'left',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     };
 
-    $this->locationAwareController = new LocationAwareController($this->controller);
+    $this->locationAwareController = $this->controller->asExtension(LocationAwareController::class);
 });
 
 it('initializes correctly', function() {
@@ -61,6 +99,23 @@ it('binds location events', function() {
     $this->controller->fireEvent('controller.beforeRemap');
 });
 
+it('applies location scope on events', function() {
+    $this->controller->fireEvent('controller.beforeRemap');
+
+    $listWidgets = $this->controller->asExtension(ListController::class)->makeLists();
+    $listWidget = $listWidgets['list'];
+
+    expect($listWidget->render())->toBeString();
+
+    $filterWidget = $this->controller->widgets['list_filter'];
+    expect($filterWidget->render())->toBeString();
+
+    LocationFacade::shouldReceive('currentOrAssigned')->andReturn([1, 2]);
+    $query = Menu::query();
+    $this->controller->fireEvent('admin.controller.extendFormQuery', [$query]);
+    expect($query->toSql())->toContain('`location_id` in (?, ?)');
+});
+
 it('applies location scope correctly', function($query, $expectedSql) {
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([1, 2]);
     $this->locationAwareController->locationApplyScope($query);
@@ -70,6 +125,13 @@ it('applies location scope correctly', function($query, $expectedSql) {
     fn() => [Review::query(), '`location_id` in (?, ?)'],
     fn() => [Menu::query(), 'and `locationables`.`location_id` in (?, ?)'],
 ]);
+
+it('does not applies location scope when model does not use Locationable trait', function() {
+    $query = WorkingHour::query();
+    $this->locationAwareController->locationApplyScope($query);
+
+    expect($query->toSql())->not->toContain('`location_id`');
+});
 
 it('does not applies location scope when user current or assigned location is missing', function() {
     $query = Review::query();

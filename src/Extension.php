@@ -6,6 +6,7 @@ use Igniter\Admin\Classes\MainMenuItem;
 use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
 use Igniter\Admin\Facades\AdminMenu;
+use Igniter\Admin\Widgets\Form;
 use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
@@ -92,9 +93,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         Order::implement(ReviewAction::class);
         Reservation::implement(ReviewAction::class);
 
-        if (Igniter::runningInAdmin()) {
-            $this->registerLocationsMainMenuItems();
-        }
+        $this->registerLocationsMainMenuItems();
     }
 
     public function registerAutomationRules()
@@ -253,26 +252,24 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     {
         Charts::extend(function($charts) {
             $charts->bindEvent('charts.extendDatasets', function() use ($charts) {
-                if (!ReviewSettings::allowReviews()) {
-                    return;
+                if (ReviewSettings::allowReviews()) {
+                    $charts->mergeDataset('reports', 'sets', [
+                        'reviews' => [
+                            'label' => 'lang:igniter.local::default.reviews.text_title',
+                            'color' => '#FFB74D',
+                            'model' => Review::class,
+                            'column' => 'created_at',
+                            'priority' => 40,
+                        ],
+                    ]);
                 }
-
-                $charts->mergeDataset('reports', 'sets', [
-                    'reviews' => [
-                        'label' => 'lang:igniter.local::default.reviews.text_title',
-                        'color' => '#FFB74D',
-                        'model' => Review::class,
-                        'column' => 'created_at',
-                        'priority' => 40,
-                    ],
-                ]);
             });
         });
     }
 
     protected function addAssetsToReviewsSettingsPage()
     {
-        Event::listen('admin.form.extendFieldsBefore', function($form) {
+        Event::listen('admin.form.extendFieldsBefore', function(Form $form) {
             if (!$form->model instanceof ReviewSettings) {
                 return;
             }
@@ -297,13 +294,11 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     protected function bindRememberLocationAreaEvents(): void
     {
         Event::listen('location.position.updated', function($location, $position, $oldPosition) {
-            if ($position->format() === $oldPosition?->format()) {
-                return;
+            if ($position->format() !== $oldPosition?->format()) {
+                $this->updateCustomerLastArea([
+                    'query' => $position->format(),
+                ]);
             }
-
-            $this->updateCustomerLastArea([
-                'query' => $position->format(),
-            ]);
         });
 
         Event::listen('location.area.updated', function($location, $coveredArea) {
@@ -313,7 +308,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         });
 
         Event::listen(['igniter.user.login', 'igniter.socialite.login'], function() {
-            try {
+            rescue(function() {
                 if (!strlen($lastArea = Auth::customer()->last_location_area)) {
                     return;
                 }
@@ -329,8 +324,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 if ($areaId && $area = LocationArea::find($areaId)) {
                     LocationFacade::updateNearbyArea($area);
                 }
-            } catch (\Exception $exception) {
-            }
+            });
         });
     }
 
@@ -350,16 +344,18 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     protected function registerLocationsMainMenuItems()
     {
-        AdminMenu::registerCallback(function(Navigation $manager) {
-            $manager->registerMainItems([
-                MainMenuItem::widget('locations', LocationPicker::class)
-                    ->priority(0)
-                    ->permission('Admin.Locations')
-                    ->mergeConfig([
-                        'form' => 'igniter.local::/models/location',
-                        'request' => LocationRequest::class,
-                    ]),
-            ]);
-        });
+        if (Igniter::runningInAdmin()) {
+            AdminMenu::registerCallback(function(Navigation $manager) {
+                $manager->registerMainItems([
+                    MainMenuItem::widget('locations', LocationPicker::class)
+                        ->priority(0)
+                        ->permission('Admin.Locations')
+                        ->mergeConfig([
+                            'form' => 'igniter.local::/models/location',
+                            'request' => LocationRequest::class,
+                        ]),
+                ]);
+            });
+        }
     }
 }

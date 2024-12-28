@@ -12,15 +12,10 @@ class CheckLocation
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!Igniter::hasDatabase()) {
-            $location = null;
-        } elseif (Igniter::runningInAdmin()) {
-            if (($location = $this->checkAdminLocation()) === false) {
-                Location::resetSession();
-
-                return redirect()->back();
-            }
-        } else {
+        $location = null;
+        if (Igniter::runningInAdmin()) {
+            $location = $this->checkAdminLocation();
+        } elseif (Igniter::hasDatabase()) {
             $location = Location::currentOrDefault();
         }
 
@@ -37,7 +32,7 @@ class CheckLocation
             return redirect()->to(page_url('home'));
         }
 
-        if (!$location->isEnabled() && !AdminAuth::getUser()?->hasPermission('Admin.Locations')) {
+        if ($locationParam && !$location->isEnabled() && !AdminAuth::getUser()?->hasPermission('Admin.Locations')) {
             flash()->error(lang('igniter.local::default.alert_location_required'));
 
             return redirect()->to(page_url('home'));
