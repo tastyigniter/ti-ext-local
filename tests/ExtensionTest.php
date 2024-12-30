@@ -143,6 +143,16 @@ it('returns delivery condition with correct attributes', function() {
     ]);
 });
 
+it('returns registered mail templates array', function() {
+    $extension = new \Igniter\Local\Extension(app());
+
+    $result = $extension->registerMailTemplates();
+
+    expect($result)->toEqual([
+        'igniter.local::mail.review_chase' => 'lang:igniter.local::default.reviews.text_chase_email',
+    ]);
+});
+
 it('returns registered permissions array', function() {
     $extension = new \Igniter\Local\Extension(app());
 
