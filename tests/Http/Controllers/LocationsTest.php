@@ -51,7 +51,7 @@ it('sets a default location', function() {
             'X-IGNITER-REQUEST-HANDLER' => 'onSetDefault',
         ]);
 
-    Location::$defaultModels = [];
+    Location::clearDefaultModel();
     expect(Location::getDefaultKey())->toBe($location->getKey());
 });
 

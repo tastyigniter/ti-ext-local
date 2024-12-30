@@ -25,7 +25,7 @@ it('returns dropdown options for enabled locations', function() {
 });
 
 it('checks if onboarding is complete with valid default location', function() {
-    Location::$defaultModels = [];
+    Location::clearDefaultModel();
     $location = Location::factory()->create([
         'location_lat' => '12.345678',
         'location_lng' => '98.765432',
@@ -39,10 +39,10 @@ it('checks if onboarding is complete with valid default location', function() {
 });
 
 it('checks if onboarding is incomplete without default location', function() {
-    Location::$defaultModels = [];
+    Location::clearDefaultModel();
     $default = Location::getDefault();
     $default->delete();
-    Location::$defaultModels = [];
+    Location::clearDefaultModel();
 
     $result = Location::onboardingIsComplete();
 

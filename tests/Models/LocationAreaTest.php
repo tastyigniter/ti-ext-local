@@ -192,7 +192,7 @@ it('checks if point is inside address boundary', function() {
         'boundaries' => [
             'components' => [
                 ['type' => 'locality', 'value' => 'White City'],
-                ['type' => 'postal_code', 'value' => 'Country'],
+                ['type' => 'postal_code', 'value' => 'Country'], // Invalid postal code
             ],
         ],
     ]);
