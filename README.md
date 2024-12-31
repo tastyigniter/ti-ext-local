@@ -1,3 +1,10 @@
+<p align="center">
+    <a href="https://github.com/tastyigniter/ti-ext-local/actions"><img src="https://github.com/tastyigniter/ti-ext-local/actions/workflows/pipeline.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://packagist.org/packages/tastyigniter/ti-ext-local"><img src="https://img.shields.io/packagist/dt/tastyigniter/ti-ext-local" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/tastyigniter/ti-ext-local"><img src="https://img.shields.io/packagist/v/tastyigniter/ti-ext-local" alt="Latest Stable Version"></a>
+    <a href="https://packagist.org/packages/tastyigniter/ti-ext-local"><img src="https://img.shields.io/packagist/l/tastyigniter/ti-ext-local" alt="License"></a>
+</p>
+
 ## Introduction
 
 The TastyIgniter Local extension enhances your TastyIgniter application with location-based features. It allows you to manage multiple locations, set delivery areas, define opening hours, and much more.
