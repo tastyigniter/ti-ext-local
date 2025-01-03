@@ -21,6 +21,11 @@ parameters:
 			path: src/Classes/Location.php
 
 		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$locations\\.$#"
+			count: 1
+			path: src/Classes/Location.php
+
+		-
 			message: "#^Call to an undefined method DateTime\\:\\:between\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Location.php
@@ -101,21 +106,6 @@ parameters:
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:isSuperUser\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getWeekDaysOptions\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/ScheduleItem.php
@@ -181,7 +171,12 @@ parameters:
 			path: src/Extension.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\Auth\\:\\:customer\\(\\)\\.$#"
+			message: "#^Cannot access property \\$last_location_area on null\\.$#"
+			count: 1
+			path: src/Extension.php
+
+		-
+			message: "#^Result of static method Igniter\\\\User\\\\Facades\\\\Auth\\:\\:customer\\(\\) \\(void\\) is used\\.$#"
 			count: 2
 			path: src/Extension.php
 
@@ -236,17 +231,12 @@ parameters:
 			path: src/Http/Controllers/Reviews.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:check\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:hasPermission\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Middleware/CheckLocation.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:getUser\\(\\)\\.$#"
-			count: 1
-			path: src/Http/Middleware/CheckLocation.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:isAssignedLocation\\(\\)\\.$#"
 			count: 1
 			path: src/Http/Middleware/CheckLocation.php
 
@@ -296,6 +286,16 @@ parameters:
 			path: src/MainMenuWidgets/LocationPicker.php
 
 		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:hasPermission\\(\\)\\.$#"
+			count: 2
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:isAssignedLocation\\(\\)\\.$#"
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
 			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:getLogs\\(\\)\\.$#"
 			count: 1
 			path: src/MainMenuWidgets/LocationPicker.php
@@ -303,11 +303,6 @@ parameters:
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Location\\:\\:find\\(\\)\\.$#"
 			count: 1
-			path: src/MainMenuWidgets/LocationPicker.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:user\\(\\)\\.$#"
-			count: 3
 			path: src/MainMenuWidgets/LocationPicker.php
 
 		-
@@ -323,81 +318,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$delivery_areas\\.$#"
 			count: 4
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$description\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$grouped_settings\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$is_auto_lat_lng\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_address_1\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_address_2\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_city\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_country_id\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_email\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_lat\\.$#"
-			count: 4
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_lng\\.$#"
-			count: 4
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_name\\.$#"
-			count: 2
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_postcode\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_state\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$location_telephone\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$permalink_slug\\.$#"
-			count: 1
 			path: src/Models/Location.php
 
 		-
@@ -461,31 +381,6 @@ parameters:
 			path: src/Models/Location.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\LocationArea\\:\\:\\$boundaries\\.$#"
-			count: 1
-			path: src/Models/LocationArea.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\LocationArea\\:\\:\\$circle\\.$#"
-			count: 4
-			path: src/Models/LocationArea.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\LocationArea\\:\\:\\$location_id\\.$#"
-			count: 2
-			path: src/Models/LocationArea.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\LocationArea\\:\\:\\$type\\.$#"
-			count: 2
-			path: src/Models/LocationArea.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\LocationArea\\:\\:\\$vertices\\.$#"
-			count: 2
-			path: src/Models/LocationArea.php
-
-		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\LocationSettings\\:\\:\\$data\\.$#"
 			count: 2
 			path: src/Models/LocationSettings.php
@@ -511,56 +406,6 @@ parameters:
 			path: src/Models/Review.php
 
 		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$author\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$customer_id\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$delivery\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$location_id\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$quality\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$review_status\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$review_text\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$reviewable_id\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$reviewable_type\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Review\\:\\:\\$service\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
 			message: "#^Call to an undefined method Igniter\\\\Flame\\\\Database\\\\Model\\:\\:isCompleted\\(\\)\\.$#"
 			count: 1
 			path: src/Models/Review.php
@@ -572,11 +417,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:whereReviewable\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\User\\\\Facades\\\\AdminAuth\\:\\:isSuperUser\\(\\)\\.$#"
 			count: 1
 			path: src/Models/Review.php
 
@@ -619,36 +459,6 @@ parameters:
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableRelationName\\(\\)\\.$#"
 			count: 2
 			path: src/Models/Scopes/LocationableScope.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\WorkingHour\\:\\:\\$close\\.$#"
-			count: 2
-			path: src/Models/WorkingHour.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\WorkingHour\\:\\:\\$closing_time\\.$#"
-			count: 2
-			path: src/Models/WorkingHour.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\WorkingHour\\:\\:\\$day\\.$#"
-			count: 2
-			path: src/Models/WorkingHour.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\WorkingHour\\:\\:\\$open\\.$#"
-			count: 2
-			path: src/Models/WorkingHour.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\WorkingHour\\:\\:\\$opening_time\\.$#"
-			count: 2
-			path: src/Models/WorkingHour.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\WorkingHour\\:\\:\\$weekday\\.$#"
-			count: 1
-			path: src/Models/WorkingHour.php
 
 		-
 			message: "#^Method Carbon\\\\Carbon\\:\\:addDay\\(\\) invoked with 1 parameter, 0 required\\.$#"

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string|null resolveLocationSlug()
  * @method static void locationSlugResolver(\Closure $resolver)
  * @method static bool check()
- * @method static \Igniter\Local\Contracts\LocationInterface|null current()
+ * @method static \Igniter\Local\Models\Location|\Igniter\Local\Contracts\LocationInterface|null current()
  * @method static \Igniter\Local\Contracts\LocationInterface|null currentOrDefault()
  * @method static array currentOrAssigned()
  * @method static void setCurrent(\Igniter\Local\Contracts\LocationInterface $locationModel)

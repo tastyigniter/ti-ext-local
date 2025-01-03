@@ -9,6 +9,18 @@ use Igniter\System\Models\Concerns\Switchable;
 
 /**
  * Working hours Model Class
+ *
+ * @property int $location_id
+ * @property int $weekday
+ * @property mixed $opening_time
+ * @property mixed $closing_time
+ * @property boolean $status
+ * @property string $type
+ * @property int $id
+ * @property-read mixed $close
+ * @property-read mixed $day
+ * @property-read mixed $open
+ * @mixin \Igniter\Flame\Database\Model
  */
 class WorkingHour extends Model implements WorkingHourInterface
 {

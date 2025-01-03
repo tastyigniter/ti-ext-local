@@ -15,6 +15,19 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * LocationArea Model Class
+ *
+ * @property int $area_id
+ * @property int $location_id
+ * @property string $name
+ * @property string $type
+ * @property array $boundaries
+ * @property array $conditions
+ * @property string|null $color
+ * @property bool $is_default
+ * @property int $priority
+ * @property-read mixed $circle
+ * @property-read mixed $vertices
+ * @mixin \Igniter\Flame\Database\Model
  */
 class LocationArea extends Model implements AreaInterface
 {

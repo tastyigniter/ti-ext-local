@@ -12,6 +12,21 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Reviews Model Class
+ *
+ * @property int $review_id
+ * @property int|null $customer_id
+ * @property int|null $reviewable_id
+ * @property string $reviewable_type
+ * @property string|null $author
+ * @property int|null $location_id
+ * @property int $quality
+ * @property int $delivery
+ * @property int $service
+ * @property string|null $review_text
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property bool $review_status
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @mixin \Igniter\Flame\Database\Model
  */
 class Review extends Model
 {
@@ -90,11 +105,11 @@ class Review extends Model
     public static function leaveReview(?Model $reviewable = null, array $data = [])
     {
         throw_unless($reviewable->isCompleted(), new ApplicationException(
-            lang('igniter.local::default.review.alert_review_status_history')
+            lang('igniter.local::default.review.alert_review_status_history'),
         ));
 
         throw_if($reviewable->customer && self::checkReviewed($reviewable, $reviewable->customer), new ApplicationException(
-            lang('igniter.local::default.review.alert_review_duplicate')
+            lang('igniter.local::default.review.alert_review_duplicate'),
         ));
 
         $review = new static;

@@ -17,6 +17,32 @@ use Igniter\System\Models\Concerns\Switchable;
 
 /**
  * Location Model Class
+ *
+ * @property int $location_id
+ * @property string $location_name
+ * @property string $location_email
+ * @property string|null $description
+ * @property string|null $location_address_1
+ * @property string|null $location_address_2
+ * @property string|null $location_city
+ * @property string|null $location_state
+ * @property string|null $location_postcode
+ * @property int|null $location_country_id
+ * @property string|null $location_telephone
+ * @property float|null $location_lat
+ * @property float|null $location_lng
+ * @property int|null $location_radius
+ * @property bool|null $location_status
+ * @property string|null $permalink_slug
+ * @property bool $is_default
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $is_auto_lat_lng
+ * @property-read mixed|null $grouped_settings
+ * @property-read mixed $location_thumb
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Igniter\Flame\Database\Attach\Media> $media
+ * @property-read int|null $media_count
+ * @mixin \Igniter\Flame\Database\Model
  */
 class Location extends Model implements LocationInterface
 {
