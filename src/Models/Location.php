@@ -40,6 +40,7 @@ use Igniter\System\Models\Concerns\Switchable;
  * @property int $is_auto_lat_lng
  * @property-read mixed|null $grouped_settings
  * @property-read mixed $location_thumb
+ * @property-read mixed $thumb
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Igniter\Flame\Database\Attach\Media> $media
  * @property-read int|null $media_count
  * @mixin \Igniter\Flame\Database\Model
