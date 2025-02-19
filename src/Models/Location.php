@@ -43,6 +43,7 @@ use Igniter\System\Models\Concerns\Switchable;
  * @property-read mixed $thumb
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Igniter\Flame\Database\Attach\Media> $media
  * @property-read int|null $media_count
+ * @method static Location first()
  * @mixin \Igniter\Flame\Database\Model
  */
 class Location extends Model implements LocationInterface
