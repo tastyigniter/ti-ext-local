@@ -9,7 +9,7 @@ use Igniter\Local\Models\Location as LocationModel;
 
 class Delivery extends CartCondition
 {
-    public $priority = 100;
+    public ?int $priority = 100;
 
     protected $deliveryCharge = 0;
 
