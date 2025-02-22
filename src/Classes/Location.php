@@ -237,7 +237,7 @@ class Location
     }
 
     /**
-     * @return \Igniter\Cart\Classes\AbstractOrderType
+     * @return ?\Igniter\Cart\Classes\AbstractOrderType
      */
     public function getOrderType($code = null)
     {
@@ -367,10 +367,7 @@ class Location
         return $orderType->getSchedule()->isOpenAt($timestamp);
     }
 
-    /**
-     * @return \Carbon\Carbon
-     */
-    public function orderDateTime()
+    public function orderDateTime(): Carbon
     {
         $dateTime = $this->getSession($this->orderType().'-timeslot.dateTime');
         if ($this->orderTimeIsAsap()) {
@@ -378,9 +375,7 @@ class Location
         }
 
         if (!$dateTime || now()->isAfter($dateTime)) {
-            $dateTime = $this->hasAsapSchedule()
-                ? $this->asapScheduleTimeslot()
-                : $this->firstScheduleTimeslot();
+            $dateTime = $this->hasAsapSchedule() ? $this->asapScheduleTimeslot() : $this->firstScheduleTimeslot();
         }
 
         return make_carbon($dateTime);
