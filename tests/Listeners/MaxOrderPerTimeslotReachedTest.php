@@ -20,7 +20,7 @@ it('bails when working schedule type is opening', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->setType(Location::OPENING);
 
-    $listener = new MaxOrderPerTimeslotReached();
+    $listener = new MaxOrderPerTimeslotReached;
     $timeslot = new DateTime('2023-01-01 12:00:00');
 
     $result = $listener->timeslotValid($workingSchedule, $timeslot);
@@ -36,7 +36,7 @@ it('returns true when limit orders is disabled', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->setType(Location::DELIVERY);
 
-    $listener = new MaxOrderPerTimeslotReached();
+    $listener = new MaxOrderPerTimeslotReached;
     $timeslot = new DateTime('2023-01-01 12:00:00');
 
     $result = $listener->timeslotValid($workingSchedule, $timeslot);
@@ -63,7 +63,7 @@ it('returns false when timeslot exceeds max orders for delivery', function(): vo
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->setType(Location::DELIVERY);
 
-    $listener = new MaxOrderPerTimeslotReached();
+    $listener = new MaxOrderPerTimeslotReached;
 
     $result = $listener->timeslotValid($workingSchedule, $timeslot);
 
@@ -85,7 +85,7 @@ it('throws exception when order exceeds max orders for pickup', function(): void
         'order_type' => Location::DELIVERY,
     ]);
 
-    $listener = new MaxOrderPerTimeslotReached();
+    $listener = new MaxOrderPerTimeslotReached;
 
     expect(fn() => $listener->beforeSaveOrder($orders->last(), []))->toThrow(ApplicationException::class);
 });
@@ -100,7 +100,7 @@ it('returns true when timeslot does not exceed max orders', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->setType(Location::DELIVERY);
 
-    $listener = new MaxOrderPerTimeslotReached();
+    $listener = new MaxOrderPerTimeslotReached;
     $timeslot = new DateTime('2023-01-01 12:00:00');
 
     $result = $listener->timeslotValid($workingSchedule, $timeslot);

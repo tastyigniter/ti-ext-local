@@ -9,7 +9,7 @@ use Igniter\Local\Models\WorkingHour;
 use Igniter\System\Models\Concerns\Switchable;
 
 it('returns timesheet options with provided value', function(): void {
-    $workingHour = new WorkingHour();
+    $workingHour = new WorkingHour;
     $value = ['some' => 'value'];
 
     $result = $workingHour->getTimesheetOptions($value, []);

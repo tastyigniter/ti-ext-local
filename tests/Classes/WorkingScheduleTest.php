@@ -58,7 +58,7 @@ it('fills correctly', function(): void {
 });
 
 it('sets the current time to now', function(): void {
-    $workingSchedule = new WorkingSchedule();
+    $workingSchedule = new WorkingSchedule;
     $now = new DateTime('2023-01-01 12:00:00');
 
     $result = $workingSchedule->setNow($now);
@@ -348,7 +348,6 @@ it('adjusts end date when next close date is before current date', function(): v
     $method->setAccessible(true);
 
     $result = $method->invoke($workingSchedule, $dateTime);
-
 
     expect($result->end->toDateString())->toBe($dateTime->copy()->subDay()->addDay()->toDateString());
 });

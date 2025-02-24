@@ -35,7 +35,7 @@ it('returns existing instance from cache', function(): void {
 });
 
 it('sets settings value for allowed key', function(): void {
-    $locationSettings = new LocationSettings();
+    $locationSettings = new LocationSettings;
     $locationSettings->setSettingsValue('allowed_key', 'value');
 
     $result = $locationSettings->getSettingsValue();
@@ -44,7 +44,7 @@ it('sets settings value for allowed key', function(): void {
 });
 
 it('does not set settings value for disallowed key', function(): void {
-    $locationSettings = new LocationSettings();
+    $locationSettings = new LocationSettings;
     $locationSettings->setSettingsValue('id', 'value');
 
     $result = $locationSettings->getSettingsValue();
@@ -53,7 +53,7 @@ it('does not set settings value for disallowed key', function(): void {
 });
 
 it('returns default value if key is not set', function(): void {
-    $locationSettings = new LocationSettings();
+    $locationSettings = new LocationSettings;
 
     $result = $locationSettings->get('non_existent_key', 'default_value');
 
@@ -134,7 +134,7 @@ it('clears internal cache', function(): void {
 });
 
 it('loads registered settings', function(): void {
-    $locationSettings = new LocationSettings();
+    $locationSettings = new LocationSettings;
     LocationSettings::registerCallback(function($settings): void {
         $settings->registerSettingItems('test_extension', [
             'test_code' => [

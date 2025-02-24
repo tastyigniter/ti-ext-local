@@ -259,7 +259,7 @@ class WorkingSchedule
         );
     }
 
-    public function getPeriod(null|DateTimeInterface $dateTime = null): WorkingPeriod
+    public function getPeriod(?DateTimeInterface $dateTime = null): WorkingPeriod
     {
         return $this->forDate($this->parseDate($dateTime));
     }
@@ -419,9 +419,9 @@ class WorkingSchedule
         }
 
         // +2 as we subtracted a day and need to count the current day
-//        if (Carbon::instance($dateTime)->addDays($this->maxDays + 2)->lt($timeslot)) {
-//            return false;
-//        }
+        //        if (Carbon::instance($dateTime)->addDays($this->maxDays + 2)->lt($timeslot)) {
+        //            return false;
+        //        }
         // Commented out as not necessary. The above condition is already checked in isBetweenPeriodForDays method
 
         $result = WorkingScheduleTimeslotValidEvent::dispatchOnce($this, $timeslot);

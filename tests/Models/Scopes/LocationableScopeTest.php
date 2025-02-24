@@ -66,6 +66,7 @@ it('applies where has or doesnt have location with single location id', function
     $builder->shouldReceive('withoutGlobalScope')->andReturnSelf();
     $builder->shouldReceive('where')->andReturnUsing(function($callback) use ($builder) {
         $callback($builder);
+
         return $builder;
     });
     $builder->shouldReceive('whereHasLocation')->with(1)->andReturnSelf();
@@ -84,6 +85,7 @@ it('applies where has or doesnt have location with multiple location ids', funct
     $builder->shouldReceive('withoutGlobalScope')->andReturnSelf();
     $builder->shouldReceive('where')->andReturnUsing(function($callback) use ($builder) {
         $callback($builder);
+
         return $builder;
     });
     $builder->shouldReceive('whereHasLocation')->with([1, 2])->andReturnSelf();

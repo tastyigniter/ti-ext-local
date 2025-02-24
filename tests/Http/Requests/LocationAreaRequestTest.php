@@ -7,7 +7,7 @@ namespace Igniter\Local\Tests\Http\Requests;
 use Igniter\Local\Http\Requests\LocationAreaRequest;
 
 it('returns correct attribute labels', function(): void {
-    $attributes = (new LocationAreaRequest())->attributes();
+    $attributes = (new LocationAreaRequest)->attributes();
 
     expect($attributes)->toHaveKey('type', lang('igniter.local::default.label_area_type'))
         ->and($attributes)->toHaveKey('name', lang('igniter.local::default.label_area_name'))
@@ -28,7 +28,7 @@ it('returns correct attribute labels', function(): void {
 });
 
 it('returns correct validation rules', function(): void {
-    $rules = (new LocationAreaRequest())->rules();
+    $rules = (new LocationAreaRequest)->rules();
 
     expect($rules)->toHaveKey('type', ['sometimes', 'required', 'string'])
         ->and($rules)->toHaveKey('name', ['sometimes', 'required', 'string'])

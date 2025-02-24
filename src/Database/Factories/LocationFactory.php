@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Database\Factories;
 
-use Igniter\Local\Models\Location;
 use Igniter\Flame\Database\Factories\Factory;
+use Igniter\Local\Models\Location;
 
 class LocationFactory extends Factory
 {

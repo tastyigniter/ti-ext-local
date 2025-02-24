@@ -39,15 +39,15 @@ trait HasDeliveryAreas
         }
 
         if ($this->location_lat && $this->location_lng && !$this->isDirty([
-                'location_address_1',
-                'location_address_2',
-                'location_city',
-                'location_state',
-                'location_postcode',
-                'location_country_id',
-                'location_lat',
-                'location_lng',
-            ])) {
+            'location_address_1',
+            'location_address_2',
+            'location_city',
+            'location_state',
+            'location_postcode',
+            'location_country_id',
+            'location_lat',
+            'location_lng',
+        ])) {
             return;
         }
 
@@ -65,12 +65,12 @@ trait HasDeliveryAreas
         return $this->delivery_areas->keyBy('area_id');
     }
 
-    public function findDeliveryArea($areaId): AreaInterface|null
+    public function findDeliveryArea($areaId): ?AreaInterface
     {
         return $this->listDeliveryAreas()->get($areaId);
     }
 
-    public function searchOrDefaultDeliveryArea(?CoordinatesInterface $coordinates): AreaInterface|null
+    public function searchOrDefaultDeliveryArea(?CoordinatesInterface $coordinates): ?AreaInterface
     {
         if ($coordinates && ($area = $this->searchDeliveryArea($coordinates))) {
             return $area;
@@ -79,7 +79,7 @@ trait HasDeliveryAreas
         return $this->delivery_areas->where('is_default', 1)->first();
     }
 
-    public function searchOrFirstDeliveryArea(?CoordinatesInterface $coordinates): AreaInterface|null
+    public function searchOrFirstDeliveryArea(?CoordinatesInterface $coordinates): ?AreaInterface
     {
         if ($coordinates && ($area = $this->searchDeliveryArea($coordinates))) {
             return $area;

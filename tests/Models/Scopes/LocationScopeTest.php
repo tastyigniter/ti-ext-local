@@ -11,7 +11,7 @@ it('applies position to builder with valid coordinates', function(): void {
     $builder = mock(Builder::class);
     $builder->shouldReceive('selectDistance')->with(12.345678, 98.765432)->andReturnSelf();
 
-    $applyPosition = (new LocationScope())->addApplyPosition();
+    $applyPosition = (new LocationScope)->addApplyPosition();
     $result = $applyPosition($builder, ['latitude' => 12.345678, 'longitude' => 98.765432]);
 
     expect($result)->toBe($builder);
@@ -25,7 +25,7 @@ it('selects distance in kilometers when distance unit is km', function(): void {
         [12.345678, 98.765432, 12.345678],
     )->andReturnSelf();
 
-    $selectDistance = (new LocationScope())->addSelectDistance();
+    $selectDistance = (new LocationScope)->addSelectDistance();
     $result = $selectDistance($builder, 12.345678, 98.765432);
 
     expect($result)->toBe($builder);
@@ -39,7 +39,7 @@ it('selects distance in miles when distance unit is miles', function(): void {
         [12.345678, 98.765432, 12.345678],
     )->andReturnSelf();
 
-    $selectDistance = (new LocationScope())->addSelectDistance();
+    $selectDistance = (new LocationScope)->addSelectDistance();
     $result = $selectDistance($builder, 12.345678, 98.765432);
 
     expect($result)->toBe($builder);

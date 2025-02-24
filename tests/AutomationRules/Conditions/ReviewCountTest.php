@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Tests\AutomationRules\Conditions;
 
-use stdClass;
 use Igniter\Automation\AutomationException;
 use Igniter\Automation\Models\RuleCondition;
 use Igniter\Cart\Models\Order;
 use Igniter\Local\AutomationRules\Conditions\ReviewCount;
 use Igniter\Reservation\Models\Reservation;
+use stdClass;
 
 it('returns correct condition details', function(): void {
-    $condition = new ReviewCount();
+    $condition = new ReviewCount;
 
     $result = $condition->conditionDetails();
 

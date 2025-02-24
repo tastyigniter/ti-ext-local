@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Tests;
 
-use Igniter\Local\Http\Middleware\CheckLocation;
-use Igniter\Local\CartConditions\Delivery;
 use Igniter\Admin\DashboardWidgets\Charts;
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Cart\Http\Controllers\Menus;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Geolite\Model\Location as UserPosition;
 use Igniter\Flame\Support\Facades\Igniter;
+use Igniter\Local\CartConditions\Delivery;
 use Igniter\Local\Extension;
 use Igniter\Local\Facades\Location as LocationFacade;
+use Igniter\Local\Http\Middleware\CheckLocation;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
@@ -60,8 +60,8 @@ it('binds remember location area events', function(): void {
 it('adds reviews relationship to reservation', function(): void {
     $this->extension->boot();
 
-    $model = new Reservation();
-    $review = new Review();
+    $model = new Reservation;
+    $review = new Review;
 
     expect($model->relation['morphMany']['review'])->not->toBeNull()
         ->toBe([Review::class, 'name' => 'reviewable'])

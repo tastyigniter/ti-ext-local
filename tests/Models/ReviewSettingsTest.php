@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Tests\Models;
 
-use Igniter\System\Actions\SettingsModel;
 use Igniter\Local\Models\ReviewSettings;
+use Igniter\System\Actions\SettingsModel;
 
 it('returns true when reviews are allowed', function(): void {
     ReviewSettings::set('allow_reviews', true);

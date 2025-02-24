@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
-use Igniter\System\Actions\SettingsModel;
 use Igniter\Flame\Database\Model;
+use Igniter\System\Actions\SettingsModel;
 
 class ReviewSettings extends Model
 {

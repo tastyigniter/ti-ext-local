@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Http\Actions;
 
-use Igniter\Local\Models\Concerns\Locationable;
-use Igniter\Admin\Http\Actions\ListController;
-use Igniter\Admin\Http\Actions\FormController;
-use Illuminate\Routing\Controller;
 use Exception;
+use Igniter\Admin\Http\Actions\FormController;
+use Igniter\Admin\Http\Actions\ListController;
 use Igniter\Local\Facades\Location as LocationFacade;
+use Igniter\Local\Models\Concerns\Locationable;
 use Igniter\System\Classes\ControllerAction;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Event;
 
 class LocationAwareController extends ControllerAction

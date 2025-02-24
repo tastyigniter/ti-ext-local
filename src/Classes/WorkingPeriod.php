@@ -177,9 +177,11 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     protected function getNextStartTime(WorkingRange $range): ?WorkingTime
     {
         $currentRangeFound = false;
+
         return collect($this->ranges)->first(function($currentRange) use ($range, &$currentRangeFound) {
             if ($currentRange === $range) {
                 $currentRangeFound = true;
+
                 return false; // Skip the current range
             }
 

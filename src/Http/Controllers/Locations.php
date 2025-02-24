@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Igniter\Local\Http\Controllers;
 
 use Igniter\Admin\Classes\AdminController;
-use Igniter\Admin\Http\Actions\ListController;
-use Igniter\Admin\Http\Actions\FormController;
-use Igniter\Local\Http\Requests\LocationRequest;
 use Igniter\Admin\Classes\ListColumn;
 use Igniter\Admin\Facades\AdminMenu;
+use Igniter\Admin\Http\Actions\FormController;
+use Igniter\Admin\Http\Actions\ListController;
+use Igniter\Local\Http\Requests\LocationRequest;
 use Igniter\Local\Models\Location;
 
 class Locations extends AdminController

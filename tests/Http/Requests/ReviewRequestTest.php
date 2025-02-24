@@ -7,7 +7,7 @@ namespace Igniter\Local\Tests\Http\Requests;
 use Igniter\Local\Http\Requests\ReviewRequest;
 
 it('returns correct attribute labels', function(): void {
-    $attributes = (new ReviewRequest())->attributes();
+    $attributes = (new ReviewRequest)->attributes();
 
     expect($attributes)->toHaveKey('reviewable_type', lang('igniter.local::default.reviews.label_reviewable_type'))
         ->and($attributes)->toHaveKey('reviewable_id', lang('igniter.local::default.reviews.label_reviewable_id'))
@@ -21,7 +21,7 @@ it('returns correct attribute labels', function(): void {
 });
 
 it('returns correct validation rules', function(): void {
-    $reviewRequest = new ReviewRequest();
+    $reviewRequest = new ReviewRequest;
     $reviewRequest->merge(['reviewable_type' => 'locations']);
 
     $rules = $reviewRequest->rules();

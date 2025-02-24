@@ -24,20 +24,21 @@ class Delivery extends CartCondition
 
         $cartSubtotal = Cart::subtotal();
         $this->deliveryCharge = Location::coveredArea()->deliveryAmount($cartSubtotal);
+
         return null;
     }
 
     public function getRules()
     {
         return [
-            $this->deliveryCharge . ' >= 0',
+            $this->deliveryCharge.' >= 0',
         ];
     }
 
     public function getActions()
     {
         return [
-            ['value' => '+' . $this->deliveryCharge],
+            ['value' => '+'.$this->deliveryCharge],
         ];
     }
 

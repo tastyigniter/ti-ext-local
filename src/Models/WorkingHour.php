@@ -17,7 +17,7 @@ use stdClass;
  * @property int $weekday
  * @property mixed $opening_time
  * @property mixed $closing_time
- * @property boolean $status
+ * @property bool $status
  * @property string $type
  * @property int $id
  * @property-read mixed $close

@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
-use Igniter\System\Models\Country;
-use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Collection;
-use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Database\Attach\HasMedia;
+use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Database\Builder;
 use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
@@ -21,6 +18,9 @@ use Igniter\Local\Models\Concerns\LocationHelpers;
 use Igniter\System\Models\Concerns\Defaultable;
 use Igniter\System\Models\Concerns\HasCountry;
 use Igniter\System\Models\Concerns\Switchable;
+use Igniter\System\Models\Country;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 
 /**
  * Location Model Class

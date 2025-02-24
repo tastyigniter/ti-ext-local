@@ -152,7 +152,7 @@ class ScheduleEditor extends BaseFormWidget
     protected function makeScheduleFormWidget($scheduleItem)
     {
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-        $widgetConfig['model'] = new WorkingHour();
+        $widgetConfig['model'] = new WorkingHour;
         $widgetConfig['data'] = $scheduleItem;
         $widgetConfig['alias'] = $this->alias.'FormScheduleEditor';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[scheduleData]';

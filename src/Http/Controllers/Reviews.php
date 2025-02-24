@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Igniter\Local\Http\Controllers;
 
 use Igniter\Admin\Classes\AdminController;
-use Igniter\Admin\Http\Actions\ListController;
+use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Admin\Http\Actions\FormController;
+use Igniter\Admin\Http\Actions\ListController;
 use Igniter\Local\Http\Actions\LocationAwareController;
 use Igniter\Local\Http\Requests\ReviewRequest;
-use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Local\Models\Review;
 
 class Reviews extends AdminController

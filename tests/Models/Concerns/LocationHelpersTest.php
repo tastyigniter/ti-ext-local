@@ -119,7 +119,7 @@ it('sets correct URL without suffix for single location', function(): void {
 
 it('checks if location has gallery', function(): void {
     $location = Location::factory()->create();
-    $media = new Media();
+    $media = new Media;
     $media->setRelation('attachment', $location);
     $media->addFromRaw('raw-content', 'media-file.jpg', 'gallery');
 

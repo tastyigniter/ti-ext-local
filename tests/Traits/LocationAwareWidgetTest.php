@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Tests\Traits;
 
-use Igniter\Local\Traits\LocationAwareWidget;
 use Igniter\Admin\Models\Status;
 use Igniter\Cart\Models\Menu;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location;
+use Igniter\Local\Traits\LocationAwareWidget;
 
 beforeEach(function(): void {
     $this->traitObject = new class

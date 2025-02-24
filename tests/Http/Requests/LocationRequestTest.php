@@ -7,7 +7,7 @@ namespace Igniter\Local\Tests\Http\Requests;
 use Igniter\Local\Http\Requests\LocationRequest;
 
 it('returns correct attribute labels', function(): void {
-    $attributes = (new LocationRequest())->attributes();
+    $attributes = (new LocationRequest)->attributes();
 
     expect($attributes)->toHaveKey('location_name', lang('igniter::admin.label_name'))
         ->and($attributes)->toHaveKey('location_email', lang('igniter::admin.label_email'))
@@ -28,7 +28,7 @@ it('returns correct attribute labels', function(): void {
 });
 
 it('returns correct validation rules', function(): void {
-    $rules = (new LocationRequest())->rules();
+    $rules = (new LocationRequest)->rules();
 
     expect($rules)->toHaveKey('location_name', ['required', 'string', 'between:2,32'])
         ->and($rules)->toHaveKey('permalink_slug', ['nullable', 'alpha_dash', 'max:255'])
