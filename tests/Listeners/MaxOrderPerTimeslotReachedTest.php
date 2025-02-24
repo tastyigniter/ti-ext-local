@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Listeners;
 
+use DateTime;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Classes\WorkingSchedule;
@@ -9,37 +12,39 @@ use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\Models\Location;
 
-beforeEach(function() {
+beforeEach(function(): void {
     MaxOrderPerTimeslotReached::$ordersCache = [];
 });
 
-it('bails when working schedule type is opening', function() {
+it('bails when working schedule type is opening', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->setType(Location::OPENING);
+
     $listener = new MaxOrderPerTimeslotReached();
-    $timeslot = '2023-01-01 12:00:00';
+    $timeslot = new DateTime('2023-01-01 12:00:00');
 
     $result = $listener->timeslotValid($workingSchedule, $timeslot);
 
     expect($result)->toBeNull();
 });
 
-it('returns true when limit orders is disabled', function() {
+it('returns true when limit orders is disabled', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('getSettings')->with('checkout.limit_orders')->andReturnFalse();
     LocationFacade::shouldReceive('current')->andReturn($location);
 
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->setType(Location::DELIVERY);
+
     $listener = new MaxOrderPerTimeslotReached();
-    $timeslot = '2023-01-01 12:00:00';
+    $timeslot = new DateTime('2023-01-01 12:00:00');
 
     $result = $listener->timeslotValid($workingSchedule, $timeslot);
 
     expect($result)->toBeNull();
 });
 
-it('returns false when timeslot exceeds max orders for delivery', function() {
+it('returns false when timeslot exceeds max orders for delivery', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('getSettings')->with('checkout.limit_orders')->andReturnTrue();
     $location->shouldReceive('getSettings')->with('checkout.limit_orders_count', 50)->andReturn(1);
@@ -53,10 +58,11 @@ it('returns false when timeslot exceeds max orders for delivery', function() {
         'order_time' => '12:00:00',
         'order_type' => Location::DELIVERY,
     ]);
-    $timeslot = '2023-01-01 12:00:00';
+    $timeslot = new DateTime('2023-01-01 12:00:00');
 
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->setType(Location::DELIVERY);
+
     $listener = new MaxOrderPerTimeslotReached();
 
     $result = $listener->timeslotValid($workingSchedule, $timeslot);
@@ -64,7 +70,7 @@ it('returns false when timeslot exceeds max orders for delivery', function() {
     expect($result)->toBeFalse();
 });
 
-it('throws exception when order exceeds max orders for pickup', function() {
+it('throws exception when order exceeds max orders for pickup', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('getSettings')->with('checkout.limit_orders')->andReturnTrue();
     $location->shouldReceive('getSettings')->with('checkout.limit_orders_count', 50)->andReturn(1);
@@ -84,7 +90,7 @@ it('throws exception when order exceeds max orders for pickup', function() {
     expect(fn() => $listener->beforeSaveOrder($orders->last(), []))->toThrow(ApplicationException::class);
 });
 
-it('returns true when timeslot does not exceed max orders', function() {
+it('returns true when timeslot does not exceed max orders', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('getSettings')->with('checkout.limit_orders')->andReturnTrue();
     $location->shouldReceive('getOrderTimeInterval')->with(Location::DELIVERY)->andReturn(15);
@@ -93,8 +99,9 @@ it('returns true when timeslot does not exceed max orders', function() {
 
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->setType(Location::DELIVERY);
+
     $listener = new MaxOrderPerTimeslotReached();
-    $timeslot = '2023-01-01 12:00:00';
+    $timeslot = new DateTime('2023-01-01 12:00:00');
 
     $result = $listener->timeslotValid($workingSchedule, $timeslot);
 

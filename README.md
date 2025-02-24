@@ -642,15 +642,15 @@ For more on restricting access to the admin area, see the [TastyIgniter Permissi
 
 The Local extension provides the following events:
 
-| Event | Description | Parameters |
-| ----- | ----------- | ---------- |
-| `location.current.updated` |    When the current location is updated.    |  The `Location` model instance   |
-| `location.position.updated` |    When the user's coordinates are updated.    |  The `Location` class instance, the `UserLocation` user position instance and previous `UserLocation` user position instance  |
-| `location.orderType.updated` |    When the location's order type is updated.    |  The `Location` class instance, the order type string and previous order type string   |
-| `location.timeslot.updated` |    When the location's order fulfilment time is updated.    |  The `Location` class instance   |
-| `location.area.updated` |    When the location's delivery area is updated.    |  The `Location` class instance and the `CoveredArea` class instance   |
-| `admin.workingSchedule.created` |   When a working schedule is created.    |  The `Location` model instance and the `WorkingSchedule` instance   |
-| `admin.workingSchedule.timeslotValid` |   When a working schedule timeslot is validated.    |  The `WorkingSchedule` instance and the `DateTime` instance  |
+| Event                                   | Description | Parameters |
+|-----------------------------------------| ----------- | ---------- |
+| `location.current.updated`              |    When the current location is updated.    |  The `Location` model instance   |
+| `location.position.updated`             |    When the user's coordinates are updated.    |  The `Location` class instance, the `UserLocation` user position instance and previous `UserLocation` user position instance  |
+| `location.orderType.updated`            |    When the location's order type is updated.    |  The `Location` class instance, the order type string and previous order type string   |
+| `location.timeslot.updated`             |    When the location's order fulfilment time is updated.    |  The `Location` class instance   |
+| `location.area.updated`                 |    When the location's delivery area is updated.    |  The `Location` class instance and the `CoveredArea` class instance   |
+| `igniter.workingSchedule.created`       |   When a working schedule is created.    |  The `Location` model instance and the `WorkingSchedule` instance   |
+| `igniter.workingSchedule.timeslotValid` |   When a working schedule timeslot is validated.    |  The `WorkingSchedule` instance and the `DateTime` instance  |
 
 Here is an example of hooking an event in the `boot` method of an extension class:
 

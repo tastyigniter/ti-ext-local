@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Http\Middleware;
 
 use Closure;
@@ -47,6 +49,7 @@ class CheckLocation
             return null;
         }
 
+        // @phpstan-ignore method.notFound
         if (!AdminAuth::user()->isAssignedLocation($location)) {
             return null;
         }

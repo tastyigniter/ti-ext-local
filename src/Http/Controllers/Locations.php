@@ -1,21 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Http\Controllers;
 
+use Igniter\Admin\Classes\AdminController;
+use Igniter\Admin\Http\Actions\ListController;
+use Igniter\Admin\Http\Actions\FormController;
+use Igniter\Local\Http\Requests\LocationRequest;
 use Igniter\Admin\Classes\ListColumn;
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Local\Models\Location;
 
-class Locations extends \Igniter\Admin\Classes\AdminController
+class Locations extends AdminController
 {
     public array $implement = [
-        \Igniter\Admin\Http\Actions\ListController::class,
-        \Igniter\Admin\Http\Actions\FormController::class,
+        ListController::class,
+        FormController::class,
     ];
 
     public array $listConfig = [
         'list' => [
-            'model' => \Igniter\Local\Models\Location::class,
+            'model' => Location::class,
             'title' => 'lang:igniter.local::default.text_title',
             'emptyMessage' => 'lang:igniter.local::default.text_empty',
             'defaultSort' => ['location_id', 'DESC'],
@@ -26,20 +32,20 @@ class Locations extends \Igniter\Admin\Classes\AdminController
 
     public array $formConfig = [
         'name' => 'lang:igniter.local::default.text_form_name',
-        'model' => \Igniter\Local\Models\Location::class,
+        'model' => Location::class,
         'create' => [
             'title' => 'lang:igniter::admin.form.create_title',
             'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
             'redirectNew' => 'locations/create',
-            'request' => \Igniter\Local\Http\Requests\LocationRequest::class,
+            'request' => LocationRequest::class,
         ],
         'edit' => [
             'title' => 'lang:igniter::admin.form.edit_title',
             'redirect' => 'locations/edit/{location_id}',
             'redirectClose' => 'locations',
             'redirectNew' => 'locations/create',
-            'request' => \Igniter\Local\Http\Requests\LocationRequest::class,
+            'request' => LocationRequest::class,
         ],
         'settings' => [
             'title' => 'lang:igniter.local::default.settings_title',
@@ -59,7 +65,7 @@ class Locations extends \Igniter\Admin\Classes\AdminController
 
     protected null|string|array $requiredPermissions = 'Admin.Locations';
 
-    public static function getSlug()
+    public static function getSlug(): string
     {
         return 'locations';
     }
@@ -71,7 +77,7 @@ class Locations extends \Igniter\Admin\Classes\AdminController
         AdminMenu::setContext('locations', 'system');
     }
 
-    public function settings(string $context, string $recordId)
+    public function settings(string $context, string $recordId): void
     {
         $this->defaultView = 'edit';
         $this->asExtension('FormController')->edit($context, $recordId);
@@ -82,7 +88,7 @@ class Locations extends \Igniter\Admin\Classes\AdminController
         return $this->asExtension('FormController')->edit_onSave($context, $recordId);
     }
 
-    public function mapViewCenterCoords()
+    public function mapViewCenterCoords(): array
     {
         $model = $this->getFormModel();
 
@@ -105,9 +111,9 @@ class Locations extends \Igniter\Admin\Classes\AdminController
         return $this->refreshList('list');
     }
 
-    public function listOverrideColumnValue(Location $record, ListColumn $column, ?string $alias = null)
+    public function listOverrideColumnValue(Location $record, ListColumn $column, ?string $alias = null): void
     {
-        if ($column->type == 'button' && $column->columnName == 'default') {
+        if ($column->type === 'button' && $column->columnName === 'default') {
             $column->iconCssClass = $record->isDefault() ? 'fa fa-star' : 'fa fa-star-o';
         }
     }

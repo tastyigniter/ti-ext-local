@@ -6,21 +6,6 @@ parameters:
 			path: database/migrations/2020_09_17_000300_create_reviews_table_or_rename.php
 
 		-
-			message: "#^Result of static method Igniter\\\\Local\\\\Facades\\\\Location\\:\\:checkDistance\\(\\) \\(void\\) is used\\.$#"
-			count: 1
-			path: src/Classes/CoveredArea.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Contracts\\\\AreaInterface\\:\\:\\$location\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$locations\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
 			message: "#^Call to an undefined method DateTime\\:\\:between\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/Location.php
@@ -86,41 +71,6 @@ parameters:
 			path: src/Classes/Location.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:selectDistance\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereIsEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:hasPermission\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/Location.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getWeekDaysOptions\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/ScheduleItem.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\), Igniter\\\\Local\\\\Classes\\\\WorkingRange\\>\\:\\:generate\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/WorkingPeriod.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:end\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/WorkingPeriod.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Support\\\\Optional\\:\\:start\\(\\)\\.$#"
-			count: 1
-			path: src/Classes/WorkingPeriod.php
-
-		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/WorkingPeriod.php
@@ -161,31 +111,6 @@ parameters:
 			path: src/Classes/WorkingTimeslot.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$last_location_area\\.$#"
-			count: 2
-			path: src/Extension.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:updateQuietly\\(\\)\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\LocationArea\\:\\:find\\(\\)\\.$#"
-			count: 1
-			path: src/Extension.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:find\\(\\)\\.$#"
-			count: 1
-			path: src/FormWidgets/MapArea.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Html\\\\HtmlFacade\\:\\:attributes\\(\\)\\.$#"
-			count: 1
-			path: src/FormWidgets/MapArea.php
-
-		-
 			message: "#^Access to an undefined property Igniter\\\\Admin\\\\Classes\\\\BaseWidget\\:\\:\\$previewMode\\.$#"
 			count: 1
 			path: src/FormWidgets/ScheduleEditor.php
@@ -194,16 +119,6 @@ parameters:
 			message: "#^Access to an undefined property Igniter\\\\Admin\\\\Classes\\\\BaseWidget\\:\\:\\$previewMode\\.$#"
 			count: 1
 			path: src/FormWidgets/SettingsEditor.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:listRegisteredSettings\\(\\)\\.$#"
-			count: 1
-			path: src/FormWidgets/SettingsEditor.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getRatingOptions\\(\\)\\.$#"
-			count: 1
-			path: src/FormWidgets/StarRating.php
 
 		-
 			message: "#^Access to an undefined property Illuminate\\\\Routing\\\\Controller\\:\\:\\$locationConfig\\.$#"
@@ -221,41 +136,6 @@ parameters:
 			path: src/Http/Controllers/Locations.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getRatingOptions\\(\\)\\.$#"
-			count: 1
-			path: src/Http/Controllers/Reviews.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:hasPermission\\(\\)\\.$#"
-			count: 1
-			path: src/Http/Middleware/CheckLocation.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:isAssignedLocation\\(\\)\\.$#"
-			count: 1
-			path: src/Http/Middleware/CheckLocation.php
-
-		-
-			message: "#^Cannot call method hasParameter\\(\\) on object\\|string\\.$#"
-			count: 1
-			path: src/Http/Middleware/CheckLocation.php
-
-		-
-			message: "#^Cannot call method parameter\\(\\) on object\\|string\\.$#"
-			count: 1
-			path: src/Http/Middleware/CheckLocation.php
-
-		-
-			message: "#^Cannot call method setParameter\\(\\) on object\\|string\\.$#"
-			count: 1
-			path: src/Http/Middleware/CheckLocation.php
-
-		-
-			message: "#^Access to an undefined property Igniter\\\\Local\\\\Http\\\\Requests\\\\ReviewRequest\\:\\:\\$reviewable_type\\.$#"
-			count: 2
-			path: src/Http/Requests/ReviewRequest.php
-
-		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:getOrderTimeInterval\\(\\)\\.$#"
 			count: 1
 			path: src/Listeners/MaxOrderPerTimeslotReached.php
@@ -266,42 +146,12 @@ parameters:
 			path: src/Listeners/MaxOrderPerTimeslotReached.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Cart\\\\Models\\\\Order\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: src/Listeners/MaxOrderPerTimeslotReached.php
-
-		-
 			message: "#^Access to an undefined property Igniter\\\\Admin\\\\Classes\\\\BaseWidget\\:\\:\\$previewMode\\.$#"
 			count: 1
 			path: src/MainMenuWidgets/LocationPicker.php
 
 		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Contracts\\\\LocationInterface\\:\\:getKey\\(\\)\\.$#"
-			count: 1
-			path: src/MainMenuWidgets/LocationPicker.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:hasPermission\\(\\)\\.$#"
-			count: 2
-			path: src/MainMenuWidgets/LocationPicker.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:isAssignedLocation\\(\\)\\.$#"
-			count: 1
-			path: src/MainMenuWidgets/LocationPicker.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Flame\\\\Geolite\\\\Facades\\\\Geocoder\\:\\:getLogs\\(\\)\\.$#"
-			count: 1
-			path: src/MainMenuWidgets/LocationPicker.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Location\\:\\:find\\(\\)\\.$#"
-			count: 1
-			path: src/MainMenuWidgets/LocationPicker.php
-
-		-
-			message: "#^Function array_except invoked with 3 parameters, 2 required\\.$#"
 			count: 1
 			path: src/MainMenuWidgets/LocationPicker.php
 
@@ -323,26 +173,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Igniter\\\\Local\\\\Models\\\\Location\\:\\:\\$working_hours\\.$#"
 			count: 2
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$country_name\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$format\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$iso_code_2\\.$#"
-			count: 1
-			path: src/Models/Location.php
-
-		-
-			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Optional\\:\\:\\$iso_code_3\\.$#"
-			count: 1
 			path: src/Models/Location.php
 
 		-
@@ -368,11 +198,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Location\\:\\:working_hours\\(\\)\\.$#"
 			count: 2
-			path: src/Models/Location.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Location\\:\\:whereIsEnabled\\(\\)\\.$#"
-			count: 1
 			path: src/Models/Location.php
 
 		-
@@ -406,34 +231,14 @@ parameters:
 			path: src/Models/Review.php
 
 		-
-			message: "#^Call to an undefined method Igniter\\\\Local\\\\Models\\\\Review\\:\\:pluckDates\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\Review\\:\\:whereReviewable\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Review.php
-
-		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 2
 			path: src/Models/Review.php
 
 		-
-			message: "#^Call to an undefined static method Igniter\\\\Local\\\\Models\\\\ReviewSettings\\:\\:get\\(\\)\\.$#"
-			count: 3
-			path: src/Models/ReviewSettings.php
-
-		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\:\\:selectDistance\\(\\)\\.$#"
 			count: 1
 			path: src/Models/Scopes/LocationScope.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\:\\:whereHasLocation\\(\\)\\.$#"
-			count: 1
-			path: src/Models/Scopes/LocationableScope.php
 
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getLocationableRelationObject\\(\\)\\.$#"
@@ -454,8 +259,3 @@ parameters:
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:locationableRelationName\\(\\)\\.$#"
 			count: 2
 			path: src/Models/Scopes/LocationableScope.php
-
-		-
-			message: "#^Method Carbon\\\\Carbon\\:\\:addDay\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: src/Models/WorkingHour.php

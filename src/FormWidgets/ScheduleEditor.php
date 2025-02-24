@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\FormWidgets;
 
 use Igniter\Admin\Classes\BaseFormWidget;
@@ -17,7 +19,7 @@ class ScheduleEditor extends BaseFormWidget
     use ValidatesForm;
 
     /**
-     * @var \Igniter\Local\Models\Location Form model object.
+     * @var Location Form model object.
      */
     public ?Model $model = null;
 
@@ -35,7 +37,7 @@ class ScheduleEditor extends BaseFormWidget
 
     protected $schedulesCache;
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->fillFromConfig([
             'form',
@@ -51,7 +53,7 @@ class ScheduleEditor extends BaseFormWidget
         return $this->makePartial('scheduleeditor/scheduleeditor');
     }
 
-    public function prepareVars()
+    public function prepareVars(): void
     {
         $this->model->getWorkingHours();
 
@@ -59,7 +61,7 @@ class ScheduleEditor extends BaseFormWidget
         $this->vars['schedules'] = $this->listSchedules();
     }
 
-    public function loadAssets()
+    public function loadAssets(): void
     {
         $this->addJs('vendor/timesheet/timesheet.js', 'timesheet-js');
         $this->addJs('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');
@@ -69,10 +71,10 @@ class ScheduleEditor extends BaseFormWidget
         $this->addCss('scheduleeditor.css', 'scheduleeditor-css');
     }
 
-    public function onLoadRecord()
+    public function onLoadRecord(): string
     {
         throw_unless($scheduleCode = input('recordId'),
-            new FlashException(lang('igniter.local::default.alert_schedule_not_found'))
+            new FlashException(lang('igniter.local::default.alert_schedule_not_found')),
         );
 
         $scheduleItem = $this->getSchedule($scheduleCode);
@@ -86,10 +88,10 @@ class ScheduleEditor extends BaseFormWidget
         ]);
     }
 
-    public function onSaveRecord()
+    public function onSaveRecord(): array
     {
         throw_unless($scheduleCode = input('recordId'),
-            new FlashException(lang('igniter.local::default.alert_schedule_not_found'))
+            new FlashException(lang('igniter.local::default.alert_schedule_not_found')),
         );
 
         $scheduleItem = $this->getSchedule($scheduleCode);
@@ -98,7 +100,7 @@ class ScheduleEditor extends BaseFormWidget
 
         $saveData = $this->validateFormWidget($form, $form->getSaveData());
 
-        DB::transaction(function() use ($scheduleCode, $saveData) {
+        DB::transaction(function() use ($scheduleCode, $saveData): void {
             $this->model->updateSchedule($scheduleCode, $saveData);
 
             // Check overlaps
@@ -122,7 +124,7 @@ class ScheduleEditor extends BaseFormWidget
     protected function getSchedule($scheduleCode)
     {
         throw_unless($schedule = array_get($this->listSchedules(), $scheduleCode),
-            new FlashException(lang('igniter.local::default.alert_schedule_not_loaded'))
+            new FlashException(lang('igniter.local::default.alert_schedule_not_loaded')),
         );
 
         return $schedule;
@@ -150,7 +152,7 @@ class ScheduleEditor extends BaseFormWidget
     protected function makeScheduleFormWidget($scheduleItem)
     {
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-        $widgetConfig['model'] = WorkingHour::make();
+        $widgetConfig['model'] = new WorkingHour();
         $widgetConfig['data'] = $scheduleItem;
         $widgetConfig['alias'] = $this->alias.'FormScheduleEditor';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[scheduleData]';
@@ -158,6 +160,7 @@ class ScheduleEditor extends BaseFormWidget
         $widget = $this->makeWidget(Form::class, $widgetConfig);
 
         $widget->bindToController();
+
         $widget->previewMode = $this->previewMode;
 
         return $widget;

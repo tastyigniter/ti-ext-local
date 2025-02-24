@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\FormWidgets;
 
 use Igniter\Admin\Classes\FormField;
@@ -9,7 +11,7 @@ use Igniter\Local\Http\Controllers\Locations;
 use Igniter\Local\Models\Location;
 use Igniter\System\Facades\Assets;
 
-beforeEach(function() {
+beforeEach(function(): void {
     $this->location = Location::factory()->create();
 
     $this->controller = resolve(Locations::class);
@@ -21,20 +23,20 @@ beforeEach(function() {
     ]);
 });
 
-it('initializes correctly', function() {
+it('initializes correctly', function(): void {
     $this->settingsEditorWidget->initialize();
 
     expect($this->settingsEditorWidget->popupSize)->toBe('modal-lg');
 });
 
-it('prepares variables correctly', function() {
+it('prepares variables correctly', function(): void {
     $this->settingsEditorWidget->prepareVars();
 
     expect($this->settingsEditorWidget->vars['field'])->toBeInstanceOf(FormField::class)
         ->and($this->settingsEditorWidget->vars['settings'])->toBeArray();
 });
 
-it('loads assets correctly', function() {
+it('loads assets correctly', function(): void {
     Assets::shouldReceive('addJs')->once()->with('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');
 
     $this->settingsEditorWidget->assetPath = [];
@@ -42,12 +44,12 @@ it('loads assets correctly', function() {
     $this->settingsEditorWidget->loadAssets();
 });
 
-it('loads record correctly', function() {
+it('loads record correctly', function(): void {
     request()->merge(['code' => 'checkout']);
     expect($this->settingsEditorWidget->onLoadRecord())->toBeString();
 });
 
-it('saves record correctly', function() {
+it('saves record correctly', function(): void {
     request()->merge(['recordId' => 'checkout']);
     expect($this->settingsEditorWidget->onSaveRecord())->toBeNull();
 });

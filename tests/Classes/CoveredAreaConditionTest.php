@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Classes;
 
 use Igniter\Local\Classes\CoveredAreaCondition;
 
-it('constructs correctly', function() {
+it('constructs correctly', function(): void {
     $condition = new CoveredAreaCondition([
         'type' => 'above',
         'amount' => 10,
@@ -18,7 +20,7 @@ it('constructs correctly', function() {
         ->and($condition->priority)->toBe(1);
 });
 
-it('gets label correctly', function() {
+it('gets label correctly', function(): void {
     $condition = new CoveredAreaCondition([
         'type' => 'above',
         'amount' => 10,
@@ -29,7 +31,7 @@ it('gets label correctly', function() {
     expect($condition->getLabel())->toBe('£10.00 above £100.00');
 });
 
-it('gets charge correctly', function() {
+it('gets charge correctly', function(): void {
     $condition = new CoveredAreaCondition([
         'type' => 'above',
         'amount' => 10,
@@ -40,7 +42,7 @@ it('gets charge correctly', function() {
     expect($condition->getCharge())->toBe(10.0);
 });
 
-it('gets minimum total correctly', function() {
+it('gets minimum total correctly', function(): void {
     $condition = new CoveredAreaCondition([
         'type' => 'above',
         'amount' => 10,
@@ -51,7 +53,7 @@ it('gets minimum total correctly', function() {
     expect($condition->getMinTotal())->toBe(100.0);
 });
 
-it('validates correctly', function() {
+it('validates correctly', function(): void {
     $condition = new CoveredAreaCondition([
         'type' => 'above',
         'amount' => 10,
@@ -63,7 +65,7 @@ it('validates correctly', function() {
         ->and($condition->isValid(50))->toBeFalse();
 });
 
-it('validates when no matching type', function() {
+it('validates when no matching type', function(): void {
     $condition = new CoveredAreaCondition([
         'type' => 'invalid',
         'amount' => 10,

@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models;
 
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\LocationSettings;
 
-beforeEach(function() {
+beforeEach(function(): void {
     LocationSettings::clearInternalCache();
 });
 
-it('creates a new instance with given location and settings code', function() {
+it('creates a new instance with given location and settings code', function(): void {
     $settingsCode = 'test_code';
     $location = Location::factory()->create();
     $location->settings()->create(['item' => $settingsCode]);
@@ -21,7 +23,7 @@ it('creates a new instance with given location and settings code', function() {
         ->and($result->item)->toBe($settingsCode);
 });
 
-it('returns existing instance from cache', function() {
+it('returns existing instance from cache', function(): void {
     $settingsCode = 'test_code';
     $location = Location::factory()->create();
     $location->settings()->create(['item' => $settingsCode]);
@@ -32,7 +34,7 @@ it('returns existing instance from cache', function() {
     expect($result)->toBe($instance);
 });
 
-it('sets settings value for allowed key', function() {
+it('sets settings value for allowed key', function(): void {
     $locationSettings = new LocationSettings();
     $locationSettings->setSettingsValue('allowed_key', 'value');
 
@@ -41,7 +43,7 @@ it('sets settings value for allowed key', function() {
     expect($result['allowed_key'])->toBe('value');
 });
 
-it('does not set settings value for disallowed key', function() {
+it('does not set settings value for disallowed key', function(): void {
     $locationSettings = new LocationSettings();
     $locationSettings->setSettingsValue('id', 'value');
 
@@ -50,7 +52,7 @@ it('does not set settings value for disallowed key', function() {
     expect($result)->not->toHaveKey('id');
 });
 
-it('returns default value if key is not set', function() {
+it('returns default value if key is not set', function(): void {
     $locationSettings = new LocationSettings();
 
     $result = $locationSettings->get('non_existent_key', 'default_value');
@@ -58,32 +60,45 @@ it('returns default value if key is not set', function() {
     expect($result)->toBe('default_value');
 });
 
-it('sets settings values after fetching data', function() {
-    $locationSettings = new LocationSettings(['data' => ['key' => 'value']]);
-    $locationSettings->afterFetch();
+it('sets settings values after fetching data', function(): void {
+    $locationSettings = new class(['data' => ['key' => 'value']]) extends LocationSettings
+    {
+        public function testAfterFetch(): void
+        {
+            parent::afterFetch();
+        }
+    };
+    $locationSettings->testAfterFetch();
 
-    $result = $locationSettings->getSettingsValue();
-
-    expect($result)->toBeArray()
-        ->and($result['key'])->toBe('value');
+    expect($locationSettings->getSettingsValue())->toBeArray()
+        ->toHaveKey('key', 'value');
 });
 
-it('merges settings values with attributes after fetching data', function() {
-    $locationSettings = new LocationSettings(['data' => ['key' => 'value'], 'attribute' => 'attr_value']);
-    $locationSettings->afterFetch();
+it('merges settings values with attributes after fetching data', function(): void {
+    $locationSettings = new class(['data' => ['key' => 'value'], 'attribute' => 'attr_value']) extends LocationSettings
+    {
+        public function testAfterFetch(): void
+        {
+            parent::afterFetch();
+        }
+    };
+    $locationSettings->testAfterFetch();
 
-    $result = $locationSettings->getAttributes();
-
-    expect($result)->toHaveKey('key')
-        ->and($result['key'])->toBe('value')
-        ->and($result)->toHaveKey('attribute')
-        ->and($result['attribute'])->toBe('attr_value');
+    expect($locationSettings->getAttributes())
+        ->toHaveKey('key', 'value')
+        ->toHaveKey('attribute', 'attr_value');
 });
 
-it('sets data attribute before saving if settings values are present', function() {
-    $locationSettings = new LocationSettings();
+it('sets data attribute before saving if settings values are present', function(): void {
+    $locationSettings = new class extends LocationSettings
+    {
+        public function testBeforeSave(): void
+        {
+            parent::beforeSave();
+        }
+    };
     $locationSettings->setSettingsValue('key', 'value');
-    $locationSettings->beforeSave();
+    $locationSettings->testBeforeSave();
 
     $result = $locationSettings->data;
 
@@ -91,16 +106,22 @@ it('sets data attribute before saving if settings values are present', function(
         ->and($result['key'])->toBe('value');
 });
 
-it('does not set data attribute before saving if settings values are empty', function() {
-    $locationSettings = new LocationSettings();
-    $locationSettings->beforeSave();
+it('does not set data attribute before saving if settings values are empty', function(): void {
+    $locationSettings = new class extends LocationSettings
+    {
+        public function testBeforeSave(): void
+        {
+            parent::beforeSave();
+        }
+    };
+    $locationSettings->testBeforeSave();
 
     $result = $locationSettings->data;
 
     expect($result)->toBeNull();
 });
 
-it('clears internal cache', function() {
+it('clears internal cache', function(): void {
     $location = Location::factory()->create();
     $settingsCode = 'test_code';
     LocationSettings::instance($location, $settingsCode);
@@ -112,9 +133,9 @@ it('clears internal cache', function() {
     expect($result)->not->toBeNull();
 });
 
-it('loads registered settings', function() {
+it('loads registered settings', function(): void {
     $locationSettings = new LocationSettings();
-    LocationSettings::registerCallback(function($settings) {
+    LocationSettings::registerCallback(function($settings): void {
         $settings->registerSettingItems('test_extension', [
             'test_code' => [
                 'label' => 'Test Label',
@@ -132,7 +153,7 @@ it('loads registered settings', function() {
         ->and($result['test_code']->form)->toBe('test_extension::test_config');
 });
 
-it('configures location settings model correctly', function() {
+it('configures location settings model correctly', function(): void {
     $locationSettings = new LocationSettings;
 
     expect($locationSettings->getTable())->toBe('location_settings')

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
 use Carbon\Carbon;
@@ -9,6 +11,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
+use Igniter\Local\Contracts\WorkingHourInterface;
 use Igniter\Local\Events\WorkingScheduleTimeslotValidEvent;
 use Igniter\Local\Exceptions\WorkingHourException;
 use Illuminate\Support\Arr;
@@ -16,41 +19,35 @@ use Illuminate\Support\Collection;
 
 class WorkingSchedule
 {
-    protected $type;
+    protected ?string $type = null;
 
-    protected $timezone;
+    protected ?DateTimeZone $timezone;
 
     /**
-     * @var \Igniter\Local\Classes\WorkingPeriod[] Holds working periods
+     * @var WorkingPeriod[] Holds working periods
      */
-    protected $periods = [];
+    protected array $periods;
 
     /**
-     * @var \Igniter\Local\Classes\WorkingPeriod[] Holds working periods exceptions
+     * @var WorkingPeriod[] Holds working periods exceptions
      */
     protected $exceptions = [];
 
-    protected $minDays;
+    protected int $minDays = 0;
 
-    protected $maxDays;
+    protected int $maxDays = 0;
 
-    /**
-     * @param int|array $days
-     */
-    public function __construct($timezone = null, $days = 5)
+    public function __construct(?string $timezone = null, int|array $days = 5)
     {
         $this->timezone = $timezone ? new DateTimeZone($timezone) : null;
-        [$this->minDays, $this->maxDays] = is_array($days) ? $days : [0, (int)$days];
+        [$this->minDays, $this->maxDays] = is_array($days) ? $days : [0, $days];
 
-        $this->periods = WorkingDay::mapDays(function() {
+        $this->periods = WorkingDay::mapDays(function(): WorkingPeriod {
             return new WorkingPeriod;
         });
     }
 
     /**
-     * @param array $exceptions
-     * @return self
-     *
      * $periods = [
      *    [
      *      'day' => 'monday',
@@ -68,7 +65,7 @@ class WorkingSchedule
      *    ]
      * ];
      */
-    public static function create($days, $periods, $exceptions = [])
+    public static function create(int|array $days, array|Collection $periods, $exceptions = []): static
     {
         return (new static(null, $days))->fill([
             'periods' => $periods,
@@ -76,7 +73,7 @@ class WorkingSchedule
         ]);
     }
 
-    public function fill($data)
+    public function fill(array $data): static
     {
         $exceptions = Arr::get($data, 'exceptions', []);
         $periods = $this->parsePeriods(Arr::get($data, 'periods', []));
@@ -87,36 +84,36 @@ class WorkingSchedule
         return $this;
     }
 
-    public function setType($type)
+    public function setType(string $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function setNow(DateTime $now)
+    public function setNow(DateTime $now): static
     {
         traceLog('Deprecated function. No longer supported.');
 
         return $this;
     }
 
-    public function setTimezone($timezone)
+    public function setTimezone(string $timezone): void
     {
         $this->timezone = new DateTimeZone($timezone);
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function minDays()
+    public function minDays(): int
     {
         return $this->minDays;
     }
 
-    public function days()
+    public function days(): int
     {
         return $this->maxDays;
     }
@@ -129,9 +126,8 @@ class WorkingSchedule
     //
     //
     //
-
     /**
-     * @throws \Igniter\Local\Exceptions\WorkingHourException
+     * @throws WorkingHourException
      */
     public function forDay(string $day): WorkingPeriod
     {
@@ -149,17 +145,17 @@ class WorkingSchedule
                 ?? $this->forDay(WorkingDay::onDateTime($date)));
     }
 
-    public function isOpen()
+    public function isOpen(): bool
     {
         return $this->isOpenAt(Carbon::now());
     }
 
-    public function isOpening()
+    public function isOpening(): bool
     {
         return (bool)$this->nextOpenAt(Carbon::now());
     }
 
-    public function isClosed()
+    public function isClosed(): bool
     {
         return $this->isClosedAt(Carbon::now());
     }
@@ -195,7 +191,7 @@ class WorkingSchedule
         return !$this->isOpenAt($dateTime);
     }
 
-    public function nextOpenAt(DateTimeInterface $dateTime)
+    public function nextOpenAt(DateTimeInterface $dateTime): ?DateTimeInterface
     {
         if (!$dateTime instanceof DateTimeImmutable) {
             $dateTime = clone $dateTime;
@@ -219,25 +215,21 @@ class WorkingSchedule
             $workingTime = WorkingTime::fromDateTime($dateTime);
 
             $forDate = $this->forDate($dateTime);
-            $nextOpenAt = !$forDate->isEmpty()
-                ? $forDate->nextOpenAt($workingTime)
-                : false;
+            $nextOpenAt = $forDate->isEmpty() ? false : $forDate->nextOpenAt($workingTime);
 
             $days++;
         }
 
         return $dateTime->setTime(
-            $nextOpenAt->toDateTime()->format('G'),
-            $nextOpenAt->toDateTime()->format('i'),
+            (int)$nextOpenAt->toDateTime()->format('G'),
+            (int)$nextOpenAt->toDateTime()->format('i'),
         );
     }
 
     /**
      * Returns the next closed time.
-     *
-     * @return \DateTimeInterface
      */
-    public function nextCloseAt(DateTimeInterface $dateTime)
+    public function nextCloseAt(DateTimeInterface $dateTime): ?DateTimeInterface
     {
         if (!$dateTime instanceof DateTimeImmutable) {
             $dateTime = clone $dateTime;
@@ -256,51 +248,42 @@ class WorkingSchedule
             $workingTime = WorkingTime::fromDateTime($dateTime);
 
             $forDate = $this->forDate($dateTime);
-            $nextCloseAt = !$forDate->isEmpty()
-                ? $forDate->nextCloseAt($workingTime)
-                : false;
+            $nextCloseAt = $forDate->isEmpty()
+                ? false
+                : $forDate->nextCloseAt($workingTime);
         }
 
         return $dateTime->setTime(
-            $nextCloseAt->toDateTime()->format('G'),
-            $nextCloseAt->toDateTime()->format('i'),
+            (int)$nextCloseAt->toDateTime()->format('G'),
+            (int)$nextCloseAt->toDateTime()->format('i'),
         );
     }
 
-    /**
-     * @param DateTime|null $dateTime
-     * @return WorkingPeriod
-     */
-    public function getPeriod($dateTime = null)
+    public function getPeriod(null|DateTimeInterface $dateTime = null): WorkingPeriod
     {
         return $this->forDate($this->parseDate($dateTime));
     }
 
-    public function getPeriods()
+    public function getPeriods(): array
     {
         return $this->periods;
     }
 
-    public function getOpenTime($format = null)
+    public function getOpenTime(?string $format = null): null|string|DateTimeInterface
     {
         $time = $this->nextOpenAt(Carbon::now());
 
         return ($time && $format) ? $time->format($format) : $time;
     }
 
-    public function getCloseTime($format = null)
+    public function getCloseTime(?string $format = null): null|string|DateTimeInterface
     {
         $time = $this->nextCloseAt(Carbon::now());
 
         return ($time && $format) ? $time->format($format) : $time;
     }
 
-    /**
-     * @param DateTime|mixed Date or timestamp
-     *
-     * @return string
-     */
-    public function checkStatus($dateTime = null)
+    public function checkStatus(null|int|string|DateTime $dateTime = null): string
     {
         $dateTime = $this->parseDate($dateTime);
 
@@ -308,18 +291,14 @@ class WorkingSchedule
             return WorkingPeriod::OPEN;
         }
 
-        if ($this->nextOpenAt($dateTime)) {
+        if ($this->nextOpenAt($dateTime) instanceof DateTimeInterface) {
             return WorkingPeriod::OPENING;
         }
 
         return WorkingPeriod::CLOSED;
     }
 
-    /**
-     * @return Collection
-     * @throws \Exception
-     */
-    public function getTimeslot(int $interval = 15, ?DateTime $dateTime = null, int $leadTimeMinutes = 25)
+    public function getTimeslot(int $interval = 15, ?DateTime $dateTime = null, int $leadTimeMinutes = 25): Collection
     {
         $dateTime = Carbon::instance($this->parseDate($dateTime));
         $interval = new DateInterval('PT'.($interval ?: 15).'M');
@@ -333,7 +312,7 @@ class WorkingSchedule
 
             $periodTimeslot = $this->forDate($date)
                 ->timeslot($date, $interval, $leadTime)
-                ->filter(function($timeslot) use ($dateTime, $leadTimeMinutes) {
+                ->filter(function($timeslot) use ($dateTime, $leadTimeMinutes): bool {
                     return $this->isTimeslotValid($timeslot, $dateTime, $leadTimeMinutes);
                 })
                 ->mapWithKeys(function($timeslot) {
@@ -350,7 +329,7 @@ class WorkingSchedule
         return collect($timeslots);
     }
 
-    public function generateTimeslot(DateTime $date, DateInterval $interval, ?DateInterval $leadTime = null)
+    public function generateTimeslot(DateTime $date, DateInterval $interval, ?DateInterval $leadTime = null): Collection
     {
         if (is_null($leadTime)) {
             $leadTime = $interval;
@@ -358,7 +337,7 @@ class WorkingSchedule
 
         return $this->forDate($date)
             ->timeslot($date, $interval, $leadTime)
-            ->filter(function($timeslot) use ($date, $leadTime) {
+            ->filter(function($timeslot) use ($date, $leadTime): bool {
                 $dateTime = make_carbon($date)->setTimeFromTimeString($timeslot->format('H:i'));
 
                 return $this->isTimeslotValid($timeslot, $dateTime, $leadTime->i);
@@ -368,42 +347,34 @@ class WorkingSchedule
             });
     }
 
-    public function setPeriods(array $periods)
+    public function setPeriods(array $periods): void
     {
         foreach ($periods as $day => $period) {
             $this->periods[$day] = WorkingPeriod::create($period);
         }
     }
 
-    public function setExceptions(array $exceptions)
+    public function setExceptions(array $exceptions): void
     {
         foreach ($exceptions as $day => $exception) {
             $this->exceptions[$day] = WorkingPeriod::create($exception);
         }
     }
 
-    protected function parseDate($start = null)
+    protected function parseDate(null|string|DateTimeInterface $start = null): Carbon
     {
-        if (!$start) {
+        if ($start === null) {
             return Carbon::now();
         }
 
-        if (is_string($start)) {
-            return Carbon::parse($start);
-        }
-
-        if ($start instanceof DateTime) {
-            return $start;
-        }
-
-        throw new WorkingHourException('The datetime must be an instance of DateTime.');
+        return Carbon::parse($start);
     }
 
-    protected function parsePeriods($periods)
+    protected function parsePeriods(array|Collection $periods): array
     {
         $parsedPeriods = [];
         foreach ($periods as $day => $period) {
-            if ($period instanceof \Igniter\Local\Contracts\WorkingHourInterface) {
+            if ($period instanceof WorkingHourInterface) {
                 if (!$period->isEnabled()) {
                     continue;
                 }
@@ -424,7 +395,7 @@ class WorkingSchedule
         return $parsedPeriods;
     }
 
-    protected function applyTimezone(DateTimeInterface $date)
+    protected function applyTimezone(DateTimeInterface $date): DateTimeInterface
     {
         if ($this->timezone && method_exists($date, 'setTimezone')) {
             $date = $date->setTimezone($this->timezone);
@@ -433,7 +404,7 @@ class WorkingSchedule
         return $date;
     }
 
-    protected function isTimeslotValid(DateTimeInterface $timeslot, DateTimeInterface $dateTime, int $leadTimeMinutes)
+    protected function isTimeslotValid(DateTimeInterface $timeslot, DateTimeInterface $dateTime, int $leadTimeMinutes): bool
     {
         if (Carbon::instance($dateTime)->gt($timeslot) || Carbon::now()->gt($timeslot)) {
             return false;
@@ -458,7 +429,7 @@ class WorkingSchedule
         return is_bool($result) ? $result : true;
     }
 
-    protected function hasPeriod()
+    protected function hasPeriod(): bool
     {
         foreach ($this->periods as $period) {
             if (!$period->isEmpty()) {
@@ -475,10 +446,10 @@ class WorkingSchedule
         return false;
     }
 
-    protected function createPeriodForDays($dateTime)
+    protected function createPeriodForDays(Carbon $dateTime): false|DatePeriod
     {
         $startDate = $dateTime->copy()->startOfDay()->subDays(2);
-        if (!$startDate = $this->nextOpenAt($startDate)) {
+        if (!($startDate = $this->nextOpenAt($startDate)) instanceof DateTimeInterface) {
             return false;
         }
 
@@ -495,7 +466,7 @@ class WorkingSchedule
         return new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
     }
 
-    protected function isBetweenPeriodForDays($timeslot)
+    protected function isBetweenPeriodForDays(DateTimeInterface $timeslot): bool
     {
         return Carbon::instance($timeslot)->between(
             now()->startOfDay()->addDays($this->minDays),

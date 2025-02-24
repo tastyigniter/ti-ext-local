@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models\Concerns;
 
 use Carbon\Carbon;
@@ -8,7 +10,7 @@ use Igniter\Local\Models\Location;
 use Illuminate\Database\Eloquent\RelationNotFoundException;
 use InvalidArgumentException;
 
-it('returns the correct working hour type when hourType is provided', function() {
+it('returns the correct working hour type when hourType is provided', function(): void {
     $location = Location::factory()->create();
     $location->settings()->create([
         'item' => 'hours',
@@ -24,7 +26,7 @@ it('returns the correct working hour type when hourType is provided', function()
         ->and($location->workingHourType('collection'))->toBe('flexible');
 });
 
-it('returns working hours by day', function() {
+it('returns working hours by day', function(): void {
     $location = Location::factory()->create();
     $workingHour1 = $location->working_hours()->create([
         'weekday' => 1,
@@ -45,7 +47,7 @@ it('returns working hours by day', function() {
         ->and($result->pluck('id')->all())->toContain($workingHour1->id, $workingHour2->id);
 });
 
-it('returns the correct working hour by day and type', function() {
+it('returns the correct working hour by day and type', function(): void {
     $location = Location::factory()->create();
     $workingHour = $location->working_hours()->create([
         'weekday' => 1,
@@ -57,7 +59,7 @@ it('returns the correct working hour by day and type', function() {
     expect($result->getKey())->toBe($workingHour->getKey());
 });
 
-it('returns the correct working hour by date and type', function() {
+it('returns the correct working hour by date and type', function(): void {
     $location = Location::factory()->create();
     $workingHour = $location->working_hours()->create([
         'weekday' => 1,
@@ -70,14 +72,14 @@ it('returns the correct working hour by date and type', function() {
     expect($result->id)->toBe($workingHour->id);
 });
 
-it('throws exception if working_hours relation does not exist', function() {
+it('throws exception if working_hours relation does not exist', function(): void {
     $location = Location::factory()->make();
     unset($location->relation['hasMany']['working_hours']);
 
     expect(fn() => $location->getWorkingHours())->toThrow(RelationNotFoundException::class);
 });
 
-it('creates default working hours if none exist', function() {
+it('creates default working hours if none exist', function(): void {
     $location = Location::factory()->create();
 
     $result = $location->getWorkingHours();
@@ -85,7 +87,7 @@ it('creates default working hours if none exist', function() {
     expect($result)->not->toBeEmpty();
 });
 
-it('creates a new working schedule with valid type and days', function() {
+it('creates a new working schedule with valid type and days', function(): void {
     $location = Location::factory()->create();
     $type = 'opening';
     $days = [2, 7];
@@ -97,14 +99,14 @@ it('creates a new working schedule with valid type and days', function() {
         ->and($schedule->days())->toBe(7);
 });
 
-it('throws exception when creating schedule with invalid type', function() {
+it('throws exception when creating schedule with invalid type', function(): void {
     $location = Location::factory()->create();
     $invalidType = 'invalid';
 
     expect(fn() => $location->newWorkingSchedule($invalidType))->toThrow(WorkingHourException::class);
 });
 
-it('creates schedule item with valid type and data', function() {
+it('creates schedule item with valid type and data', function(): void {
     $location = Location::factory()->create();
     $type = 'opening';
     $scheduleData = ['type' => 'daily', 'open' => '09:00', 'close' => '17:00'];
@@ -121,14 +123,14 @@ it('creates schedule item with valid type and data', function() {
     }, $scheduleItem->getHours());
 });
 
-it('throws exception when creating schedule item with invalid type', function() {
+it('throws exception when creating schedule item with invalid type', function(): void {
     $location = Location::factory()->create();
     $invalidType = 'invalid';
 
     expect(fn() => $location->createScheduleItem($invalidType))->toThrow(InvalidArgumentException::class);
 });
 
-it('adds opening hours for all types when type is null', function() {
+it('adds opening hours for all types when type is null', function(): void {
     $location = Location::factory()->create();
     $data = [
         'opening' => ['type' => 'daily', 'days' => [1], 'open' => '09:00', 'close' => '17:00', 'status' => 1],
@@ -142,7 +144,7 @@ it('adds opening hours for all types when type is null', function() {
         ->and($location->working_hours()->whereIsEnabled()->count())->toBe(3);
 });
 
-it('adds opening hours for a specific type', function() {
+it('adds opening hours for a specific type', function(): void {
     $location = Location::factory()->create();
     $data = ['type' => 'daily', 'days' => [1], 'open' => '09:00', 'close' => '17:00', 'status' => 1];
 
@@ -152,7 +154,7 @@ it('adds opening hours for a specific type', function() {
         ->and($location->working_hours()->whereIsEnabled()->where('type', 'opening')->count())->toBe(1);
 });
 
-it('does not add opening hours if schedule data is not an array', function() {
+it('does not add opening hours if schedule data is not an array', function(): void {
     $location = Location::factory()->create();
     $data = ['opening' => 'invalid data'];
 
@@ -161,4 +163,3 @@ it('does not add opening hours if schedule data is not an array', function() {
     expect($result)->toBeTrue()
         ->and($location->working_hours()->count())->toBe(0);
 });
-

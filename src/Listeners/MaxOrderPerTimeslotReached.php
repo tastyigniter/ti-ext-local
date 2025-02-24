@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Listeners;
 
 use Carbon\Carbon;
+use DateTimeInterface;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Local\Classes\WorkingSchedule;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -13,48 +17,50 @@ class MaxOrderPerTimeslotReached
 {
     public static $ordersCache = [];
 
-    public function subscribe(Dispatcher $dispatcher)
+    public function subscribe(Dispatcher $dispatcher): void
     {
         $dispatcher->listen('igniter.workingSchedule.timeslotValid', __CLASS__.'@timeslotValid');
 
         $dispatcher->listen('igniter.checkout.beforeSaveOrder', __CLASS__.'@beforeSaveOrder');
     }
 
-    public function timeslotValid($workingSchedule, $timeslot)
+    public function timeslotValid(WorkingSchedule $workingSchedule, DateTimeInterface $timeslot): ?bool
     {
         // Skip if the working schedule is not for delivery or pickup
-        if ($workingSchedule->getType() == Location::OPENING) {
-            return;
+        if ($workingSchedule->getType() === Location::OPENING) {
+            return null;
         }
 
         if ($this->execute($timeslot, $workingSchedule->getType())) {
             return false;
         }
+
+        return null;
     }
 
-    public function beforeSaveOrder($order, $data)
+    public function beforeSaveOrder(Order $order, array $data): void
     {
         if ($this->execute($order->order_datetime, $order->order_type)) {
             throw new ApplicationException(lang('igniter.local::default.alert_max_guest_reached'));
         }
     }
 
-    protected function execute($timeslot, $orderType)
+    protected function execute(DateTimeInterface $timeslot, string $orderType): ?bool
     {
         $locationModel = LocationFacade::current();
-        if (!(bool)$locationModel->getSettings('checkout.limit_orders')) {
-            return;
+        if (!(bool)$locationModel?->getSettings('checkout.limit_orders')) {
+            return null;
         }
 
         $ordersOnThisDay = $this->getOrders($timeslot);
         if ($ordersOnThisDay->isEmpty()) {
-            return;
+            return null;
         }
 
         $startTime = Carbon::parse($timeslot);
         $endTime = Carbon::parse($timeslot)->addMinutes($locationModel->getOrderTimeInterval($orderType))->subMinute();
 
-        $orderCount = $ordersOnThisDay->filter(function($time) use ($startTime, $endTime) {
+        $orderCount = $ordersOnThisDay->filter(function(string $time) use ($startTime, $endTime): bool {
             $orderTime = Carbon::createFromFormat('Y-m-d H:i:s', $startTime->format('Y-m-d').' '.$time);
 
             return $orderTime->between($startTime, $endTime);
@@ -63,7 +69,7 @@ class MaxOrderPerTimeslotReached
         return $orderCount >= (int)$locationModel->getSettings('checkout.limit_orders_count', 50);
     }
 
-    protected function getOrders($timeslot)
+    protected function getOrders(DateTimeInterface $timeslot)
     {
         $date = Carbon::parse($timeslot)->toDateString();
 

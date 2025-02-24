@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\MainMenuWidgets;
 
+use Igniter\Admin\Classes\BaseMainMenuWidget;
 use Igniter\Admin\Traits\FormModelWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
@@ -11,9 +14,10 @@ use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location;
 use Igniter\User\Facades\AdminAuth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
-class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
+class LocationPicker extends BaseMainMenuWidget
 {
     use FormModelWidget;
     use ValidatesForm;
@@ -24,7 +28,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
     public $modelClass = Location::class;
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->fillFromConfig([
             'form',
@@ -40,18 +44,19 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
         return $this->makePartial('locationpicker/locationpicker');
     }
 
-    public function prepareVars()
+    public function prepareVars(): void
     {
         $location = LocationFacade::current();
         $this->vars['locations'] = $this->listLocations();
+        // @phpstan-ignore method.notFound
         $this->vars['activeLocation'] = $location && AdminAuth::user()->isAssignedLocation($location) ? $location : null;
         $this->vars['canCreateLocation'] = AdminAuth::user()->hasPermission('Admin.Locations');
         $this->vars['isSingleMode'] = is_single_location();
     }
 
-    public function onLoadForm()
+    public function onLoadForm(): string
     {
-        $model = strlen($recordId = post('location', ''))
+        $model = strlen((string)$recordId = post('location', '')) !== 0
             ? $this->findFormModel($recordId)
             : $this->createFormModel();
 
@@ -63,40 +68,41 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
         ]);
     }
 
-    public function onChoose()
+    public function onChoose(): RedirectResponse
     {
         throw_unless(
             is_numeric($locationId = input('location')),
-            new ApplicationException(lang('igniter.local::default.picker.alert_location_required'))
+            new ApplicationException(lang('igniter.local::default.picker.alert_location_required')),
         );
 
         throw_unless(
             $location = Location::find($locationId),
-            new ApplicationException(lang('igniter.local::default.picker.alert_location_not_found'))
+            new ApplicationException(lang('igniter.local::default.picker.alert_location_not_found')),
         );
 
         throw_unless(
             $this->getController()->getUser()->isAssignedLocation($location),
-            new ApplicationException(lang('igniter.local::default.picker.alert_location_not_allowed'))
+            new ApplicationException(lang('igniter.local::default.picker.alert_location_not_allowed')),
         );
 
         $currentLocation = LocationFacade::current();
         if ($currentLocation && $currentLocation->getKey() === $location->getKey()) {
             LocationFacade::resetSession();
         } else {
+            /** @var Location $location */
             LocationFacade::setCurrent($location);
         }
 
         return $this->controller->redirectBack();
     }
 
-    public function onSaveRecord()
+    public function onSaveRecord(): array
     {
         throw_unless($this->getController()->authorize('Admin.Locations'),
-            new FlashException(lang('igniter.local::default.picker.alert_user_restricted'))
+            new FlashException(lang('igniter.local::default.picker.alert_user_restricted')),
         );
 
-        $model = strlen($recordId = post('recordId'))
+        $model = strlen((string)$recordId = post('recordId', '')) !== 0
             ? $this->findFormModel($recordId)
             : $this->createFormModel();
 
@@ -106,7 +112,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
 
         $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
-        DB::transaction(function() use ($modelsToSave) {
+        DB::transaction(function() use ($modelsToSave): void {
             foreach ($modelsToSave as $modelToSave) {
                 $modelToSave->saveOrFail();
             }
@@ -122,10 +128,10 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
         return $this->reload();
     }
 
-    public function onDeleteRecord()
+    public function onDeleteRecord(): array
     {
         throw_unless($this->getController()->authorize('Admin.Locations'),
-            new FlashException(lang('igniter.local::default.picker.alert_user_restricted'))
+            new FlashException(lang('igniter.local::default.picker.alert_user_restricted')),
         );
 
         $model = $this->findFormModel((string)input('recordId'));
@@ -145,7 +151,7 @@ class LocationPicker extends \Igniter\Admin\Classes\BaseMainMenuWidget
         }
 
         $formConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
-        $widgetConfig = array_except($formConfig, 'toolbar', []);
+        $widgetConfig = array_except($formConfig, 'toolbar');
         $widgetConfig['model'] = $model;
         $widgetConfig['alias'] = $this->alias.'RecordEditor';
         $widgetConfig['arrayName'] = 'LocationData';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local;
 
 use Igniter\Admin\Classes\MainMenuItem;
@@ -7,12 +9,23 @@ use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Admin\Widgets\Form;
+use Igniter\Automation\AutomationRules\Actions\SendMailTemplate;
+use Igniter\Automation\AutomationRules\Events\OrderSchedule;
+use Igniter\Cart\AutomationRules\Conditions\OrderAttribute;
 use Igniter\Cart\Classes\OrderTypes;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Support\Facades\Igniter;
+use Igniter\Local\AutomationRules\Conditions\ReviewCount;
+use Igniter\Local\CartConditions\Delivery;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Facades\Location as LocationFacade;
+use Igniter\Local\FormWidgets\MapArea;
+use Igniter\Local\FormWidgets\MapView;
+use Igniter\Local\FormWidgets\ScheduleEditor;
+use Igniter\Local\FormWidgets\SettingsEditor;
+use Igniter\Local\FormWidgets\StarRating;
+use Igniter\Local\Http\Middleware\CheckLocation;
 use Igniter\Local\Http\Requests\LocationRequest;
 use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\MainMenuWidgets\LocationPicker;
@@ -22,7 +35,9 @@ use Igniter\Local\Models\LocationArea;
 use Igniter\Local\Models\Review;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Local\Models\Scopes\LocationScope;
+use Igniter\Local\Models\WorkingHour;
 use Igniter\Reservation\Models\Reservation;
+use Igniter\System\Classes\BaseExtension;
 use Igniter\User\Facades\Auth;
 use Igniter\User\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -30,7 +45,7 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 
-class Extension extends \Igniter\System\Classes\BaseExtension
+class Extension extends BaseExtension
 {
     protected array $scopes = [
         LocationModel::class => LocationScope::class,
@@ -41,9 +56,9 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     ];
 
     protected array $morphMap = [
-        'location_areas' => \Igniter\Local\Models\LocationArea::class,
+        'location_areas' => LocationArea::class,
         'locations' => \Igniter\Local\Models\Location::class,
-        'working_hours' => \Igniter\Local\Models\WorkingHour::class,
+        'working_hours' => WorkingHour::class,
     ];
 
     public array $singletons = [
@@ -51,20 +66,20 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         'location' => Location::class,
     ];
 
-    public function register()
+    public function register(): void
     {
         parent::register();
 
-        $this->callAfterResolving('location', function(Location $location) {
+        $this->callAfterResolving('location', function(Location $location): void {
             $location->setSessionKey(Igniter::runningInAdmin() ? 'admin_location' : 'location');
         });
 
-        Route::pushMiddlewareToGroup('igniter', \Igniter\Local\Http\Middleware\CheckLocation::class);
+        Route::pushMiddlewareToGroup('igniter', CheckLocation::class);
 
         AliasLoader::getInstance()->alias('Location', LocationFacade::class);
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->bindRememberLocationAreaEvents();
 
@@ -72,7 +87,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $this->addAssetsToReviewsSettingsPage();
         $this->extendDashboardChartsDatasets();
 
-        User::extend(function($model) {
+        User::extend(function($model): void {
             $model->addDynamicMethod('getAvailableLocations', function() use ($model) {
                 if ($model->isSuperUser()) {
                     return $model->locations()->getModel()->query()->get();
@@ -96,33 +111,33 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         $this->registerLocationsMainMenuItems();
     }
 
-    public function registerAutomationRules()
+    public function registerAutomationRules(): array
     {
         return [
             'events' => [],
             'actions' => [],
             'conditions' => [
-                \Igniter\Local\AutomationRules\Conditions\ReviewCount::class,
+                ReviewCount::class,
             ],
             'presets' => [
                 'chase_review_after_one_day' => [
                     'name' => 'Send a message to leave a review after 24 hours',
-                    'event' => \Igniter\Automation\AutomationRules\Events\OrderSchedule::class,
+                    'event' => OrderSchedule::class,
                     'actions' => [
-                        \Igniter\Automation\AutomationRules\Actions\SendMailTemplate::class => [
+                        SendMailTemplate::class => [
                             'template' => 'igniter.local::mail.review_chase',
                             'send_to' => 'customer',
                         ],
                     ],
                     'conditions' => [
-                        \Igniter\Local\AutomationRules\Conditions\ReviewCount::class => [
+                        ReviewCount::class => [
                             [
                                 'attribute' => 'review_count',
                                 'value' => '0',
                                 'operator' => 'is',
                             ],
                         ],
-                        \Igniter\Cart\AutomationRules\Conditions\OrderAttribute::class => [
+                        OrderAttribute::class => [
                             [
                                 'attribute' => 'hours_since',
                                 'value' => '24',
@@ -135,10 +150,10 @@ class Extension extends \Igniter\System\Classes\BaseExtension
         ];
     }
 
-    public function registerCartConditions()
+    public function registerCartConditions(): array
     {
         return [
-            \Igniter\Local\CartConditions\Delivery::class => [
+            Delivery::class => [
                 'name' => 'delivery',
                 'label' => 'lang:igniter.local::default.text_delivery',
                 'description' => 'lang:igniter.local::default.help_delivery_condition',
@@ -202,7 +217,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
                 'label' => 'lang:igniter.local::default.reviews.text_settings',
                 'icon' => 'fa fa-gear',
                 'description' => 'lang:igniter.local::default.reviews.text_settings_description',
-                'model' => \Igniter\Local\Models\ReviewSettings::class,
+                'model' => ReviewSettings::class,
                 'permissions' => ['Admin.Reviews'],
             ],
         ];
@@ -211,30 +226,30 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     public function registerFormWidgets(): array
     {
         return [
-            \Igniter\Local\FormWidgets\StarRating::class => [
+            StarRating::class => [
                 'label' => 'Star Rating',
                 'code' => 'starrating',
             ],
-            \Igniter\Local\FormWidgets\MapArea::class => [
+            MapArea::class => [
                 'label' => 'Map Area',
                 'code' => 'maparea',
             ],
-            \Igniter\Local\FormWidgets\MapView::class => [
+            MapView::class => [
                 'label' => 'Map View',
                 'code' => 'mapview',
             ],
-            \Igniter\Local\FormWidgets\ScheduleEditor::class => [
+            ScheduleEditor::class => [
                 'label' => 'Schedule Editor',
                 'code' => 'scheduleeditor',
             ],
-            \Igniter\Local\FormWidgets\SettingsEditor::class => [
+            SettingsEditor::class => [
                 'label' => 'Settings Editor',
                 'code' => 'settingseditor',
             ],
         ];
     }
 
-    public function registerOnboardingSteps()
+    public function registerOnboardingSteps(): array
     {
         return [
             'igniter.local::locations' => [
@@ -250,8 +265,8 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     protected function extendDashboardChartsDatasets()
     {
-        Charts::extend(function($charts) {
-            $charts->bindEvent('charts.extendDatasets', function() use ($charts) {
+        Charts::extend(function($charts): void {
+            $charts->bindEvent('charts.extendDatasets', function() use ($charts): void {
                 if (ReviewSettings::allowReviews()) {
                     $charts->mergeDataset('reports', 'sets', [
                         'reviews' => [
@@ -269,7 +284,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
     protected function addAssetsToReviewsSettingsPage()
     {
-        Event::listen('admin.form.extendFieldsBefore', function(Form $form) {
+        Event::listen('admin.form.extendFieldsBefore', function(Form $form): void {
             if (!$form->model instanceof ReviewSettings) {
                 return;
             }
@@ -283,17 +298,17 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     protected function addReviewsRelationship(): void
     {
         Relation::morphMap([
-            'reviews' => \Igniter\Local\Models\Review::class,
+            'reviews' => Review::class,
         ]);
 
-        Reservation::extend(function($model) {
-            $model->relation['morphMany']['review'] = [\Igniter\Local\Models\Review::class];
+        Reservation::extend(function($model): void {
+            $model->relation['morphMany']['review'] = [Review::class];
         });
     }
 
     protected function bindRememberLocationAreaEvents(): void
     {
-        Event::listen('location.position.updated', function($location, $position, $oldPosition) {
+        Event::listen('location.position.updated', function($location, $position, $oldPosition): void {
             if ($position->format() !== $oldPosition?->format()) {
                 $this->updateCustomerLastArea([
                     'query' => $position->format(),
@@ -301,15 +316,15 @@ class Extension extends \Igniter\System\Classes\BaseExtension
             }
         });
 
-        Event::listen('location.area.updated', function($location, $coveredArea) {
+        Event::listen('location.area.updated', function($location, $coveredArea): void {
             $this->updateCustomerLastArea([
                 'areaId' => $coveredArea->getKey(),
             ]);
         });
 
-        Event::listen(['igniter.user.login', 'igniter.socialite.login'], function() {
-            rescue(function() {
-                if (!strlen($lastArea = Auth::customer()->last_location_area)) {
+        Event::listen(['igniter.user.login', 'igniter.socialite.login'], function(): void {
+            rescue(function(): void {
+                if ((string)($lastArea = Auth::customer()->last_location_area) === '') {
                     return;
                 }
 
@@ -322,6 +337,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
 
                 $areaId = array_get($lastArea, 'areaId');
                 if ($areaId && $area = LocationArea::find($areaId)) {
+                    /** @var LocationArea $area */
                     LocationFacade::updateNearbyArea($area);
                 }
             });
@@ -345,7 +361,7 @@ class Extension extends \Igniter\System\Classes\BaseExtension
     protected function registerLocationsMainMenuItems()
     {
         if (Igniter::runningInAdmin()) {
-            AdminMenu::registerCallback(function(Navigation $manager) {
+            AdminMenu::registerCallback(function(Navigation $manager): void {
                 $manager->registerMainItems([
                     MainMenuItem::widget('locations', LocationPicker::class)
                         ->priority(0)

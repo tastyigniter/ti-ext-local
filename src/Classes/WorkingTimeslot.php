@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
 use DateInterval;
@@ -9,7 +11,7 @@ use Illuminate\Support\Collection;
 
 class WorkingTimeslot extends Collection
 {
-    public function generate(DateTimeInterface $date, DateInterval $interval, ?DateInterval $leadTime = null)
+    public function generate(DateTimeInterface $date, DateInterval $interval, ?DateInterval $leadTime = null): static
     {
         $items = [];
 

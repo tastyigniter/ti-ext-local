@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models\Concerns;
 
 use Carbon\Carbon;
@@ -14,7 +16,7 @@ use InvalidArgumentException;
 
 trait HasWorkingHours
 {
-    public function availableWorkingTypes()
+    public function availableWorkingTypes(): array
     {
         return array_merge([
             static::OPENING,
@@ -26,7 +28,7 @@ trait HasWorkingHours
      */
     public function workingHourType($hourType = null)
     {
-        return $this->getSettings("hours.{$hourType}.type");
+        return $this->getSettings(sprintf('hours.%s.type', $hourType));
     }
 
     public function getWorkingHoursByType($type)
@@ -95,7 +97,7 @@ trait HasWorkingHours
     //
     //
 
-    public function createScheduleItem(string $type, ?array $scheduleData = null)
+    public function createScheduleItem(string $type, ?array $scheduleData = null): ScheduleItem
     {
         if (!in_array($type, $this->availableWorkingTypes())) {
             throw new InvalidArgumentException(sprintf(lang('igniter.local::default.alert_invalid_schedule_type'), $type));
@@ -106,7 +108,7 @@ trait HasWorkingHours
         return ScheduleItem::create($type, $scheduleData);
     }
 
-    public function updateSchedule($type, $scheduleData)
+    public function updateSchedule($type, $scheduleData): void
     {
         $this->addOpeningHours($type, $scheduleData);
 
@@ -116,10 +118,8 @@ trait HasWorkingHours
 
     /**
      * Create a new or update existing location working hours
-     *
-     * @return bool
      */
-    public function addOpeningHours(null|string|array $type, ?array $data = [])
+    public function addOpeningHours(null|string|array $type, ?array $data = []): bool
     {
         if (is_array($type)) {
             $data = $type;

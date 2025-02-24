@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Http\Requests;
 
 use Igniter\System\Classes\FormRequest;
@@ -28,7 +30,7 @@ class LocationRequest extends FormRequest
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'location_name' => ['required', 'string', 'between:2,32'],

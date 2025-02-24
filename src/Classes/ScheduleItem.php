@@ -1,24 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
 use Igniter\Local\Models\WorkingHour;
 
 class ScheduleItem
 {
-    public $name;
+    public string $name;
 
-    public $type;
+    public string $type;
 
-    public $days;
+    public array $days;
 
-    public $open;
+    public string $open;
 
-    public $close;
+    public string $close;
 
-    public $timesheet;
+    public array $timesheet;
 
-    public $flexible;
+    public array $flexible;
 
     /**
      * @var array
@@ -30,7 +32,7 @@ class ScheduleItem
         $this->name = $name;
     }
 
-    public static function create(string $name, array $data = [])
+    public static function create(string $name, array $data = []): self
     {
         $instance = resolve(static::class, ['name' => $name]);
         $instance->data = $data;
@@ -44,7 +46,7 @@ class ScheduleItem
         return $instance;
     }
 
-    public function getHours()
+    public function getHours(): array
     {
         $result = [];
 
@@ -71,12 +73,12 @@ class ScheduleItem
         return $result;
     }
 
-    public function getFormatted()
+    public function getFormatted(): array
     {
         $result = [];
 
         $hours = $this->getHours();
-        foreach (WorkingHour::make()->getWeekDaysOptions() as $index => $day) {
+        foreach ((new WorkingHour)->getWeekDaysOptions() as $index => $day) {
             $formattedHours = [];
             foreach (array_get($hours, $index, []) as $hour) {
                 if (!$hour['status']) {
@@ -88,14 +90,14 @@ class ScheduleItem
 
             $result[] = (object)[
                 'day' => $day,
-                'hours' => $formattedHours ? implode(', ', $formattedHours) : '--',
+                'hours' => $formattedHours !== [] ? implode(', ', $formattedHours) : '--',
             ];
         }
 
         return $result;
     }
 
-    protected function timesheet($timesheet)
+    protected function timesheet($timesheet): array
     {
         if (is_string($timesheet)) {
             $timesheet = @json_decode($timesheet, true) ?: [];
@@ -113,7 +115,7 @@ class ScheduleItem
         return $result;
     }
 
-    protected function flexible(array $data)
+    protected function flexible(array $data): array
     {
         $result = [];
         foreach (WorkingHour::$weekDays as $key => $weekDay) {

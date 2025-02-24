@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models\Concerns;
 
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
+use Igniter\Flame\Geolite\Contracts\DistanceInterface;
+use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Geolite\Facades\Geolite;
 use Igniter\Local\Models\LocationSettings;
 
 trait LocationHelpers
@@ -12,7 +17,7 @@ trait LocationHelpers
         return $this->location_name;
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return strtolower($this->location_email);
     }
@@ -27,7 +32,7 @@ trait LocationHelpers
         return $this->description;
     }
 
-    public function getAddress()
+    public function getAddress(): array
     {
         $country = optional($this->country);
 
@@ -55,26 +60,20 @@ trait LocationHelpers
         $distance->setTo($position);
         $distance->in($this->getDistanceUnit());
 
-        return app('geocoder')->distance($distance);
+        return Geocoder::distance($distance);
     }
 
-    /**
-     * @return \Igniter\Flame\Geolite\Model\Coordinates
-     */
-    public function getCoordinates()
+    public function getCoordinates(): CoordinatesInterface
     {
-        return app('geolite')->coordinates($this->location_lat, $this->location_lng);
+        return Geolite::coordinates($this->location_lat, $this->location_lng);
     }
 
-    /**
-     * @return \Igniter\Flame\Geolite\Contracts\DistanceInterface
-     */
-    public function makeDistance()
+    public function makeDistance(): DistanceInterface
     {
-        return app('geolite')->distance();
+        return Geolite::distance();
     }
 
-    public function setUrl($suffix = null)
+    public function setUrl($suffix = null): void
     {
         if (is_single_location()) {
             $suffix = '/menus';

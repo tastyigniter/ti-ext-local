@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models\Concerns;
 
 use Igniter\Flame\Exception\SystemException;
@@ -22,14 +24,12 @@ trait Locationable
 
     /**
      * Boot the locationable trait for a model.
-     *
-     * @return void
      */
-    public static function bootLocationable()
+    public static function bootLocationable(): void
     {
         static::addGlobalScope(new LocationableScope);
 
-        static::deleting(function(self $model) {
+        static::deleting(function(self $model): void {
             $model->detachLocationsOnDelete();
         });
     }
@@ -64,14 +64,14 @@ trait Locationable
         return $this->{$relationName}();
     }
 
-    public function locationableIsSingleRelationType()
+    public function locationableIsSingleRelationType(): bool
     {
         $relationType = $this->getRelationType($this->locationableRelationName());
 
         return in_array($relationType, ['hasOne', 'belongsTo', 'morphOne']);
     }
 
-    public function locationableIsMorphRelationType()
+    public function locationableIsMorphRelationType(): bool
     {
         $relationType = $this->getRelationType($this->locationableRelationName());
 
@@ -83,7 +83,7 @@ trait Locationable
         return defined('static::LOCATIONABLE_RELATION') ? static::LOCATIONABLE_RELATION : 'location';
     }
 
-    public function locationableRelationExists()
+    public function locationableRelationExists(): bool
     {
         $relationName = $this->locationableRelationName();
 
@@ -91,6 +91,6 @@ trait Locationable
             return !is_null($this->{$relationName});
         }
 
-        return count($this->{$relationName} ?? []) > 0;
+        return ($this->{$relationName} ?? []) !== [];
     }
 }

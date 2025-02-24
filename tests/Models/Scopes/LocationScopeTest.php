@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models\Scopes;
 
 use Igniter\Flame\Database\Builder;
 use Igniter\Local\Models\Scopes\LocationScope;
 
-it('applies position to builder with valid coordinates', function() {
+it('applies position to builder with valid coordinates', function(): void {
     $builder = mock(Builder::class);
     $builder->shouldReceive('selectDistance')->with(12.345678, 98.765432)->andReturnSelf();
 
@@ -15,7 +17,7 @@ it('applies position to builder with valid coordinates', function() {
     expect($result)->toBe($builder);
 });
 
-it('selects distance in kilometers when distance unit is km', function() {
+it('selects distance in kilometers when distance unit is km', function(): void {
     setting()->set('distance_unit', 'km');
     $builder = mock(Builder::class);
     $builder->shouldReceive('selectRaw')->with(
@@ -29,7 +31,7 @@ it('selects distance in kilometers when distance unit is km', function() {
     expect($result)->toBe($builder);
 });
 
-it('selects distance in miles when distance unit is miles', function() {
+it('selects distance in miles when distance unit is miles', function(): void {
     setting()->set('distance_unit', 'miles');
     $builder = mock(Builder::class);
     $builder->shouldReceive('selectRaw')->with(

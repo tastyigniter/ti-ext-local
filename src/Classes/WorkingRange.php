@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
 use Igniter\Local\Exceptions\WorkingHourException;
 
 class WorkingRange
 {
-    /** @var \Igniter\Local\Classes\WorkingTime */
-    protected $start;
+    protected WorkingTime $start;
 
-    /** @var \Igniter\Local\Classes\WorkingTime */
-    protected $end;
+    protected WorkingTime $end;
 
     protected function __construct(WorkingTime $start, WorkingTime $end)
     {
@@ -30,11 +30,11 @@ class WorkingRange
 
     public static function fromRanges(array $ranges): self
     {
-        if (count($ranges) === 0) {
+        if ($ranges === []) {
             throw new WorkingHourException('The given ranges must contain at least one range.');
         }
 
-        array_walk($ranges, function($range) {
+        array_walk($ranges, function($range): void {
             if (!$range instanceof self) {
                 throw new WorkingHourException('The given ranges is not a valid list of TimeRange instance containing.');
             }

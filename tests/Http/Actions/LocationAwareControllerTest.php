@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Http\Actions;
 
 use Igniter\Admin\Classes\AdminController;
@@ -13,7 +15,7 @@ use Igniter\Local\Models\Review;
 use Igniter\Local\Models\WorkingHour;
 use Illuminate\Support\Facades\Event;
 
-beforeEach(function() {
+beforeEach(function(): void {
     Event::fakeExcept([
         'admin.list.extendQuery',
         'admin.filter.extendQuery',
@@ -83,12 +85,12 @@ beforeEach(function() {
     $this->locationAwareController = $this->controller->asExtension(LocationAwareController::class);
 });
 
-it('initializes correctly', function() {
+it('initializes correctly', function(): void {
     expect($this->locationAwareController->locationConfig)->toBe($this->controller->locationConfig)
         ->and($this->controller->hiddenActions)->toContain('locationApplyScope');
 });
 
-it('binds location events', function() {
+it('binds location events', function(): void {
     $locationAwareControllerMock = $this->getMockBuilder(LocationAwareController::class)
         ->setConstructorArgs([$this->controller])
         ->onlyMethods(['locationBindEvents'])
@@ -99,7 +101,7 @@ it('binds location events', function() {
     $this->controller->fireEvent('controller.beforeRemap');
 });
 
-it('applies location scope on events', function() {
+it('applies location scope on events', function(): void {
     $this->controller->fireEvent('controller.beforeRemap');
 
     $listWidgets = $this->controller->asExtension(ListController::class)->makeLists();
@@ -116,24 +118,24 @@ it('applies location scope on events', function() {
     expect($query->toSql())->toContain('`location_id` in (?, ?)');
 });
 
-it('applies location scope correctly', function($query, $expectedSql) {
+it('applies location scope correctly', function($query, $expectedSql): void {
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([1, 2]);
     $this->locationAwareController->locationApplyScope($query);
 
     expect($query->toSql())->toContain($expectedSql);
 })->with([
-    fn() => [Review::query(), '`location_id` in (?, ?)'],
-    fn() => [Menu::query(), 'and `locationables`.`location_id` in (?, ?)'],
+    fn(): array => [Review::query(), '`location_id` in (?, ?)'],
+    fn(): array => [Menu::query(), 'and `locationables`.`location_id` in (?, ?)'],
 ]);
 
-it('does not applies location scope when model does not use Locationable trait', function() {
+it('does not applies location scope when model does not use Locationable trait', function(): void {
     $query = WorkingHour::query();
     $this->locationAwareController->locationApplyScope($query);
 
     expect($query->toSql())->not->toContain('`location_id`');
 });
 
-it('does not applies location scope when user current or assigned location is missing', function() {
+it('does not applies location scope when user current or assigned location is missing', function(): void {
     $query = Review::query();
 
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([]);
@@ -142,7 +144,7 @@ it('does not applies location scope when user current or assigned location is mi
     expect($query->toSql())->not->toContain('`location_id`');
 });
 
-it('applies absence location scope correctly', function($query, $expectedSql) {
+it('applies absence location scope correctly', function($query, $expectedSql): void {
     $this->locationAwareController->setConfig([
         'addAbsenceConstraint' => true,
     ]);
@@ -152,6 +154,6 @@ it('applies absence location scope correctly', function($query, $expectedSql) {
 
     expect($query->toSql())->toContain($expectedSql);
 })->with([
-    fn() => [Review::query(), 'or `location_id` is null'],
-    fn() => [Menu::query(), ' or not exists (select * from `locations`'],
+    fn(): array => [Review::query(), 'or `location_id` is null'],
+    fn(): array => [Menu::query(), ' or not exists (select * from `locations`'],
 ]);

@@ -1,23 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Classes;
 
 use DateTime;
 use Igniter\Local\Classes\WorkingTime;
 use Igniter\Local\Exceptions\WorkingHourException;
 
-it('creates correctly', function() {
+it('creates correctly', function(): void {
     $workingTime = WorkingTime::create('08:00');
 
     expect($workingTime->hours())->toBe(8)
         ->and($workingTime->minutes())->toBe(0);
 });
 
-it('throws exception when creating with invalid date', function() {
-    expect(fn() => WorkingTime::create('invalid'))->toThrow(WorkingHourException::class);
+it('throws exception when creating with invalid date', function(): void {
+    expect(fn(): WorkingTime => WorkingTime::create('invalid'))->toThrow(WorkingHourException::class);
 });
 
-it('creates from DateTime correctly', function() {
+it('creates from DateTime correctly', function(): void {
     $dateTime = new DateTime('08:00');
 
     $workingTime = WorkingTime::fromDateTime($dateTime);
@@ -26,7 +28,7 @@ it('creates from DateTime correctly', function() {
         ->and($workingTime->minutes())->toBe(0);
 });
 
-it('checks time correctly', function() {
+it('checks time correctly', function(): void {
     $workingTime1 = WorkingTime::create('08:00');
     $workingTime2 = WorkingTime::create('10:00');
 
@@ -40,7 +42,7 @@ it('checks time correctly', function() {
         ->and($workingTime1->isSameOrAfter($workingTime2))->toBeFalse();
 });
 
-it('gets time difference correctly', function() {
+it('gets time difference correctly', function(): void {
     $workingTime1 = WorkingTime::create('08:00');
     $workingTime2 = WorkingTime::create('10:00');
 
@@ -50,7 +52,7 @@ it('gets time difference correctly', function() {
         ->and($diff->i)->toBe(0);
 });
 
-it('formats correctly', function() {
+it('formats correctly', function(): void {
     $workingTime = WorkingTime::create('08:00');
 
     expect($workingTime->format())->toBe('08:00')

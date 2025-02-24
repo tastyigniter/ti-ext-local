@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\FormWidgets;
 
+use Igniter\Local\Models\Location;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
@@ -15,7 +18,7 @@ class SettingsEditor extends BaseFormWidget
     use ValidatesForm;
 
     /**
-     * @var \Igniter\Local\Models\Location Form model object.
+     * @var Location Form model object.
      */
     public ?Model $model = null;
 
@@ -23,7 +26,7 @@ class SettingsEditor extends BaseFormWidget
 
     public $popupSize = 'modal-lg';
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->fillFromConfig([
             'form',
@@ -37,18 +40,18 @@ class SettingsEditor extends BaseFormWidget
         return $this->makePartial('settingseditor/settingseditor');
     }
 
-    public function prepareVars()
+    public function prepareVars(): void
     {
         $this->vars['field'] = $this->formField;
         $this->vars['settings'] = $this->listSettings();
     }
 
-    public function loadAssets()
+    public function loadAssets(): void
     {
         $this->addJs('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');
     }
 
-    public function onLoadRecord()
+    public function onLoadRecord(): string
     {
         throw_unless($settingsCode = input('code'), new ApplicationException('Missing settings code'));
 
@@ -63,7 +66,7 @@ class SettingsEditor extends BaseFormWidget
         ]);
     }
 
-    public function onSaveRecord()
+    public function onSaveRecord(): void
     {
         throw_unless($settingsCode = input('recordId'), new ApplicationException('Missing settings code'));
 
@@ -75,7 +78,7 @@ class SettingsEditor extends BaseFormWidget
 
         $saveData = $this->validateFormWidget($form, $form->getSaveData());
 
-        DB::transaction(function() use ($model, $saveData) {
+        DB::transaction(function() use ($model, $saveData): void {
             $model->fill($saveData)->save();
         });
 
@@ -86,15 +89,15 @@ class SettingsEditor extends BaseFormWidget
     {
         throw_unless(
             $definition = array_get($this->listSettings(), $settingsCode),
-            new ApplicationException(lang('igniter.local::default.alert_settings_not_loaded'))
+            new ApplicationException(lang('igniter.local::default.alert_settings_not_loaded')),
         );
 
         return $definition;
     }
 
-    protected function listSettings()
+    protected function listSettings(): array
     {
-        return LocationSettings::make()->listRegisteredSettings();
+        return (new LocationSettings)->listRegisteredSettings();
     }
 
     protected function makeSettingsFormWidget($model, $definition)
@@ -108,6 +111,7 @@ class SettingsEditor extends BaseFormWidget
         $widget = $this->makeWidget(Form::class, $widgetConfig);
 
         $widget->bindToController();
+
         $widget->previewMode = $this->previewMode;
 
         return $widget;

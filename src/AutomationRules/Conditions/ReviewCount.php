@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\AutomationRules\Conditions;
 
 use Igniter\Automation\AutomationException;
@@ -10,7 +12,7 @@ use Igniter\Reservation\Models\Reservation;
 
 class ReviewCount extends BaseModelAttributesCondition
 {
-    protected $modelClass = \Igniter\Local\Models\Review::class;
+    protected $modelClass = Review::class;
 
     protected $modelAttributes;
 

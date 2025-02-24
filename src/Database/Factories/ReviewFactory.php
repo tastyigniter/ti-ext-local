@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Database\Factories;
 
+use Igniter\Local\Models\Review;
 use Igniter\Flame\Database\Factories\Factory;
 
 class ReviewFactory extends Factory
 {
-    protected $model = \Igniter\Local\Models\Review::class;
+    protected $model = Review::class;
 
     public function definition(): array
     {

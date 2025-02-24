@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models\Scopes;
 
 use Igniter\Flame\Database\Builder;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\Scopes\LocationableScope;
 
-it('applies where has location with single location id', function() {
+it('applies where has location with single location id', function(): void {
     $location = Location::factory()->create();
     $builder = mock(Builder::class);
     $builder->shouldReceive('withoutGlobalScope')->andReturnSelf();
@@ -21,7 +23,7 @@ it('applies where has location with single location id', function() {
     expect($result)->toBe($builder);
 });
 
-it('applies where has location with multiple location ids', function() {
+it('applies where has location with multiple location ids', function(): void {
     $builder = mock(Builder::class);
     $builder->shouldReceive('withoutGlobalScope')->andReturnSelf();
     $builder->shouldReceive('getModel->locationableRelationName')->andReturn('location');
@@ -40,7 +42,7 @@ it('applies where has location with multiple location ids', function() {
     expect($result)->toBe($builder);
 });
 
-it('applies where has location with multiple location ids and nor morph type', function() {
+it('applies where has location with multiple location ids and nor morph type', function(): void {
     $builder = mock(Builder::class);
     $builder->shouldReceive('withoutGlobalScope')->andReturnSelf();
     $builder->shouldReceive('getModel->locationableRelationName')->andReturn('location');
@@ -59,7 +61,7 @@ it('applies where has location with multiple location ids and nor morph type', f
     expect($result)->toBe($builder);
 });
 
-it('applies where has or doesnt have location with single location id', function() {
+it('applies where has or doesnt have location with single location id', function(): void {
     $builder = mock(Builder::class);
     $builder->shouldReceive('withoutGlobalScope')->andReturnSelf();
     $builder->shouldReceive('where')->andReturnUsing(function($callback) use ($builder) {
@@ -77,7 +79,7 @@ it('applies where has or doesnt have location with single location id', function
     expect($result)->toBe($builder);
 });
 
-it('applies where has or doesnt have location with multiple location ids', function() {
+it('applies where has or doesnt have location with multiple location ids', function(): void {
     $builder = mock(Builder::class);
     $builder->shouldReceive('withoutGlobalScope')->andReturnSelf();
     $builder->shouldReceive('where')->andReturnUsing(function($callback) use ($builder) {

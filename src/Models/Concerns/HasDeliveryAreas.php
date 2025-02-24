@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models\Concerns;
 
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
@@ -9,24 +11,19 @@ use Igniter\Local\Models\LocationArea;
 
 trait HasDeliveryAreas
 {
-    /**
-     * @var \Illuminate\Database\Eloquent\Collection
-     */
-    protected $deliveryAreas;
-
-    public static function bootHasDeliveryAreas()
+    public static function bootHasDeliveryAreas(): void
     {
-        static::extend(function(self $model) {
+        static::extend(function(self $model): void {
             $model->relation['hasMany']['delivery_areas'] = [LocationArea::class, 'delete' => true];
 
             $model->addPurgeable(['delivery_areas']);
         });
 
-        self::saving(function(self $model) {
+        self::saving(function(self $model): void {
             $model->geocodeAddressOnSave();
         });
 
-        self::saved(function(self $model) {
+        self::saved(function(self $model): void {
             $model->restorePurgedValues();
 
             if (array_key_exists('delivery_areas', $model->getAttributes())) {
@@ -41,8 +38,7 @@ trait HasDeliveryAreas
             return;
         }
 
-        if ($this->location_lat && $this->location_lng) {
-            if (!$this->isDirty([
+        if ($this->location_lat && $this->location_lng && !$this->isDirty([
                 'location_address_1',
                 'location_address_2',
                 'location_city',
@@ -52,8 +48,7 @@ trait HasDeliveryAreas
                 'location_lat',
                 'location_lng',
             ])) {
-                return;
-            }
+            return;
         }
 
         $address = format_address($this->getAddress(), false);
@@ -70,19 +65,12 @@ trait HasDeliveryAreas
         return $this->delivery_areas->keyBy('area_id');
     }
 
-    /**
-     * @return \Igniter\Local\Contracts\AreaInterface|null
-     */
-    public function findDeliveryArea($areaId)
+    public function findDeliveryArea($areaId): AreaInterface|null
     {
         return $this->listDeliveryAreas()->get($areaId);
     }
 
-    /**
-     * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
-     * @return \Igniter\Local\Contracts\AreaInterface|null
-     */
-    public function searchOrDefaultDeliveryArea($coordinates)
+    public function searchOrDefaultDeliveryArea(?CoordinatesInterface $coordinates): AreaInterface|null
     {
         if ($coordinates && ($area = $this->searchDeliveryArea($coordinates))) {
             return $area;
@@ -91,11 +79,7 @@ trait HasDeliveryAreas
         return $this->delivery_areas->where('is_default', 1)->first();
     }
 
-    /**
-     * @param \Igniter\Flame\Geolite\Contracts\CoordinatesInterface $coordinates
-     * @return \Igniter\Local\Contracts\AreaInterface|null
-     */
-    public function searchOrFirstDeliveryArea($coordinates)
+    public function searchOrFirstDeliveryArea(?CoordinatesInterface $coordinates): AreaInterface|null
     {
         if ($coordinates && ($area = $this->searchDeliveryArea($coordinates))) {
             return $area;
@@ -113,7 +97,7 @@ trait HasDeliveryAreas
             });
     }
 
-    public function getDistanceUnit()
+    public function getDistanceUnit(): string
     {
         return strtolower($this->distanceUnit ?? setting('distance_unit'));
     }
@@ -121,15 +105,12 @@ trait HasDeliveryAreas
     //
     //
     //
-
     /**
      * Create a new or update existing location areas
      *
      * @param array $deliveryAreas
-     *
-     * @return bool
      */
-    public function addLocationAreas($deliveryAreas)
+    public function addLocationAreas($deliveryAreas): int
     {
         $idsToKeep = [];
         foreach ($deliveryAreas ?: [] as $area) {

@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models;
 
+use Igniter\Local\Models\Location;
 use Igniter\Local\Models\WorkingHour;
 use Igniter\System\Models\Concerns\Switchable;
 
-it('returns timesheet options with provided value', function() {
+it('returns timesheet options with provided value', function(): void {
     $workingHour = new WorkingHour();
     $value = ['some' => 'value'];
 
@@ -18,7 +21,7 @@ it('returns timesheet options with provided value', function() {
         ]);
 });
 
-it('returns correct day attribute', function() {
+it('returns correct day attribute', function(): void {
     $workingHour = WorkingHour::create(['weekday' => 1]);
 
     $result = $workingHour->day;
@@ -26,7 +29,7 @@ it('returns correct day attribute', function() {
     expect($result->format('l'))->toBe('Tuesday');
 });
 
-it('returns correct open attribute', function() {
+it('returns correct open attribute', function(): void {
     $workingHour = WorkingHour::create(['weekday' => 1, 'opening_time' => '08:00']);
 
     $result = $workingHour->open;
@@ -34,7 +37,7 @@ it('returns correct open attribute', function() {
     expect($result->format('H:i'))->toBe('08:00');
 });
 
-it('returns correct close attribute', function() {
+it('returns correct close attribute', function(): void {
     $workingHour = WorkingHour::create(['weekday' => 1, 'opening_time' => '22:00', 'closing_time' => '02:00']);
 
     $result = $workingHour->close;
@@ -43,7 +46,7 @@ it('returns correct close attribute', function() {
         ->and($result->format('l'))->toBe('Wednesday');
 });
 
-it('returns true when open all day', function() {
+it('returns true when open all day', function(): void {
     $workingHour = WorkingHour::create(['opening_time' => '00:00', 'closing_time' => '23:59']);
 
     $result = $workingHour->isOpenAllDay();
@@ -51,7 +54,7 @@ it('returns true when open all day', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns false when not open all day', function() {
+it('returns false when not open all day', function(): void {
     $workingHour = WorkingHour::create(['opening_time' => '08:00', 'closing_time' => '17:00']);
 
     $result = $workingHour->isOpenAllDay();
@@ -59,7 +62,7 @@ it('returns false when not open all day', function() {
     expect($result)->toBeFalse();
 });
 
-it('returns true when past midnight', function() {
+it('returns true when past midnight', function(): void {
     $workingHour = WorkingHour::create(['opening_time' => '22:00', 'closing_time' => '02:00']);
 
     $result = $workingHour->isPastMidnight();
@@ -67,7 +70,7 @@ it('returns true when past midnight', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns false when not past midnight', function() {
+it('returns false when not past midnight', function(): void {
     $workingHour = WorkingHour::create(['opening_time' => '08:00', 'closing_time' => '17:00']);
 
     $result = $workingHour->isPastMidnight();
@@ -75,7 +78,7 @@ it('returns false when not past midnight', function() {
     expect($result)->toBeFalse();
 });
 
-it('configures working hour model correctly', function() {
+it('configures working hour model correctly', function(): void {
     $workingHour = new WorkingHour;
 
     expect(class_uses_recursive($workingHour))->toContain(Switchable::class)
@@ -83,7 +86,7 @@ it('configures working hour model correctly', function() {
         ->and($workingHour->getKeyName())->toBe('id')
         ->and($workingHour->relation)->toEqual([
             'belongsTo' => [
-                'location' => [\Igniter\Local\Models\Location::class],
+                'location' => [Location::class],
             ],
         ])
         ->and($workingHour->getAppends())->toEqual(['day', 'open', 'close'])

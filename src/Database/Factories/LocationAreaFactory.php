@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Database\Factories;
 
+use Igniter\Local\Models\LocationArea;
 use Igniter\Flame\Database\Factories\Factory;
 
 class LocationAreaFactory extends Factory
 {
-    protected $model = \Igniter\Local\Models\LocationArea::class;
+    protected $model = LocationArea::class;
 
     public function definition(): array
     {

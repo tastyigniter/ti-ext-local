@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Traits;
 
 use Igniter\Local\Facades\Location as LocationFacade;
@@ -8,7 +10,7 @@ use Igniter\Local\Models\Location;
 
 trait LocationAwareWidget
 {
-    protected function isLocationAware($config)
+    protected function isLocationAware($config): bool
     {
         $locationAware = $config['locationAware'] ?? false;
 

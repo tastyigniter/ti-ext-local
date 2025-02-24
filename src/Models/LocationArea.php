@@ -1,14 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models;
 
 use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
+use Igniter\Flame\Geolite\Contracts\CircleInterface;
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Geolite\Contracts\LocationInterface;
+use Igniter\Flame\Geolite\Contracts\PolygonInterface;
 use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Geolite\Facades\Geolite;
 use Igniter\Local\Contracts\AreaInterface;
 use Igniter\System\Models\Concerns\Defaultable;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,7 +32,9 @@ use Illuminate\Database\Eloquent\Builder;
  * @property int $priority
  * @property-read mixed $circle
  * @property-read mixed $vertices
- * @mixin \Igniter\Flame\Database\Model
+ * @property-read null|Location $location
+ * @method null|Location location()
+ * @mixin Model
  */
 class LocationArea extends Model implements AreaInterface
 {
@@ -36,15 +43,15 @@ class LocationArea extends Model implements AreaInterface
     use Sortable;
     use Validation;
 
-    const VERTEX = 'vertex';
+    public const string VERTEX = 'vertex';
 
-    const BOUNDARY = 'boundary';
+    public const string BOUNDARY = 'boundary';
 
-    const INSIDE = 'inside';
+    public const string INSIDE = 'inside';
 
-    const OUTSIDE = 'outside';
+    public const string OUTSIDE = 'outside';
 
-    const SORT_ORDER = 'priority';
+    public const string SORT_ORDER = 'priority';
 
     /**
      * @var string The database table name
@@ -55,7 +62,7 @@ class LocationArea extends Model implements AreaInterface
 
     public $relation = [
         'belongsTo' => [
-            'location' => [\Igniter\Local\Models\Location::class],
+            'location' => [Location::class],
         ],
     ];
 
@@ -119,7 +126,7 @@ class LocationArea extends Model implements AreaInterface
 
     public function getColorAttribute($value)
     {
-        if (!strlen($value)) {
+        if ((string)$value === '') {
             $value = array_random(self::$areaColors);
         }
 
@@ -129,40 +136,31 @@ class LocationArea extends Model implements AreaInterface
     //
     // Helpers
     //
-
-    /**
-     * @return \Igniter\Flame\Geolite\Contracts\PolygonInterface
-     */
-    public function getPolygon()
+    public function getPolygon(): PolygonInterface
     {
-        $geolite = app('geolite');
-        $vertices = array_map(function($coordinates) use ($geolite) {
-            return $geolite->coordinates($coordinates->lat, $coordinates->lng);
+        $vertices = array_map(function($coordinates) {
+            return Geolite::coordinates($coordinates->lat, $coordinates->lng);
         }, $this->vertices);
 
-        return $geolite->polygon($vertices);
+        return Geolite::polygon($vertices);
     }
 
-    /**
-     * @return \Igniter\Flame\Geolite\Contracts\CircleInterface
-     */
-    public function getCircle()
+    public function getCircle(): CircleInterface
     {
-        $geolite = app('geolite');
-        $coordinate = $geolite->coordinates(
+        $coordinate = Geolite::coordinates(
             $this->circle->lat,
             $this->circle->lng,
         );
 
-        return $geolite->circle($coordinate, $this->circle->radius);
+        return Geolite::circle($coordinate, $this->circle->radius);
     }
 
-    public function isAddressBoundary()
+    public function isAddressBoundary(): bool
     {
         return $this->type === 'address';
     }
 
-    public function isPolygonBoundary()
+    public function isPolygonBoundary(): bool
     {
         return $this->type === 'polygon';
     }
@@ -212,12 +210,12 @@ class LocationArea extends Model implements AreaInterface
         return $circle->pointInRadius($coordinate);
     }
 
-    public function matchAddressComponents(LocationInterface $position)
+    public function matchAddressComponents(LocationInterface $position): bool
     {
         $components = (array)array_get($this->boundaries, 'components');
 
         $groupedComponents = collect($components)->groupBy('type')->all();
 
-        return app('geolite')->addressMatch($groupedComponents)->matches($position);
+        return Geolite::addressMatch($groupedComponents)->matches($position);
     }
 }

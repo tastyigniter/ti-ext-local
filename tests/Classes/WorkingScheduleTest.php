@@ -1,30 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Classes;
 
 use DateInterval;
 use DateTime;
+use DateTimeZone;
 use Igniter\Local\Classes\WorkingPeriod;
 use Igniter\Local\Classes\WorkingSchedule;
-use Igniter\Local\Exceptions\WorkingHourException;
+use Igniter\Local\Models\Location;
 use Igniter\Local\Models\WorkingHour;
 use Illuminate\Support\Carbon;
+use ReflectionClass;
 
-it('creates correctly', function() {
+it('creates correctly', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', 5);
 
     expect($workingSchedule->minDays())->toBe(0)
         ->and($workingSchedule->days())->toBe(5);
 });
 
-it('creates with min and max future days correctly', function() {
+it('creates with min and max future days correctly', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [5, 10]);
 
     expect($workingSchedule->minDays())->toBe(5)
         ->and($workingSchedule->days())->toBe(10);
 });
 
-it('fills correctly', function() {
+it('fills correctly', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', 5);
 
     $workingHour = WorkingHour::create([
@@ -53,7 +57,7 @@ it('fills correctly', function() {
         ->and($workingSchedule->exceptions())->toHaveCount(1);
 });
 
-it('sets the current time to now', function() {
+it('sets the current time to now', function(): void {
     $workingSchedule = new WorkingSchedule();
     $now = new DateTime('2023-01-01 12:00:00');
 
@@ -62,10 +66,10 @@ it('sets the current time to now', function() {
     expect($result)->toBe($workingSchedule);
 });
 
-it('sets the timezone correctly', function() {
+it('sets the timezone correctly', function(): void {
     $workingSchedule = new class extends WorkingSchedule
     {
-        public function timezone()
+        public function timezone(): ?DateTimeZone
         {
             return $this->timezone;
         }
@@ -77,7 +81,7 @@ it('sets the timezone correctly', function() {
     expect($workingSchedule->timezone()->getName())->toBe($timezone);
 });
 
-it('checks next open time', function() {
+it('checks next open time', function(): void {
     $this->travelTo(new DateTime('2023-01-01 10:00:00')); // Sunday
     $workingSchedule = new WorkingSchedule('UTC', [0, 15]);
     $workingSchedule->fill([
@@ -94,16 +98,14 @@ it('checks next open time', function() {
     expect($result)->toBeTrue();
 });
 
-it('checks next open time fails when no periods', function() {
+it('checks next open time fails when no periods', function(): void {
     $this->travelTo(new DateTime('2023-01-03 10:00:00')); // Tuesday
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
 
-    $result = $workingSchedule->isOpening();
-
-    expect($result)->toBeFalse();
+    expect($workingSchedule->isOpening())->toBeFalse();
 });
 
-it('opens on day with no periods', function() {
+it('opens on day with no periods', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
     $workingSchedule->fill([
         'periods' => [
@@ -116,7 +118,7 @@ it('opens on day with no periods', function() {
     expect($result)->toBeFalse();
 });
 
-it('closed on day with no periods', function() {
+it('closed on day with no periods', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
     $workingSchedule->fill([
         'periods' => [
@@ -129,7 +131,7 @@ it('closed on day with no periods', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns the working period for a given date', function() {
+it('returns the working period for a given date', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
     $workingSchedule->fill([
         'periods' => [
@@ -145,7 +147,7 @@ it('returns the working period for a given date', function() {
     expect($result)->toBeInstanceOf(WorkingPeriod::class);
 });
 
-it('returns the next open time formatted', function() {
+it('returns the next open time formatted', function(): void {
     $this->travelTo(new DateTime('2023-01-01 10:00:00')); // Sunday
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
     $workingSchedule->fill([
@@ -162,7 +164,7 @@ it('returns the next open time formatted', function() {
     expect($result)->toBe('08:00');
 });
 
-it('returns the next close time formatted', function() {
+it('returns the next close time formatted', function(): void {
     $this->travelTo(new DateTime('2023-01-01 10:00:00')); // Sunday
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
     $workingSchedule->fill([
@@ -179,7 +181,7 @@ it('returns the next close time formatted', function() {
     expect($result)->toBe('12:00');
 });
 
-it('checks next close time fails when no periods and exceptions', function() {
+it('checks next close time fails when no periods and exceptions', function(): void {
     $this->travelTo(new DateTime('2023-01-03 10:00:00')); // Tuesday
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
 
@@ -188,7 +190,7 @@ it('checks next close time fails when no periods and exceptions', function() {
     expect($result)->toBeNull();
 });
 
-it('checks next close time with exceptions', function() {
+it('checks next close time with exceptions', function(): void {
     $this->travelTo(new DateTime('2023-01-03 10:00:00')); // Tuesday
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
     $workingSchedule->fill([
@@ -204,7 +206,7 @@ it('checks next close time with exceptions', function() {
     expect($result)->toBe('12:00');
 });
 
-it('checks status correctly', function() {
+it('checks status correctly', function(): void {
     $this->travelTo(new DateTime('2022-12-25 10:00:00'));
     $workingSchedule = new WorkingSchedule('UTC', 0);
     $workingSchedule->fill([
@@ -229,15 +231,10 @@ it('checks status correctly', function() {
         ->and($workingSchedule->checkStatus(new DateTime('2023-01-02 07:00:00')))->toBe(WorkingPeriod::OPENING);
 });
 
-it('throws exception when checking status with invalid date instance', function() {
-    $workingSchedule = new WorkingSchedule('UTC', 0);
-
-    expect(fn() => $workingSchedule->checkStatus(new \stdClass()))->toThrow(WorkingHourException::class);
-});
-
-it('gets timeslot correctly', function() {
+it('gets timeslot correctly', function(): void {
     $this->travelTo(new DateTime('2023-01-02 10:00:00'));
     $workingSchedule = new WorkingSchedule('UTC', 5);
+    $workingSchedule->setType(Location::DELIVERY);
     $workingSchedule->fill([
         'periods' => [
             'monday' => [
@@ -253,7 +250,7 @@ it('gets timeslot correctly', function() {
         ->and($timeslot['2023-01-02'])->toHaveCount(22);
 });
 
-it('gets empty timeslot when no next open time', function() {
+it('gets empty timeslot when no next open time', function(): void {
     $this->travelTo(new DateTime('2023-01-03 10:00:00')); // Tuesday
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
 
@@ -262,7 +259,7 @@ it('gets empty timeslot when no next open time', function() {
     expect($timeslot)->toBeEmpty();
 });
 
-it('gets timeslot when when closes late', function() {
+it('gets timeslot when when closes late', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
     $workingSchedule->fill([
         'periods' => [
@@ -277,7 +274,7 @@ it('gets timeslot when when closes late', function() {
     expect($timeslot)->toBeEmpty();
 });
 
-it('gets timeslot when when next end date is less than current date', function() {
+it('gets timeslot when when next end date is less than current date', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', [1, 1]);
     $workingSchedule->fill([
         'periods' => [
@@ -295,9 +292,10 @@ it('gets timeslot when when next end date is less than current date', function()
     expect($timeslot)->toBeEmpty();
 });
 
-it('generates timeslot correctly', function() {
+it('generates timeslot correctly', function(): void {
     $this->travelTo(new DateTime('2023-01-02 10:00:00'));
     $workingSchedule = new WorkingSchedule('UTC', 5);
+    $workingSchedule->setType(Location::DELIVERY);
 
     $workingSchedule->fill([
         'periods' => [
@@ -317,7 +315,7 @@ it('generates timeslot correctly', function() {
         ->and($timeslot)->toHaveCount(22);
 });
 
-it('generates empty timeslot', function() {
+it('generates empty timeslot', function(): void {
     $this->travelTo(new DateTime('2023-01-02 07:00:00'));
     $workingSchedule = new WorkingSchedule('UTC', [2, 5]);
     $workingSchedule->fill([
@@ -336,7 +334,7 @@ it('generates empty timeslot', function() {
     expect($timeslot)->toBeArray()->and($timeslot)->toHaveCount(0);
 });
 
-it('adjusts end date when next close date is before current date', function() {
+it('adjusts end date when next close date is before current date', function(): void {
     $dateTime = Carbon::now();
     $workingSchedule = mock(WorkingSchedule::class)->makePartial();
     $workingSchedule->shouldReceive('nextOpenAt')->andReturn($dateTime->copy()->subDay());
@@ -345,9 +343,10 @@ it('adjusts end date when next close date is before current date', function() {
     $workingPeriod->shouldReceive('closesLate')->andReturnFalse();
     $workingSchedule->shouldReceive('forDate')->andReturn($workingPeriod);
 
-    $reflection = new \ReflectionClass(WorkingSchedule::class);
+    $reflection = new ReflectionClass(WorkingSchedule::class);
     $method = $reflection->getMethod('createPeriodForDays');
     $method->setAccessible(true);
+
     $result = $method->invoke($workingSchedule, $dateTime);
 
 

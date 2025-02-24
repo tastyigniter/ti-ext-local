@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Exceptions;
 
-class WorkingHourException extends \Exception {}
+use Exception;
+
+class WorkingHourException extends Exception {}

@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
+use DateInterval;
 use DateTime;
-use DateTimeImmutable;
 use DateTimeInterface;
 use Igniter\Local\Exceptions\WorkingHourException;
 
 class WorkingTime
 {
-    /** @var int */
-    protected $hours;
+    protected int $hours;
 
-    /** @var int */
-    protected $minutes;
+    protected int $minutes;
 
     public function __construct(int $hours, int $minutes)
     {
@@ -24,12 +24,12 @@ class WorkingTime
     public static function create(string $string): self
     {
         if (!preg_match('/^([0-1]\d)|(2[0-4]):[0-5]\d$/', $string)) {
-            throw new WorkingHourException("The string `{$string}` isn't a valid time string. A time string must be a formatted as `18:00`.");
+            throw new WorkingHourException(sprintf("The string `%s` isn't a valid time string. A time string must be a formatted as `18:00`.", $string));
         }
 
         [$hours, $minutes] = explode(':', $string);
 
-        return new self($hours, $minutes);
+        return new self((int)$hours, (int)$minutes);
     }
 
     public static function fromDateTime(DateTimeInterface $dateTime): self
@@ -79,7 +79,7 @@ class WorkingTime
         return $this->isSame($time) || $this->isAfter($time);
     }
 
-    public function diff(self $time): \DateInterval
+    public function diff(self $time): DateInterval
     {
         return $this->toDateTime()->diff($time->toDateTime());
     }
@@ -89,11 +89,7 @@ class WorkingTime
      */
     public function toDateTime(?DateTime $date = null): DateTime
     {
-        if (!$date) {
-            $date = new DateTime('1970-01-01 00:00:00');
-        } elseif (!($date instanceof DateTimeImmutable)) {
-            $date = clone $date;
-        }
+        $date = $date instanceof DateTime ? clone $date : new DateTime('1970-01-01 00:00:00');
 
         return $date->setTime($this->hours, $this->minutes);
     }

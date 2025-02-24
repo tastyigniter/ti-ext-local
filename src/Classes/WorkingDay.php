@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
 use DateTimeInterface;
@@ -51,15 +53,15 @@ class WorkingDay
 
     public static function toISO(string $day): int
     {
-        return array_search($day, static::days()) + 1;
+        return array_search($day, static::days(), true) + 1;
     }
 
-    public static function normalizeName($day)
+    public static function normalizeName($day): string
     {
         $day = strtolower($day);
 
         if (!static::isValid($day)) {
-            throw new WorkingHourException("Day `{$day}` isn't a valid day name. Valid day names are lowercase english words, e.g. `monday`, `thursday`.");
+            throw new WorkingHourException(sprintf("Day `%s` isn't a valid day name. Valid day names are lowercase english words, e.g. `monday`, `thursday`.", $day));
         }
 
         return $day;

@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Traits;
 
+use Igniter\Local\Traits\LocationAwareWidget;
 use Igniter\Admin\Models\Status;
 use Igniter\Cart\Models\Menu;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location;
 
-beforeEach(function() {
+beforeEach(function(): void {
     $this->traitObject = new class
     {
-        use \Igniter\Local\Traits\LocationAwareWidget;
+        use LocationAwareWidget;
 
-        public function testIsLocationAware(array $config)
+        public function testIsLocationAware(array $config): bool
         {
             return $this->isLocationAware($config);
         }
@@ -24,7 +27,7 @@ beforeEach(function() {
     };
 });
 
-it('returns true when location is aware and location check passes', function() {
+it('returns true when location is aware and location check passes', function(): void {
     LocationFacade::shouldReceive('check')->andReturn(true);
     $config = ['locationAware' => true];
 
@@ -33,7 +36,7 @@ it('returns true when location is aware and location check passes', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns false when location is not aware', function() {
+it('returns false when location is not aware', function(): void {
     $config = ['locationAware' => false];
 
     $result = $this->traitObject->testIsLocationAware($config);
@@ -41,7 +44,7 @@ it('returns false when location is not aware', function() {
     expect($result)->toBeFalse();
 });
 
-it('applies location scope to location model', function() {
+it('applies location scope to location model', function(): void {
     $location = Location::factory()->create();
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([$location->id]);
     $query = Location::query();
@@ -52,7 +55,7 @@ it('applies location scope to location model', function() {
     expect($query->toSql())->toContain('where `location_id` in (?)');
 });
 
-it('does not apply location scope when model is not locationable', function() {
+it('does not apply location scope when model is not locationable', function(): void {
     $query = Status::query();
     $config = ['locationAware' => true];
 
@@ -61,7 +64,7 @@ it('does not apply location scope when model is not locationable', function() {
     expect($query->toSql())->not->toContain('where `location_id` in (?)');
 });
 
-it('does not apply location scope when location is not current or assigned', function() {
+it('does not apply location scope when location is not current or assigned', function(): void {
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([]);
     $query = Menu::query();
     $config = ['locationAware' => true];
@@ -71,7 +74,7 @@ it('does not apply location scope when location is not current or assigned', fun
     expect($query->toSql())->not->toContain('where `location_id` in (?)');
 });
 
-it('applies location scope to assigned only', function() {
+it('applies location scope to assigned only', function(): void {
     $location = \Igniter\Local\Models\Location::factory()->create();
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([$location->id]);
 
@@ -83,7 +86,7 @@ it('applies location scope to assigned only', function() {
     expect($query->toSql())->toContain('where exists');
 });
 
-it('applies location scope', function() {
+it('applies location scope', function(): void {
     $location = \Igniter\Local\Models\Location::factory()->create();
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([$location->id]);
 

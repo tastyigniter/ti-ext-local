@@ -1,8 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models;
 
+use Igniter\System\Models\Country;
+use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Database\Attach\HasMedia;
+use Igniter\Flame\Database\Builder;
 use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
@@ -35,16 +42,17 @@ use Igniter\System\Models\Concerns\Switchable;
  * @property bool|null $location_status
  * @property string|null $permalink_slug
  * @property bool $is_default
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int $is_auto_lat_lng
  * @property-read mixed|null $grouped_settings
  * @property-read mixed $location_thumb
  * @property-read mixed $thumb
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Igniter\Flame\Database\Attach\Media> $media
+ * @property-read Collection<int, Media> $media
  * @property-read int|null $media_count
  * @method static Location first()
- * @mixin \Igniter\Flame\Database\Model
+ * @method static Builder|Location selectDistance()
+ * @mixin Model
  */
 class Location extends Model implements LocationInterface
 {
@@ -99,12 +107,12 @@ class Location extends Model implements LocationInterface
 
     public $relation = [
         'hasMany' => [
-            'settings' => [\Igniter\Local\Models\LocationSettings::class, 'delete' => true],
-            'reviews' => [\Igniter\Local\Models\Review::class],
-            'working_hours' => [\Igniter\Local\Models\WorkingHour::class, 'delete' => true],
+            'settings' => [LocationSettings::class, 'delete' => true],
+            'reviews' => [Review::class],
+            'working_hours' => [WorkingHour::class, 'delete' => true],
         ],
         'belongsTo' => [
-            'country' => [\Igniter\System\Models\Country::class, 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
+            'country' => [Country::class, 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],
         ],
     ];
 
@@ -150,7 +158,7 @@ class Location extends Model implements LocationInterface
 
     public static function onboardingIsComplete()
     {
-        if (!$model = self::getDefault()) {
+        if (($model = self::getDefault()) === null) {
             return false;
         }
 
@@ -158,7 +166,7 @@ class Location extends Model implements LocationInterface
             && $model->delivery_areas()->whereIsDefault()->count() > 0;
     }
 
-    public function getLocationThumbAttribute()
+    public function getLocationThumbAttribute(): ?string
     {
         return $this->hasMedia() ? $this->getThumb() : null;
     }

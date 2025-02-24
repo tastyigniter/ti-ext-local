@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\MainMenuWidgets;
 
 use Igniter\Admin\Classes\MainMenuItem;
@@ -12,21 +14,21 @@ use Igniter\User\Facades\AdminAuth;
 use Igniter\User\Models\User;
 use Illuminate\Http\RedirectResponse;
 
-beforeEach(function() {
+beforeEach(function(): void {
     $this->location = Location::factory()->create();
     $menuItem = (new MainMenuItem('test_field', 'Location picker'))->displayAs('locationpicker');
     $this->controller = resolve(Locations::class);
     $this->locationPickerWidget = new LocationPicker($this->controller, $menuItem);
 });
 
-it('initializes correctly', function() {
+it('initializes correctly', function(): void {
     $this->locationPickerWidget->initialize();
 
     expect($this->locationPickerWidget->popupSize)->toBe('modal-lg')
         ->and($this->locationPickerWidget->modelClass)->toBe(Location::class);
 });
 
-it('prepares variables correctly', function() {
+it('prepares variables correctly', function(): void {
     $user = User::factory()->create();
     $this->controller->setUser($user);
     $this->actingAs($user, 'igniter-admin');
@@ -40,14 +42,14 @@ it('prepares variables correctly', function() {
         ->toHaveKey('isSingleMode');
 });
 
-it('loads form with new record correctly', function() {
+it('loads form with new record correctly', function(): void {
     $user = User::factory()->create();
     AdminAuth::shouldReceive('user')->andReturn($user);
 
     expect($this->locationPickerWidget->onLoadForm())->toBeString();
 });
 
-it('loads form with existing correctly', function() {
+it('loads form with existing correctly', function(): void {
     $this->actingAs(User::factory()->superUser()->create(), 'igniter-admin');
     $location = Location::factory()->create();
     request()->request->set('location', $location->getKey());
@@ -55,7 +57,7 @@ it('loads form with existing correctly', function() {
     expect($this->locationPickerWidget->onLoadForm())->toBeString();
 });
 
-it('chooses location correctly', function() {
+it('chooses location correctly', function(): void {
     $user = User::factory()->superUser()->create();
     $this->controller->setUser($user);
     $this->actingAs($user, 'igniter-admin');
@@ -64,7 +66,7 @@ it('chooses location correctly', function() {
     expect($this->locationPickerWidget->onChoose())->toBeInstanceOf(RedirectResponse::class);
 });
 
-it('chooses location and resets session', function() {
+it('chooses location and resets session', function(): void {
     $user = User::factory()->superUser()->create();
     $this->controller->setUser($user);
     $this->actingAs($user, 'igniter-admin');
@@ -75,7 +77,7 @@ it('chooses location and resets session', function() {
     expect($this->locationPickerWidget->onChoose())->toBeInstanceOf(RedirectResponse::class);
 });
 
-it('saves new record correctly', function() {
+it('saves new record correctly', function(): void {
     $user = User::factory()->superUser()->create();
     $this->controller->setUser($user);
     $this->actingAs($user, 'igniter-admin');
@@ -83,7 +85,7 @@ it('saves new record correctly', function() {
     expect($this->locationPickerWidget->onSaveRecord())->toBeArray();
 });
 
-it('saves existing record correctly', function() {
+it('saves existing record correctly', function(): void {
     $user = User::factory()->superUser()->create();
     $this->controller->setUser($user);
     $this->actingAs($user, 'igniter-admin');
@@ -93,7 +95,7 @@ it('saves existing record correctly', function() {
     expect($this->locationPickerWidget->onSaveRecord())->toBeArray();
 });
 
-it('flashes error when geocoder fails', function() {
+it('flashes error when geocoder fails', function(): void {
     $user = User::factory()->superUser()->create();
     $this->controller->setUser($user);
     $this->actingAs($user, 'igniter-admin');
@@ -106,7 +108,7 @@ it('flashes error when geocoder fails', function() {
     expect($result['#notification'])->toContain('Failed to geocode');
 });
 
-it('deletes record correctly', function() {
+it('deletes record correctly', function(): void {
     $user = User::factory()->superUser()->create();
     $this->controller->setUser($user);
     $this->actingAs($user, 'igniter-admin');

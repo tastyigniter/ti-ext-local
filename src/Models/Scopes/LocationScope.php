@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models\Scopes;
 
 use Igniter\Flame\Database\Scope;

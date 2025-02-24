@@ -1,22 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Http\Controllers;
 
 use Igniter\Local\Models\Location;
 
-it('loads locations page', function() {
+it('loads locations page', function(): void {
     actingAsSuperUser()
         ->get(route('igniter.local.locations'))
         ->assertOk();
 });
 
-it('loads create location page', function() {
+it('loads create location page', function(): void {
     actingAsSuperUser()
         ->get(route('igniter.local.locations', ['slug' => 'create']))
         ->assertOk();
 });
 
-it('loads edit location page', function() {
+it('loads edit location page', function(): void {
     $location = Location::factory()->create();
 
     actingAsSuperUser()
@@ -24,7 +26,7 @@ it('loads edit location page', function() {
         ->assertOk();
 });
 
-it('loads location settings page', function() {
+it('loads location settings page', function(): void {
     $location = Location::factory()->create();
 
     actingAsSuperUser()
@@ -32,7 +34,7 @@ it('loads location settings page', function() {
         ->assertOk();
 });
 
-it('loads location preview page', function() {
+it('loads location preview page', function(): void {
     $location = Location::factory()->create();
 
     actingAsSuperUser()
@@ -40,7 +42,7 @@ it('loads location preview page', function() {
         ->assertOk();
 });
 
-it('sets a default location', function() {
+it('sets a default location', function(): void {
     $location = Location::factory()->create();
 
     actingAsSuperUser()
@@ -55,7 +57,7 @@ it('sets a default location', function() {
     expect(Location::getDefaultKey())->toBe($location->getKey());
 });
 
-it('creates location', function() {
+it('creates location', function(): void {
     actingAsSuperUser()
         ->post(route('igniter.local.locations', ['slug' => 'create']), [
             'Location' => [
@@ -80,7 +82,7 @@ it('creates location', function() {
     expect(Location::where('location_name', 'Created Location')->exists())->toBeTrue();
 });
 
-it('updates location', function() {
+it('updates location', function(): void {
     $location = Location::factory()->create();
 
     actingAsSuperUser()
@@ -107,7 +109,7 @@ it('updates location', function() {
     expect(Location::where('location_name', 'Updated Location')->exists())->toBeTrue();
 });
 
-it('updates location settings', function() {
+it('updates location settings', function(): void {
     $location = Location::factory()->create();
 
     actingAsSuperUser()
@@ -121,7 +123,7 @@ it('updates location settings', function() {
         ->assertOk();
 });
 
-it('deletes location', function() {
+it('deletes location', function(): void {
     $location = Location::factory()->create();
 
     actingAsSuperUser()
@@ -132,4 +134,3 @@ it('deletes location', function() {
 
     expect(Location::where('location_id', $location->getKey())->exists())->toBeFalse();
 });
-

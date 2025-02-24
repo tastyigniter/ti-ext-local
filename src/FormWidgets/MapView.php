@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\FormWidgets;
 
 use Igniter\Admin\Classes\BaseFormWidget;
@@ -24,7 +26,7 @@ class MapView extends BaseFormWidget
      */
     public $cssClasses = [];
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->fillFromConfig([
             'height',
@@ -34,12 +36,12 @@ class MapView extends BaseFormWidget
         ]);
     }
 
-    public function loadAssets()
+    public function loadAssets(): void
     {
-        if (strlen($key = setting('maps_api_key'))) {
+        if (strlen($key = setting('maps_api_key')) !== 0) {
             $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
             $this->addJs(sprintf($url, $key),
-                ['name' => 'google-maps-js', 'async' => null, 'defer' => null]
+                ['name' => 'google-maps-js', 'async' => null, 'defer' => null],
             );
         }
 
@@ -54,7 +56,7 @@ class MapView extends BaseFormWidget
         return $this->makePartial('mapview/mapview');
     }
 
-    public function prepareVars()
+    public function prepareVars(): void
     {
         $this->vars['mapHeight'] = (int)$this->height;
         $this->vars['mapZoom'] = (int)$this->zoom;
@@ -63,12 +65,12 @@ class MapView extends BaseFormWidget
         $this->vars['previewMode'] = $this->previewMode;
     }
 
-    public function isConfigured()
+    public function isConfigured(): bool
     {
         return (bool)strlen(trim(setting('maps_api_key')));
     }
 
-    public function hasCenter()
+    public function hasCenter(): bool
     {
         return (bool)count(array_filter($this->getCenter() ?: []));
     }
@@ -79,8 +81,8 @@ class MapView extends BaseFormWidget
             return $this->center;
         }
 
-        if (method_exists($this->controller, 'mapViewCenterCoords')) {
-            return $this->controller->mapViewCenterCoords();
-        }
+        return method_exists($this->controller, 'mapViewCenterCoords')
+            ? $this->controller->mapViewCenterCoords()
+            : null;
     }
 }

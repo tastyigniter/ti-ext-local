@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Classes;
 
 use Carbon\Carbon;
 use Igniter\Cart\Classes\AbstractOrderType;
 use Igniter\Cart\Facades\Cart;
+use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Geolite\Model\Distance;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\Location;
@@ -17,24 +21,24 @@ use Igniter\User\Facades\AdminAuth;
 use Igniter\User\Models\User;
 use Illuminate\Support\Facades\Event;
 
-beforeEach(function() {
+beforeEach(function(): void {
     $this->location = new Location;
 });
 
-afterEach(function() {
+afterEach(function(): void {
     $this->location->clearInternalCache();
     $this->location->resetSession();
 });
 
-it('returns location slug from resolver callback', function() {
-    $this->location->locationSlugResolver(fn() => 'test-location');
+it('returns location slug from resolver callback', function(): void {
+    $this->location->locationSlugResolver(fn(): string => 'test-location');
 
     $result = $this->location->resolveLocationSlug();
 
     expect($result)->toBe('test-location');
 });
 
-it('returns current location when model is already set', function() {
+it('returns current location when model is already set', function(): void {
     $model = mock(LocationInterface::class);
     $this->location->setModel($model);
 
@@ -43,16 +47,16 @@ it('returns current location when model is already set', function() {
     expect($result)->toBe($model);
 });
 
-it('sets current location by slug', function() {
+it('sets current location by slug', function(): void {
     $model = LocationModel::factory()->create(['permalink_slug' => 'test-slug']);
-    $this->location->locationSlugResolver(fn() => 'test-slug');
+    $this->location->locationSlugResolver(fn(): string => 'test-slug');
 
     $result = $this->location->current();
 
     expect($result->getKey())->toBe($model->getKey());
 });
 
-it('sets current location by session id', function() {
+it('sets current location by session id', function(): void {
     $model = LocationModel::factory()->create();
     $this->location->putSession('id', $model->getKey());
 
@@ -61,7 +65,7 @@ it('sets current location by session id', function() {
     expect($this->location->getName())->toBe($model->location_name);
 });
 
-it('sets default location when no current location is set', function() {
+it('sets default location when no current location is set', function(): void {
     config(['igniter-system.locationMode' => 'single']);
     $defaultLocation = LocationModel::getDefault();
 
@@ -70,7 +74,7 @@ it('sets default location when no current location is set', function() {
     expect($result->getKey())->toBe($defaultLocation->getKey());
 });
 
-it('returns default location in currentOrDefault', function() {
+it('returns default location in currentOrDefault', function(): void {
     $defaultLocation = LocationModel::getDefault();
 
     $result = $this->location->currentOrDefault();
@@ -78,7 +82,7 @@ it('returns default location in currentOrDefault', function() {
     expect($result->getKey())->toBe($defaultLocation->getKey());
 });
 
-it('returns current location in currentOrDefault', function() {
+it('returns current location in currentOrDefault', function(): void {
     $model = mock(LocationInterface::class)->makePartial();
     $this->location->setModel($model);
 
@@ -87,7 +91,7 @@ it('returns current location in currentOrDefault', function() {
     expect($result)->toBe($model);
 });
 
-it('returns assigned location ids for non-super user in currentOrAssigned', function() {
+it('returns assigned location ids for non-super user in currentOrAssigned', function(): void {
     $user = mock(User::class)->makePartial();
     $user->shouldReceive('extendableGet')->with('locations')->andReturnSelf();
     $user->shouldReceive('pluck')->andReturnSelf();
@@ -100,7 +104,7 @@ it('returns assigned location ids for non-super user in currentOrAssigned', func
     expect($result)->toBe([1, 2, 3]);
 });
 
-it('returns empty array for super user in currentOrAssigned', function() {
+it('returns empty array for super user in currentOrAssigned', function(): void {
     AdminAuth::shouldReceive('isSuperUser')->andReturn(true);
 
     $result = $this->location->currentOrAssigned();
@@ -108,7 +112,7 @@ it('returns empty array for super user in currentOrAssigned', function() {
     expect($result)->toBe([]);
 });
 
-it('returns current location id in currentOrAssigned', function() {
+it('returns current location id in currentOrAssigned', function(): void {
     $location = mock(LocationInterface::class)->makePartial();
     $location->shouldReceive('getKey')->andReturn(1);
     $this->location->setCurrent($location);
@@ -118,7 +122,7 @@ it('returns current location id in currentOrAssigned', function() {
     expect($result)->toBe([1]);
 });
 
-it('updates order type correctly', function() {
+it('updates order type correctly', function(): void {
     $this->location->updateOrderType(LocationModel::DELIVERY);
 
     expect($this->location->orderType())->toBe(LocationModel::DELIVERY);
@@ -128,13 +132,13 @@ it('updates order type correctly', function() {
     expect($this->location->orderType())->toBe(LocationModel::COLLECTION);
 });
 
-it('clears order type', function() {
+it('clears order type', function(): void {
     $this->location->updateOrderType();
 
     expect($this->location->getSession('orderType'))->toBeNull();
 });
 
-it('updates user position correctly', function() {
+it('updates user position correctly', function(): void {
     $userPosition = new UserLocation('google', []);
 
     $this->location->updateUserPosition($userPosition);
@@ -142,7 +146,7 @@ it('updates user position correctly', function() {
     expect($this->location->userPosition())->toBe($userPosition);
 });
 
-it('updates schedule time slot correctly', function() {
+it('updates schedule time slot correctly', function(): void {
     Event::fake();
 
     $this->location->updateScheduleTimeSlot('2022-12-31 12:00:00', false);
@@ -150,7 +154,7 @@ it('updates schedule time slot correctly', function() {
     Event::assertDispatched('location.timeslot.updated');
 });
 
-it('clears schedule time slot', function() {
+it('clears schedule time slot', function(): void {
     Event::fake();
 
     $this->location->updateScheduleTimeSlot(null);
@@ -158,7 +162,7 @@ it('clears schedule time slot', function() {
     expect($this->location->getSession($this->location->orderType().'-timeslot'))->toBeNull();
 });
 
-it('returns true when location order setting is enabled', function() {
+it('returns true when location order setting is enabled', function(): void {
     setting()->set('location_order', 1);
 
     $result = $this->location->requiresUserPosition();
@@ -166,13 +170,13 @@ it('returns true when location order setting is enabled', function() {
     expect($result)->toBeTrue();
 });
 
-it('checks order type correctly', function() {
+it('checks order type correctly', function(): void {
     $this->location->setModel(new LocationModel);
 
     expect($this->location->checkOrderType(LocationModel::DELIVERY))->toBeTrue();
 });
 
-it('gets order type correctly', function() {
+it('gets order type correctly', function(): void {
     $this->location->setModel(new LocationModel);
 
     expect($this->location->getOrderType(LocationModel::DELIVERY))->toBeInstanceOf(AbstractOrderType::class);
@@ -186,7 +190,7 @@ it('gets order type correctly', function() {
     expect($this->location->orderTypeIsDelivery())->toBeTrue();
 });
 
-it('returns true when order type is available and not disabled', function() {
+it('returns true when order type is available and not disabled', function(): void {
     $location = mock(Location::class)->makePartial();
     $orderType = mock(AbstractOrderType::class);
     $orderType->shouldReceive('isDisabled')->andReturn(false);
@@ -197,7 +201,7 @@ it('returns true when order type is available and not disabled', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns false when order type is not available', function() {
+it('returns false when order type is not available', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('getOrderType')->andReturn(null);
 
@@ -206,7 +210,7 @@ it('returns false when order type is not available', function() {
     expect($result)->toBeFalse();
 });
 
-it('returns active order types when all are enabled', function() {
+it('returns active order types when all are enabled', function(): void {
     $model = mock(LocationModel::class)->makePartial();
     $this->location->setModel($model);
     $orderType1 = mock(AbstractOrderType::class);
@@ -220,7 +224,7 @@ it('returns active order types when all are enabled', function() {
     expect($result->count())->toBe(2);
 });
 
-it('returns opening schedule', function() {
+it('returns opening schedule', function(): void {
     $location = mock(Location::class)->makePartial();
     $schedule = mock(WorkingSchedule::class);
     $location->shouldReceive('workingSchedule')->with(LocationModel::OPENING)->andReturn($schedule);
@@ -230,7 +234,7 @@ it('returns opening schedule', function() {
     expect($result)->toBe($schedule);
 });
 
-it('returns delivery schedule', function() {
+it('returns delivery schedule', function(): void {
     $location = mock(Location::class)->makePartial();
     $schedule = mock(WorkingSchedule::class);
     $location->shouldReceive('workingSchedule')->with(LocationModel::DELIVERY)->andReturn($schedule);
@@ -240,7 +244,7 @@ it('returns delivery schedule', function() {
     expect($result)->toBe($schedule);
 });
 
-it('returns collection schedule', function() {
+it('returns collection schedule', function(): void {
     $location = mock(Location::class)->makePartial();
     $schedule = mock(WorkingSchedule::class);
     $location->shouldReceive('workingSchedule')->with(LocationModel::COLLECTION)->andReturn($schedule);
@@ -250,7 +254,7 @@ it('returns collection schedule', function() {
     expect($result)->toBe($schedule);
 });
 
-it('returns open/close time for given order type and time format', function($method, $scheduleMethod, $type, $format) {
+it('returns open/close time for given order type and time format', function($method, $scheduleMethod, $type, $format): void {
     $location = mock(Location::class)->makePartial();
     $schedule = mock(WorkingSchedule::class);
     $location->shouldReceive('workingSchedule')->with($type)->andReturn($schedule);
@@ -268,7 +272,7 @@ it('returns open/close time for given order type and time format', function($met
     ['closeTime', 'getCloseTime', 'opening', 'H:i'],
 ]);
 
-it('returns open/close time for current order type and no time format', function($method, $scheduleMethod, $type) {
+it('returns open/close time for current order type and no time format', function($method, $scheduleMethod, $type): void {
     $location = mock(Location::class)->makePartial();
     $schedule = mock(WorkingSchedule::class);
     $location->shouldReceive('orderType')->andReturn($type);
@@ -287,7 +291,7 @@ it('returns open/close time for current order type and no time format', function
     ['closeTime', 'getCloseTime', 'opening'],
 ]);
 
-it('returns last order time', function() {
+it('returns last order time', function(): void {
     $location = mock(Location::class)->makePartial();
     $schedule = mock(WorkingSchedule::class);
     $location->shouldReceive('getOrderType->getSchedule')->andReturn($schedule);
@@ -298,7 +302,7 @@ it('returns last order time', function() {
     expect($result->toTimeString())->toBe('22:00:00');
 });
 
-it('gets minimum order total correctly', function() {
+it('gets minimum order total correctly', function(): void {
     $this->location->setModel(new LocationModel);
 
     LocationFacade::shouldReceive('coveredArea->minimumOrderTotal')->andReturn(10.0);
@@ -306,7 +310,7 @@ it('gets minimum order total correctly', function() {
     expect($this->location->minimumOrderTotal(LocationModel::DELIVERY))->toBeNumeric();
 });
 
-it('checks minimum order total correctly', function() {
+it('checks minimum order total correctly', function(): void {
     $this->location->setModel(new LocationModel);
 
     LocationFacade::shouldReceive('coveredArea->minimumOrderTotal')->andReturn(10.0);
@@ -314,19 +318,19 @@ it('checks minimum order total correctly', function() {
     expect($this->location->checkMinimumOrder(100, LocationModel::DELIVERY))->toBeBool();
 });
 
-it('checks order time correctly', function() {
+it('checks order time correctly', function(): void {
     $this->location->setModel(new LocationModel(['location_id' => 1]));
 
     expect($this->location->checkOrderTime())->toBeBool();
 });
 
-it('checks order time returns false when current time is after order time', function() {
+it('checks order time returns false when current time is after order time', function(): void {
     $this->location->setModel(new LocationModel(['location_id' => 1]));
 
     expect($this->location->checkOrderTime(now()->subMinutes(10), LocationModel::DELIVERY))->toBeFalse();
 });
 
-it('checks order time returns false when no future days and location is closed', function() {
+it('checks order time returns false when no future days and location is closed', function(): void {
     $location = mock(Location::class)->makePartial();
     $orderType = mock(AbstractOrderType::class);
     $location->shouldReceive('getOrderType')->andReturn($orderType);
@@ -336,7 +340,7 @@ it('checks order time returns false when no future days and location is closed',
     expect($location->checkOrderTime(now()->toDateTimeString()))->toBeFalse();
 });
 
-it('checks order time returns false when location is closed in future dates', function() {
+it('checks order time returns false when location is closed in future dates', function(): void {
     $location = mock(Location::class)->makePartial();
     $orderType = mock(AbstractOrderType::class);
     $location->shouldReceive('getOrderType')->andReturn($orderType);
@@ -344,10 +348,10 @@ it('checks order time returns false when location is closed in future dates', fu
     $orderType->shouldReceive('getMinimumFutureDays')->andReturn(5);
     $orderType->shouldReceive('getFutureDays')->andReturn(10);
 
-    expect($location->checkOrderTime(now()->addDay(1)))->toBeFalse();
+    expect($location->checkOrderTime(now()->addDay()))->toBeFalse();
 });
 
-it('orderTimeIsAsap returns first schedule timeslot when session date time is in the past', function() {
+it('orderTimeIsAsap returns first schedule timeslot when session date time is in the past', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('orderType')->andReturn('delivery');
     $location->shouldReceive('getSession')->with('delivery-timeslot.dateTime')->andReturn('2023-10-10 10:00:00');
@@ -360,7 +364,7 @@ it('orderTimeIsAsap returns first schedule timeslot when session date time is in
     expect($result->toDateTimeString())->toBe('2023-10-10 12:00:00');
 });
 
-it('orderTimeIsAsap returns false when order time is not ASAP and no ASAP schedule', function() {
+it('orderTimeIsAsap returns false when order time is not ASAP and no ASAP schedule', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('hasAsapSchedule')->andReturn(false);
 
@@ -369,7 +373,7 @@ it('orderTimeIsAsap returns false when order time is not ASAP and no ASAP schedu
     expect($result)->toBeFalse();
 });
 
-it('orderTimeIsAsap returns false when order time is not ASAP', function() {
+it('orderTimeIsAsap returns false when order time is not ASAP', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('hasAsapSchedule')->andReturnFalse();
 
@@ -378,7 +382,7 @@ it('orderTimeIsAsap returns false when order time is not ASAP', function() {
     expect($result)->toBeFalse();
 });
 
-it('orderTimeIsAsap returns false when order time is not ASAP and location is closed', function() {
+it('orderTimeIsAsap returns false when order time is not ASAP and location is closed', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('hasAsapSchedule')->andReturn(true);
     $location->shouldReceive('orderType')->andReturn('delivery');
@@ -391,7 +395,7 @@ it('orderTimeIsAsap returns false when order time is not ASAP and location is cl
     expect($result)->toBeFalse();
 });
 
-it('hasAsapSchedule returns false when order type has minimum future days', function() {
+it('hasAsapSchedule returns false when order type has minimum future days', function(): void {
     $orderType = mock(AbstractOrderType::class);
     $orderType->shouldReceive('getMinimumFutureDays')->andReturn(1);
     $location = mock(Location::class)->makePartial();
@@ -402,7 +406,7 @@ it('hasAsapSchedule returns false when order type has minimum future days', func
     expect($result)->toBeFalse();
 });
 
-it('isOpened returns true when location is open', function() {
+it('isOpened returns true when location is open', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('getOrderType->getSchedule->isOpen')->andReturnTrue();
 
@@ -411,7 +415,7 @@ it('isOpened returns true when location is open', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns first schedule timeslot when location is closed', function() {
+it('returns first schedule timeslot when location is closed', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('isClosed')->andReturn(true);
     $location->shouldReceive('firstScheduleTimeslot')->andReturn(make_carbon('2023-10-10 12:00:00'));
@@ -421,7 +425,7 @@ it('returns first schedule timeslot when location is closed', function() {
     expect($result->toDateTimeString())->toBe('2023-10-10 12:00:00');
 });
 
-it('returns first schedule timeslot when limit orders is enabled', function() {
+it('returns first schedule timeslot when limit orders is enabled', function(): void {
     $location = mock(Location::class)->makePartial();
     $location->shouldReceive('isClosed')->andReturn(false);
     $location->shouldReceive('getModel->getSettings')->with('checkout.limit_orders')->andReturn(true);
@@ -432,7 +436,7 @@ it('returns first schedule timeslot when limit orders is enabled', function() {
     expect($result->toDateTimeString())->toBe('2023-10-10 12:00:00');
 });
 
-it('returns first schedule timeslot when available', function() {
+it('returns first schedule timeslot when available', function(): void {
     $location = mock(Location::class)->makePartial();
     $timeslot = Carbon::parse('2023-10-10 12:00:00');
     $location->shouldReceive('scheduleTimeslot')->andReturn(collect([[$timeslot]]));
@@ -442,7 +446,7 @@ it('returns first schedule timeslot when available', function() {
     expect($result->toDateTimeString())->toBe('2023-10-10 12:00:00');
 });
 
-it('returns schedule timeslot when available and cached', function() {
+it('returns schedule timeslot when available and cached', function(): void {
     $location = mock(Location::class)->makePartial();
     $orderType = mock(AbstractOrderType::class);
     $schedule = mock(WorkingSchedule::class);
@@ -466,14 +470,14 @@ it('returns schedule timeslot when available and cached', function() {
     expect($result->all())->toBe(['timeslot']);
 });
 
-it('returns false when at least one order type is available', function() {
+it('returns false when at least one order type is available', function(): void {
     $this->location->setModel(new LocationModel);
     $result = $this->location->checkNoOrderTypeAvailable();
 
     expect($result)->toBeFalse();
 });
 
-it('returns true when order type has later schedule', function() {
+it('returns true when order type has later schedule', function(): void {
     $this->location->setModel(new LocationModel);
 
     $result = $this->location->hasLaterSchedule();
@@ -481,7 +485,7 @@ it('returns true when order type has later schedule', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns working schedule', function() {
+it('returns working schedule', function(): void {
     $location = LocationModel::factory()->create();
     $this->location->setModel($location);
 
@@ -496,7 +500,7 @@ it('returns working schedule', function() {
     $this->location->workingSchedule('delivery');
 });
 
-it('updates nearby area correctly', function() {
+it('updates nearby area correctly', function(): void {
     $area = LocationArea::factory()->create(['location_id' => LocationModel::factory()->create()->getKey()]);
 
     $this->location->updateNearbyArea($area);
@@ -506,7 +510,7 @@ it('updates nearby area correctly', function() {
         ->and($this->location->getAreaId())->toBe($area->getKey());
 });
 
-it('coveredArea returns covered area by session area id', function() {
+it('coveredArea returns covered area by session area id', function(): void {
     $location = LocationModel::factory()->create();
     $area = LocationArea::factory()->create(['location_id' => $location->getKey()]);
     $this->location->putSession('area', $area->getKey());
@@ -517,7 +521,7 @@ it('coveredArea returns covered area by session area id', function() {
     expect($result->getKey())->toBe($area->getKey());
 });
 
-it('coveredArea returns new covered area when session area id does not match location id', function() {
+it('coveredArea returns new covered area when session area id does not match location id', function(): void {
     $location = LocationModel::factory()->create();
     $location2 = LocationModel::factory()->create();
     $area = LocationArea::factory()->create(['location_id' => $location->getKey()]);
@@ -529,7 +533,7 @@ it('coveredArea returns new covered area when session area id does not match loc
     expect($result->getKey())->toBeNull();
 });
 
-it('returns delivery areas from the model', function() {
+it('returns delivery areas from the model', function(): void {
     $location = LocationModel::factory()->create();
     $location->delivery_areas()->saveMany([
         LocationArea::factory()->make(['location_id' => $location->getKey()]),
@@ -542,7 +546,7 @@ it('returns delivery areas from the model', function() {
     expect($result)->toHaveCount(2);
 });
 
-it('returns delivery amount from covered area', function() {
+it('returns delivery amount from covered area', function(): void {
     $location = LocationModel::factory()->create();
     $area = LocationArea::factory()->create([
         'location_id' => $location->getKey(),
@@ -558,7 +562,7 @@ it('returns delivery amount from covered area', function() {
     expect($result)->toBe(10.0);
 });
 
-it('returns minimum order total', function() {
+it('returns minimum order total', function(): void {
     $location = LocationModel::factory()->create();
     $area = LocationArea::factory()->create([
         'location_id' => $location->getKey(),
@@ -576,7 +580,7 @@ it('returns minimum order total', function() {
     expect($result)->toBe(100.0);
 });
 
-it('returns delivery charge conditions from covered area', function() {
+it('returns delivery charge conditions from covered area', function(): void {
     $location = LocationModel::factory()->create();
     $area = LocationArea::factory()->create([
         'location_id' => $location->getKey(),
@@ -593,7 +597,7 @@ it('returns delivery charge conditions from covered area', function() {
     expect($result)->toHaveCount(2);
 });
 
-it('returns formatted distance when distance is an instance of Distance', function() {
+it('returns formatted distance when distance is an instance of Distance', function(): void {
     $location = LocationModel::factory()->create([
         'location_lat' => 51.0,
         'location_lng' => -0.0,
@@ -605,16 +609,16 @@ it('returns formatted distance when distance is an instance of Distance', functi
         'longitude' => -74.0,
     ]);
     $this->location->putSession('position', $userPosition);
+    Geocoder::shouldReceive('distance')->andReturn(new Distance(2129.6443 * 1000, 0));
 
-    $result = $this->location->checkDistance();
-
-    expect($result)->toBe(2129.6443);
+    expect($this->location->checkDistance())->toBe(2129.6443);
 });
 
-it('returns locations ordered by distance', function() {
+it('returns locations ordered by distance', function(): void {
     $location = LocationModel::factory()->create();
     $location->update(['location_lat' => 1.01, 'location_lng' => 0.01]);
     $this->location->setModel($location);
+
     $userPosition = new UserLocation('google', [
         'latitude' => 0.01,
         'longitude' => 0.01,
@@ -626,7 +630,7 @@ it('returns locations ordered by distance', function() {
     expect($result)->toBeCollection();
 });
 
-it('checks delivery coverage correctly', function() {
+it('checks delivery coverage correctly', function(): void {
     $this->location->setModel(new LocationModel);
     $userPosition = new UserLocation('google', [
         'latitude' => 0.01,

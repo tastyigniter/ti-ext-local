@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Http\Requests;
 
 use Igniter\System\Classes\FormRequest;
@@ -28,7 +30,7 @@ class LocationAreaRequest extends FormRequest
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'type' => ['sometimes', 'required', 'string'],

@@ -1,21 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Http\Controllers;
 
+use Igniter\Admin\Classes\AdminController;
+use Igniter\Admin\Http\Actions\ListController;
+use Igniter\Admin\Http\Actions\FormController;
+use Igniter\Local\Http\Actions\LocationAwareController;
+use Igniter\Local\Http\Requests\ReviewRequest;
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Local\Models\Review;
 
-class Reviews extends \Igniter\Admin\Classes\AdminController
+class Reviews extends AdminController
 {
     public array $implement = [
-        \Igniter\Admin\Http\Actions\ListController::class,
-        \Igniter\Admin\Http\Actions\FormController::class,
-        \Igniter\Local\Http\Actions\LocationAwareController::class,
+        ListController::class,
+        FormController::class,
+        LocationAwareController::class,
     ];
 
     public array $listConfig = [
         'list' => [
-            'model' => \Igniter\Local\Models\Review::class,
+            'model' => Review::class,
             'title' => 'lang:igniter.local::default.reviews.text_title',
             'emptyMessage' => 'lang:igniter.local::default.reviews.text_empty',
             'defaultSort' => ['review_id', 'DESC'],
@@ -25,8 +32,8 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
 
     public array $formConfig = [
         'name' => 'lang:igniter.local::default.reviews.text_form_name',
-        'model' => \Igniter\Local\Models\Review::class,
-        'request' => \Igniter\Local\Http\Requests\ReviewRequest::class,
+        'model' => Review::class,
+        'request' => ReviewRequest::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'igniter/local/reviews/edit/{review_id}',
@@ -62,7 +69,7 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
         AdminMenu::setContext('reviews', 'marketing');
     }
 
-    public function index()
+    public function index(): void
     {
         $this->addJs('js/vendor.chart.js', 'vendor-chart-js');
 
@@ -71,10 +78,10 @@ class Reviews extends \Igniter\Admin\Classes\AdminController
         $this->asExtension('ListController')->index();
     }
 
-    public function makeAverageRatingDataset($ratingType, $records)
+    public function makeAverageRatingDataset(string $ratingType, $records)
     {
         if (is_null(self::$reviewHints)) {
-            self::$reviewHints = Review::make()->getRatingOptions();
+            self::$reviewHints = (new Review)->getRatingOptions();
         }
 
         $pieColors = ['', '#e74c3c', '#f1c40f', '#9b59b6', '#64B5F6', '#1abc9c'];

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models;
 
+use Igniter\System\Actions\SettingsModel;
 use Igniter\Local\Models\ReviewSettings;
 
-it('returns true when reviews are allowed', function() {
+it('returns true when reviews are allowed', function(): void {
     ReviewSettings::set('allow_reviews', true);
 
     $result = ReviewSettings::allowReviews();
@@ -12,7 +15,7 @@ it('returns true when reviews are allowed', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns false when reviews are not allowed', function() {
+it('returns false when reviews are not allowed', function(): void {
     ReviewSettings::set('allow_reviews', false);
 
     $result = ReviewSettings::allowReviews();
@@ -20,7 +23,7 @@ it('returns false when reviews are not allowed', function() {
     expect($result)->toBeFalse();
 });
 
-it('returns true when reviews are auto approved', function() {
+it('returns true when reviews are auto approved', function(): void {
     ReviewSettings::set('approve_reviews', true);
 
     $result = ReviewSettings::autoApproveReviews();
@@ -28,7 +31,7 @@ it('returns true when reviews are auto approved', function() {
     expect($result)->toBeTrue();
 });
 
-it('returns false when reviews are not auto approved', function() {
+it('returns false when reviews are not auto approved', function(): void {
     ReviewSettings::set('approve_reviews', false);
 
     $result = ReviewSettings::autoApproveReviews();
@@ -36,7 +39,7 @@ it('returns false when reviews are not auto approved', function() {
     expect($result)->toBeFalse();
 });
 
-it('returns default hints when no custom hints are set', function() {
+it('returns default hints when no custom hints are set', function(): void {
     $result = ReviewSettings::getHints();
 
     expect($result)->toBeArray()
@@ -47,7 +50,7 @@ it('returns default hints when no custom hints are set', function() {
         ->and($result)->toContain('Excellent');
 });
 
-it('returns custom hints when they are set', function() {
+it('returns custom hints when they are set', function(): void {
     $customHints = [
         ['value' => 'Bad'],
         ['value' => 'Okay'],
@@ -63,10 +66,10 @@ it('returns custom hints when they are set', function() {
         ->and($result)->toContain('Great');
 });
 
-it('configures review settings model correctly', function() {
+it('configures review settings model correctly', function(): void {
     $reviewSettings = new ReviewSettings;
 
-    expect($reviewSettings->implement)->toContain(\Igniter\System\Actions\SettingsModel::class)
+    expect($reviewSettings->implement)->toContain(SettingsModel::class)
         ->and($reviewSettings->settingsCode)->toBe('igniter_review_settings')
         ->and($reviewSettings->settingsFieldsConfig)->toBe('reviewsettings')
         ->and(ReviewSettings::$defaultHints)->toEqual([

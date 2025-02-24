@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\FormWidgets;
 
 use Igniter\Admin\Classes\FormField;
@@ -10,7 +12,7 @@ use Igniter\Local\Models\LocationArea;
 use Igniter\System\Facades\Assets;
 use Igniter\System\Models\Settings;
 
-beforeEach(function() {
+beforeEach(function(): void {
     $this->location = Location::factory()->create();
     $this->formField = (new FormField('test_field', 'Map area'))
         ->displayAs('maparea', ['valueFrom' => 'delivery_areas']);
@@ -19,7 +21,7 @@ beforeEach(function() {
     ]);
 });
 
-it('initializes correctly', function() {
+it('initializes correctly', function(): void {
     expect($this->mapAreaWidget->modelClass)->toBe(LocationArea::class)
         ->and($this->mapAreaWidget->prompt)->toBe('lang:igniter.local::default.text_add_new_area')
         ->and($this->mapAreaWidget->formName)->toBe('lang:igniter.local::default.text_edit_area')
@@ -30,7 +32,7 @@ it('initializes correctly', function() {
         ->and($this->mapAreaWidget->sortable)->toBeTrue();
 });
 
-it('loads assets correctly', function() {
+it('loads assets correctly', function(): void {
     Settings::set('maps_api_key', 'test_key');
 
     Assets::shouldReceive('addCss')->once()->with('maparea.css', 'maparea-css');
@@ -39,7 +41,7 @@ it('loads assets correctly', function() {
     Assets::shouldReceive('addJs')->once()->with('maparea.js', 'maparea-js');
     Assets::shouldReceive('addJs')->once()->with('mapview.js', 'mapview-js');
     Assets::shouldReceive('addJs')->once()->with('mapview.shape.js', 'mapview-shape-js');
-    Assets::shouldReceive('addJs')->once()->withArgs(function($url, $name) {
+    Assets::shouldReceive('addJs')->once()->withArgs(function($url, $name): bool {
         return str_contains($url, 'googleapis.com/maps/api/js');
     });
 
@@ -48,7 +50,7 @@ it('loads assets correctly', function() {
     $this->mapAreaWidget->loadAssets();
 });
 
-it('prepares variables correctly', function() {
+it('prepares variables correctly', function(): void {
     $this->formField->value = [
         ['area_id' => 1, 'name' => 'Test Area 1'],
     ];
@@ -62,7 +64,7 @@ it('prepares variables correctly', function() {
         ->and($this->mapAreaWidget->vars)->toHaveKey('prompt');
 });
 
-it('gets saves value', function() {
+it('gets saves value', function(): void {
     expect($this->mapAreaWidget->getSaveValue([]))->toBeNull();
 
     $area = LocationArea::factory()->create();
@@ -72,35 +74,35 @@ it('gets saves value', function() {
     expect($this->mapAreaWidget->getSaveValue([]))->toBeArray();
 });
 
-it('returns no save value when sortable is disabled correctly', function() {
+it('returns no save value when sortable is disabled correctly', function(): void {
     $this->mapAreaWidget->sortable = false;
 
     expect($this->mapAreaWidget->getSaveValue([]))->toBe(FormField::NO_SAVE_DATA);
 });
 
-it('loads new record correctly', function() {
+it('loads new record correctly', function(): void {
     expect($this->mapAreaWidget->onLoadRecord())->toBeString();
 });
 
-it('loads existing record correctly', function() {
+it('loads existing record correctly', function(): void {
     $area = LocationArea::factory()->create();
     request()->request->set('recordId', $area->getKey());
 
     expect($this->mapAreaWidget->onLoadRecord())->toBeString();
 });
 
-it('saves new record correctly', function() {
+it('saves new record correctly', function(): void {
     expect($this->mapAreaWidget->onSaveRecord())->toBeArray();
 });
 
-it('saves existing record correctly', function() {
+it('saves existing record correctly', function(): void {
     $area = LocationArea::factory()->create();
     request()->request->set('areaId', $area->getKey());
 
     expect($this->mapAreaWidget->onSaveRecord())->toBeArray();
 });
 
-it('deletes area correctly', function() {
+it('deletes area correctly', function(): void {
     $locationArea = LocationArea::factory()->create();
     request()->merge(['areaId' => $locationArea->area_id]);
 
@@ -109,6 +111,6 @@ it('deletes area correctly', function() {
     expect(LocationArea::find($locationArea->area_id))->toBeNull();
 });
 
-it('gets map shape attributes correctly', function() {
+it('gets map shape attributes correctly', function(): void {
     expect($this->mapAreaWidget->getMapShapeAttributes(new LocationArea))->toBeString();
 });

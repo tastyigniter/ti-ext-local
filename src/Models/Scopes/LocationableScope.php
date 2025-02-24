@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models\Scopes;
 
 use Igniter\Flame\Database\Scope;
@@ -33,7 +35,7 @@ class LocationableScope extends Scope
                 ? $relationObject->getTable().'.'.$locationModel->getKeyName()
                 : $relationObject->getParent()->getTable().'.'.$locationModel->getKeyName();
 
-            return $builder->whereHas($relationName, function($query) use ($qualifiedColumnName, $locationId) {
+            return $builder->whereHas($relationName, function($query) use ($qualifiedColumnName, $locationId): void {
                 $query->whereIn($qualifiedColumnName, $locationId);
             });
         };

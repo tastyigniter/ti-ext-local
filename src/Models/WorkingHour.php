@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models;
 
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 use Igniter\Local\Contracts\WorkingHourInterface;
 use Igniter\System\Models\Concerns\Switchable;
+use stdClass;
 
 /**
  * Working hours Model Class
@@ -20,7 +23,7 @@ use Igniter\System\Models\Concerns\Switchable;
  * @property-read mixed $close
  * @property-read mixed $day
  * @property-read mixed $open
- * @mixin \Igniter\Flame\Database\Model
+ * @mixin Model
  */
 class WorkingHour extends Model implements WorkingHourInterface
 {
@@ -41,7 +44,7 @@ class WorkingHour extends Model implements WorkingHourInterface
 
     public $relation = [
         'belongsTo' => [
-            'location' => [\Igniter\Local\Models\Location::class],
+            'location' => [Location::class],
         ],
     ];
 
@@ -67,9 +70,9 @@ class WorkingHour extends Model implements WorkingHourInterface
         })->all();
     }
 
-    public function getTimesheetOptions($value, $data)
+    public function getTimesheetOptions($value, $data): stdClass
     {
-        $result = new \stdClass;
+        $result = new stdClass;
         $result->timesheet = $value ?? [];
 
         $result->daysOfWeek = [];
@@ -86,7 +89,7 @@ class WorkingHour extends Model implements WorkingHourInterface
 
     public function getDayAttribute()
     {
-        return Carbon::now()->startOfWeek()->addDay($this->weekday);
+        return Carbon::now()->startOfWeek()->addDays($this->weekday);
     }
 
     public function getOpenAttribute()
@@ -115,14 +118,14 @@ class WorkingHour extends Model implements WorkingHourInterface
     // Helpers
     //
 
-    public function isOpenAllDay()
+    public function isOpenAllDay(): bool
     {
         $diffInHours = (int)floor($this->open->diffInHours($this->close));
 
         return $diffInHours >= 23 || $diffInHours == 0;
     }
 
-    public function isPastMidnight()
+    public function isPastMidnight(): bool
     {
         return $this->opening_time > $this->closing_time;
     }
@@ -142,7 +145,7 @@ class WorkingHour extends Model implements WorkingHourInterface
         return $this->close->format('H:i');
     }
 
-    public function getWeekDate()
+    public function getWeekDate(): Carbon
     {
         return new Carbon($this->day);
     }

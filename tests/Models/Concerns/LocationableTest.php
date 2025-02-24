@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models\Concerns;
 
 use Igniter\Cart\Models\Menu;
@@ -9,7 +11,7 @@ use Igniter\Local\Models\Location;
 use Igniter\User\Facades\AdminAuth;
 use Illuminate\Http\Request;
 
-it('detaches locations on delete for morph relation type', function() {
+it('detaches locations on delete for morph relation type', function(): void {
     $menu = Menu::factory()->create();
     $menu->locations()->attach(Location::factory()->create());
 
@@ -18,7 +20,7 @@ it('detaches locations on delete for morph relation type', function() {
     expect($menu->locations()->count())->toBe(0);
 });
 
-it('throws exception when detaching locations as non-superuser', function() {
+it('throws exception when detaching locations as non-superuser', function(): void {
     $menu = Menu::factory()->create();
     $menu->locations()->attach(Location::factory()->create());
     AdminAuth::shouldReceive('isSuperUser')->andReturnFalse();
@@ -36,29 +38,28 @@ it('throws exception when detaching locations as non-superuser', function() {
     $menu->delete();
 });
 
-it('checks if locationable relation is single type', function() {
+it('checks if locationable relation is single type', function(): void {
     $order = Order::factory()->create();
 
     expect($order->locationableIsSingleRelationType())->toBeTrue();
 });
 
-it('checks if locationable relation is morph type', function() {
+it('checks if locationable relation is morph type', function(): void {
     $menu = Menu::factory()->create();
 
     expect($menu->locationableIsMorphRelationType())->toBeTrue();
 });
 
-it('checks if locationable relation exists for single relation type', function() {
+it('checks if locationable relation exists for single relation type', function(): void {
     $order = Order::factory()->create();
     $order->location()->associate(Location::factory()->create());
 
     expect($order->locationableRelationExists())->toBeTrue();
 });
 
-it('checks if locationable relation exists for morph relation type', function() {
+it('checks if locationable relation exists for morph relation type', function(): void {
     $menu = Menu::factory()->create();
     $menu->locations()->attach(Location::factory()->create());
 
     expect($menu->locationableRelationExists())->toBeTrue();
 });
-

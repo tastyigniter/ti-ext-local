@@ -1,54 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
-use Igniter\Local\Contracts\AreaInterface;
+use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Local\Facades\Location;
+use Igniter\Local\Models\LocationArea;
+use Illuminate\Support\Collection;
 
 /**
  * @method getLocationId()
  * @method getKey()
- * @method checkBoundary(\Igniter\Flame\Geolite\Contracts\CoordinatesInterface $userPosition)
+ * @method checkBoundary(CoordinatesInterface $userPosition)
  */
 class CoveredArea
 {
-    protected $model;
+    protected LocationArea $model;
 
-    public function __construct(AreaInterface $model)
+    public function __construct(LocationArea $model)
     {
         $this->model = $model;
     }
 
-    public function deliveryAmount($cartTotal)
+    public function deliveryAmount($cartTotal): float|int
     {
         return $this->getConditionValue('amount', $cartTotal) + $this->calculateDistanceCharges();
     }
 
-    public function minimumOrderTotal($cartTotal)
+    public function minimumOrderTotal($cartTotal): float|int
     {
         return $this->getConditionValue('total', $cartTotal);
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function listConditions()
+    public function listConditions(): Collection
     {
         return collect($this->model->conditions ?? [])
             ->sortBy('priority')
             ->mapInto(CoveredAreaCondition::class);
     }
 
-    public function getConditionLabels()
+    public function getConditionLabels(): array
     {
-        return $this->listConditions()->map(function(CoveredAreaCondition $condition) {
+        return $this->listConditions()->map(function(CoveredAreaCondition $condition): string {
             return ucfirst(strtolower($condition->getLabel()));
         })->all();
     }
 
-    protected function getConditionValue($type, $cartTotal)
+    protected function getConditionValue($type, $cartTotal): float|int
     {
-        if (!$condition = $this->checkConditions($cartTotal, $type)) {
+        if (!($condition = $this->checkConditions($cartTotal, $type)) instanceof CoveredAreaCondition) {
             return 0;
         }
 
@@ -58,21 +59,21 @@ class CoveredArea
         }
 
         // At this stage, return the minimum total when the matched condition is a below
-        if ($type == 'total' && $condition->type == 'below') {
+        if ($type == 'total' && $condition->type === 'below') {
             return $condition->total;
         }
 
         return $condition->{$type};
     }
 
-    protected function checkConditions($cartTotal, $value = 'total')
+    protected function checkConditions($cartTotal, $value = 'total'): ?CoveredAreaCondition
     {
-        return $this->listConditions()->first(function(CoveredAreaCondition $condition) use ($cartTotal) {
+        return $this->listConditions()->first(function(CoveredAreaCondition $condition) use ($cartTotal): bool {
             return $condition->isValid($cartTotal);
         });
     }
 
-    protected function calculateDistanceCharges()
+    protected function calculateDistanceCharges(): float|int
     {
         $distanceCharges = collect($this->model->boundaries['distance'] ?? []);
 
@@ -84,14 +85,14 @@ class CoveredArea
 
         $condition = $distanceCharges
             ->sortBy('priority')
-            ->map(function($condition) {
+            ->map(function(array $condition): CoveredAreaCondition {
                 return new CoveredAreaCondition([
                     'type' => $condition['type'],
                     'amount' => $condition['charge'],
                     'total' => $condition['distance'],
                 ]);
             })
-            ->first(function(CoveredAreaCondition $condition) use ($distanceFromLocation) {
+            ->first(function(CoveredAreaCondition $condition) use ($distanceFromLocation): bool {
                 return $condition->isValid($distanceFromLocation);
             });
 
@@ -105,8 +106,6 @@ class CoveredArea
 
     public function __call($method, $parameters)
     {
-        if (method_exists($this->model, $method)) {
-            return call_user_func_array([$this->model, $method], $parameters);
-        }
+        return method_exists($this->model, $method) ? call_user_func_array([$this->model, $method], $parameters) : null;
     }
 }

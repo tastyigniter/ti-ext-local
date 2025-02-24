@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\FormWidgets;
 
 use Igniter\Admin\Classes\BaseFormWidget;
@@ -18,14 +20,14 @@ class StarRating extends BaseFormWidget
 
     protected string $defaultAlias = 'starrating';
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->fillFromConfig([
             'hints',
         ]);
 
         if (!self::$hints) {
-            self::$hints = Review::make()->getRatingOptions();
+            self::$hints = (new Review)->getRatingOptions();
         }
     }
 
@@ -39,7 +41,7 @@ class StarRating extends BaseFormWidget
     /**
      * Prepares the list data
      */
-    public function prepareVars()
+    public function prepareVars(): void
     {
         $this->vars['field'] = $this->formField;
         $this->vars['name'] = $this->formField->getName();
@@ -47,7 +49,7 @@ class StarRating extends BaseFormWidget
         $this->vars['hints'] = array_values(self::$hints);
     }
 
-    public function loadAssets()
+    public function loadAssets(): void
     {
         $this->addCss('vendor/raty/jquery.raty.css', 'jquery-raty-css');
         $this->addJs('vendor/raty/jquery.raty.js', 'jquery-raty-js');

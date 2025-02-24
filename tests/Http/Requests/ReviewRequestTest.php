@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Http\Requests;
 
 use Igniter\Local\Http\Requests\ReviewRequest;
 
-it('returns correct attribute labels', function() {
+it('returns correct attribute labels', function(): void {
     $attributes = (new ReviewRequest())->attributes();
 
     expect($attributes)->toHaveKey('reviewable_type', lang('igniter.local::default.reviews.label_reviewable_type'))
@@ -18,9 +20,10 @@ it('returns correct attribute labels', function() {
         ->and($attributes)->toHaveKey('review_status', lang('admin::lang.label_status'));
 });
 
-it('returns correct validation rules', function() {
+it('returns correct validation rules', function(): void {
     $reviewRequest = new ReviewRequest();
     $reviewRequest->merge(['reviewable_type' => 'locations']);
+
     $rules = $reviewRequest->rules();
 
     expect($rules)->toHaveKey('reviewable_type', ['required'])
@@ -33,4 +36,3 @@ it('returns correct validation rules', function() {
         ->and($rules)->toHaveKey('review_text', ['required', 'between:2,1028'])
         ->and($rules)->toHaveKey('review_status', ['required', 'boolean']);
 });
-

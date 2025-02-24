@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\FormWidgets;
 
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Classes\FormField;
 use Igniter\Admin\Traits\FormModelWidget;
 use Igniter\Admin\Traits\ValidatesForm;
+use Igniter\Admin\Widgets\Form;
 use Igniter\Flame\Exception\FlashException;
 use Igniter\Flame\Html\HtmlFacade as Html;
 use Igniter\Local\Models\LocationArea;
@@ -69,7 +72,7 @@ class MapArea extends BaseFormWidget
 
     protected $mapAreas;
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->fillFromConfig([
             'modelClass',
@@ -88,7 +91,7 @@ class MapArea extends BaseFormWidget
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
     }
 
-    public function loadAssets()
+    public function loadAssets(): void
     {
         $this->addJs('formwidgets/repeater.js', 'repeater-js');
         $this->addJs('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');
@@ -97,7 +100,7 @@ class MapArea extends BaseFormWidget
         $this->addJs('maparea.js', 'maparea-js');
 
         // Make the mapview assets available
-        if (strlen($key = setting('maps_api_key'))) {
+        if (strlen($key = setting('maps_api_key')) !== 0) {
             $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
             $this->addJs(sprintf($url, $key),
                 ['name' => 'google-maps-js', 'async' => null, 'defer' => null],
@@ -115,7 +118,7 @@ class MapArea extends BaseFormWidget
         return $this->makePartial('maparea/maparea');
     }
 
-    public function prepareVars()
+    public function prepareVars(): void
     {
         $this->vars['field'] = $this->formField;
         $this->vars['mapAreas'] = $this->getMapAreas();
@@ -150,9 +153,9 @@ class MapArea extends BaseFormWidget
         return $value;
     }
 
-    public function onLoadRecord()
+    public function onLoadRecord(): string
     {
-        $model = strlen($areaId = post('recordId'))
+        $model = strlen((string)$areaId = post('recordId')) !== 0
             ? $this->findFormModel($areaId)
             : $this->createFormModel();
 
@@ -163,9 +166,9 @@ class MapArea extends BaseFormWidget
         ]);
     }
 
-    public function onSaveRecord()
+    public function onSaveRecord(): array
     {
-        $model = strlen($areaId = post('areaId'))
+        $model = strlen((string)$areaId = post('areaId')) !== 0
             ? $this->findFormModel($areaId)
             : $this->createFormModel();
 
@@ -175,7 +178,7 @@ class MapArea extends BaseFormWidget
 
         $modelsToSave = $this->prepareModelsToSave($model, $saveData);
 
-        DB::transaction(function() use ($modelsToSave) {
+        DB::transaction(function() use ($modelsToSave): void {
             foreach ($modelsToSave as $modelToSave) {
                 $modelToSave->saveOrFail();
             }
@@ -196,7 +199,7 @@ class MapArea extends BaseFormWidget
         ];
     }
 
-    public function onDeleteArea()
+    public function onDeleteArea(): array
     {
         throw_unless($areaId = input('areaId'),
             new FlashException(lang('igniter.local::default.alert_invalid_area')),
@@ -278,7 +281,7 @@ class MapArea extends BaseFormWidget
         $config['alias'] = $this->alias.'Form';
         $config['arrayName'] = $this->formField->arrayName.'[areaData]';
 
-        $widget = $this->makeWidget(\Igniter\Admin\Widgets\Form::class, $config);
+        $widget = $this->makeWidget(Form::class, $config);
         $widget->bindToController();
 
         return $this->formWidget = $widget;

@@ -1,7 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Http\Actions;
 
+use Igniter\Local\Models\Concerns\Locationable;
+use Igniter\Admin\Http\Actions\ListController;
+use Igniter\Admin\Http\Actions\FormController;
+use Illuminate\Routing\Controller;
+use Exception;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\System\Classes\ControllerAction;
 use Illuminate\Support\Facades\Event;
@@ -25,9 +32,9 @@ class LocationAwareController extends ControllerAction
     /**
      * List_Controller constructor.
      *
-     * @param \Illuminate\Routing\Controller $controller
+     * @param Controller $controller
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct($controller)
     {
@@ -42,14 +49,14 @@ class LocationAwareController extends ControllerAction
             'locationApplyScope',
         ]);
 
-        $this->controller->bindEvent('controller.beforeRemap', function() {
+        $this->controller->bindEvent('controller.beforeRemap', function(): void {
             $this->locationBindEvents();
         });
     }
 
-    public function locationApplyScope($query)
+    public function locationApplyScope($query): void
     {
-        if (!in_array(\Igniter\Local\Models\Concerns\Locationable::class, class_uses($query->getModel()))) {
+        if (!in_array(Locationable::class, class_uses($query->getModel()))) {
             return;
         }
 
@@ -64,14 +71,14 @@ class LocationAwareController extends ControllerAction
 
     protected function locationBindEvents()
     {
-        if ($this->controller->isClassExtendedWith(\Igniter\Admin\Http\Actions\ListController::class)) {
-            Event::listen('admin.list.extendQuery', function($listWidget, $query) {
+        if ($this->controller->isClassExtendedWith(ListController::class)) {
+            Event::listen('admin.list.extendQuery', function($listWidget, $query): void {
                 if ((bool)$this->getConfig('applyScopeOnListQuery', true)) {
                     $this->locationApplyScope($query);
                 }
             });
 
-            Event::listen('admin.filter.extendQuery', function($filterWidget, $query, $scope) {
+            Event::listen('admin.filter.extendQuery', function($filterWidget, $query, $scope): void {
                 if (array_get($scope->config, 'locationAware') === true
                     && (bool)$this->getConfig('applyScopeOnListQuery', true)
                 ) {
@@ -80,8 +87,8 @@ class LocationAwareController extends ControllerAction
             });
         }
 
-        if ($this->controller->isClassExtendedWith(\Igniter\Admin\Http\Actions\FormController::class)) {
-            $this->controller->bindEvent('admin.controller.extendFormQuery', function($query) {
+        if ($this->controller->isClassExtendedWith(FormController::class)) {
+            $this->controller->bindEvent('admin.controller.extendFormQuery', function($query): void {
                 if ((bool)$this->getConfig('applyScopeOnFormQuery', true)) {
                     $this->locationApplyScope($query);
                 }

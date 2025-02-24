@@ -1,23 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Http\Controllers;
 
 use Igniter\Cart\Models\Order;
 use Igniter\Local\Models\Review;
 
-it('loads reviews page', function() {
+it('loads reviews page', function(): void {
     actingAsSuperUser()
         ->get(route('igniter.local.reviews'))
         ->assertOk();
 });
 
-it('loads create review page', function() {
+it('loads create review page', function(): void {
     actingAsSuperUser()
         ->get(route('igniter.local.reviews', ['slug' => 'create']))
         ->assertOk();
 });
 
-it('loads edit review page', function() {
+it('loads edit review page', function(): void {
     $review = Review::factory()->create();
 
     actingAsSuperUser()
@@ -25,7 +27,7 @@ it('loads edit review page', function() {
         ->assertOk();
 });
 
-it('creates review', function() {
+it('creates review', function(): void {
     $order = Order::factory()->create();
 
     actingAsSuperUser()
@@ -49,7 +51,7 @@ it('creates review', function() {
     expect(Review::where('review_text', 'Great food!')->exists())->toBeTrue();
 });
 
-it('updates review', function() {
+it('updates review', function(): void {
     $review = Review::factory()->create();
     $order = Order::factory()->create();
 
@@ -74,7 +76,7 @@ it('updates review', function() {
     expect(Review::where('review_text', 'Great food!')->exists())->toBeTrue();
 });
 
-it('deletes review', function() {
+it('deletes review', function(): void {
     $review = Review::factory()->create();
 
     actingAsSuperUser()
@@ -85,4 +87,3 @@ it('deletes review', function() {
 
     expect(Review::where('review_id', $review->getKey())->exists())->toBeFalse();
 });
-

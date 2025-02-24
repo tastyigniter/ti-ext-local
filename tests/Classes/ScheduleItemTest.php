@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Classes;
 
 use Igniter\Local\Classes\ScheduleItem;
 
-it('creates 24/7 hours correctly', function() {
+it('creates 24/7 hours correctly', function(): void {
     $data = [
         'type' => '24_7',
     ];
@@ -19,7 +21,7 @@ it('creates 24/7 hours correctly', function() {
         ->and($hours[0][0]['status'])->toBeTrue();
 });
 
-it('creates daily hours correctly', function() {
+it('creates daily hours correctly', function(): void {
     $data = [
         'type' => 'daily',
         'days' => [1, 2, 3],
@@ -42,7 +44,7 @@ it('creates daily hours correctly', function() {
         ->and($hours[1][0]['status'])->toBeTrue();
 });
 
-it('creates empty hours when no matching type', function() {
+it('creates empty hours when no matching type', function(): void {
     $data = [
         'type' => 'invalid',
         'days' => [1, 2, 3],
@@ -58,7 +60,7 @@ it('creates empty hours when no matching type', function() {
     expect(array_filter($hours))->toBeEmpty();
 });
 
-it('creates timesheet hours correctly', function() {
+it('creates timesheet hours correctly', function(): void {
     $data = [
         'type' => 'timesheet',
         'days' => [],
@@ -89,7 +91,7 @@ it('creates timesheet hours correctly', function() {
         ->and($hours[0][1]['status'])->toBeTrue();
 });
 
-it('creates timesheet hours from json encoded string', function() {
+it('creates timesheet hours from json encoded string', function(): void {
     $data = [
         'type' => 'timesheet',
         'days' => [],
@@ -111,7 +113,7 @@ it('creates timesheet hours from json encoded string', function() {
         ->and($hours)->toHaveCount(7);
 });
 
-it('creates flexible hours correctly', function() {
+it('creates flexible hours correctly', function(): void {
     $data = [
         'type' => 'flexible',
         'days' => [],
@@ -137,7 +139,7 @@ it('creates flexible hours correctly', function() {
         ->and($hours[0][1]['status'])->toBeTrue();
 });
 
-it('gets formatted hours correctly', function() {
+it('gets formatted hours correctly', function(): void {
     $data = [
         'type' => 'daily',
         'days' => [1, 2, 3],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Classes;
 
 use Igniter\Local\Classes\CoveredArea;
@@ -8,7 +10,7 @@ use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\LocationArea;
 use Mockery;
 
-it('calculates delivery amount correctly', function() {
+it('calculates delivery amount correctly', function(): void {
     $model = Mockery::mock(LocationArea::class);
     $model->shouldReceive('offsetExists')->andReturnTrue();
     $model->shouldReceive('extendableGet')->with('conditions')->andReturn([
@@ -25,7 +27,7 @@ it('calculates delivery amount correctly', function() {
         ->and($coveredArea->deliveryAmount(40))->toBe(5.0);
 });
 
-it('calculates delivery amount using delivery charges correctly', function() {
+it('calculates delivery amount using delivery charges correctly', function(): void {
     $model = Mockery::mock(LocationArea::class);
     $model->shouldReceive('offsetExists')->andReturnTrue();
     $model->shouldReceive('extendableGet')->with('conditions')->andReturn([
@@ -52,7 +54,7 @@ it('calculates delivery amount using delivery charges correctly', function() {
         ->and($coveredArea->deliveryAmount(40))->toBe(20.0);
 });
 
-it('returns minimum order total correctly', function() {
+it('returns minimum order total correctly', function(): void {
     $model = Mockery::mock(LocationArea::class);
     $model->shouldReceive('offsetExists')->andReturnTrue();
 
@@ -67,7 +69,7 @@ it('returns minimum order total correctly', function() {
         ->and($coveredArea->minimumOrderTotal(40))->toBe(50.0);
 });
 
-it('returns zero minimum order total when no conditions are met', function() {
+it('returns zero minimum order total when no conditions are met', function(): void {
     $model = Mockery::mock(LocationArea::class);
     $model->shouldReceive('offsetExists')->andReturnTrue();
     $model->shouldReceive('extendableGet')->with('conditions')->andReturn([]);
@@ -77,7 +79,7 @@ it('returns zero minimum order total when no conditions are met', function() {
     expect($coveredArea->minimumOrderTotal(100))->toBe(0);
 });
 
-it('returns unavailable when matched rule is -1', function() {
+it('returns unavailable when matched rule is -1', function(): void {
     $model = Mockery::mock(LocationArea::class);
     $model->shouldReceive('offsetExists')->andReturnTrue();
     $model->shouldReceive('extendableGet')->with('conditions')->andReturn([
@@ -89,7 +91,7 @@ it('returns unavailable when matched rule is -1', function() {
     expect($coveredArea->minimumOrderTotal(100))->toBe(100.0);
 });
 
-it('lists conditions correctly', function() {
+it('lists conditions correctly', function(): void {
     $model = Mockery::mock(LocationArea::class);
     $model->shouldReceive('offsetExists')->andReturnTrue();
 
@@ -107,7 +109,7 @@ it('lists conditions correctly', function() {
         ->and($conditions[1]->type)->toBe('below');
 });
 
-it('gets condition labels correctly', function() {
+it('gets condition labels correctly', function(): void {
     $model = Mockery::mock(LocationArea::class);
     $model->shouldReceive('offsetExists')->andReturnTrue();
 
@@ -132,7 +134,7 @@ it('gets condition labels correctly', function() {
         ->and($labels[5])->toContain('not available below');
 });
 
-it('access model attributes', function() {
+it('access model attributes', function(): void {
     $model = Mockery::mock(LocationArea::class)->makePartial();
     $model->shouldReceive('getAttribute')->with('name')->andReturn('Area name');
 

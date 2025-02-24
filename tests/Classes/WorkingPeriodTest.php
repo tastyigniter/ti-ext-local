@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Classes;
 
 use DateInterval;
@@ -9,7 +11,7 @@ use Igniter\Local\Classes\WorkingRange;
 use Igniter\Local\Classes\WorkingTime;
 use Igniter\Local\Exceptions\WorkingHourException;
 
-it('creates correctly', function() {
+it('creates correctly', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -20,16 +22,16 @@ it('creates correctly', function() {
     expect($workingPeriod->count())->toBe(2);
 });
 
-it('throws an exception when time overlaps', function() {
+it('throws an exception when time overlaps', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['11:00', '17:00'],
     ];
 
     WorkingPeriod::create($times);
-})->throws('Igniter\Local\Exceptions\WorkingHourException');
+})->throws(WorkingHourException::class);
 
-it('checks if open at a specific time', function() {
+it('checks if open at a specific time', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -41,7 +43,7 @@ it('checks if open at a specific time', function() {
         ->and($workingPeriod->isOpenAt(new WorkingTime(12, 30)))->toBeFalse();
 });
 
-it('gets open time at a specific time', function() {
+it('gets open time at a specific time', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -54,7 +56,7 @@ it('gets open time at a specific time', function() {
         ->and($workingPeriod->openTimeAt(new WorkingTime(06, 00))->format())->toBe('08:00');
 });
 
-it('gets close time at a specific time', function() {
+it('gets close time at a specific time', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -67,7 +69,7 @@ it('gets close time at a specific time', function() {
         ->and($workingPeriod->closeTimeAt(new WorkingTime(18, 00))->format())->toBe('17:00');
 });
 
-it('gets next open time when time is within a range', function() {
+it('gets next open time when time is within a range', function(): void {
     $times = [
         ['08:00', '12:00'],
     ];
@@ -77,7 +79,7 @@ it('gets next open time when time is within a range', function() {
     expect($workingPeriod->nextOpenAt(new WorkingTime(10, 00))->format())->toBe('08:00');
 });
 
-it('gets next open time when time is within a range and has multiple ranges', function() {
+it('gets next open time when time is within a range and has multiple ranges', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -90,7 +92,7 @@ it('gets next open time when time is within a range and has multiple ranges', fu
         ->and($workingPeriod->nextOpenAt(new WorkingTime(15, 00))->format())->toBe('18:00');
 });
 
-it('gets next open time when time is not within a range but in free time', function() {
+it('gets next open time when time is not within a range but in free time', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -101,7 +103,7 @@ it('gets next open time when time is not within a range but in free time', funct
     expect($workingPeriod->nextOpenAt(new WorkingTime(6, 00))->format())->toBe('08:00');
 });
 
-it('returns false when no next open time is found', function() {
+it('returns false when no next open time is found', function(): void {
     $times = [
         ['13:00', '17:00'],
     ];
@@ -111,7 +113,7 @@ it('returns false when no next open time is found', function() {
     expect($workingPeriod->nextOpenAt(new WorkingTime(18, 00)))->toBeFalse();
 });
 
-it('gets next close time at a specific time', function() {
+it('gets next close time at a specific time', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -123,7 +125,7 @@ it('gets next close time at a specific time', function() {
         ->and($workingPeriod->nextCloseAt(new WorkingTime(14, 00))->format())->toBe('17:00');
 });
 
-it('checks if opens all day', function() {
+it('checks if opens all day', function(): void {
     $times = [
         ['00:00', '23:59'],
     ];
@@ -133,7 +135,7 @@ it('checks if opens all day', function() {
     expect($workingPeriod->opensAllDay())->toBeTrue();
 });
 
-it('checks if closes late', function() {
+it('checks if closes late', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '01:00'],
@@ -144,7 +146,7 @@ it('checks if closes late', function() {
     expect($workingPeriod->closesLate())->toBeTrue();
 });
 
-it('checks if opens late at a specific time', function() {
+it('checks if opens late at a specific time', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '01:00'],
@@ -156,7 +158,7 @@ it('checks if opens late at a specific time', function() {
         ->and($workingPeriod->opensLateAt(new WorkingTime(10, 00)))->toBeFalse();
 });
 
-it('generates timeslot', function() {
+it('generates timeslot', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -174,7 +176,7 @@ it('generates timeslot', function() {
         ->and($timeslot[1]->format('H:i'))->toBe('08:15');
 });
 
-it('returns an iterator for the ranges', function() {
+it('returns an iterator for the ranges', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -185,7 +187,7 @@ it('returns an iterator for the ranges', function() {
     expect(iterator_to_array($iterator))->toHaveCount(2);
 });
 
-it('checks if an offset exists in ranges', function() {
+it('checks if an offset exists in ranges', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -197,7 +199,7 @@ it('checks if an offset exists in ranges', function() {
     expect($exists)->toBeTrue();
 });
 
-it('retrieves a range by offset', function() {
+it('retrieves a range by offset', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -209,7 +211,7 @@ it('retrieves a range by offset', function() {
     expect($retrievedRange)->toBeInstanceOf(WorkingRange::class);
 });
 
-it('throws an exception when setting a range by offset', function() {
+it('throws an exception when setting a range by offset', function(): void {
     $times = [];
     $workingPeriod = WorkingPeriod::create($times);
 
@@ -217,7 +219,7 @@ it('throws an exception when setting a range by offset', function() {
         ->toThrow(WorkingHourException::class);
 });
 
-it('unsets a range by offset', function() {
+it('unsets a range by offset', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -229,7 +231,7 @@ it('unsets a range by offset', function() {
     expect(count($workingPeriod))->toBe(1);
 });
 
-it('returns a string representation of the ranges', function() {
+it('returns a string representation of the ranges', function(): void {
     $times = [
         ['08:00', '12:00'],
         ['13:00', '17:00'],
@@ -240,4 +242,3 @@ it('returns a string representation of the ranges', function() {
 
     expect($stringRepresentation)->toBe('08:00-12:00,13:00-17:00');
 });
-

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\FormWidgets;
 
 use Igniter\Admin\Classes\FormField;
@@ -9,7 +11,7 @@ use Igniter\Local\Http\Controllers\Locations;
 use Igniter\Local\Models\Location;
 use Igniter\System\Facades\Assets;
 
-beforeEach(function() {
+beforeEach(function(): void {
     $this->location = Location::factory()->create();
 
     $this->controller = resolve(Locations::class);
@@ -21,14 +23,14 @@ beforeEach(function() {
     ]);
 });
 
-it('initializes correctly', function() {
+it('initializes correctly', function(): void {
     $this->scheduleEditorWidget->initialize();
 
     expect($this->scheduleEditorWidget->popupSize)->toBe('modal-lg')
         ->and($this->scheduleEditorWidget->formTitle)->toBe('igniter.local::default.text_title_schedule');
 });
 
-it('prepares variables correctly', function() {
+it('prepares variables correctly', function(): void {
     $this->scheduleEditorWidget->prepareVars();
 
     expect($this->scheduleEditorWidget->vars['field'])->toBeInstanceOf(FormField::class)
@@ -39,7 +41,7 @@ it('prepares variables correctly', function() {
     $this->scheduleEditorWidget->prepareVars();
 });
 
-it('loads assets correctly', function() {
+it('loads assets correctly', function(): void {
     Assets::shouldReceive('addJs')->once()->with('vendor/timesheet/timesheet.js', 'timesheet-js');
     Assets::shouldReceive('addJs')->once()->with('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');
     Assets::shouldReceive('addJs')->once()->with('scheduleeditor.js', 'scheduleeditor-js');
@@ -52,12 +54,12 @@ it('loads assets correctly', function() {
     $this->scheduleEditorWidget->loadAssets();
 });
 
-it('loads record correctly', function() {
+it('loads record correctly', function(): void {
     request()->merge(['recordId' => Location::OPENING]);
     expect($this->scheduleEditorWidget->onLoadRecord())->toBeString();
 });
 
-it('saves record correctly', function() {
+it('saves record correctly', function(): void {
     request()->merge(['recordId' => Location::OPENING]);
     expect($this->scheduleEditorWidget->onSaveRecord())->toBeArray();
 });

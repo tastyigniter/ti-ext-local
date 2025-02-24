@@ -1,13 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models;
 
+use Igniter\Cart\Models\Order;
 use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Models\Concerns\Locationable;
+use Igniter\Reservation\Models\Reservation;
 use Igniter\System\Models\Concerns\Switchable;
+use Igniter\User\Models\Customer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -23,10 +30,10 @@ use Illuminate\Support\Facades\DB;
  * @property int $delivery
  * @property int $service
  * @property string|null $review_text
- * @property \Illuminate\Support\Carbon $created_at
+ * @property Carbon $created_at
  * @property bool $review_status
- * @property \Illuminate\Support\Carbon $updated_at
- * @mixin \Igniter\Flame\Database\Model
+ * @property Carbon $updated_at
+ * @mixin Model
  */
 class Review extends Model
 {
@@ -62,8 +69,8 @@ class Review extends Model
 
     public $relation = [
         'belongsTo' => [
-            'location' => [\Igniter\Local\Models\Location::class, 'scope' => 'isEnabled'],
-            'customer' => \Igniter\User\Models\Customer::class,
+            'location' => [Location::class, 'scope' => 'isEnabled'],
+            'customer' => Customer::class,
         ],
         'morphTo' => [
             'reviewable' => ['name' => 'sale'],
@@ -81,13 +88,13 @@ class Review extends Model
     ];
 
     public static $relatedSaleTypes = [
-        'orders' => \Igniter\Cart\Models\Order::class,
-        'reservations' => \Igniter\Reservation\Models\Reservation::class,
+        'orders' => Order::class,
+        'reservations' => Reservation::class,
     ];
 
     public static $ratingScoreCache = [];
 
-    public static function getReviewableTypeOptions()
+    public static function getReviewableTypeOptions(): array
     {
         return [
             'orders' => 'lang:igniter.local::default.reviews.text_order',
@@ -102,7 +109,7 @@ class Review extends Model
         return $saleTypeModel->find($saleId);
     }
 
-    public static function leaveReview(?Model $reviewable = null, array $data = [])
+    public static function leaveReview(?Model $reviewable = null, array $data = []): static
     {
         throw_unless($reviewable->isCompleted(), new ApplicationException(
             lang('igniter.local::default.review.alert_review_status_history'),
@@ -176,10 +183,8 @@ class Review extends Model
 
     /**
      * Return the dates of all reviews
-     *
-     * @return array
      */
-    public function getReviewDates()
+    public function getReviewDates(): Collection
     {
         return $this->pluckDates('created_at');
     }
@@ -192,7 +197,7 @@ class Review extends Model
         return $query->exists();
     }
 
-    public static function getScoreForLocation($locationId)
+    public static function getScoreForLocation($locationId): null|int|float
     {
         if (!$locationId) {
             return null;

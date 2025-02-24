@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models;
 
 use Igniter\Flame\Database\Attach\HasMedia;
@@ -14,7 +16,7 @@ use Igniter\System\Models\Concerns\Defaultable;
 use Igniter\System\Models\Concerns\HasCountry;
 use Igniter\System\Models\Concerns\Switchable;
 
-it('returns dropdown options for enabled locations', function() {
+it('returns dropdown options for enabled locations', function(): void {
     $location1 = Location::factory()->create(['location_name' => 'Location 1', 'location_status' => true]);
     $location2 = Location::factory()->create(['location_name' => 'Location 2', 'location_status' => false]);
 
@@ -24,7 +26,7 @@ it('returns dropdown options for enabled locations', function() {
         ->and($result)->not->toHaveKey($location2->getKey());
 });
 
-it('checks if onboarding is complete with valid default location', function() {
+it('checks if onboarding is complete with valid default location', function(): void {
     Location::clearDefaultModel();
     $location = Location::factory()->create([
         'location_lat' => '12.345678',
@@ -38,7 +40,7 @@ it('checks if onboarding is complete with valid default location', function() {
     expect($result)->toBeTrue();
 });
 
-it('checks if onboarding is incomplete without default location', function() {
+it('checks if onboarding is incomplete without default location', function(): void {
     Location::clearDefaultModel();
     $default = Location::getDefault();
     $default->delete();
@@ -49,7 +51,7 @@ it('checks if onboarding is incomplete without default location', function() {
     expect($result)->toBeFalse();
 });
 
-it('checks if onboarding is incomplete with default location missing coordinates', function() {
+it('checks if onboarding is incomplete with default location missing coordinates', function(): void {
     $location = Location::factory()->create(['location_lat' => null, 'location_lng' => null]);
     $location->delivery_areas()->create(['is_default' => true]);
 
@@ -58,7 +60,7 @@ it('checks if onboarding is incomplete with default location missing coordinates
     expect($result)->toBeFalse();
 });
 
-it('checks if onboarding is incomplete with default location missing delivery areas', function() {
+it('checks if onboarding is incomplete with default location missing delivery areas', function(): void {
     Location::factory()->create(['location_lat' => '12.345678', 'location_lng' => '98.765432']);
 
     $result = Location::onboardingIsComplete();
@@ -66,7 +68,7 @@ it('checks if onboarding is incomplete with default location missing delivery ar
     expect($result)->toBeFalse();
 });
 
-it('applies filters to query builder', function() {
+it('applies filters to query builder', function(): void {
     $query = Location::query()->applyFilters([
         'enabled' => 1,
         'position' => [['latitude' => 1, 'longitude' => 2]],
@@ -81,7 +83,7 @@ it('applies filters to query builder', function() {
         ->toContain('order by `location_name` desc');
 });
 
-it('configures location model correctly', function() {
+it('configures location model correctly', function(): void {
     $location = new Location;
     $location->location_name = 'Location Name';
 

@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
 class CoveredAreaCondition
 {
-    public $type;
+    public string $type;
 
-    public $amount;
+    public float $amount;
 
-    public $total;
+    public float $total;
 
-    public $priority;
+    public int $priority;
 
     public function __construct(array $condition = [])
     {
@@ -20,7 +22,7 @@ class CoveredAreaCondition
         $this->priority = (int)array_get($condition, 'priority', 999);
     }
 
-    public function getLabel()
+    public function getLabel(): string
     {
         $condition['amount'] = lang('igniter::main.text_free');
         if ($this->amount < 0) {
@@ -29,41 +31,41 @@ class CoveredAreaCondition
             $condition['amount'] = currency_format($this->amount);
         }
 
-        $condition['total'] = $this->total
+        $condition['total'] = $this->total !== 0.0
             ? currency_format($this->total)
             : lang('igniter.local::default.text_delivery_all_orders');
 
-        $type = $this->type == 'all' ? 'all_orders' : $this->type.'_total';
+        $type = $this->type === 'all' ? 'all_orders' : $this->type.'_total';
         $label = lang('igniter.local::default.text_condition_'.$type);
 
         return parse_values($condition, $label);
     }
 
-    public function getCharge()
+    public function getCharge(): null|float|int
     {
         return ($this->amount < 0) ? null : $this->amount;
     }
 
-    public function getMinTotal()
+    public function getMinTotal(): float|int
     {
         return $this->total;
     }
 
-    public function isValid($cartTotal)
+    public function isValid($cartTotal): bool
     {
-        if ($this->type === 'above' || $this->type == 'equals_or_greater') {
+        if ($this->type === 'above' || $this->type === 'equals_or_greater') {
             return $cartTotal >= $this->total;
         }
 
-        if ($this->type == 'equals_or_less') {
+        if ($this->type === 'equals_or_less') {
             return $cartTotal <= $this->total;
         }
 
-        if ($this->type == 'greater') {
+        if ($this->type === 'greater') {
             return $cartTotal > $this->total;
         }
 
-        if ($this->type === 'below' || $this->type == 'less') {
+        if ($this->type === 'below' || $this->type === 'less') {
             return $cartTotal < $this->total;
         }
 

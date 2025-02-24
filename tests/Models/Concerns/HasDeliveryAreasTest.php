@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Models\Concerns;
 
 use Igniter\Flame\Geolite\Facades\Geocoder;
@@ -7,7 +9,7 @@ use Igniter\Flame\Geolite\Model\Location as GeoliteLocation;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\LocationArea;
 
-it('geocodes address on save', function() {
+it('geocodes address on save', function(): void {
     $location = Location::factory()->create();
 
     $lat = 37.7749295;
@@ -28,7 +30,7 @@ it('geocodes address on save', function() {
         ->and($location->location_lng)->toBe($lng);
 });
 
-it('does not geocode address if coordinates already exists and not dirty', function() {
+it('does not geocode address if coordinates already exists and not dirty', function(): void {
     $location = Location::factory()->createQuietly([
         'location_lat' => 37.7749295,
         'location_lng' => -122.4194155,
@@ -42,7 +44,7 @@ it('does not geocode address if coordinates already exists and not dirty', funct
         ->and($location->location_lng)->toBe(-122.4194155);
 });
 
-it('searchOrDefaultDeliveryArea returns the matching delivery area if found', function() {
+it('searchOrDefaultDeliveryArea returns the matching delivery area if found', function(): void {
     $location = Location::factory()->create();
     $area1 = LocationArea::factory()->create([
         'type' => 'address',
@@ -66,7 +68,7 @@ it('searchOrDefaultDeliveryArea returns the matching delivery area if found', fu
     expect($result->getKey())->toBe($area2->getKey());
 });
 
-it('searchOrFirstDeliveryArea returns the matching delivery area if found', function() {
+it('searchOrFirstDeliveryArea returns the matching delivery area if found', function(): void {
     $location = Location::factory()->create();
     $area1 = LocationArea::factory()->create([
         'type' => 'address',
@@ -90,7 +92,7 @@ it('searchOrFirstDeliveryArea returns the matching delivery area if found', func
     expect($result->getKey())->toBe($area2->getKey());
 });
 
-it('searchOrFirstDeliveryArea returns the first delivery area if matching not found', function() {
+it('searchOrFirstDeliveryArea returns the first delivery area if matching not found', function(): void {
     $location = Location::factory()->create();
     $area1 = LocationArea::factory()->create([
         'type' => 'address',
@@ -113,7 +115,7 @@ it('searchOrFirstDeliveryArea returns the first delivery area if matching not fo
     expect($result->getKey())->toBe($area1->getKey());
 });
 
-it('adds delivery areas on save', function() {
+it('adds delivery areas on save', function(): void {
     $location = Location::factory()->create();
 
     $location->delivery_areas = [

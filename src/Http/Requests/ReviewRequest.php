@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Http\Requests;
 
 use Igniter\System\Classes\FormRequest;
@@ -21,7 +23,7 @@ class ReviewRequest extends FormRequest
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'reviewable_type' => ['required'],

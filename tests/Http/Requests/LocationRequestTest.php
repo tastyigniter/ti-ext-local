@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Http\Requests;
 
 use Igniter\Local\Http\Requests\LocationRequest;
 
-it('returns correct attribute labels', function() {
+it('returns correct attribute labels', function(): void {
     $attributes = (new LocationRequest())->attributes();
 
     expect($attributes)->toHaveKey('location_name', lang('igniter::admin.label_name'))
@@ -25,7 +27,7 @@ it('returns correct attribute labels', function() {
         ->and($attributes)->toHaveKey('gallery.description', lang('igniter::admin.label_description'));
 });
 
-it('returns correct validation rules', function() {
+it('returns correct validation rules', function(): void {
     $rules = (new LocationRequest())->rules();
 
     expect($rules)->toHaveKey('location_name', ['required', 'string', 'between:2,32'])

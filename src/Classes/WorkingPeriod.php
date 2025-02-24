@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Classes;
 
 use ArrayAccess;
@@ -13,22 +15,22 @@ use Traversable;
 
 class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
 {
-    const CLOSED = 'closed';
+    public const string CLOSED = 'closed';
 
-    const OPEN = 'open';
+    public const string OPEN = 'open';
 
-    const OPENING = 'opening';
+    public const string OPENING = 'opening';
 
     /**
-     * @var \Igniter\Local\Classes\WorkingRange[]
+     * @var WorkingRange[]
      */
-    protected $ranges = [];
+    protected array $ranges = [];
 
-    public static function create($times)
+    public static function create(array $times): static
     {
         $period = new static;
 
-        $timeRanges = array_map(function($times) {
+        $timeRanges = array_map(function($times): WorkingRange {
             return WorkingRange::create($times);
         }, $times);
 
@@ -39,33 +41,30 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         return $period;
     }
 
-    public function isOpenAt(WorkingTime $time)
+    public function isOpenAt(WorkingTime $time): bool
     {
         return !is_null($this->findTimeInRange($time));
     }
 
-    public function openTimeAt(WorkingTime $time)
+    public function openTimeAt(WorkingTime $time): WorkingTime
     {
-        if ($range = $this->findTimeInRange($time)) {
+        if (($range = $this->findTimeInRange($time)) instanceof WorkingRange) {
             return $range->start();
         }
 
         return optional(current($this->ranges))->start();
     }
 
-    public function closeTimeAt(WorkingTime $time)
+    public function closeTimeAt(WorkingTime $time): WorkingTime
     {
-        if ($range = $this->findTimeInRange($time)) {
+        if (($range = $this->findTimeInRange($time)) instanceof WorkingRange) {
             return $range->end();
         }
 
         return optional(end($this->ranges))->end();
     }
 
-    /**
-     * @return bool|\Igniter\Local\Classes\WorkingTime
-     */
-    public function nextOpenAt(WorkingTime $time)
+    public function nextOpenAt(WorkingTime $time): bool|WorkingTime
     {
         foreach ($this->ranges as $range) {
             if ($range->containsTime($time)) {
@@ -73,12 +72,12 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
                     return $range->start();
                 }
 
-                if ($nextOpenTime = $this->getNextStartTime($range)) {
+                if (($nextOpenTime = $this->getNextStartTime($range)) instanceof WorkingTime) {
                     return $nextOpenTime;
                 }
             }
 
-            if ($nextOpenTime = $this->findNextTimeInFreeTime('start', $time, $range)) {
+            if (($nextOpenTime = $this->findNextTimeInFreeTime('start', $time, $range)) instanceof WorkingTime) {
                 return $nextOpenTime;
             }
         }
@@ -86,17 +85,14 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         return false;
     }
 
-    /**
-     * @return bool|\Igniter\Local\Classes\WorkingTime
-     */
-    public function nextCloseAt(WorkingTime $time)
+    public function nextCloseAt(WorkingTime $time): bool|WorkingTime
     {
         foreach ($this->ranges as $range) {
-            if ($range->containsTime($time) && $nextCloseTime = $range->end()) {
-                return $nextCloseTime;
+            if ($range->containsTime($time)) {
+                return $range->end();
             }
 
-            if ($nextCloseTime = $this->findNextTimeInFreeTime('end', $time, $range)) {
+            if (($nextCloseTime = $this->findNextTimeInFreeTime('end', $time, $range)) instanceof WorkingTime) {
                 return $nextCloseTime;
             }
         }
@@ -104,7 +100,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         return false;
     }
 
-    public function opensAllDay()
+    public function opensAllDay(): bool
     {
         $diffInHours = 0;
         foreach ($this->ranges as $range) {
@@ -115,7 +111,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         return $diffInHours >= 23 || $diffInHours == 0;
     }
 
-    public function closesLate()
+    public function closesLate(): bool
     {
         foreach ($this->ranges as $range) {
             if ($range->endsNextDay()) {
@@ -126,7 +122,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         return false;
     }
 
-    public function opensLateAt(WorkingTime $time)
+    public function opensLateAt(WorkingTime $time): bool
     {
         foreach ($this->ranges as $range) {
             if ($range->endsNextDay() && $range->containsTime($time)) {
@@ -137,47 +133,43 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         return false;
     }
 
-    public function timeslot(DateTimeInterface $dateTime, DateInterval $interval, ?DateInterval $leadTime = null)
+    public function timeslot(DateTimeInterface $dateTime, DateInterval $interval, ?DateInterval $leadTime = null): WorkingTimeslot
     {
         return WorkingTimeslot::make($this->ranges)->generate(
             $dateTime, $interval, $leadTime,
         );
     }
 
-    protected function findTimeInRange(WorkingTime $time)
+    protected function findTimeInRange(WorkingTime $time): ?WorkingRange
     {
         foreach ($this->ranges as $range) {
             if ($range->containsTime($time)) {
                 return $range;
             }
         }
+
+        return null;
     }
 
-    protected function findNextTimeInFreeTime($type, WorkingTime $time, WorkingRange $timeRange)
+    protected function findNextTimeInFreeTime($type, WorkingTime $time, WorkingRange $timeRange): ?WorkingTime
     {
-        $timeOffRange = WorkingRange::create(['00:00', $timeRange->start()]);
+        $timeOffRange = WorkingRange::create(['00:00', (string)$timeRange->start()]);
 
-        if (
-            $timeOffRange->containsTime($time)
-            || $timeOffRange->start()->isSame($time)
-        ) {
-            return $timeRange->{$type}();
-        }
+        return ($timeOffRange->containsTime($time) || $timeOffRange->start()->isSame($time))
+            ? $timeRange->{$type}()
+            : null;
     }
 
     /**
-     * @param \Igniter\Local\Classes\WorkingRange[] $ranges
-     * @throws \Igniter\Local\Exceptions\WorkingHourException
+     * @param WorkingRange[] $ranges
+     * @throws WorkingHourException
      */
-    protected function checkWorkingRangesOverlaps($ranges)
+    protected function checkWorkingRangesOverlaps(array $ranges): void
     {
         foreach ($ranges as $index => $range) {
             $nextRange = $ranges[$index + 1] ?? null;
             if ($nextRange && $range->overlaps($nextRange)) {
-                throw new WorkingHourException(sprintf(
-                    'Time ranges %s and %s overlap.',
-                    $range, $nextRange,
-                ));
+                throw new WorkingHourException(sprintf('Time ranges %s and %s overlap.', $range, $nextRange));
             }
         }
     }
@@ -190,7 +182,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
                 $currentRangeFound = true;
                 return false; // Skip the current range
             }
-            
+
             if ($currentRangeFound) {
                 return true; // Return the next range start
             }
@@ -199,7 +191,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
 
     public function isEmpty(): bool
     {
-        return empty($this->ranges);
+        return $this->ranges === [];
     }
 
     /**
@@ -254,9 +246,9 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         unset($this->ranges[$offset]);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        $values = array_map(function($range) {
+        $values = array_map(function($range): string {
             return (string)$range;
         }, $this->ranges);
 

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Http\Requests;
 
 use Igniter\Local\Http\Requests\LocationAreaRequest;
 
-it('returns correct attribute labels', function() {
+it('returns correct attribute labels', function(): void {
     $attributes = (new LocationAreaRequest())->attributes();
 
     expect($attributes)->toHaveKey('type', lang('igniter.local::default.label_area_type'))
@@ -25,7 +27,7 @@ it('returns correct attribute labels', function() {
         ->and($attributes)->toHaveKey('conditions.*.total', lang('igniter.local::default.label_area_min_amount'));
 });
 
-it('returns correct validation rules', function() {
+it('returns correct validation rules', function(): void {
     $rules = (new LocationAreaRequest())->rules();
 
     expect($rules)->toHaveKey('type', ['sometimes', 'required', 'string'])

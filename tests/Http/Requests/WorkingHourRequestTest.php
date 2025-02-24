@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests\Http\Requests;
 
 use Igniter\Local\Http\Requests\WorkingHourRequest;
 
-it('returns correct attribute labels', function() {
+it('returns correct attribute labels', function(): void {
     $attributes = (new WorkingHourRequest())->attributes();
 
     expect($attributes)->toHaveKey('type', lang('igniter.local::default.label_schedule_type'))
@@ -17,7 +19,7 @@ it('returns correct attribute labels', function() {
         ->and($attributes)->toHaveKey('flexible.*.status', lang('igniter::admin.label_status'));
 });
 
-it('returns correct validation rules', function() {
+it('returns correct validation rules', function(): void {
     $rules = (new WorkingHourRequest())->rules();
 
     expect($rules)->toHaveKey('type', ['alpha_dash', 'in:24_7,daily,timesheet,flexible'])

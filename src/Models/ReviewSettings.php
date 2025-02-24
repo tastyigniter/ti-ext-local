@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models;
 
+use Igniter\System\Actions\SettingsModel;
 use Igniter\Flame\Database\Model;
 
 class ReviewSettings extends Model
 {
-    public array $implement = [\Igniter\System\Actions\SettingsModel::class];
+    public array $implement = [SettingsModel::class];
 
     // A unique code
     public string $settingsCode = 'igniter_review_settings';
@@ -22,18 +25,21 @@ class ReviewSettings extends Model
         ['value' => 'Excellent'],
     ];
 
-    public static function allowReviews()
+    public static function allowReviews(): bool
     {
+        // @phpstan-ignore arguments.count
         return (bool)self::get('allow_reviews', true);
     }
 
     public static function autoApproveReviews()
     {
+        // @phpstan-ignore arguments.count
         return self::get('approve_reviews', false);
     }
 
     public static function getHints()
     {
+        // @phpstan-ignore arguments.count
         return collect(self::get('hints', self::$defaultHints))->pluck('value')->all();
     }
 }

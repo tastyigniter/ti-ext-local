@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Tests;
 
+use Igniter\Local\Http\Middleware\CheckLocation;
+use Igniter\Local\CartConditions\Delivery;
 use Igniter\Admin\DashboardWidgets\Charts;
 use Igniter\Admin\Facades\AdminMenu;
 use Igniter\Cart\Http\Controllers\Menus;
@@ -21,19 +25,19 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Mockery;
 
-beforeEach(function() {
+beforeEach(function(): void {
     $this->extension = new Extension(app());
 });
 
-it('registers location middleware', function() {
+it('registers location middleware', function(): void {
     Route::shouldReceive('pushMiddlewareToGroup')
-        ->with('igniter', \Igniter\Local\Http\Middleware\CheckLocation::class)
+        ->with('igniter', CheckLocation::class)
         ->once();
 
     $this->extension->register();
 });
 
-it('binds remember location area events', function() {
+it('binds remember location area events', function(): void {
     Event::shouldReceive('listen')
         ->with('location.position.updated', Mockery::type('callable'))
         ->once();
@@ -53,7 +57,7 @@ it('binds remember location area events', function() {
     $this->extension->boot();
 });
 
-it('adds reviews relationship to reservation', function() {
+it('adds reviews relationship to reservation', function(): void {
     $this->extension->boot();
 
     $model = new Reservation();
@@ -64,7 +68,7 @@ it('adds reviews relationship to reservation', function() {
         ->and($review->getMorphClass())->toBe('reviews');
 });
 
-it('updates customer last area on location position updated', function() {
+it('updates customer last area on location position updated', function(): void {
     $customer = Customer::factory()->create();
     $location = Mockery::mock(Location::class);
     $position = Mockery::mock(UserPosition::class);
@@ -80,7 +84,7 @@ it('updates customer last area on location position updated', function() {
     expect($customer->last_location_area)->toContain('new-position');
 });
 
-it('updates customer last area on location area updated', function() {
+it('updates customer last area on location area updated', function(): void {
     $customer = Customer::factory()->create();
     $location = Mockery::mock(Location::class);
     $coveredArea = Mockery::mock(LocationArea::class);
@@ -94,7 +98,7 @@ it('updates customer last area on location area updated', function() {
     expect($customer->last_location_area)->toContain(1);
 });
 
-it('updates user position and nearby area on user login', function() {
+it('updates user position and nearby area on user login', function(): void {
     $locationArea = LocationArea::factory()->create([
         'location_id' => 1,
     ]);
@@ -114,7 +118,7 @@ it('updates user position and nearby area on user login', function() {
     Event::dispatch('igniter.user.login');
 });
 
-it('does not updates user position on user login when last_location_area is empty', function() {
+it('does not updates user position on user login when last_location_area is empty', function(): void {
     $customer = Customer::factory()->create([
         'customer_id' => 1,
         'last_location_area' => '',
@@ -129,13 +133,13 @@ it('does not updates user position on user login when last_location_area is empt
     Event::dispatch('igniter.user.login');
 });
 
-it('returns delivery condition with correct attributes', function() {
-    $extension = new \Igniter\Local\Extension(app());
+it('returns delivery condition with correct attributes', function(): void {
+    $extension = new Extension(app());
 
     $result = $extension->registerCartConditions();
 
     expect($result)->toEqual([
-        \Igniter\Local\CartConditions\Delivery::class => [
+        Delivery::class => [
             'name' => 'delivery',
             'label' => 'lang:igniter.local::default.text_delivery',
             'description' => 'lang:igniter.local::default.help_delivery_condition',
@@ -143,8 +147,8 @@ it('returns delivery condition with correct attributes', function() {
     ]);
 });
 
-it('returns registered mail templates array', function() {
-    $extension = new \Igniter\Local\Extension(app());
+it('returns registered mail templates array', function(): void {
+    $extension = new Extension(app());
 
     $result = $extension->registerMailTemplates();
 
@@ -153,8 +157,8 @@ it('returns registered mail templates array', function() {
     ]);
 });
 
-it('returns registered permissions array', function() {
-    $extension = new \Igniter\Local\Extension(app());
+it('returns registered permissions array', function(): void {
+    $extension = new Extension(app());
 
     $result = $extension->registerPermissions();
 
@@ -170,8 +174,8 @@ it('returns registered permissions array', function() {
     ]);
 });
 
-it('returns registered settings array', function() {
-    $extension = new \Igniter\Local\Extension(app());
+it('returns registered settings array', function(): void {
+    $extension = new Extension(app());
 
     $result = $extension->registerSettings();
 
@@ -180,14 +184,14 @@ it('returns registered settings array', function() {
             'label' => 'lang:igniter.local::default.reviews.text_settings',
             'icon' => 'fa fa-gear',
             'description' => 'lang:igniter.local::default.reviews.text_settings_description',
-            'model' => \Igniter\Local\Models\ReviewSettings::class,
+            'model' => ReviewSettings::class,
             'permissions' => ['Admin.Reviews'],
         ],
     ]);
 });
 
-it('returns registered onboarding steps array', function() {
-    $extension = new \Igniter\Local\Extension(app());
+it('returns registered onboarding steps array', function(): void {
+    $extension = new Extension(app());
 
     $result = $extension->registerOnboardingSteps();
 
@@ -203,7 +207,7 @@ it('returns registered onboarding steps array', function() {
     ]);
 });
 
-it('returns registered dashboard charts', function() {
+it('returns registered dashboard charts', function(): void {
     ReviewSettings::set('allow_reviews', true);
     $charts = new class(resolve(Menus::class)) extends Charts
     {
@@ -217,7 +221,7 @@ it('returns registered dashboard charts', function() {
     expect($datasets['reports']['sets']['reviews']['model'])->toBe(Review::class);
 });
 
-it('registers locations picker admin menus when running in admin', function() {
+it('registers locations picker admin menus when running in admin', function(): void {
     Igniter::partialMock()->shouldReceive('runningInAdmin')->andReturnTrue();
     $this->extension->boot();
     $menuItems = AdminMenu::getMainItems();

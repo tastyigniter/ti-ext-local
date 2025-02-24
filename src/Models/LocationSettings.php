@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Models;
 
 use Igniter\Flame\Database\Model;
@@ -46,26 +48,26 @@ class LocationSettings extends Model
         ]);
     }
 
-    public function afterFetch()
+    protected function afterFetch()
     {
         $this->settingsValues = (array)$this->data ?: [];
         $this->setRawAttributes(array_merge($this->settingsValues, $this->getAttributes()));
     }
 
-    public function beforeSave()
+    protected function beforeSave()
     {
         if ($this->settingsValues) {
             $this->data = $this->settingsValues;
         }
     }
 
-    public function saveModelInternal()
+    public function saveModelInternal(): void
     {
         // Purge the field values from the attributes
         $this->setRawAttributes(array_diff_key($this->getAttributes(), $this->settingsValues));
     }
 
-    public function setSettingsValue($key, $value)
+    public function setSettingsValue($key, $value): void
     {
         if ($this->isKeyAllowed($key)) {
             return;
@@ -79,17 +81,17 @@ class LocationSettings extends Model
         return $this->getAttribute($key) ?? $default;
     }
 
-    public function getSettingsValue()
+    public function getSettingsValue(): array
     {
         return $this->settingsValues;
     }
 
-    protected function isKeyAllowed($key)
+    protected function isKeyAllowed($key): bool
     {
         return in_array($key, ['id', 'location_id', 'item', 'data']) || $this->hasRelation($key);
     }
 
-    public static function clearInternalCache()
+    public static function clearInternalCache(): void
     {
         static::$instances = [];
     }
@@ -98,7 +100,7 @@ class LocationSettings extends Model
     // Registration
     //
 
-    public function listRegisteredSettings()
+    public function listRegisteredSettings(): array
     {
         if (!static::$registeredSettings) {
             $this->loadRegisteredSettings();
@@ -107,7 +109,7 @@ class LocationSettings extends Model
         return static::$registeredSettings;
     }
 
-    public function loadRegisteredSettings()
+    public function loadRegisteredSettings(): void
     {
         foreach (self::$callbacks as $callback) {
             $callback($this);
@@ -119,12 +121,12 @@ class LocationSettings extends Model
             $this->registerSettingItems($extensionCode, $definitions);
         }
 
-        uasort(static::$registeredSettings, function($a, $b) {
+        uasort(static::$registeredSettings, function($a, $b): int|float {
             return $a->priority - $b->priority;
         });
     }
 
-    public function registerSettingItems($extensionCode, array $definitions)
+    public function registerSettingItems(string $extensionCode, array $definitions): void
     {
         $defaultDefinitions = [
             'code' => null,
@@ -150,7 +152,7 @@ class LocationSettings extends Model
         }
     }
 
-    public static function registerCallback(callable $callback)
+    public static function registerCallback(callable $callback): void
     {
         self::$callbacks[] = $callback;
     }

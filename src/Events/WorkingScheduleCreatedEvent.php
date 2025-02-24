@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Igniter\Local\Events;
 
 use Igniter\Flame\Database\Model;
@@ -12,8 +14,8 @@ class WorkingScheduleCreatedEvent
 
     public function __construct(public Model $model, public WorkingSchedule $schedule) {}
 
-    public static function eventName()
+    public static function eventName(): string
     {
-        return 'admin.workingSchedule.created';
+        return 'igniter.workingSchedule.created';
     }
 }
