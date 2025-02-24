@@ -96,11 +96,6 @@ parameters:
 			path: src/Classes/WorkingSchedule.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(DateTime\\|mixed Date or timestamp\\)\\: Unexpected token \"Date\", expected variable at offset 33$#"
-			count: 1
-			path: src/Classes/WorkingSchedule.php
-
-		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
 			path: src/Classes/WorkingSchedule.php
