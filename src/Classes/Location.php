@@ -12,7 +12,6 @@ use Igniter\Cart\Classes\AbstractOrderType;
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Flame\Traits\EventEmitter;
-use Igniter\Local\Contracts\LocationInterface;
 use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\LocationArea;
 use Igniter\System\Traits\SessionMaker;
@@ -36,7 +35,7 @@ class Location
 
     protected string $sessionKey = 'local_info';
 
-    protected ?LocationInterface $model = null;
+    protected ?LocationModel $model = null;
 
     protected string $locationModel = \Igniter\Local\Models\Location::class;
 
@@ -78,7 +77,7 @@ class Location
         return !is_null($this->current());
     }
 
-    public function current(): ?LocationInterface
+    public function current(): ?LocationModel
     {
         if (!is_null($this->model)) {
             return $this->model;
@@ -101,9 +100,9 @@ class Location
         return $this->model;
     }
 
-    public function currentOrDefault(): ?LocationInterface
+    public function currentOrDefault(): ?LocationModel
     {
-        if (($model = $this->current()) instanceof LocationInterface) {
+        if (($model = $this->current()) instanceof LocationModel) {
             return $model;
         }
 
@@ -128,7 +127,7 @@ class Location
         return AdminAuth::user()?->locations?->pluck('location_id')->all() ?? [];
     }
 
-    public function setCurrent(LocationInterface $locationModel): void
+    public function setCurrent(LocationModel $locationModel): void
     {
         $this->setModel($locationModel);
 
@@ -137,12 +136,12 @@ class Location
         $this->fireSystemEvent('location.current.updated', [$locationModel]);
     }
 
-    public function getModel(): ?LocationInterface
+    public function getModel(): ?LocationModel
     {
         return $this->model;
     }
 
-    public function setModel(LocationInterface $model): self
+    public function setModel(LocationModel $model): self
     {
         $this->model = $model;
 
@@ -159,7 +158,7 @@ class Location
         return $this->model?->getName();
     }
 
-    public function createLocationModel(): LocationInterface
+    public function createLocationModel(): LocationModel
     {
         $class = '\\'.ltrim($this->locationModel, '\\');
 
@@ -182,22 +181,22 @@ class Location
         }
     }
 
-    public function getById(string|int $identifier): ?LocationInterface
+    public function getById(string|int $identifier): ?LocationModel
     {
         $query = $this->createLocationModelQuery();
 
-        /** @var ?LocationInterface $location */
+        /** @var ?LocationModel $location */
         $location = $query->find($identifier);
 
         return $location ?: null;
     }
 
-    public function getBySlug(string $slug): ?LocationInterface
+    public function getBySlug(string $slug): ?LocationModel
     {
         $model = $this->createLocationModel();
         $query = $this->createLocationModelQuery();
 
-        /** @var ?LocationInterface $location */
+        /** @var ?LocationModel $location */
         $location = $query->where($model->getSlugKeyName(), $slug)->first();
 
         return $location ?: null;
@@ -575,10 +574,7 @@ class Location
         return $coveredArea;
     }
 
-    /**
-     * @return \Igniter\Flame\Geolite\Model\Location
-     */
-    public function userPosition(): mixed
+    public function userPosition(): ?\Igniter\Flame\Geolite\Model\Location
     {
         return $this->getSession('position', UserLocation::createFromArray([]));
     }

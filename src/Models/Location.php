@@ -50,6 +50,7 @@ use Illuminate\Support\Carbon;
  * @property-read mixed $thumb
  * @property-read Collection<int, Media> $media
  * @property-read int|null $media_count
+ * @property-read float|null $distance
  * @method static Location first()
  * @method static Builder|Location selectDistance()
  * @mixin Model

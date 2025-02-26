@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Igniter\Local\Models;
 
 use Igniter\Cart\Models\Order;
+use Igniter\Flame\Database\Builder;
 use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
@@ -33,6 +34,8 @@ use Illuminate\Support\Facades\DB;
  * @property Carbon $created_at
  * @property bool $review_status
  * @property Carbon $updated_at
+ * @property-read null|Customer $customer
+ * @method static Builder|Review whereReviewable()
  * @mixin Model
  */
 class Review extends Model

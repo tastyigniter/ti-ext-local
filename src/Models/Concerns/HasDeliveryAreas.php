@@ -6,7 +6,6 @@ namespace Igniter\Local\Models\Concerns;
 
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Geolite\Facades\Geocoder;
-use Igniter\Local\Contracts\AreaInterface;
 use Igniter\Local\Models\LocationArea;
 
 trait HasDeliveryAreas
@@ -38,7 +37,7 @@ trait HasDeliveryAreas
             return;
         }
 
-        if ($this->location_lat && $this->location_lng && !$this->isDirty([
+        $attributesToCheck = [
             'location_address_1',
             'location_address_2',
             'location_city',
@@ -47,7 +46,8 @@ trait HasDeliveryAreas
             'location_country_id',
             'location_lat',
             'location_lng',
-        ])) {
+        ];
+        if ($this->location_lat && $this->location_lng && !$this->isDirty($attributesToCheck)) {
             return;
         }
 
@@ -65,12 +65,12 @@ trait HasDeliveryAreas
         return $this->delivery_areas->keyBy('area_id');
     }
 
-    public function findDeliveryArea($areaId): ?AreaInterface
+    public function findDeliveryArea($areaId): ?LocationArea
     {
         return $this->listDeliveryAreas()->get($areaId);
     }
 
-    public function searchOrDefaultDeliveryArea(?CoordinatesInterface $coordinates): ?AreaInterface
+    public function searchOrDefaultDeliveryArea(?CoordinatesInterface $coordinates): ?LocationArea
     {
         if ($coordinates && ($area = $this->searchDeliveryArea($coordinates))) {
             return $area;
@@ -79,7 +79,7 @@ trait HasDeliveryAreas
         return $this->delivery_areas->where('is_default', 1)->first();
     }
 
-    public function searchOrFirstDeliveryArea(?CoordinatesInterface $coordinates): ?AreaInterface
+    public function searchOrFirstDeliveryArea(?CoordinatesInterface $coordinates): ?LocationArea
     {
         if ($coordinates && ($area = $this->searchDeliveryArea($coordinates))) {
             return $area;
@@ -88,11 +88,11 @@ trait HasDeliveryAreas
         return $this->delivery_areas->first();
     }
 
-    public function searchDeliveryArea(CoordinatesInterface $coordinates): ?AreaInterface
+    public function searchDeliveryArea(CoordinatesInterface $coordinates): ?LocationArea
     {
         return $this->delivery_areas
             ->sortBy('priority')
-            ->first(function(AreaInterface $model) use ($coordinates) {
+            ->first(function(LocationArea $model) use ($coordinates) {
                 return $model->checkBoundary($coordinates);
             });
     }
