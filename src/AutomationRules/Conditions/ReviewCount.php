@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\AutomationRules\Conditions;
 
+use Override;
 use Igniter\Automation\AutomationException;
 use Igniter\Automation\Classes\BaseModelAttributesCondition;
 use Igniter\Cart\Models\Order;
@@ -16,6 +17,7 @@ class ReviewCount extends BaseModelAttributesCondition
 
     protected $modelAttributes;
 
+    #[Override]
     public function conditionDetails(): array
     {
         return [
@@ -24,6 +26,7 @@ class ReviewCount extends BaseModelAttributesCondition
         ];
     }
 
+    #[Override]
     public function defineModelAttributes(): array
     {
         return [
@@ -50,6 +53,7 @@ class ReviewCount extends BaseModelAttributesCondition
      * @param array $params Specifies a list of parameters as an associative array.
      * @return bool
      */
+    #[Override]
     public function isTrue(&$params)
     {
         if (!$orderOrReservation = array_get($params, 'order', array_get($params, 'reservation'))) {

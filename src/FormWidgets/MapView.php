@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\FormWidgets;
 
+use Override;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\FormModelWidget;
 
@@ -26,6 +27,7 @@ class MapView extends BaseFormWidget
      */
     public $cssClasses = [];
 
+    #[Override]
     public function initialize(): void
     {
         $this->fillFromConfig([
@@ -36,9 +38,10 @@ class MapView extends BaseFormWidget
         ]);
     }
 
+    #[Override]
     public function loadAssets(): void
     {
-        if (strlen($key = setting('maps_api_key')) !== 0) {
+        if (strlen((string) ($key = setting('maps_api_key'))) !== 0) {
             $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
             $this->addJs(sprintf($url, $key),
                 ['name' => 'google-maps-js', 'async' => null, 'defer' => null],
@@ -49,6 +52,7 @@ class MapView extends BaseFormWidget
         $this->addJs('mapview.shape.js', 'mapview-shape-js');
     }
 
+    #[Override]
     public function render(): string
     {
         $this->prepareVars();
@@ -67,7 +71,7 @@ class MapView extends BaseFormWidget
 
     public function isConfigured(): bool
     {
-        return (bool)strlen(trim(setting('maps_api_key')));
+        return (bool)strlen(trim((string) setting('maps_api_key')));
     }
 
     public function hasCenter(): bool

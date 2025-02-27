@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Database\Factories;
 
+use Override;
 use Igniter\Flame\Database\Factories\Factory;
 use Igniter\Local\Models\Location;
 
@@ -11,6 +12,7 @@ class LocationFactory extends Factory
 {
     protected $model = Location::class;
 
+    #[Override]
     public function definition(): array
     {
         return [

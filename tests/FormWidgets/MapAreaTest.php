@@ -41,9 +41,7 @@ it('loads assets correctly', function(): void {
     Assets::shouldReceive('addJs')->once()->with('maparea.js', 'maparea-js');
     Assets::shouldReceive('addJs')->once()->with('mapview.js', 'mapview-js');
     Assets::shouldReceive('addJs')->once()->with('mapview.shape.js', 'mapview-shape-js');
-    Assets::shouldReceive('addJs')->once()->withArgs(function($url, $name): bool {
-        return str_contains($url, 'googleapis.com/maps/api/js');
-    });
+    Assets::shouldReceive('addJs')->once()->withArgs(fn($url, $name): bool => str_contains((string) $url, 'googleapis.com/maps/api/js'));
 
     $this->mapAreaWidget->assetPath = [];
 

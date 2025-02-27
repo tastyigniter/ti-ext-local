@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
+use Override;
 use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
@@ -115,13 +116,13 @@ class LocationArea extends Model implements AreaInterface
     public function getVerticesAttribute()
     {
         return isset($this->boundaries['vertices']) ?
-            json_decode($this->boundaries['vertices'], false) : [];
+            json_decode((string) $this->boundaries['vertices'], false) : [];
     }
 
     public function getCircleAttribute()
     {
         return isset($this->boundaries['circle']) ?
-            json_decode($this->boundaries['circle'], false) : null;
+            json_decode((string) $this->boundaries['circle'], false) : null;
     }
 
     public function getColorAttribute($value)
@@ -138,9 +139,7 @@ class LocationArea extends Model implements AreaInterface
     //
     public function getPolygon(): PolygonInterface
     {
-        $vertices = array_map(function($coordinates) {
-            return Geolite::coordinates($coordinates->lat, $coordinates->lng);
-        }, $this->vertices);
+        $vertices = array_map(fn($coordinates) => Geolite::coordinates($coordinates->lat, $coordinates->lng), $this->vertices);
 
         return Geolite::polygon($vertices);
     }
@@ -165,11 +164,13 @@ class LocationArea extends Model implements AreaInterface
         return $this->type === 'polygon';
     }
 
+    #[Override]
     public function getLocationId()
     {
         return $this->location_id;
     }
 
+    #[Override]
     public function checkBoundary(CoordinatesInterface $coordinate)
     {
         if ($this->isAddressBoundary()) {
@@ -188,6 +189,7 @@ class LocationArea extends Model implements AreaInterface
     }
 
     // Check if the point is inside the polygon or on the boundary
+    #[Override]
     public function pointInVertices(CoordinatesInterface $coordinate)
     {
         if (!$this->vertices) {
@@ -197,6 +199,7 @@ class LocationArea extends Model implements AreaInterface
         return $this->getPolygon()->pointInPolygon($coordinate);
     }
 
+    #[Override]
     public function pointInCircle(CoordinatesInterface $coordinate)
     {
         if (!$this->circle) {
@@ -210,6 +213,7 @@ class LocationArea extends Model implements AreaInterface
         return $circle->pointInRadius($coordinate);
     }
 
+    #[Override]
     public function matchAddressComponents(LocationInterface $position): bool
     {
         $components = (array)array_get($this->boundaries, 'components');

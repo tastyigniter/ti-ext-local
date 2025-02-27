@@ -8,8 +8,6 @@ use Igniter\Local\Models\WorkingHour;
 
 class ScheduleItem
 {
-    public string $name;
-
     public string $type;
 
     public array $days;
@@ -27,9 +25,8 @@ class ScheduleItem
      */
     protected $data;
 
-    public function __construct(string $name)
+    public function __construct(public string $name)
     {
-        $this->name = $name;
     }
 
     public static function create(string $name, array $data = []): self

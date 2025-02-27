@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
+use Override;
 use Igniter\Flame\Database\Model;
 use Igniter\System\Classes\ExtensionManager;
 
@@ -30,8 +31,8 @@ class LocationSettings extends Model
     {
         parent::__construct($attributes);
 
-        $this->bindEvent('model.setAttribute', [$this, 'setSettingsValue']);
-        $this->bindEvent('model.saveInternal', [$this, 'saveModelInternal']);
+        $this->bindEvent('model.setAttribute', $this->setSettingsValue(...));
+        $this->bindEvent('model.saveInternal', $this->saveModelInternal(...));
     }
 
     public static function instance(Location $location, string $settingsCode)
@@ -48,12 +49,14 @@ class LocationSettings extends Model
         ]);
     }
 
+    #[Override]
     protected function afterFetch()
     {
         $this->settingsValues = (array)$this->data ?: [];
         $this->setRawAttributes(array_merge($this->settingsValues, $this->getAttributes()));
     }
 
+    #[Override]
     protected function beforeSave()
     {
         if ($this->settingsValues) {
@@ -121,9 +124,7 @@ class LocationSettings extends Model
             $this->registerSettingItems($extensionCode, $definitions);
         }
 
-        uasort(static::$registeredSettings, function($a, $b): int|float {
-            return $a->priority - $b->priority;
-        });
+        uasort(static::$registeredSettings, fn($a, $b): int|float => $a->priority - $b->priority);
     }
 
     public function registerSettingItems(string $extensionCode, array $definitions): void

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\FormWidgets;
 
+use Override;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Local\Models\Review;
 
@@ -20,6 +21,7 @@ class StarRating extends BaseFormWidget
 
     protected string $defaultAlias = 'starrating';
 
+    #[Override]
     public function initialize(): void
     {
         $this->fillFromConfig([
@@ -31,6 +33,7 @@ class StarRating extends BaseFormWidget
         }
     }
 
+    #[Override]
     public function render(): string
     {
         $this->prepareVars();
@@ -49,6 +52,7 @@ class StarRating extends BaseFormWidget
         $this->vars['hints'] = array_values(self::$hints);
     }
 
+    #[Override]
     public function loadAssets(): void
     {
         $this->addCss('vendor/raty/jquery.raty.css', 'jquery-raty-css');
@@ -58,6 +62,7 @@ class StarRating extends BaseFormWidget
         $this->addJs('js/starrating.js', 'starrating-js');
     }
 
+    #[Override]
     public function getSaveValue(mixed $value): mixed
     {
         return $value ? (int)$value : 0;

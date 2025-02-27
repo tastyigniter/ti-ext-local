@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\CartConditions;
 
+use Override;
 use Igniter\Cart\CartCondition;
 use Igniter\Cart\Facades\Cart;
 use Igniter\Local\Facades\Location;
@@ -15,6 +16,7 @@ class Delivery extends CartCondition
 
     protected $deliveryCharge = 0;
 
+    #[Override]
     public function beforeApply(): ?bool
     {
         // Do not apply condition when orderType is not delivery
@@ -28,6 +30,7 @@ class Delivery extends CartCondition
         return null;
     }
 
+    #[Override]
     public function getRules(): array
     {
         return [
@@ -35,6 +38,7 @@ class Delivery extends CartCondition
         ];
     }
 
+    #[Override]
     public function getActions(): array
     {
         return [
@@ -42,6 +46,7 @@ class Delivery extends CartCondition
         ];
     }
 
+    #[Override]
     public function getValue()
     {
         return $this->calculatedValue > 0 ? $this->calculatedValue : lang('igniter::main.text_free');

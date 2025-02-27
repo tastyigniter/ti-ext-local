@@ -466,9 +466,7 @@ class Location
 
     public function checkNoOrderTypeAvailable()
     {
-        return $this->getOrderTypes()->filter(function($orderType): bool {
-            return !$orderType->isDisabled();
-        })->isEmpty();
+        return $this->getOrderTypes()->filter(fn($orderType): bool => !$orderType->isDisabled())->isEmpty();
     }
 
     public function hasLaterSchedule(): bool

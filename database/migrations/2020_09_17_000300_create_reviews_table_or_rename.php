@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Igniter\Local\Models\ReviewSettings;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -7,14 +9,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         if (Schema::hasTable('reviews')) {
             Schema::rename('reviews', 'igniter_reviews');
         }
 
         if (!Schema::hasTable('igniter_reviews')) {
-            Schema::create('igniter_reviews', function(Blueprint $table) {
+            Schema::create('igniter_reviews', function(Blueprint $table): void {
                 $table->engine = 'InnoDB';
                 $table->integer('review_id', true);
                 $table->integer('customer_id');
@@ -41,7 +43,7 @@ return new class extends Migration
         ]);
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('igniter_reviews');
     }

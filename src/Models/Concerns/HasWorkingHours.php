@@ -147,8 +147,8 @@ trait HasWorkingHours
                     'location_id' => $this->getKey(),
                     'weekday' => $hour['day'],
                     'type' => $type,
-                    'opening_time' => mdate('%H:%i', strtotime($hour['open'])),
-                    'closing_time' => mdate('%H:%i', strtotime($hour['close'])),
+                    'opening_time' => mdate('%H:%i', strtotime((string) $hour['open'])),
+                    'closing_time' => mdate('%H:%i', strtotime((string) $hour['close'])),
                     'status' => $hour['status'],
                 ]);
             }

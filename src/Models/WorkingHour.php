@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
+use Override;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 use Igniter\Local\Contracts\WorkingHourInterface;
@@ -65,9 +66,7 @@ class WorkingHour extends Model implements WorkingHourInterface
 
     public function getWeekDaysOptions()
     {
-        return collect(self::$weekDays)->map(function($day, $index) {
-            return now()->startOfWeek()->addDays($index)->isoFormat(lang('igniter::system.moment.weekday_format'));
-        })->all();
+        return collect(self::$weekDays)->map(fn($day, $index) => now()->startOfWeek()->addDays($index)->isoFormat(lang('igniter::system.moment.weekday_format')))->all();
     }
 
     public function getTimesheetOptions($value, $data): stdClass
@@ -130,16 +129,19 @@ class WorkingHour extends Model implements WorkingHourInterface
         return $this->opening_time > $this->closing_time;
     }
 
+    #[Override]
     public function getDay()
     {
         return $this->day->format('l');
     }
 
+    #[Override]
     public function getOpen()
     {
         return $this->open->format('H:i');
     }
 
+    #[Override]
     public function getClose()
     {
         return $this->close->format('H:i');

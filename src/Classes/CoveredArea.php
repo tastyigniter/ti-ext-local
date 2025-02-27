@@ -16,11 +16,8 @@ use Illuminate\Support\Collection;
  */
 class CoveredArea
 {
-    protected LocationArea $model;
-
-    public function __construct(LocationArea $model)
+    public function __construct(protected LocationArea $model)
     {
-        $this->model = $model;
     }
 
     public function deliveryAmount($cartTotal): float|int
@@ -42,9 +39,7 @@ class CoveredArea
 
     public function getConditionLabels(): array
     {
-        return $this->listConditions()->map(function(CoveredAreaCondition $condition): string {
-            return ucfirst(strtolower($condition->getLabel()));
-        })->all();
+        return $this->listConditions()->map(fn(CoveredAreaCondition $condition): string => ucfirst(strtolower($condition->getLabel())))->all();
     }
 
     protected function getConditionValue($type, $cartTotal): float|int
@@ -68,9 +63,7 @@ class CoveredArea
 
     protected function checkConditions($cartTotal, $value = 'total'): ?CoveredAreaCondition
     {
-        return $this->listConditions()->first(function(CoveredAreaCondition $condition) use ($cartTotal): bool {
-            return $condition->isValid($cartTotal);
-        });
+        return $this->listConditions()->first(fn(CoveredAreaCondition $condition): bool => $condition->isValid($cartTotal));
     }
 
     protected function calculateDistanceCharges(): float|int
@@ -85,16 +78,12 @@ class CoveredArea
 
         $condition = $distanceCharges
             ->sortBy('priority')
-            ->map(function(array $condition): CoveredAreaCondition {
-                return new CoveredAreaCondition([
-                    'type' => $condition['type'],
-                    'amount' => $condition['charge'],
-                    'total' => $condition['distance'],
-                ]);
-            })
-            ->first(function(CoveredAreaCondition $condition) use ($distanceFromLocation): bool {
-                return $condition->isValid($distanceFromLocation);
-            });
+            ->map(fn(array $condition): CoveredAreaCondition => new CoveredAreaCondition([
+                'type' => $condition['type'],
+                'amount' => $condition['charge'],
+                'total' => $condition['distance'],
+            ]))
+            ->first(fn(CoveredAreaCondition $condition): bool => $condition->isValid($distanceFromLocation));
 
         return optional($condition)->amount ?? 0;
     }

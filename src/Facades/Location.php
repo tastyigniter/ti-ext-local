@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Facades;
 
+use Override;
 use Carbon\Carbon;
 use Closure;
 use Igniter\Cart\Classes\AbstractOrderType;
@@ -100,6 +101,7 @@ class Location extends Facade
      * Get the registered name of the component.
      * @return string
      */
+    #[Override]
     protected static function getFacadeAccessor()
     {
         return 'location';

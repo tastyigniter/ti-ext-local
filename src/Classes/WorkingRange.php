@@ -5,18 +5,12 @@ declare(strict_types=1);
 namespace Igniter\Local\Classes;
 
 use Igniter\Local\Exceptions\WorkingHourException;
+use Override;
+use Stringable;
 
-class WorkingRange
+class WorkingRange implements Stringable
 {
-    protected WorkingTime $start;
-
-    protected WorkingTime $end;
-
-    protected function __construct(WorkingTime $start, WorkingTime $end)
-    {
-        $this->start = $start;
-        $this->end = $end;
-    }
+    protected function __construct(protected WorkingTime $start, protected WorkingTime $end) {}
 
     public static function create(array $times): self
     {
@@ -24,7 +18,7 @@ class WorkingRange
 
         return new static(
             WorkingTime::create($start),
-            WorkingTime::create($end)
+            WorkingTime::create($end),
         );
     }
 
@@ -103,6 +97,7 @@ class WorkingRange
         return sprintf($rangeFormat, $this->start->format($timeFormat), $this->end->format($timeFormat));
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->format();

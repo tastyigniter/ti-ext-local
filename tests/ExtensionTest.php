@@ -202,7 +202,7 @@ it('returns registered onboarding steps array', function(): void {
             'icon' => 'fa-store',
             'url' => admin_url('locations'),
             'priority' => 15,
-            'complete' => [\Igniter\Local\Models\Location::class, 'onboardingIsComplete'],
+            'complete' => \Igniter\Local\Models\Location::onboardingIsComplete(...),
         ],
     ]);
 });

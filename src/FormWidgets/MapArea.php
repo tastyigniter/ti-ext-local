@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\FormWidgets;
 
+use Override;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Classes\FormField;
 use Igniter\Admin\Traits\FormModelWidget;
@@ -72,6 +73,7 @@ class MapArea extends BaseFormWidget
 
     protected $mapAreas;
 
+    #[Override]
     public function initialize(): void
     {
         $this->fillFromConfig([
@@ -91,6 +93,7 @@ class MapArea extends BaseFormWidget
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
     }
 
+    #[Override]
     public function loadAssets(): void
     {
         $this->addJs('formwidgets/repeater.js', 'repeater-js');
@@ -100,7 +103,7 @@ class MapArea extends BaseFormWidget
         $this->addJs('maparea.js', 'maparea-js');
 
         // Make the mapview assets available
-        if (strlen($key = setting('maps_api_key')) !== 0) {
+        if (strlen((string) ($key = setting('maps_api_key'))) !== 0) {
             $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
             $this->addJs(sprintf($url, $key),
                 ['name' => 'google-maps-js', 'async' => null, 'defer' => null],
@@ -111,6 +114,7 @@ class MapArea extends BaseFormWidget
         $this->addJs('mapview.shape.js', 'mapview-shape-js');
     }
 
+    #[Override]
     public function render(): string
     {
         $this->prepareVars();
@@ -128,6 +132,7 @@ class MapArea extends BaseFormWidget
         $this->vars['prompt'] = $this->prompt;
     }
 
+    #[Override]
     public function getSaveValue(mixed $value): mixed
     {
         if (!$this->sortable) {
@@ -258,7 +263,7 @@ class MapArea extends BaseFormWidget
         $result = [];
 
         foreach ($loadValue as $key => $area) {
-            if (!isset($area['color']) || !strlen($area['color'])) {
+            if (!isset($area['color']) || !strlen((string) $area['color'])) {
                 $index = min($key, count($this->areaColors));
                 $area['color'] = $this->areaColors[$index] ?? $this->areaColors[0];
             }

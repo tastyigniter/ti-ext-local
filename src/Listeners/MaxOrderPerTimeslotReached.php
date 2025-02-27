@@ -19,9 +19,9 @@ class MaxOrderPerTimeslotReached
 
     public function subscribe(Dispatcher $dispatcher): void
     {
-        $dispatcher->listen('igniter.workingSchedule.timeslotValid', __CLASS__.'@timeslotValid');
+        $dispatcher->listen('igniter.workingSchedule.timeslotValid', self::class.'@timeslotValid');
 
-        $dispatcher->listen('igniter.checkout.beforeSaveOrder', __CLASS__.'@beforeSaveOrder');
+        $dispatcher->listen('igniter.checkout.beforeSaveOrder', self::class.'@beforeSaveOrder');
     }
 
     public function timeslotValid(WorkingSchedule $workingSchedule, DateTimeInterface $timeslot): ?bool

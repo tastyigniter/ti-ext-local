@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\FormWidgets;
 
+use Override;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
@@ -37,6 +38,7 @@ class ScheduleEditor extends BaseFormWidget
 
     protected $schedulesCache;
 
+    #[Override]
     public function initialize(): void
     {
         $this->fillFromConfig([
@@ -46,6 +48,7 @@ class ScheduleEditor extends BaseFormWidget
         ]);
     }
 
+    #[Override]
     public function render(): string
     {
         $this->prepareVars();
@@ -61,6 +64,7 @@ class ScheduleEditor extends BaseFormWidget
         $this->vars['schedules'] = $this->listSchedules();
     }
 
+    #[Override]
     public function loadAssets(): void
     {
         $this->addJs('vendor/timesheet/timesheet.js', 'timesheet-js');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
+use Override;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Database\Builder;
@@ -177,6 +178,7 @@ class Location extends Model implements LocationInterface
         return $this->location_name;
     }
 
+    #[Override]
     public function getMorphClass()
     {
         return 'locations';

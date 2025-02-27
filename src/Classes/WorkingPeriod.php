@@ -11,9 +11,11 @@ use DateInterval;
 use DateTimeInterface;
 use Igniter\Local\Exceptions\WorkingHourException;
 use IteratorAggregate;
+use Override;
+use Stringable;
 use Traversable;
 
-class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
+class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate, Stringable
 {
     public const string CLOSED = 'closed';
 
@@ -30,9 +32,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     {
         $period = new static;
 
-        $timeRanges = array_map(function($times): WorkingRange {
-            return WorkingRange::create($times);
-        }, $times);
+        $timeRanges = array_map(fn($times): WorkingRange => WorkingRange::create($times), $times);
 
         $period->checkWorkingRangesOverlaps($timeRanges);
 
@@ -196,9 +196,11 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
         return $this->ranges === [];
     }
 
+
     /**
      * Retrieve an external iterator
      */
+    #[Override]
     public function getIterator(): Traversable
     {
         return new ArrayIterator($this->ranges);
@@ -207,6 +209,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[Override]
     public function count(): int
     {
         return count($this->ranges);
@@ -217,6 +220,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return bool true on success or false on failure.
      */
+    #[Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->ranges[$offset]);
@@ -227,6 +231,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return mixed Can return all value types.
      */
+    #[Override]
     public function offsetGet(mixed $offset): mixed
     {
         return $this->ranges[$offset];
@@ -235,6 +240,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Offset to set
      */
+    #[Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         throw new WorkingHourException('Can not set ranges');
@@ -243,16 +249,16 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Offset to unset
      */
+    #[Override]
     public function offsetUnset(mixed $offset): void
     {
         unset($this->ranges[$offset]);
     }
 
+    #[Override]
     public function __toString(): string
     {
-        $values = array_map(function($range): string {
-            return (string)$range;
-        }, $this->ranges);
+        $values = array_map(fn($range): string => (string)$range, $this->ranges);
 
         return implode(',', $values);
     }

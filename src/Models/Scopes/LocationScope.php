@@ -11,9 +11,7 @@ class LocationScope extends Scope
 {
     public function addApplyPosition()
     {
-        return function(Builder $builder, array $position) {
-            return $builder->selectDistance($position['latitude'], $position['longitude']);
-        };
+        return fn(Builder $builder, array $position) => $builder->selectDistance($position['latitude'], $position['longitude']);
     }
 
     public function addSelectDistance()

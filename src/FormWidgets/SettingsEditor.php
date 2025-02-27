@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\FormWidgets;
 
+use Override;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
@@ -26,6 +27,7 @@ class SettingsEditor extends BaseFormWidget
 
     public $popupSize = 'modal-lg';
 
+    #[Override]
     public function initialize(): void
     {
         $this->fillFromConfig([
@@ -33,6 +35,7 @@ class SettingsEditor extends BaseFormWidget
         ]);
     }
 
+    #[Override]
     public function render(): string
     {
         $this->prepareVars();
@@ -46,6 +49,7 @@ class SettingsEditor extends BaseFormWidget
         $this->vars['settings'] = $this->listSettings();
     }
 
+    #[Override]
     public function loadAssets(): void
     {
         $this->addJs('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');

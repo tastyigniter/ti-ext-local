@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Http\Requests;
 
+use Override;
 use Igniter\System\Classes\FormRequest;
 
 class LocationRequest extends FormRequest
 {
+    #[Override]
     public function attributes()
     {
         return [

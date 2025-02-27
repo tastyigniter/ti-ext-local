@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local;
 
+use Override;
 use Igniter\Admin\Classes\MainMenuItem;
 use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
@@ -66,6 +67,7 @@ class Extension extends BaseExtension
         'location' => Location::class,
     ];
 
+    #[Override]
     public function register(): void
     {
         parent::register();
@@ -79,6 +81,7 @@ class Extension extends BaseExtension
         AliasLoader::getInstance()->alias('Location', LocationFacade::class);
     }
 
+    #[Override]
     public function boot(): void
     {
         $this->bindRememberLocationAreaEvents();
@@ -161,6 +164,7 @@ class Extension extends BaseExtension
         ];
     }
 
+    #[Override]
     public function registerMailTemplates(): array
     {
         return [
@@ -168,6 +172,7 @@ class Extension extends BaseExtension
         ];
     }
 
+    #[Override]
     public function registerNavigation(): array
     {
         return [
@@ -196,6 +201,7 @@ class Extension extends BaseExtension
         ];
     }
 
+    #[Override]
     public function registerPermissions(): array
     {
         return [
@@ -210,6 +216,7 @@ class Extension extends BaseExtension
         ];
     }
 
+    #[Override]
     public function registerSettings(): array
     {
         return [
@@ -223,6 +230,7 @@ class Extension extends BaseExtension
         ];
     }
 
+    #[Override]
     public function registerFormWidgets(): array
     {
         return [
@@ -258,7 +266,7 @@ class Extension extends BaseExtension
                 'icon' => 'fa-store',
                 'url' => admin_url('locations'),
                 'priority' => 15,
-                'complete' => [\Igniter\Local\Models\Location::class, 'onboardingIsComplete'],
+                'complete' => \Igniter\Local\Models\Location::onboardingIsComplete(...),
             ],
         ];
     }

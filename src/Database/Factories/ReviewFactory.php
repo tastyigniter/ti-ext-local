@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Database\Factories;
 
+use Override;
 use Igniter\Flame\Database\Factories\Factory;
 use Igniter\Local\Models\Review;
 
@@ -11,6 +12,7 @@ class ReviewFactory extends Factory
 {
     protected $model = Review::class;
 
+    #[Override]
     public function definition(): array
     {
         return [

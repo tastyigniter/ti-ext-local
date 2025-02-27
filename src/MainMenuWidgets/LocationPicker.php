@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\MainMenuWidgets;
 
+use Override;
 use Igniter\Admin\Classes\BaseMainMenuWidget;
 use Igniter\Admin\Traits\FormModelWidget;
 use Igniter\Admin\Traits\ValidatesForm;
@@ -28,6 +29,7 @@ class LocationPicker extends BaseMainMenuWidget
 
     public $modelClass = Location::class;
 
+    #[Override]
     public function initialize(): void
     {
         $this->fillFromConfig([
@@ -37,6 +39,7 @@ class LocationPicker extends BaseMainMenuWidget
         ]);
     }
 
+    #[Override]
     public function render(): string
     {
         $this->prepareVars();
