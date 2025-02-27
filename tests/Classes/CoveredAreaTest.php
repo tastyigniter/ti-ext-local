@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Tests\Classes;
 
+use Igniter\Flame\Geolite\Model\Location as GeoliteLocation;
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\LocationArea;
-use Igniter\Flame\Geolite\Model\Location as GeoliteLocation;
 use Mockery;
 
 it('calculates delivery amount correctly', function(): void {
