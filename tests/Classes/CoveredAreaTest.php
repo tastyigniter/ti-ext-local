@@ -8,6 +8,7 @@ use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\CoveredAreaCondition;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\LocationArea;
+use Igniter\Flame\Geolite\Model\Location as GeoliteLocation;
 use Mockery;
 
 it('calculates delivery amount correctly', function(): void {
@@ -42,8 +43,8 @@ it('calculates delivery amount using delivery charges correctly', function(): vo
             ['distance' => 12, 'type' => 'equals_or_less', 'charge' => 15],
         ],
     ]);
-    Location::shouldReceive('userPosition')->andReturnSelf();
-    Location::shouldReceive('isValid')->andReturnTrue();
+    Location::shouldReceive('userPosition')->andReturn($userPosition = mock(GeoliteLocation::class));
+    $userPosition->shouldReceive('isValid')->andReturnTrue();
     Location::shouldReceive('checkDistance')->andReturn(20, 5, 15, 12);
 
     $coveredArea = new CoveredArea($model);

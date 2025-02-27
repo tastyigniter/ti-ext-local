@@ -13,7 +13,6 @@ use Igniter\Flame\Geolite\Model\Location as UserLocation;
 use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Classes\WorkingSchedule;
-use Igniter\Local\Contracts\LocationInterface;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\LocationArea;
@@ -39,7 +38,7 @@ it('returns location slug from resolver callback', function(): void {
 });
 
 it('returns current location when model is already set', function(): void {
-    $model = mock(LocationInterface::class);
+    $model = mock(LocationModel::class);
     $this->location->setModel($model);
 
     $result = $this->location->current();
@@ -83,7 +82,7 @@ it('returns default location in currentOrDefault', function(): void {
 });
 
 it('returns current location in currentOrDefault', function(): void {
-    $model = mock(LocationInterface::class)->makePartial();
+    $model = mock(LocationModel::class)->makePartial();
     $this->location->setModel($model);
 
     $result = $this->location->currentOrDefault();
@@ -113,7 +112,7 @@ it('returns empty array for super user in currentOrAssigned', function(): void {
 });
 
 it('returns current location id in currentOrAssigned', function(): void {
-    $location = mock(LocationInterface::class)->makePartial();
+    $location = mock(LocationModel::class)->makePartial();
     $location->shouldReceive('getKey')->andReturn(1);
     $this->location->setCurrent($location);
 

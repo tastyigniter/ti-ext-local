@@ -15,7 +15,7 @@ class Delivery extends CartCondition
 
     protected $deliveryCharge = 0;
 
-    public function beforeApply()
+    public function beforeApply(): ?bool
     {
         // Do not apply condition when orderType is not delivery
         if (Location::orderType() != LocationModel::DELIVERY) {
@@ -28,14 +28,14 @@ class Delivery extends CartCondition
         return null;
     }
 
-    public function getRules()
+    public function getRules(): array
     {
         return [
             $this->deliveryCharge.' >= 0',
         ];
     }
 
-    public function getActions()
+    public function getActions(): array
     {
         return [
             ['value' => '+'.$this->deliveryCharge],

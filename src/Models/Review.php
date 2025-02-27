@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\DB;
  * @property bool $review_status
  * @property Carbon $updated_at
  * @property-read null|Customer $customer
- * @method static Builder|Review whereReviewable()
+ * @method static Builder|Review whereReviewable(Model $object)
  * @mixin Model
  */
 class Review extends Model

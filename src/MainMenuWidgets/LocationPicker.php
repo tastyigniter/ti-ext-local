@@ -37,7 +37,7 @@ class LocationPicker extends BaseMainMenuWidget
         ]);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->prepareVars();
 

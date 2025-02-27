@@ -111,7 +111,7 @@ class MapArea extends BaseFormWidget
         $this->addJs('mapview.shape.js', 'mapview-shape-js');
     }
 
-    public function render()
+    public function render(): string
     {
         $this->prepareVars();
 

@@ -574,7 +574,7 @@ class Location
         return $coveredArea;
     }
 
-    public function userPosition(): ?\Igniter\Flame\Geolite\Model\Location
+    public function userPosition(): ?UserLocation
     {
         return $this->getSession('position', UserLocation::createFromArray([]));
     }

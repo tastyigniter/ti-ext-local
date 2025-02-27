@@ -16,7 +16,7 @@ class ReviewCount extends BaseModelAttributesCondition
 
     protected $modelAttributes;
 
-    public function conditionDetails()
+    public function conditionDetails(): array
     {
         return [
             'name' => 'Review Count',
@@ -24,7 +24,7 @@ class ReviewCount extends BaseModelAttributesCondition
         ];
     }
 
-    public function defineModelAttributes()
+    public function defineModelAttributes(): array
     {
         return [
             'review_count' => [

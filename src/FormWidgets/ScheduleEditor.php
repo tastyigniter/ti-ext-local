@@ -46,7 +46,7 @@ class ScheduleEditor extends BaseFormWidget
         ]);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->prepareVars();
 
