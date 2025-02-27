@@ -16,9 +16,7 @@ use Illuminate\Support\Collection;
  */
 class CoveredArea
 {
-    public function __construct(protected LocationArea $model)
-    {
-    }
+    public function __construct(protected LocationArea $model) {}
 
     public function deliveryAmount($cartTotal): float|int
     {

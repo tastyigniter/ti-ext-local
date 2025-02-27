@@ -196,7 +196,6 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate, String
         return $this->ranges === [];
     }
 
-
     /**
      * Retrieve an external iterator
      */

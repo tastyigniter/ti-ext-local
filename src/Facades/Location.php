@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Facades;
 
-use Override;
 use Carbon\Carbon;
 use Closure;
 use Igniter\Cart\Classes\AbstractOrderType;
@@ -15,6 +14,7 @@ use Igniter\Local\Contracts\AreaInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
+use Override;
 
 /**
  * @method static string|null resolveLocationSlug()

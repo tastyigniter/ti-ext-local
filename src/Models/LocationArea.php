@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
-use Override;
 use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
@@ -18,6 +17,7 @@ use Igniter\Flame\Geolite\Facades\Geolite;
 use Igniter\Local\Contracts\AreaInterface;
 use Igniter\System\Models\Concerns\Defaultable;
 use Illuminate\Database\Eloquent\Builder;
+use Override;
 
 /**
  * LocationArea Model Class

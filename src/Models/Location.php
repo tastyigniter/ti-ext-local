@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
-use Override;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Database\Builder;
@@ -22,6 +21,7 @@ use Igniter\System\Models\Concerns\Switchable;
 use Igniter\System\Models\Country;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * Location Model Class

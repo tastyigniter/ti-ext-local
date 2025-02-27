@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Igniter\Local;
 
-use Override;
 use Igniter\Admin\Classes\MainMenuItem;
 use Igniter\Admin\Classes\Navigation;
 use Igniter\Admin\DashboardWidgets\Charts;
@@ -45,6 +44,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
+use Override;
 
 class Extension extends BaseExtension
 {

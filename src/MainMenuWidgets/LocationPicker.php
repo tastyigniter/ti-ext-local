@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Igniter\Local\MainMenuWidgets;
 
-use Override;
 use Igniter\Admin\Classes\BaseMainMenuWidget;
 use Igniter\Admin\Traits\FormModelWidget;
 use Igniter\Admin\Traits\ValidatesForm;
@@ -17,6 +16,7 @@ use Igniter\Local\Models\Location;
 use Igniter\User\Facades\AdminAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 class LocationPicker extends BaseMainMenuWidget
 {

@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Classes;
 
-use Stringable;
-use Override;
 use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use Igniter\Local\Exceptions\WorkingHourException;
+use Override;
+use Stringable;
 
 class WorkingTime implements Stringable
 {
-    public function __construct(protected int $hours, protected int $minutes)
-    {
-    }
+    public function __construct(protected int $hours, protected int $minutes) {}
 
     public static function create(string $string): self
     {

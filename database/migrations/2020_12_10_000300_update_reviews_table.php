@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Igniter\Cart\Models\Order;
 use Igniter\Reservation\Models\Reservation;
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;

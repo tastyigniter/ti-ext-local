@@ -25,9 +25,7 @@ class ScheduleItem
      */
     protected $data;
 
-    public function __construct(public string $name)
-    {
-    }
+    public function __construct(public string $name) {}
 
     public static function create(string $name, array $data = []): self
     {

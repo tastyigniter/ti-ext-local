@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models;
 
-use Override;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 use Igniter\Local\Contracts\WorkingHourInterface;
 use Igniter\System\Models\Concerns\Switchable;
+use Override;
 use stdClass;
 
 /**

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Database\Factories;
 
-use Override;
 use Igniter\Flame\Database\Factories\Factory;
 use Igniter\Local\Models\LocationArea;
+use Override;
 
 class LocationAreaFactory extends Factory
 {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Igniter\Local\FormWidgets;
 
-use Override;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\ValidatesForm;
 use Igniter\Admin\Widgets\Form;
@@ -13,6 +12,7 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\LocationSettings;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 class SettingsEditor extends BaseFormWidget
 {

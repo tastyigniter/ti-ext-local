@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Igniter\Local\AutomationRules\Conditions;
 
-use Override;
 use Igniter\Automation\AutomationException;
 use Igniter\Automation\Classes\BaseModelAttributesCondition;
 use Igniter\Cart\Models\Order;
 use Igniter\Local\Models\Review;
 use Igniter\Reservation\Models\Reservation;
+use Override;
 
 class ReviewCount extends BaseModelAttributesCondition
 {

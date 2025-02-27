@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Igniter\Local\CartConditions;
 
-use Override;
 use Igniter\Cart\CartCondition;
 use Igniter\Cart\Facades\Cart;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\Location as LocationModel;
+use Override;
 
 class Delivery extends CartCondition
 {

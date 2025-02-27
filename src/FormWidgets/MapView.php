@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Igniter\Local\FormWidgets;
 
-use Override;
 use Igniter\Admin\Classes\BaseFormWidget;
 use Igniter\Admin\Traits\FormModelWidget;
+use Override;
 
 class MapView extends BaseFormWidget
 {
