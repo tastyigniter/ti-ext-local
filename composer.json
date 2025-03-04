@@ -10,18 +10,21 @@
     }
   ],
   "require": {
-    "tastyigniter/core": "^v4.0@beta || ^v4.0@dev",
-    "tastyigniter/ti-ext-automation": "^v4.0@beta || ^v4.0@dev",
-    "tastyigniter/ti-ext-cart": "^v4.0@beta || ^v4.0@dev",
-    "tastyigniter/ti-ext-reservation": "^v4.0@beta || ^v4.0@dev"
+    "tastyigniter/core": "^v4.0",
+    "tastyigniter/ti-ext-automation": "^v4.0",
+    "tastyigniter/ti-ext-cart": "^v4.0",
+    "tastyigniter/ti-ext-reservation": "^v4.0"
   },
   "require-dev": {
-    "igniterlabs/ti-ext-importexport": "v4.x-dev as 4.0",
+    "igniterlabs/ti-ext-importexport": "v4.0",
     "larastan/larastan": "^2.4.0",
     "laravel/pint": "^1.2",
     "pestphp/pest-plugin-laravel": "^3.0",
     "rector/rector": "^1.2",
-    "sampoyigi/testbench": "dev-main as 1.0"
+    "sampoyigi/testbench": "^1.0"
+  },
+  "suggest": {
+    "igniterlabs/ti-ext-importexport": "For importing and exporting menu items."
   },
   "autoload": {
     "psr-4": {
@@ -65,6 +68,5 @@
       "composer/installers": true
     },
     "sort-packages": true
-  },
-  "minimum-stability": "dev"
+  }
 }
