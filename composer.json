@@ -1,6 +1,6 @@
 {
   "name": "tastyigniter/ti-ext-local",
-  "type": "tastyigniter-extension",
+  "type": "tastyigniter-package",
   "description": "This extension allows your customers find and view menu items of their nearest location.",
   "license": "MIT",
   "authors": [
@@ -9,6 +9,33 @@
       "email": "sam@sampoyigi.com"
     }
   ],
+  "require": {
+    "tastyigniter/core": "^v4.0",
+    "tastyigniter/ti-ext-automation": "^v4.0",
+    "tastyigniter/ti-ext-cart": "^v4.0",
+    "tastyigniter/ti-ext-reservation": "^v4.0"
+  },
+  "require-dev": {
+    "igniterlabs/ti-ext-importexport": "v4.0",
+    "larastan/larastan": "^2.4.0",
+    "laravel/pint": "^1.2",
+    "pestphp/pest-plugin-laravel": "^3.0",
+    "rector/rector": "^1.2",
+    "sampoyigi/testbench": "^1.0"
+  },
+  "suggest": {
+    "igniterlabs/ti-ext-importexport": "For importing and exporting menu items."
+  },
+  "autoload": {
+    "psr-4": {
+      "Igniter\\Local\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Igniter\\Local\\Tests\\": "tests/"
+    }
+  },
   "extra": {
     "tastyigniter-extension": {
       "code": "igniter.local",
@@ -20,5 +47,26 @@
       },
       "homepage": "https://tastyigniter.com/marketplace/item/igniter-local"
     }
+  },
+  "scripts": {
+    "test": "vendor/bin/pest",
+    "test-coverage": "vendor/bin/pest --coverage --exactly=100 --compact",
+    "type-coverage": "vendor/bin/pest --type-coverage --min=100",
+    "format": "vendor/bin/pint",
+    "refactor": "vendor/bin/rector process --dry-run",
+    "static": "vendor/bin/phpstan analyse --ansi --memory-limit 1056M",
+    "test-suite": [
+      "@refactor",
+      "@static",
+      "@test-coverage"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "php-http/discovery": true,
+      "composer/installers": true
+    },
+    "sort-packages": true
   }
 }

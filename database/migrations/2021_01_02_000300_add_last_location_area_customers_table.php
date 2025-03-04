@@ -1,27 +1,23 @@
 <?php
 
-namespace Igniter\Local\Database\Migrations;
+declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Add last_location_area column to customer table
- */
-class AddLastLocationAreaCustomersTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
-        if (Schema::hasColumn('customers', 'last_location_area'))
+        if (Schema::hasColumn('customers', 'last_location_area')) {
             return;
+        }
 
-        Schema::table('customers', function (Blueprint $table) {
+        Schema::table('customers', function(Blueprint $table): void {
             $table->text('last_location_area');
         });
     }
 
-    public function down()
-    {
-    }
-}
+    public function down(): void {}
+};
