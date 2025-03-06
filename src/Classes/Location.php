@@ -123,7 +123,6 @@ class Location
             return [];
         }
 
-        // @phpstan-ignore property.notFound
         return AdminAuth::user()?->locations?->pluck('location_id')->all() ?? [];
     }
 
