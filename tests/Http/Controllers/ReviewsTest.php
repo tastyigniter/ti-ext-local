@@ -33,7 +33,7 @@ it('creates review', function(): void {
     actingAsSuperUser()
         ->post(route('igniter.local.reviews', ['slug' => 'create']), [
             'Review' => [
-                'customer_id' => 1,
+                'author' => 'John Doe',
                 'location_id' => 1,
                 'reviewable_type' => 'orders',
                 'reviewable_id' => $order->getKey(),
@@ -58,7 +58,6 @@ it('updates review', function(): void {
     actingAsSuperUser()
         ->post(route('igniter.local.reviews', ['slug' => 'edit/'.$review->getKey()]), [
             'Review' => [
-                'customer_id' => 1,
                 'location_id' => 1,
                 'reviewable_type' => 'orders',
                 'reviewable_id' => $order->getKey(),

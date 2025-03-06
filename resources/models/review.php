@@ -77,8 +77,7 @@ $config['list']['columns'] = [
     ],
     'author' => [
         'label' => 'lang:igniter.local::default.reviews.column_author',
-        'relation' => 'customer',
-        'select' => "concat(first_name, ' ', last_name)",
+        'type' => 'text',
         'searchable' => true,
     ],
     'reviewable_id' => [
@@ -145,13 +144,16 @@ $config['form']['fields'] = [
         'span' => 'left',
         'placeholder' => 'lang:admin::lang.text_please_select',
     ],
-    'customer_id' => [
+    'author@edit' => [
         'label' => 'lang:igniter.local::default.reviews.label_author',
-        'type' => 'relation',
-        'relationFrom' => 'customer',
-        'nameFrom' => 'full_name',
+        'type' => 'text',
         'span' => 'right',
-        'placeholder' => 'lang:admin::lang.text_please_select',
+        'disabled' => true,
+    ],
+    'author@create' => [
+        'label' => 'lang:igniter.local::default.reviews.label_author',
+        'type' => 'text',
+        'span' => 'right',
     ],
     'reviewable_type' => [
         'label' => 'lang:igniter.local::default.reviews.label_reviewable_type',
