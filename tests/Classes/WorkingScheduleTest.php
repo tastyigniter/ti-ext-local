@@ -211,6 +211,9 @@ it('checks status correctly', function(): void {
     $workingSchedule = new WorkingSchedule('UTC', 0);
     $workingSchedule->fill([
         'periods' => [
+            'sunday' => [
+                ['08:00', '18:00'],
+            ],
             'monday' => [
                 ['08:00', '12:00'],
                 ['13:00', '17:00'],
@@ -221,11 +224,13 @@ it('checks status correctly', function(): void {
                 ['08:00', '12:00'],
             ],
             '2022-12-31' => [],
+            '2023-01-01' => [],
         ],
     ]);
 
     expect($workingSchedule->checkStatus())->toBe(WorkingPeriod::OPEN)
         ->and($workingSchedule->checkStatus('2022-12-31 20:00:00'))->toBe(WorkingPeriod::CLOSED)
+        ->and($workingSchedule->checkStatus('2023-01-01 15:00:00'))->toBe(WorkingPeriod::CLOSED)
         ->and($workingSchedule->checkStatus(new DateTime('2023-01-02 20:00:00')))->toBe(WorkingPeriod::CLOSED)
         ->and($workingSchedule->checkStatus(new DateTime('2023-01-02 10:00:00')))->toBe(WorkingPeriod::OPEN)
         ->and($workingSchedule->checkStatus(new DateTime('2023-01-02 07:00:00')))->toBe(WorkingPeriod::OPENING);

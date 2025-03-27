@@ -73,6 +73,11 @@ class WorkingTime implements Stringable
         return $this->isSame($time) || $this->isAfter($time);
     }
 
+    public function isSameOrBefore(self $time): bool
+    {
+        return $this->isSame($time) || $this->isBefore($time);
+    }
+
     public function diff(self $time): DateInterval
     {
         return $this->toDateTime()->diff($time->toDateTime());
