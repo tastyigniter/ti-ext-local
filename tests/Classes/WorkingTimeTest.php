@@ -39,7 +39,10 @@ it('checks time correctly', function(): void {
         ->and($workingTime1->isBefore($workingTime2))->toBeTrue()
         ->and($workingTime1->isBefore($workingTime1))->toBeFalse()
         ->and($workingTime1->isSameOrAfter($workingTime1))->toBeTrue()
-        ->and($workingTime1->isSameOrAfter($workingTime2))->toBeFalse();
+        ->and($workingTime1->isSameOrAfter($workingTime2))->toBeFalse()
+        ->and($workingTime1->isSameOrBefore($workingTime1))->toBeTrue()
+        ->and($workingTime1->isSameOrBefore($workingTime2))->toBeTrue()
+        ->and($workingTime2->isSameOrBefore($workingTime1))->toBeFalse();
 });
 
 it('gets time difference correctly', function(): void {
