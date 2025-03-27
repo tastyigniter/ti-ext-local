@@ -46,7 +46,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate, String
         return !is_null($this->findTimeInRange($time));
     }
 
-    public function openTimeAt(WorkingTime $time): WorkingTime
+    public function openTimeAt(WorkingTime $time): ?WorkingTime
     {
         if (($range = $this->findTimeInRange($time)) instanceof WorkingRange) {
             return $range->start();
@@ -55,7 +55,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate, String
         return optional(current($this->ranges))->start();
     }
 
-    public function closeTimeAt(WorkingTime $time): WorkingTime
+    public function closeTimeAt(WorkingTime $time): ?WorkingTime
     {
         if (($range = $this->findTimeInRange($time)) instanceof WorkingRange) {
             return $range->end();
