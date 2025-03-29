@@ -80,6 +80,7 @@ class SettingsEditor extends BaseFormWidget
 
         $form = $this->makeSettingsFormWidget($model, $definition);
 
+        $this->config['request'] = $definition->request ?? null;
         $saveData = $this->validateFormWidget($form, $form->getSaveData());
 
         DB::transaction(function() use ($model, $saveData): void {
