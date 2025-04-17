@@ -7,6 +7,7 @@ namespace Igniter\Local\Http\Controllers;
 use Igniter\Admin\Classes\AdminController;
 use Igniter\Admin\Classes\ListColumn;
 use Igniter\Admin\Facades\AdminMenu;
+use Igniter\Admin\Facades\Template;
 use Igniter\Admin\Http\Actions\FormController;
 use Igniter\Admin\Http\Actions\ListController;
 use Igniter\Local\Http\Requests\LocationRequest;
@@ -48,7 +49,7 @@ class Locations extends AdminController
             'request' => LocationRequest::class,
         ],
         'settings' => [
-            'title' => 'lang:igniter.local::default.settings_title',
+            'title' => 'lang:igniter.local::default.text_settings_title',
             'redirect' => 'locations/settings/{location_id}',
             'redirectClose' => 'locations',
             'configFile' => 'locationsettings',
@@ -75,6 +76,16 @@ class Locations extends AdminController
         parent::__construct();
 
         AdminMenu::setContext('locations', 'system');
+    }
+
+    public function edit(string $context, string $recordId): void
+    {
+        Template::setButton(lang('igniter.local::default.button_settings'), [
+            'class' => 'btn btn-default',
+            'href' => admin_url('locations/settings/'.$recordId),
+        ]);
+
+        $this->asExtension('FormController')->edit($context, $recordId);
     }
 
     public function settings(string $context, string $recordId): void

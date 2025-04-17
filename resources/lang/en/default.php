@@ -66,6 +66,7 @@ return [
     'button_search_location' => 'GO',
     'button_enter_location' => 'Enter Location',
     'button_view_menu' => 'View Menu',
+    'button_settings' => 'Settings',
 
     'label_default_order_type' => 'Set the default selected order type',
     'label_location_search_mode' => 'Hide Location Search',
@@ -195,7 +196,7 @@ return [
     'text_empty' => 'There are no locations available.',
     'text_24_7' => '24/7',
     'text_daily' => 'Daily',
-    'settings_title' => 'Settings',
+    'text_settings_title' => 'Location Settings',
     'text_flexible' => 'Flexible',
     'text_timesheet' => 'Timesheet',
     'text_schedule' => 'Schedule',
