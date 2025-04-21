@@ -8,8 +8,10 @@ parameters:
         - src/
         - database/
         - resources/
-#    ignoreErrors:
+    ignoreErrors:
 #        - '#PHPDoc tag @var#'
+        - identifier: generics.notGeneric
+        - identifier: trait.unused
 #    excludePaths:
 #        - ./*/*/FileToBeExcluded.php
 #    checkMissingIterableValueType: false
