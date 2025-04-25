@@ -17,7 +17,7 @@ class ReviewAction extends ModelAction
         $this->model->relation['morphMany']['review'] = [Review::class, 'name' => 'reviewable'];
     }
 
-    public function leaveReview($attributes): Review
+    public function leaveReview(array $attributes): Review
     {
         return Review::leaveReview($this->model, $attributes);
     }
