@@ -420,7 +420,9 @@ class Location
             return $this->firstScheduleTimeslot();
         }
 
-        return Carbon::now();
+        // add lead time to order time
+        $leadTime = $this->orderLeadTime();
+        return Carbon::now()->addMinutes($leadTime);
     }
 
     public function isClosed(): bool
