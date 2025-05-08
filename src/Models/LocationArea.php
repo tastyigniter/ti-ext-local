@@ -87,6 +87,7 @@ class LocationArea extends Model implements AreaInterface
         ['type', 'igniter.local::default.label_area_type', 'sometimes|required|string'],
         ['name', 'igniter.local::default.label_area_name', 'sometimes|required|string'],
         ['area_id', 'igniter.local::default.label_area_id', 'nullable|integer'],
+        ['is_default', 'igniter.local::default.label_area_default', 'sometimes|required|boolean'],
         ['boundaries.components', 'igniter.local::default.label_address_component', 'sometimes|required_if:type,address'],
         ['boundaries.components.*.type', 'igniter.local::default.label_address_component_type', 'sometimes|required|string'],
         ['boundaries.components.*.value', 'igniter.local::default.label_address_component_value', 'sometimes|required|string'],

@@ -244,6 +244,7 @@ it('configures location area model correctly', function(): void {
         ->and($locationArea->rules)->toEqual([
             ['type', 'igniter.local::default.label_area_type', 'sometimes|required|string'],
             ['name', 'igniter.local::default.label_area_name', 'sometimes|required|string'],
+            ['is_default', 'igniter.local::default.label_area_default', 'sometimes|required|boolean'],
             ['area_id', 'igniter.local::default.label_area_id', 'nullable|integer'],
             ['boundaries.components', 'igniter.local::default.label_address_component', 'sometimes|required_if:type,address'],
             ['boundaries.components.*.type', 'igniter.local::default.label_address_component_type', 'sometimes|required|string'],

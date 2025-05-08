@@ -15,6 +15,7 @@ class LocationAreaRequest extends FormRequest
         return [
             'type' => lang('igniter.local::default.label_area_type'),
             'name' => lang('igniter.local::default.label_area_name'),
+            'is_default' => lang('igniter.local::default.label_area_default'),
             'area_id' => lang('igniter.local::default.label_area_id'),
             'boundaries.components' => lang('igniter.local::default.label_address_component'),
             'boundaries.components.*.type' => lang('igniter.local::default.label_address_component_type'),
@@ -37,6 +38,7 @@ class LocationAreaRequest extends FormRequest
         return [
             'type' => ['sometimes', 'required', 'string'],
             'name' => ['sometimes', 'required', 'string'],
+            'is_default' => ['sometimes', 'required', 'boolean'],
             'area_id' => ['integer'],
             'boundaries.components' => ['sometimes', 'required_if:type,address', 'array'],
             'boundaries.components.*.type' => ['sometimes', 'required', 'string'],
