@@ -11,6 +11,7 @@ it('returns correct attribute labels', function(): void {
 
     expect($attributes)->toHaveKey('type', lang('igniter.local::default.label_area_type'))
         ->and($attributes)->toHaveKey('name', lang('igniter.local::default.label_area_name'))
+        ->and($attributes)->toHaveKey('is_default', lang('igniter.local::default.label_area_default'))
         ->and($attributes)->toHaveKey('area_id', lang('igniter.local::default.label_area_id'))
         ->and($attributes)->toHaveKey('boundaries.components', lang('igniter.local::default.label_address_component'))
         ->and($attributes)->toHaveKey('boundaries.components.*.type', lang('igniter.local::default.label_address_component_type'))
@@ -32,6 +33,7 @@ it('returns correct validation rules', function(): void {
 
     expect($rules)->toHaveKey('type', ['sometimes', 'required', 'string'])
         ->and($rules)->toHaveKey('name', ['sometimes', 'required', 'string'])
+        ->and($rules)->toHaveKey('is_default', ['sometimes', 'required', 'boolean'])
         ->and($rules)->toHaveKey('area_id', ['integer'])
         ->and($rules)->toHaveKey('boundaries.components', ['sometimes', 'required_if:type,address', 'array'])
         ->and($rules)->toHaveKey('boundaries.components.*.type', ['sometimes', 'required', 'string'])

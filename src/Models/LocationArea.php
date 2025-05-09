@@ -83,16 +83,17 @@ class LocationArea extends Model implements AreaInterface
 
     protected $fillable = ['area_id', 'type', 'name', 'boundaries', 'conditions', 'priority'];
 
-    public $rules = [
+    public array $rules = [
         ['type', 'igniter.local::default.label_area_type', 'sometimes|required|string'],
         ['name', 'igniter.local::default.label_area_name', 'sometimes|required|string'],
+        ['is_default', 'igniter.local::default.label_area_default', 'sometimes|required|boolean'],
         ['area_id', 'igniter.local::default.label_area_id', 'nullable|integer'],
         ['boundaries.components', 'igniter.local::default.label_address_component', 'sometimes|required_if:type,address'],
         ['boundaries.components.*.type', 'igniter.local::default.label_address_component_type', 'sometimes|required|string'],
         ['boundaries.components.*.value', 'igniter.local::default.label_address_component_value', 'sometimes|required|string'],
         ['boundaries.polygon', 'igniter.local::default.label_area_shape', 'sometimes|required_if:type,polygon'],
-        ['boundaries.circle', 'igniter.local::default.label_area_circle', 'sometimes|required_if:type,circle|json'],
-        ['boundaries.vertices', 'igniter.local::default.label_area_vertices', 'sometimes|required_unless:type,address|json'],
+        ['boundaries.circle', 'igniter.local::default.label_area_circle', 'nullable|required_if:type,circle|json'],
+        ['boundaries.vertices', 'igniter.local::default.label_area_vertices', 'nullable|required_unless:type,address|json'],
         ['boundaries.distance.*.type', 'igniter.local::default.label_area_distance', 'sometimes|required|string'],
         ['boundaries.distance.*.distance', 'igniter.local::default.label_area_distance', 'sometimes|required|numeric'],
         ['boundaries.distance.*.charge', 'igniter.local::default.label_area_charge', 'sometimes|required|numeric'],

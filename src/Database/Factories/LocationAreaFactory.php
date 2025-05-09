@@ -15,11 +15,33 @@ class LocationAreaFactory extends Factory
     #[Override]
     public function definition(): array
     {
-        return [
+        $data = [
             'name' => $this->faker->sentence(2),
             'type' => $this->faker->randomElement(['address', 'circle', 'polygon']),
             'color' => $this->faker->hexColor(),
             'is_default' => $this->faker->boolean(),
         ];
+        if($data['type'] !== 'address') {
+            $data['boundaries'] = [
+                'circle' => json_encode([
+                    'lat' => $this->faker->latitude(),
+                    'lng' => $this->faker->longitude(),
+                    'radius' => $this->faker->numberBetween(1, 100),
+                ]),
+                'polygon' => '}a}~HpewHhf@??l_Aif@?',
+                'vertices' => json_encode([
+                    [
+                        'lat' => $this->faker->latitude(),
+                        'lng' => $this->faker->longitude(),
+                    ],
+                    [
+                        'lat' => $this->faker->latitude(),
+                        'lng' => $this->faker->longitude(),
+                    ],
+                ]),
+            ];
+        }
+
+        return $data;
     }
 }
