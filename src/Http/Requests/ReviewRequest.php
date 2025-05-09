@@ -10,7 +10,7 @@ use Override;
 class ReviewRequest extends FormRequest
 {
     #[Override]
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'reviewable_type' => lang('igniter.local::default.reviews.label_reviewable_type'),

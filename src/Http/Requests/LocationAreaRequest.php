@@ -10,7 +10,7 @@ use Override;
 class LocationAreaRequest extends FormRequest
 {
     #[Override]
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'type' => lang('igniter.local::default.label_area_type'),

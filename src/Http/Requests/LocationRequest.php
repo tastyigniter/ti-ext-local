@@ -10,7 +10,7 @@ use Override;
 class LocationRequest extends FormRequest
 {
     #[Override]
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'location_name' => lang('igniter::admin.label_name'),

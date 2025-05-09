@@ -99,10 +99,9 @@ class Location extends Facade
 {
     /**
      * Get the registered name of the component.
-     * @return string
      */
     #[Override]
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return 'location';
     }
