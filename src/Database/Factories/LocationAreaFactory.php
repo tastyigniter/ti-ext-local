@@ -41,6 +41,7 @@ class LocationAreaFactory extends Factory
                 ]),
             ];
         }
+
         return $data;
     }
 }
