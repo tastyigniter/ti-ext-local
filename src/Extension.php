@@ -264,9 +264,9 @@ class Extension extends BaseExtension
                 'label' => 'igniter.local::default.onboarding_locations',
                 'description' => 'igniter.local::default.help_onboarding_locations',
                 'icon' => 'fa-store',
-                'url' => admin_url('locations'),
+                'url' => admin_url('locations/settings/'.LocationModel::getDefaultKey()),
                 'priority' => 15,
-                'complete' => \Igniter\Local\Models\Location::onboardingIsComplete(...),
+                'complete' => LocationModel::onboardingIsComplete(...),
             ],
         ];
     }

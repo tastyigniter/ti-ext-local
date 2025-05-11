@@ -52,8 +52,8 @@ return [
     'text_filter_search' => 'Search by name or city',
     'text_filter_no_match' => 'No location found',
 
-    'onboarding_locations' => 'Configure a default location',
-    'help_onboarding_locations' => 'Set your default delivery area and customise your opening hours.',
+    'onboarding_locations' => 'Configure your location',
+    'help_onboarding_locations' => 'Set up your default location, delivery zone, and business hours so your customers know when and where you’re available.',
 
     'column_area_charge' => 'Delivery Charge',
     'column_area_min_total' => 'Min Total',

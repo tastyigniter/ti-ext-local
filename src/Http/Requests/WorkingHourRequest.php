@@ -10,7 +10,7 @@ use Override;
 class WorkingHourRequest extends FormRequest
 {
     #[Override]
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'type' => lang('igniter.local::default.label_schedule_type'),

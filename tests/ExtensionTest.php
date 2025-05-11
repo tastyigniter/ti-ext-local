@@ -200,9 +200,9 @@ it('returns registered onboarding steps array', function(): void {
             'label' => 'igniter.local::default.onboarding_locations',
             'description' => 'igniter.local::default.help_onboarding_locations',
             'icon' => 'fa-store',
-            'url' => admin_url('locations'),
+            'url' => admin_url('locations/settings/'.Location::getDefaultKey()),
             'priority' => 15,
-            'complete' => \Igniter\Local\Models\Location::onboardingIsComplete(...),
+            'complete' => Location::onboardingIsComplete(...),
         ],
     ]);
 });

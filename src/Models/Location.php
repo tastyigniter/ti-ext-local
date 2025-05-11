@@ -179,7 +179,7 @@ class Location extends Model implements LocationInterface
     }
 
     #[Override]
-    public function getMorphClass()
+    public function getMorphClass(): string
     {
         return 'locations';
     }
