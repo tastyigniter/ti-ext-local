@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Igniter\Local\Tests\Models;
 
 use Igniter\Flame\Database\Traits\Sortable;
-use Igniter\Flame\Database\Traits\Validation;
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Geolite\Model\Coordinates;
@@ -14,7 +13,7 @@ use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\LocationArea;
 use Igniter\System\Models\Concerns\Defaultable;
 
-it('returns correct conditions attribute', function(): void {
+it('returns correct conditions attribute', function (): void {
     $locationArea = LocationArea::factory()->create([
         'conditions' => [
             ['type' => 'above', 'amount' => 10.0, 'total' => 100.0],
@@ -29,7 +28,7 @@ it('returns correct conditions attribute', function(): void {
         ->and($result[0]['total'])->toBe(100);
 });
 
-it('returns correct vertices attribute', function(): void {
+it('returns correct vertices attribute', function (): void {
     $locationArea = LocationArea::factory()->create([
         'boundaries' => ['vertices' => json_encode([['lat' => 12.345678, 'lng' => 98.765432]])],
     ]);
@@ -41,7 +40,7 @@ it('returns correct vertices attribute', function(): void {
         ->and($result[0]->lng)->toBe(98.765432);
 });
 
-it('returns empty vertices attribute when boundaries are not set', function(): void {
+it('returns empty vertices attribute when boundaries are not set', function (): void {
     $locationArea = LocationArea::factory()->create(['boundaries' => []]);
 
     $result = $locationArea->vertices;
@@ -50,7 +49,7 @@ it('returns empty vertices attribute when boundaries are not set', function(): v
         ->and($result)->toBeEmpty();
 });
 
-it('returns correct circle attribute', function(): void {
+it('returns correct circle attribute', function (): void {
     $locationArea = LocationArea::factory()->create([
         'boundaries' => [
             'circle' => json_encode(['lat' => 12.345678, 'lng' => 98.765432, 'radius' => 1000]),
@@ -65,7 +64,7 @@ it('returns correct circle attribute', function(): void {
         ->and($result->radius)->toBe(1000);
 });
 
-it('returns null circle attribute when boundaries are not set', function(): void {
+it('returns null circle attribute when boundaries are not set', function (): void {
     $locationArea = LocationArea::factory()->create(['boundaries' => []]);
 
     $result = $locationArea->circle;
@@ -73,7 +72,7 @@ it('returns null circle attribute when boundaries are not set', function(): void
     expect($result)->toBeNull();
 });
 
-it('returns correct color attribute when value is set', function(): void {
+it('returns correct color attribute when value is set', function (): void {
     $locationArea = LocationArea::factory()->create(['color' => '#FFFFFF']);
 
     $result = $locationArea->color;
@@ -81,7 +80,7 @@ it('returns correct color attribute when value is set', function(): void {
     expect($result)->toBe('#FFFFFF');
 });
 
-it('returns random color attribute when value is not set', function(): void {
+it('returns random color attribute when value is not set', function (): void {
     $locationArea = LocationArea::factory()->create(['color' => '']);
 
     $result = $locationArea->color;
@@ -90,7 +89,7 @@ it('returns random color attribute when value is not set', function(): void {
         ->and(in_array($result, LocationArea::$areaColors))->toBeTrue();
 });
 
-it('returns location id attribute', function(): void {
+it('returns location id attribute', function (): void {
     $locationArea = LocationArea::factory()->create(['location_id' => 123]);
 
     $result = $locationArea->getLocationId();
@@ -98,7 +97,7 @@ it('returns location id attribute', function(): void {
     expect($result)->toBe(123);
 });
 
-it('checks if boundary is address type', function(): void {
+it('checks if boundary is address type', function (): void {
     $locationArea = LocationArea::factory()->create(['type' => 'address']);
 
     $result = $locationArea->isAddressBoundary();
@@ -106,7 +105,7 @@ it('checks if boundary is address type', function(): void {
     expect($result)->toBeTrue();
 });
 
-it('checks if boundary is polygon type', function(): void {
+it('checks if boundary is polygon type', function (): void {
     $locationArea = LocationArea::factory()->create(['type' => 'polygon']);
 
     $result = $locationArea->isPolygonBoundary();
@@ -114,7 +113,7 @@ it('checks if boundary is polygon type', function(): void {
     expect($result)->toBeTrue();
 });
 
-it('pointInVertices returns false when vertices is empty', function(): void {
+it('pointInVertices returns false when vertices is empty', function (): void {
     $locationArea = LocationArea::factory()->create(['boundaries' => []]);
     $coordinate = mock(CoordinatesInterface::class);
 
@@ -123,7 +122,7 @@ it('pointInVertices returns false when vertices is empty', function(): void {
     expect($result)->toBeFalse();
 });
 
-it('pointInCircle returns false when circle is empty', function(): void {
+it('pointInCircle returns false when circle is empty', function (): void {
     $locationArea = LocationArea::factory()->create(['boundaries' => []]);
     $coordinate = mock(CoordinatesInterface::class);
 
@@ -132,7 +131,7 @@ it('pointInCircle returns false when circle is empty', function(): void {
     expect($result)->toBeFalse();
 });
 
-it('checks if point is inside polygon vertices', function(): void {
+it('checks if point is inside polygon vertices', function (): void {
     $locationArea = LocationArea::factory()->create([
         'boundaries' => [
             'vertices' => json_encode([['lat' => 12.345678, 'lng' => 98.765432]]),
@@ -147,7 +146,7 @@ it('checks if point is inside polygon vertices', function(): void {
     expect($result)->toBeTrue();
 });
 
-it('checks if point is outside polygon vertices', function(): void {
+it('checks if point is outside polygon vertices', function (): void {
     $locationArea = LocationArea::factory()->create([
         'boundaries' => [
             'vertices' => json_encode([['lat' => 12.345678, 'lng' => 98.765432]]),
@@ -162,7 +161,7 @@ it('checks if point is outside polygon vertices', function(): void {
     expect($result)->toBeFalse();
 });
 
-it('checks if point is inside circle boundary', function(): void {
+it('checks if point is inside circle boundary', function (): void {
     $locationArea = LocationArea::factory()->create([
         'boundaries' => [
             'circle' => json_encode(['lat' => 12.345678, 'lng' => 98.765432, 'radius' => 1000]),
@@ -175,7 +174,7 @@ it('checks if point is inside circle boundary', function(): void {
     expect($result)->toBeTrue();
 });
 
-it('checks if point is outside circle boundary', function(): void {
+it('checks if point is outside circle boundary', function (): void {
     $locationArea = LocationArea::factory()->create([
         'boundaries' => [
             'circle' => json_encode(['lat' => 12.345678, 'lng' => 98.765432, 'radius' => 1000]),
@@ -188,7 +187,7 @@ it('checks if point is outside circle boundary', function(): void {
     expect($result)->toBeFalse();
 });
 
-it('checks if point is inside address boundary', function(): void {
+it('checks if point is inside address boundary', function (): void {
     $locationArea = LocationArea::factory()->create([
         'type' => 'address',
         'boundaries' => [
@@ -211,7 +210,7 @@ it('checks if point is inside address boundary', function(): void {
     expect($result)->toBeFalse();
 });
 
-it('configures location area model correctly', function(): void {
+it('configures location area model correctly', function (): void {
     $locationArea = new LocationArea;
 
     expect(class_uses_recursive($locationArea))
