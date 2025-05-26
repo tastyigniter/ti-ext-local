@@ -92,7 +92,7 @@ trait HasDeliveryAreas
     {
         return $this->delivery_areas
             ->sortBy('priority')
-            ->first(fn(LocationArea $model) => $model->checkBoundary($coordinates));
+            ->first(fn(LocationArea $model): bool => $model->checkBoundary($coordinates));
     }
 
     public function getDistanceUnit(): string
