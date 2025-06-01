@@ -32,6 +32,7 @@ use Igniter\Local\MainMenuWidgets\LocationPicker;
 use Igniter\Local\Models\Actions\ReviewAction;
 use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\LocationArea;
+use Igniter\Local\Models\Observers\LocationAreaObserver;
 use Igniter\Local\Models\Review;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Local\Models\Scopes\LocationScope;
@@ -50,6 +51,10 @@ class Extension extends BaseExtension
 {
     protected array $scopes = [
         LocationModel::class => LocationScope::class,
+    ];
+
+    protected $observers = [
+        LocationArea::class => LocationAreaObserver::class,
     ];
 
     protected $subscribe = [
