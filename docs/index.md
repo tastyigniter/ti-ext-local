@@ -46,7 +46,7 @@ You can enable or disable order and reservation reviews by navigating to the _Ma
 
 ## Usage
 
-This section explains how to integrate the Local extension API into your own extension if you need to manage locations, delivery areas, working hours, and reviews. The Local extension provides a simple API for managing locations, delivery areas, working hours, and reviews.
+This section covers how to integrate the Local extension API into your own extension if you need to manage locations, delivery areas, working hours, and reviews. The Local extension provides a simple API for managing locations, delivery areas, working hours, and reviews.
 
 ### Locations
 
