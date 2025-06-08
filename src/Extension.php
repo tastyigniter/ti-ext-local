@@ -227,7 +227,7 @@ class Extension extends BaseExtension
         return [
             'reviewsettings' => [
                 'label' => 'lang:igniter.local::default.reviews.text_settings',
-                'icon' => 'fa fa-gear',
+                'icon' => 'fa fa-comment-dots',
                 'description' => 'lang:igniter.local::default.reviews.text_settings_description',
                 'model' => ReviewSettings::class,
                 'permissions' => ['Admin.Reviews'],
