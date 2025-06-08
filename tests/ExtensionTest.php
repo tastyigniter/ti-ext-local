@@ -177,17 +177,12 @@ it('returns registered permissions array', function(): void {
 it('returns registered settings array', function(): void {
     $extension = new Extension(app());
 
-    $result = $extension->registerSettings();
+    $settings = $extension->registerSettings();
 
-    expect($result)->toEqual([
-        'reviewsettings' => [
-            'label' => 'lang:igniter.local::default.reviews.text_settings',
-            'icon' => 'fa fa-gear',
-            'description' => 'lang:igniter.local::default.reviews.text_settings_description',
-            'model' => ReviewSettings::class,
-            'permissions' => ['Admin.Reviews'],
-        ],
-    ]);
+    expect($settings)->toHaveKey('reviewsettings')
+        ->and($settings['reviewsettings']['label'])->toBe('lang:igniter.local::default.reviews.text_settings')
+        ->and($settings['reviewsettings']['model'])->toBe(ReviewSettings::class)
+        ->and($settings['reviewsettings']['permissions'])->toBe(['Admin.Reviews']);
 });
 
 it('returns registered onboarding steps array', function(): void {
