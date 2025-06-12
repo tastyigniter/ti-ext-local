@@ -30,7 +30,7 @@ return new class extends Migration
                 $table->text('review_text');
                 $table->dateTime('date_added');
                 $table->boolean('review_status');
-                $table->index(['review_id', 'sale_type', 'sale_id'], 'igniter_reviews_sale_id_type_index');  // was unique
+                $table->index(['review_id', 'sale_type', 'sale_id'], 'reviews_sale_id_type_index');  // was unique
             });
         }
 
