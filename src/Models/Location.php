@@ -103,6 +103,7 @@ class Location extends Model implements LocationInterface
 
     protected $casts = [
         'location_country_id' => 'integer',
+        'location_status' => 'boolean',
         'location_lat' => 'double',
         'location_lng' => 'double',
     ];
