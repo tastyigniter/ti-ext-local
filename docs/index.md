@@ -28,10 +28,13 @@ IGNITER_LOCATION_MODE=single
 
 By default, the location mode is set to `multiple` which allows you to manage multiple locations.
 
-### GeoCoder
+### Managing ocations
 
-The Local extension uses the `Igniter\Flame\Geolite\Facades\Geocoder` facade to geocode addresses. You can configure the geocoder provider by setting the
-**Default Geocoder** field to the desired provider in the _Manage > Settings > General_ admin settings page.
+From your TastyIgniter Admin, navigate to _Manage > Settings > Locations_ to create, edit or delete locations. You can also set the default location by clicking on the **Set as Default** button next to the location.
+
+### Geocoder
+
+From your TastyIgniter Admin, you can configure the geocoder provider by setting the **Default Geocoder** field to the desired provider in the _Manage > Settings > General_ admin settings page.
 
 #### Google Maps API Key
 
@@ -39,15 +42,13 @@ To use the Google Maps geocoder provider, you need to set the Google Maps API ke
 
 ### Review Settings
 
-You can enable or disable reviews by navigating to the _Manage > Settings > Review settings_ admin settings page.
+You can enable or disable order and reservation reviews by navigating to the _Manage > Settings > Review settings_ admin settings page.
 
 ## Usage
 
+This section covers how to integrate the Local extension API into your own extension if you need to manage locations, delivery areas, working hours, and reviews. The Local extension provides a simple API for managing locations, delivery areas, working hours, and reviews.
+
 ### Locations
-
-#### Creating locations
-
-To create a location, navigate to _Manage > Settings > Locations_ in the admin area. Click on the **New** button, fill in the required details such as name, address, and description, and save your changes.
 
 #### Setting current location
 
@@ -623,7 +624,7 @@ The Local extension registers the following permissions:
 - `Admin.Locations`: Control who can manage locations in the admin area.
 - `Admin.Reviews`: Control who can manage reviews in the admin area.
 
-For more on restricting access to the admin area, see the [TastyIgniter Permissions](https://tastyigniter.com/docs/extend/permissions) documentation.
+For more on restricting access to the admin area, see the [TastyIgniter Permissions](https://tastyigniter.com/docs/customize/permissions) documentation.
 
 ### Events
 
@@ -631,13 +632,13 @@ The Local extension provides the following events:
 
 | Event                                   | Description | Parameters |
 |-----------------------------------------| ----------- | ---------- |
-| `location.current.updated`              |    When the current location is updated.    |  The `Location` model instance   |
-| `location.position.updated`             |    When the user's coordinates are updated.    |  The `Location` class instance, the `UserLocation` user position instance and previous `UserLocation` user position instance  |
-| `location.orderType.updated`            |    When the location's order type is updated.    |  The `Location` class instance, the order type string and previous order type string   |
-| `location.timeslot.updated`             |    When the location's order fulfilment time is updated.    |  The `Location` class instance   |
-| `location.area.updated`                 |    When the location's delivery area is updated.    |  The `Location` class instance and the `CoveredArea` class instance   |
-| `igniter.workingSchedule.created`       |   When a working schedule is created.    |  The `Location` model instance and the `WorkingSchedule` instance   |
-| `igniter.workingSchedule.timeslotValid` |   When a working schedule timeslot is validated.    |  The `WorkingSchedule` instance and the `DateTime` instance  |
+| `location.current.updated`              |    When the current location is updated.    |  The `Igniter\Local\Models\Location` model instance   |
+| `location.position.updated`             |    When the user's coordinates are updated.    |  The `Igniter\Local\Models\Location` class instance, the `UserLocation` user position instance and previous `UserLocation` user position instance  |
+| `location.orderType.updated`            |    When the location's order type is updated.    |  The `Igniter\Local\Models\Location` class instance, the order type string and previous order type string   |
+| `location.timeslot.updated`             |    When the location's order fulfilment time is updated.    |  The `Igniter\Local\Models\Location` class instance   |
+| `location.area.updated`                 |    When the location's delivery area is updated.    |  The `Igniter\Local\Models\Location` class instance and the `CoveredArea` class instance   |
+| `igniter.workingSchedule.created`       |   When a working schedule is created.    |  The `Igniter\Local\Models\Location` model instance and the `WorkingSchedule` instance   |
+| `igniter.workingSchedule.timeslotValid` |   When a working schedule timeslot is validated.    |  The `Igniter\Local\Classes\WorkingSchedule` instance and the `DateTime` instance  |
 
 Here is an example of hooking an event in the `boot` method of an extension class:
 

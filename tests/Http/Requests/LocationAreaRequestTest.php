@@ -35,6 +35,7 @@ it('returns correct validation rules', function(): void {
         ->and($rules)->toHaveKey('name', ['sometimes', 'required', 'string'])
         ->and($rules)->toHaveKey('is_default', ['sometimes', 'required', 'boolean'])
         ->and($rules)->toHaveKey('area_id', ['integer'])
+        ->and($rules)->toHaveKey('color', ['sometimes', 'nullable', 'string'])
         ->and($rules)->toHaveKey('boundaries.components', ['sometimes', 'required_if:type,address', 'array'])
         ->and($rules)->toHaveKey('boundaries.components.*.type', ['sometimes', 'required', 'string'])
         ->and($rules)->toHaveKey('boundaries.components.*.value', ['sometimes', 'required', 'string'])

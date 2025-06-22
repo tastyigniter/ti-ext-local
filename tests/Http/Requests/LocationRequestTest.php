@@ -40,8 +40,8 @@ it('returns correct validation rules', function(): void {
         ->and($rules)->toHaveKey('location_state', ['nullable', 'string', 'max:255'])
         ->and($rules)->toHaveKey('location_postcode', ['nullable', 'string', 'max:15'])
         ->and($rules)->toHaveKey('is_auto_lat_lng', ['required', 'boolean'])
-        ->and($rules)->toHaveKey('location_lat', ['required_if:is_auto_lat_lng,0', 'numeric'])
-        ->and($rules)->toHaveKey('location_lng', ['required_if:is_auto_lat_lng,0', 'numeric'])
+        ->and($rules)->toHaveKey('location_lat', ['required_if:is_auto_lat_lng,0', 'nullable', 'numeric'])
+        ->and($rules)->toHaveKey('location_lng', ['required_if:is_auto_lat_lng,0', 'nullable', 'numeric'])
         ->and($rules)->toHaveKey('description', ['max:3028'])
         ->and($rules)->toHaveKey('location_status', ['boolean'])
         ->and($rules)->toHaveKey('is_default', ['boolean']);
