@@ -47,6 +47,8 @@ class SettingsEditor extends BaseFormWidget
     {
         $this->vars['field'] = $this->formField;
         $this->vars['settings'] = $this->listSettings();
+        $this->vars['recordId'] = $this->model->getKey();
+
     }
 
     #[Override]
@@ -55,15 +57,13 @@ class SettingsEditor extends BaseFormWidget
         $this->addJs('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');
     }
 
-    public function onLoadRecord(): string
+    public function onLoadRecord(string $settingsCode): string
     {
-        throw_unless($settingsCode = input('code'), new ApplicationException('Missing settings code'));
-
         $definition = $this->getSettings($settingsCode);
 
         $model = LocationSettings::instance($this->model, $definition->code);
 
-        return $this->makePartial('recordeditor/form', [
+        return $this->makePartial('settingseditor/settingsrecord', [
             'formRecordId' => $settingsCode,
             'formTitle' => lang($definition->label),
             'formWidget' => $this->makeSettingsFormWidget($model, $definition),
