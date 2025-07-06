@@ -14,7 +14,7 @@
                 </div>
             @else
                 <h2 class="accordion-header">
-                    <a class="accordion-button collapsed"  href="{{ admin_url('locations/settings/' . $recordId . '?general=' . $setting->code) }}" aria-expanded="false" aria-controls="collapse{{ ucfirst($setting->code) }}">
+                    <a class="accordion-button collapsed"  href="{{ admin_url('locations/settings/' . $this->model->id . '?general=' . $setting->code) }}" aria-expanded="false" aria-controls="collapse{{ ucfirst($setting->code) }}">
                         @lang($setting->label)
                     </a>
                 </h2>

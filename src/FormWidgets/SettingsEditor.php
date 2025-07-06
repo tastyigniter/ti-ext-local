@@ -47,7 +47,6 @@ class SettingsEditor extends BaseFormWidget
     {
         $this->vars['field'] = $this->formField;
         $this->vars['settings'] = $this->listSettings();
-        $this->vars['recordId'] = $this->model->getKey();
 
     }
 
