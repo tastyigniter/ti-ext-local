@@ -46,11 +46,11 @@ class SettingsEditor extends BaseFormWidget
 
     public function prepareVars(): void
     {
+        $lastUri = Str::afterLast(request()->path(), '/');
+
         $this->vars['field'] = $this->formField;
         $this->vars['settings'] = $this->listSettings();
-        $this->vars['currentSettingsCode'] = Str::contains($lastUri = Str::afterLast(request()->path(), '/'), 'general-')
-            ? Str::after($lastUri, 'general-')
-            : null;
+        $this->vars['currentSettingsCode'] = Str::contains($lastUri, 'general-') ? Str::after($lastUri, 'general-') : null;
     }
 
     #[Override]
