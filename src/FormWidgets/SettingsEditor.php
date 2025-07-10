@@ -12,6 +12,7 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\LocationSettings;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Override;
 
 class SettingsEditor extends BaseFormWidget
@@ -47,7 +48,9 @@ class SettingsEditor extends BaseFormWidget
     {
         $this->vars['field'] = $this->formField;
         $this->vars['settings'] = $this->listSettings();
-
+        $this->vars['currentSettingsCode'] = Str::contains($lastUri = Str::afterLast(request()->path(), '/'), 'general-')
+            ? Str::after($lastUri, 'general-')
+            : null;
     }
 
     #[Override]
@@ -56,13 +59,13 @@ class SettingsEditor extends BaseFormWidget
         $this->addJs('formwidgets/recordeditor.modal.js', 'recordeditor-modal-js');
     }
 
-    public function onLoadRecord(string $settingsCode): string
+    public function renderSettingsForm(string $settingsCode): string
     {
         $definition = $this->getSettings($settingsCode);
 
         $model = LocationSettings::instance($this->model, $definition->code);
 
-        return $this->makePartial('settingseditor/settingsrecord', [
+        return $this->makePartial('settingseditor/form', [
             'formRecordId' => $settingsCode,
             'formTitle' => lang($definition->label),
             'formWidget' => $this->makeSettingsFormWidget($model, $definition),
