@@ -28,7 +28,7 @@ IGNITER_LOCATION_MODE=single
 
 By default, the location mode is set to `multiple` which allows you to manage multiple locations.
 
-### Managing ocations
+### Managing locations
 
 From your TastyIgniter Admin, navigate to _Manage > Settings > Locations_ to create, edit or delete locations. You can also set the default location by clicking on the **Set as Default** button next to the location.
 
