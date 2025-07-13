@@ -27,7 +27,6 @@ use Igniter\Local\FormWidgets\SettingsEditor;
 use Igniter\Local\FormWidgets\StarRating;
 use Igniter\Local\Http\Middleware\CheckLocation;
 use Igniter\Local\Http\Requests\LocationRequest;
-use Igniter\Local\Listeners\MaxOrderPerTimeslotReached;
 use Igniter\Local\MainMenuWidgets\LocationPicker;
 use Igniter\Local\Models\Actions\ReviewAction;
 use Igniter\Local\Models\Location as LocationModel;
@@ -55,10 +54,6 @@ class Extension extends BaseExtension
 
     protected $observers = [
         LocationArea::class => LocationAreaObserver::class,
-    ];
-
-    protected $subscribe = [
-        MaxOrderPerTimeslotReached::class,
     ];
 
     protected array $morphMap = [

@@ -87,8 +87,6 @@ return [
     'label_time' => 'Select a time',
     'label_minute' => 'Minute',
 
-    'label_limit_orders' => 'Limit Order Count',
-    'label_limit_orders_count' => 'Maximum Orders Per Interval',
     'label_offer_delivery' => 'Offer Delivery',
     'label_offer_collection' => 'Offer Pick-up',
     'label_delivery_time_interval' => 'Delivery Time Interval',
@@ -114,8 +112,6 @@ return [
     'help_menu_page_limit' => 'Limit how many menus are shown per page',
     'help_show_menu_image' => 'Show or hide menu images on view menu page',
 
-    'help_limit_orders' => 'Enabling this disables ASAP delivery and pickup orders.',
-    'help_limit_orders_interval' => 'Set the number of orders that can be placed between each time slot.',
     'help_delivery_time_restriction' => 'Whether your customers can only place ASAP delivery orders, schedule delivery orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
     'help_collection_time_restriction' => 'Whether your customers can only place ASAP pick-up orders, schedule pick-up orders for later or both. Restrictions do not apply when pre-ordering is enabled.',
     'help_delivery_time_interval' => 'Set the minutes between each delivery order time available to your customer.',
@@ -146,7 +142,6 @@ return [
     'alert_slot_time_required' => 'Please select a slot time.',
     'alert_slot_date_required' => 'Please select a slot date.',
     'alert_slot_type_required' => 'Please select a slot type.',
-    'alert_max_guest_reached' => 'We\'ve reached the maximum number of orders allowed for the selected timeslot, please choose another timeslot.',
 
     'text_heading' => 'Restaurants',
     'text_local_heading' => '%s - Restaurant',
