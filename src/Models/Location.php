@@ -69,23 +69,23 @@ class Location extends Model implements LocationInterface
     use Purgeable;
     use Switchable;
 
-    public const SWITCHABLE_COLUMN = 'location_status';
+    public const string SWITCHABLE_COLUMN = 'location_status';
 
-    const KM_UNIT = 111.13384;
+    public const float KM_UNIT = 111.13384;
 
-    const M_UNIT = 69.05482;
+    public const float M_UNIT = 69.05482;
 
-    const OPENING = 'opening';
+    public const string OPENING = 'opening';
 
-    const RESERVATION = 'reservation';
+    public const string RESERVATION = 'reservation';
 
-    const DELIVERY = 'delivery';
+    public const string DELIVERY = 'delivery';
 
-    const COLLECTION = 'collection';
+    public const string COLLECTION = 'collection';
 
-    const LOCATION_CONTEXT_SINGLE = 'single';
+    public const string LOCATION_CONTEXT_SINGLE = 'single';
 
-    const LOCATION_CONTEXT_MULTIPLE = 'multiple';
+    public const string LOCATION_CONTEXT_MULTIPLE = 'multiple';
 
     /**
      * @var string The database table name
