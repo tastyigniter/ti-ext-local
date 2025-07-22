@@ -39,7 +39,7 @@
       "name": "Local",
       "icon": {
         "class": "fa fa-map-marker",
-        "backgroundColor": "#CD4341",
+        "backgroundColor": "#FF4900",
         "color": "#fff"
       },
       "homepage": "https://tastyigniter.com/marketplace/item/igniter-local"
