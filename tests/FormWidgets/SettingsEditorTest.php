@@ -45,8 +45,7 @@ it('loads assets correctly', function(): void {
 });
 
 it('loads record correctly', function(): void {
-    request()->merge(['code' => 'checkout']);
-    expect($this->settingsEditorWidget->onLoadRecord())->toBeString();
+    expect($this->settingsEditorWidget->renderSettingsForm('checkout'))->toBeString();
 });
 
 it('saves record correctly', function(): void {

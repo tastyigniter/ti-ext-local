@@ -1,16 +1,5 @@
 <?php
 
-$config['form']['toolbar'] = [
-    'buttons' => [
-        'save' => [
-            'label' => 'lang:igniter::admin.button_save',
-            'class' => 'btn btn-primary',
-            'data-request' => 'onSave',
-            'data-progress-indicator' => 'igniter::admin.text_saving',
-        ],
-    ],
-];
-
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:igniter.local::default.text_tab_general',
     'fields' => [
