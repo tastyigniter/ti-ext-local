@@ -28,12 +28,24 @@ class SettingsEditor extends BaseFormWidget
 
     public $popupSize = 'modal-lg';
 
+    protected ?string $currentSettingsCode = null;
+
+    protected ?Form $settingsFormWidget = null;
+
     #[Override]
     public function initialize(): void
     {
         $this->fillFromConfig([
             'form',
         ]);
+
+        $lastUri = Str::afterLast(request()->path(), '/');
+        $this->currentSettingsCode = Str::contains($lastUri, 'general-') ? Str::after($lastUri, 'general-') : 'checkout';
+
+        $definition = $this->getSettings($this->currentSettingsCode);
+        $model = LocationSettings::instance($this->model, $definition->code);
+
+        $this->settingsFormWidget = $this->makeSettingsFormWidget($model, $definition);
     }
 
     #[Override]
@@ -46,11 +58,9 @@ class SettingsEditor extends BaseFormWidget
 
     public function prepareVars(): void
     {
-        $lastUri = Str::afterLast(request()->path(), '/');
-
         $this->vars['field'] = $this->formField;
         $this->vars['settings'] = $this->listSettings();
-        $this->vars['currentSettingsCode'] = Str::contains($lastUri, 'general-') ? Str::after($lastUri, 'general-') : null;
+        $this->vars['currentSettingsCode'] = $this->currentSettingsCode;
     }
 
     #[Override]
@@ -63,12 +73,10 @@ class SettingsEditor extends BaseFormWidget
     {
         $definition = $this->getSettings($settingsCode);
 
-        $model = LocationSettings::instance($this->model, $definition->code);
-
         return $this->makePartial('settingseditor/form', [
             'formRecordId' => $settingsCode,
             'formTitle' => lang($definition->label),
-            'formWidget' => $this->makeSettingsFormWidget($model, $definition),
+            'formWidget' => $this->settingsFormWidget,
         ]);
     }
 

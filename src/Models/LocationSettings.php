@@ -16,6 +16,12 @@ class LocationSettings extends Model
         'data' => 'array',
     ];
 
+    public $relation = [
+        'belongsTo' => [
+            'location' => [Location::class],
+        ],
+    ];
+
     protected array $settingsValues = [];
 
     protected static array $registeredSettings = [];

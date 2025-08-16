@@ -116,7 +116,7 @@ it('creates schedule item with valid type and data', function(): void {
     expect($scheduleItem->name)->toBe($type)
         ->and($scheduleItem->type)->toBe('daily');
 
-    array_map(function($data) {
+    array_map(function(array $data): array {
         expect($data[0]['open'])->toBe('09:00')
             ->and($data[0]['close'])->toBe('17:00');
 

@@ -350,7 +350,6 @@ it('adjusts end date when next close date is before current date', function(): v
 
     $reflection = new ReflectionClass(WorkingSchedule::class);
     $method = $reflection->getMethod('createPeriodForDays');
-    $method->setAccessible(true);
 
     $result = $method->invoke($workingSchedule, $dateTime);
 
