@@ -257,7 +257,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate, String
     #[Override]
     public function __toString(): string
     {
-        $values = array_map(fn($range): string => (string)$range, $this->ranges);
+        $values = array_map(fn(WorkingRange $range): string => (string)$range, $this->ranges);
 
         return implode(',', $values);
     }
