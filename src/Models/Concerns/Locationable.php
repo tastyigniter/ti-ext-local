@@ -8,6 +8,7 @@ use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Support\Facades\Igniter;
 use Igniter\Local\Models\Scopes\LocationableScope;
 use Igniter\User\Facades\AdminAuth;
+use Illuminate\Support\Collection;
 
 trait Locationable
 {
@@ -91,6 +92,6 @@ trait Locationable
             return !is_null($this->{$relationName});
         }
 
-        return ($this->{$relationName} ?? []) !== [];
+        return $this->{$relationName} instanceof Collection ? $this->{$relationName}->isNotEmpty() : ($this->{$relationName} ?? []) !== [];
     }
 }

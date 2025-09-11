@@ -311,7 +311,7 @@ class WorkingSchedule
             $periodTimeslot = $this->forDate($date)
                 ->timeslot($date, $interval, $leadTime)
                 ->filter(fn($timeslot): bool => $this->isTimeslotValid($timeslot, $dateTime, $leadTimeMinutes))
-                ->mapWithKeys(fn($timeslot) => [$timeslot->getTimestamp() => $timeslot]);
+                ->mapWithKeys(fn($timeslot): array => [$timeslot->getTimestamp() => $timeslot]);
 
             if ($periodTimeslot->isEmpty()) {
                 continue;
@@ -336,7 +336,7 @@ class WorkingSchedule
 
                 return $this->isTimeslotValid($timeslot, $dateTime, $leadTime->i);
             })
-            ->mapWithKeys(fn($timeslot) => [$timeslot->getTimestamp() => $timeslot]);
+            ->mapWithKeys(fn($timeslot): array => [$timeslot->getTimestamp() => $timeslot]);
     }
 
     public function setPeriods(array $periods): void

@@ -223,7 +223,7 @@ class Review extends Model
         $totalReviews = 0;
 
         foreach ($ratings as $rating => $totalRatings) {
-            $rating = (int)substr($rating, 2);
+            $rating = (int)substr((string) $rating, 2);
             $totalRatings = (int)$totalRatings;
 
             $weight = $rating * $totalRatings;

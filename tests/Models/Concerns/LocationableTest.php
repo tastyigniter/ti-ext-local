@@ -8,6 +8,7 @@ use Igniter\Cart\Models\Menu;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Exception\SystemException;
 use Igniter\Local\Models\Location;
+use Igniter\Local\Models\Review;
 use Igniter\User\Facades\AdminAuth;
 use Illuminate\Http\Request;
 
@@ -51,6 +52,9 @@ it('checks if locationable relation is morph type', function(): void {
 });
 
 it('checks if locationable relation exists for single relation type', function(): void {
+    $review = Review::factory()->create(['location_id' => null]);
+    expect($review->locationableRelationExists())->toBeFalse();
+
     $order = Order::factory()->create();
     $order->location()->associate(Location::factory()->create());
 
@@ -58,6 +62,9 @@ it('checks if locationable relation exists for single relation type', function()
 });
 
 it('checks if locationable relation exists for morph relation type', function(): void {
+    $menu = Menu::factory()->create();
+    expect($menu->locationableRelationExists())->toBeFalse();
+
     $menu = Menu::factory()->create();
     $menu->locations()->attach(Location::factory()->create());
 

@@ -104,6 +104,6 @@ trait LocationHelpers
 
     public function getGroupedSettingsAttribute(): mixed
     {
-        return $this->settings->mapWithKeys(fn($setting) => [$setting->item => $setting->data])->all();
+        return $this->settings->mapWithKeys(fn($setting): array => [$setting->item => $setting->data])->all();
     }
 }
