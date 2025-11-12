@@ -310,7 +310,7 @@ class WorkingSchedule
 
             $periodTimeslot = $this->forDate($date)
                 ->timeslot($date, $interval, $leadTime)
-                ->filter(fn($timeslot): bool => $this->isTimeslotValid($timeslot, $dateTime, $leadTimeMinutes))
+                ->filter(fn(DateTimeInterface $timeslot): bool => $this->isTimeslotValid($timeslot, $dateTime, $leadTimeMinutes))
                 ->mapWithKeys(fn($timeslot): array => [$timeslot->getTimestamp() => $timeslot]);
 
             if ($periodTimeslot->isEmpty()) {
@@ -331,7 +331,7 @@ class WorkingSchedule
 
         return $this->forDate($date)
             ->timeslot($date, $interval, $leadTime)
-            ->filter(function($timeslot) use ($date, $leadTime): bool {
+            ->filter(function(DateTimeInterface $timeslot) use ($date, $leadTime): bool {
                 $dateTime = make_carbon($date)->setTimeFromTimeString($timeslot->format('H:i'));
 
                 return $this->isTimeslotValid($timeslot, $dateTime, $leadTime->i);

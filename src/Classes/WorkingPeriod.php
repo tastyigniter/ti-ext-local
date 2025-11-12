@@ -32,7 +32,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate, String
     {
         $period = new static;
 
-        $timeRanges = array_map(fn($times): WorkingRange => WorkingRange::create($times), $times);
+        $timeRanges = array_map(WorkingRange::create(...), $times);
 
         $period->checkWorkingRangesOverlaps($timeRanges);
 
@@ -108,7 +108,7 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate, String
             $diffInHours += (int)$interval->format('%H');
         }
 
-        return $diffInHours >= 23 || $diffInHours == 0;
+        return $diffInHours >= 23 || $diffInHours === 0;
     }
 
     public function closesLate(): bool

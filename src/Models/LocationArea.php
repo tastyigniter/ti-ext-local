@@ -95,13 +95,13 @@ class LocationArea extends Model implements AreaInterface
     public function getVerticesAttribute()
     {
         return isset($this->boundaries['vertices']) ?
-            json_decode((string) $this->boundaries['vertices'], false) : [];
+            json_decode((string)$this->boundaries['vertices'], false) : [];
     }
 
     public function getCircleAttribute()
     {
         return isset($this->boundaries['circle']) ?
-            json_decode((string) $this->boundaries['circle'], false) : null;
+            json_decode((string)$this->boundaries['circle'], false) : null;
     }
 
     public function getColorAttribute($value)

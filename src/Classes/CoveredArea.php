@@ -86,12 +86,12 @@ class CoveredArea
         return optional($condition)->amount ?? 0;
     }
 
-    public function __get($key)
+    public function __get(string $key): mixed
     {
         return $this->model->getAttribute($key);
     }
 
-    public function __call($method, $parameters)
+    public function __call(string $method, array $parameters)
     {
         return method_exists($this->model, $method) ? call_user_func_array([$this->model, $method], $parameters) : null;
     }

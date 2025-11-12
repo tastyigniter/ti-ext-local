@@ -130,7 +130,7 @@ class ScheduleItem
         return $result;
     }
 
-    protected function createHours(int $day, $data): array
+    protected function createHours(int $day, array $data): array
     {
         $result = [];
 

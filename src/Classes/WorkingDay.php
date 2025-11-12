@@ -58,7 +58,7 @@ class WorkingDay
 
     public static function normalizeName($day): string
     {
-        $day = strtolower((string) $day);
+        $day = strtolower((string)$day);
 
         if (!static::isValid($day)) {
             throw new WorkingHourException(sprintf("Day `%s` isn't a valid day name. Valid day names are lowercase english words, e.g. `monday`, `thursday`.", $day));

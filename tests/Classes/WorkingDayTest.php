@@ -15,7 +15,7 @@ it('lists days correctly', function(): void {
 });
 
 it('maps days correctly', function(): void {
-    $mappedDays = WorkingDay::mapDays(fn($day) => strtoupper((string) $day));
+    $mappedDays = WorkingDay::mapDays(fn($day) => strtoupper((string)$day));
 
     expect($mappedDays)->toBeArray()
         ->and($mappedDays)->toHaveCount(7)
