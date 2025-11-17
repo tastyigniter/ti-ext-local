@@ -10,7 +10,7 @@ use Igniter\Local\Models\Location;
 
 trait LocationAwareWidget
 {
-    protected function isLocationAware($config): bool
+    protected function isLocationAware(array $config): bool
     {
         $locationAware = $config['locationAware'] ?? false;
 

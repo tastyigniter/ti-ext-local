@@ -103,7 +103,7 @@ class MapArea extends BaseFormWidget
         $this->addJs('maparea.js', 'maparea-js');
 
         // Make the mapview assets available
-        if (strlen((string) ($key = setting('maps_api_key'))) !== 0) {
+        if (strlen((string)($key = setting('maps_api_key'))) !== 0) {
             $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
             $this->addJs(sprintf($url, $key),
                 ['name' => 'google-maps-js', 'async' => null, 'defer' => null],
@@ -263,7 +263,7 @@ class MapArea extends BaseFormWidget
         $result = [];
 
         foreach ($loadValue as $key => $area) {
-            if (!isset($area['color']) || !strlen((string) $area['color'])) {
+            if (!isset($area['color']) || !strlen((string)$area['color'])) {
                 $index = min($key, count($this->areaColors));
                 $area['color'] = $this->areaColors[$index] ?? $this->areaColors[0];
             }

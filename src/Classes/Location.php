@@ -642,6 +642,6 @@ class Location
             $coordinates->getLongitude(),
         );
 
-        return $query->orderBy('distance')->whereIsEnabled()->limit($limit)->get();
+        return $query->with('delivery_areas')->orderBy('distance')->limit($limit)->get();
     }
 }

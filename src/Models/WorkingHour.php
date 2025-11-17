@@ -121,7 +121,7 @@ class WorkingHour extends Model implements WorkingHourInterface
     {
         $diffInHours = (int)floor($this->open->diffInHours($this->close));
 
-        return $diffInHours >= 23 || $diffInHours == 0;
+        return $diffInHours >= 23 || $diffInHours === 0;
     }
 
     public function isPastMidnight(): bool
