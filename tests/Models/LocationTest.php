@@ -99,7 +99,6 @@ it('configures location model correctly', function(): void {
         ->and($location->getTable())->toBe('locations')
         ->and($location->getKeyName())->toBe('location_id')
         ->and($location->timestamps)->toBeTrue()
-        ->and($location->getAppends())->toContain('location_thumb')
         ->and($location->getCasts())->toHaveKeys(['location_lat', 'location_lng'])
         ->and($location->getMorphClass())->toBe('locations')
         ->and($location->getGlobalScopes())->toHaveKey(LocationScope::class)
@@ -115,5 +114,6 @@ it('configures location model correctly', function(): void {
             'thumb',
             'gallery' => ['multiple' => true],
         ])
-        ->and($location->defaultableName())->toBe('Location Name');
+        ->and($location->defaultableName())->toBe('Location Name')
+        ->and($location->location_thumb)->toBeNull();
 });

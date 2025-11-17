@@ -52,6 +52,7 @@ use Override;
  * @property-read Collection<int, Media> $media
  * @property-read int|null $media_count
  * @property-read float|null $distance
+ * @property-read array|Collection<int, Review> $reviews
  * @method static Location first()
  * @method static Builder|Location selectDistance()
  * @mixin Model
@@ -98,8 +99,6 @@ class Location extends Model implements LocationInterface
     protected $primaryKey = 'location_id';
 
     public $timestamps = true;
-
-    protected $appends = ['location_thumb'];
 
     protected $casts = [
         'location_country_id' => 'integer',

@@ -149,9 +149,11 @@ it('returns review dates as an array', function(): void {
 });
 
 it('returns null if location id is not provided for score calculation', function(): void {
+    $location = Location::factory()->create();
     $result = Review::getScoreForLocation(null);
 
-    expect($result)->toBeNull();
+    expect(Review::calculateScoreForLocation($location))->toBe(0)
+        ->and($result)->toBeNull();
 });
 
 it('calculates correct score for location', function(): void {
@@ -160,7 +162,8 @@ it('calculates correct score for location', function(): void {
 
     $result = Review::getScoreForLocation($location->getKey());
 
-    expect($result)->toBeNumeric()
+    expect($result)->toBe(Review::calculateScoreForLocation($location))
+        ->and($result)->toBeNumeric()
         ->and($result)->toBeGreaterThan(0);
 });
 

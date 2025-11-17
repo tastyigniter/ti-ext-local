@@ -35,7 +35,9 @@ use Illuminate\Support\Facades\DB;
  * @property bool $review_status
  * @property Carbon $updated_at
  * @property-read null|Customer $customer
+ *
  * @method static Builder|Review whereReviewable(Model $object)
+ *
  * @mixin Model
  */
 class Review extends Model
@@ -207,7 +209,7 @@ class Review extends Model
         }
 
         if (!$ratings = array_get(self::$ratingScoreCache, $locationId)) {
-            $ratings = DB::table(self::make()->getTable())
+            $ratings = DB::table('igniter_reviews')
                 ->selectRaw('SUM(delivery = 1) as dr1, SUM(delivery = 2) as dr2, SUM(delivery = 3) as dr3, SUM(delivery = 4) as dr4, SUM(delivery = 5) as dr5')
                 ->selectRaw('SUM(quality = 1) as qr1, SUM(quality = 2) as qr2, SUM(quality = 3) as qr3, SUM(quality = 4) as qr4, SUM(quality = 5) as qr5')
                 ->selectRaw('SUM(service = 1) as sr1, SUM(service = 2) as sr2, SUM(service = 3) as sr3, SUM(service = 4) as sr4, SUM(service = 5) as sr5')
@@ -229,6 +231,36 @@ class Review extends Model
             $weight = $rating * $totalRatings;
             $totalWeight += $weight;
             $totalReviews += $totalRatings;
+        }
+
+        return $totalReviews > 0 ? ($totalWeight / $totalReviews) : 0;
+    }
+
+    public static function calculateScoreForLocation(Location $location): int|float
+    {
+        $reviews = $location->reviews;
+        if ($reviews->isEmpty()) {
+            return 0;
+        }
+
+        $totalWeight = 0;
+        $totalReviews = 0;
+
+        foreach ($reviews as $review) {
+            if ($review->delivery >= 1 && $review->delivery <= 5) {
+                $totalWeight += $review->delivery;
+                $totalReviews++;
+            }
+
+            if ($review->quality >= 1 && $review->quality <= 5) {
+                $totalWeight += $review->quality;
+                $totalReviews++;
+            }
+
+            if ($review->service >= 1 && $review->service <= 5) {
+                $totalWeight += $review->service;
+                $totalReviews++;
+            }
         }
 
         return $totalReviews > 0 ? ($totalWeight / $totalReviews) : 0;
