@@ -29,7 +29,7 @@ return new class extends Migration
     public function up(): void
     {
         foreach ($this->getIndexes() as $tableName => $indexes) {
-            Schema::table($tableName, function (Blueprint $table) use ($indexes) {
+            Schema::table($tableName, function(Blueprint $table) use ($indexes): void {
                 foreach ($indexes as $index) {
                     $table->index($index['columns'], $index['name']);
                 }
@@ -40,7 +40,7 @@ return new class extends Migration
     public function down(): void
     {
         foreach ($this->getIndexes() as $tableName => $indexes) {
-            Schema::table($tableName, function (Blueprint $table) use ($indexes) {
+            Schema::table($tableName, function(Blueprint $table) use ($indexes): void {
                 foreach ($indexes as $index) {
                     $table->dropIndex($index['name']);
                 }
