@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models\Concerns;
 
-use Igniter\Flame\Exception\SystemException;
 use Igniter\Flame\Exception\FlashException;
 use Igniter\Flame\Support\Facades\Igniter;
 use Igniter\Local\Models\Scopes\LocationableScope;
