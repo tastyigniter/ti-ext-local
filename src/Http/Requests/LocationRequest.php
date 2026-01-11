@@ -34,22 +34,35 @@ class LocationRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+
+        $method = Request::method();
+
+        $rules = [
             'location_name' => ['required', 'string', 'between:2,32'],
             'permalink_slug' => ['nullable', 'alpha_dash', 'max:255'],
-            'location_email' => ['required', 'email:filter', 'max:96'],
+            'location_email' => ['email:filter', 'max:96'],
             'location_telephone' => ['nullable', 'string'],
-            'location_address_1' => ['required', 'string', 'between:2,255'],
+            'location_address_1' => ['string', 'between:2,255'],
             'location_address_2' => ['nullable', 'string', 'max:255'],
             'location_city' => ['nullable', 'string', 'max:255'],
             'location_state' => ['nullable', 'string', 'max:255'],
             'location_postcode' => ['nullable', 'string', 'max:15'],
-            'is_auto_lat_lng' => ['required', 'boolean'],
+            'is_auto_lat_lng' => ['boolean'],
             'location_lat' => ['required_if:is_auto_lat_lng,0', 'nullable', 'numeric'],
             'location_lng' => ['required_if:is_auto_lat_lng,0', 'nullable', 'numeric'],
             'description' => ['max:3028'],
             'location_status' => ['boolean'],
             'is_default' => ['boolean'],
         ];
+
+        if ($method == 'POST') {
+            $rules['location_name'][] = 'required';
+            $rules['location_email'][] = 'required';
+            $rules['is_auto_lat_lng'][] = 'required';
+            $rules['location_address_1'][] = 'required';
+            $rules['is_auto_lat_lng'][] = 'required';
+        }
+
+        return $rules;
     }
 }
