@@ -7,7 +7,6 @@ namespace Igniter\Local\Tests\Models\Concerns;
 use Igniter\Cart\Models\Menu;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Exception\FlashException;
-use Igniter\Flame\Exception\SystemException;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\Review;
 use Igniter\User\Facades\AdminAuth;
