@@ -38,7 +38,7 @@ class LocationRequest extends FormRequest
         $method = Request::method();
 
         $rules = [
-            'location_name' => ['required', 'string', 'between:2,32'],
+            'location_name' => ['string', 'between:2,32'],
             'permalink_slug' => ['nullable', 'alpha_dash', 'max:255'],
             'location_email' => ['email:filter', 'max:96'],
             'location_telephone' => ['nullable', 'string'],
