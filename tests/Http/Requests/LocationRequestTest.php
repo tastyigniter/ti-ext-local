@@ -47,7 +47,7 @@ it('returns correct validation rules', function(): void {
         ->and($rules)->toHaveKey('is_default', ['boolean']);
 });
 
-it('returns correct validation rules when method is post', function() {
+it('returns correct validation rules when method is post', function(): void {
     $request = new LocationRequest([], [], [], [], [], ['REQUEST_METHOD' => 'POST']);
     $rules = $request->rules();
 

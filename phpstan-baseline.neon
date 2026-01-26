@@ -103,12 +103,6 @@ parameters:
 			path: src/Http/Controllers/Locations.php
 
 		-
-			message: '#^Call to static method method\(\) on an unknown class Igniter\\Local\\Http\\Requests\\Request\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Http/Requests/LocationRequest.php
-
-		-
 			message: '#^Access to an undefined property Igniter\\Admin\\Classes\\BaseWidget\:\:\$previewMode\.$#'
 			identifier: property.notFound
 			count: 1
