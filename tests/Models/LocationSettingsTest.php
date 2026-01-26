@@ -163,3 +163,72 @@ it('configures location settings model correctly', function(): void {
             'data' => 'array',
         ]);
 });
+
+it('filters by location_id using scopeApplyLocationId', function(): void {
+    $location1 = Location::factory()->create();
+    $location2 = Location::factory()->create();
+
+    $location1->settings()->create(['item' => 'settings_code_1']);
+    $location1->settings()->create(['item' => 'settings_code_2']);
+    $location2->settings()->create(['item' => 'settings_code_1']);
+    $location2->settings()->create(['item' => 'settings_code_2']);
+
+    $result = LocationSettings::applyLocationId($location1->getKey())->get();
+
+    expect($result)->toHaveCount(2)
+        ->and($result->pluck('location_id')->unique())->toHaveCount(1)
+        ->and($result->first()->location_id)->toBe($location1->getKey());
+});
+
+it('filters by item using scopeApplyItem', function(): void {
+    $location1 = Location::factory()->create();
+    $location2 = Location::factory()->create();
+
+    $location1->settings()->create(['item' => 'settings_code_1']);
+    $location1->settings()->create(['item' => 'settings_code_2']);
+    $location2->settings()->create(['item' => 'settings_code_1']);
+    $location2->settings()->create(['item' => 'settings_code_2']);
+
+    $result = LocationSettings::applyItem('settings_code_1')->get();
+
+    expect($result)->toHaveCount(2)
+        ->and($result->pluck('item')->unique())->toHaveCount(1)
+        ->and($result->first()->item)->toBe('settings_code_1');
+});
+
+it('can chain scopeApplyLocationId and scopeApplyItem together', function(): void {
+    $location1 = Location::factory()->create();
+    $location2 = Location::factory()->create();
+
+    $location1->settings()->create(['item' => 'settings_code_1']);
+    $location1->settings()->create(['item' => 'settings_code_2']);
+    $location2->settings()->create(['item' => 'settings_code_1']);
+    $location2->settings()->create(['item' => 'settings_code_2']);
+
+    $result = LocationSettings::applyLocationId($location1->getKey())
+        ->applyItem('settings_code_1')
+        ->get();
+
+    expect($result)->toHaveCount(1)
+        ->and($result->first()->location_id)->toBe($location1->getKey())
+        ->and($result->first()->item)->toBe('settings_code_1');
+});
+
+it('returns empty collection when scopeApplyLocationId filters with non-existent location_id', function(): void {
+    $location = Location::factory()->create();
+    $location->settings()->create(['item' => 'settings_code_1']);
+
+    $nonExistentLocationId = 99999;
+    $result = LocationSettings::applyLocationId($nonExistentLocationId)->get();
+
+    expect($result)->toHaveCount(0);
+});
+
+it('returns empty collection when scopeApplyItem filters with non-existent item', function(): void {
+    $location = Location::factory()->create();
+    $location->settings()->create(['item' => 'settings_code_1']);
+
+    $result = LocationSettings::applyItem('non_existent_item')->get();
+
+    expect($result)->toHaveCount(0);
+});
