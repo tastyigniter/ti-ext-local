@@ -30,19 +30,29 @@ it('returns correct attribute labels', function(): void {
 it('returns correct validation rules', function(): void {
     $rules = (new LocationRequest)->rules();
 
-    expect($rules)->toHaveKey('location_name', ['required', 'string', 'between:2,32'])
+    expect($rules)->toHaveKey('location_name', ['string', 'between:2,32'])
         ->and($rules)->toHaveKey('permalink_slug', ['nullable', 'alpha_dash', 'max:255'])
-        ->and($rules)->toHaveKey('location_email', ['required', 'email:filter', 'max:96'])
+        ->and($rules)->toHaveKey('location_email', ['email:filter', 'max:96'])
         ->and($rules)->toHaveKey('location_telephone', ['nullable', 'string'])
-        ->and($rules)->toHaveKey('location_address_1', ['required', 'string', 'between:2,255'])
+        ->and($rules)->toHaveKey('location_address_1', ['string', 'between:2,255'])
         ->and($rules)->toHaveKey('location_address_2', ['nullable', 'string', 'max:255'])
         ->and($rules)->toHaveKey('location_city', ['nullable', 'string', 'max:255'])
         ->and($rules)->toHaveKey('location_state', ['nullable', 'string', 'max:255'])
         ->and($rules)->toHaveKey('location_postcode', ['nullable', 'string', 'max:15'])
-        ->and($rules)->toHaveKey('is_auto_lat_lng', ['required', 'boolean'])
+        ->and($rules)->toHaveKey('is_auto_lat_lng', ['boolean'])
         ->and($rules)->toHaveKey('location_lat', ['required_if:is_auto_lat_lng,0', 'nullable', 'numeric'])
         ->and($rules)->toHaveKey('location_lng', ['required_if:is_auto_lat_lng,0', 'nullable', 'numeric'])
         ->and($rules)->toHaveKey('description', ['max:3028'])
         ->and($rules)->toHaveKey('location_status', ['boolean'])
         ->and($rules)->toHaveKey('is_default', ['boolean']);
+});
+
+it('returns correct validation rules when method is post', function() {
+    $request = new LocationRequest([], [], [], [], [], ['REQUEST_METHOD' => 'POST']);
+    $rules = $request->rules();
+
+    expect($rules['location_name'])->toContain('required')
+        ->and($rules['location_email'])->toContain('required')
+        ->and($rules['is_auto_lat_lng'])->toContain('required')
+        ->and($rules['location_address_1'])->toContain('required');
 });

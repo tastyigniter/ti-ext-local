@@ -34,9 +34,6 @@ class LocationRequest extends FormRequest
 
     public function rules(): array
     {
-
-        $method = Request::method();
-
         $rules = [
             'location_name' => ['string', 'between:2,32'],
             'permalink_slug' => ['nullable', 'alpha_dash', 'max:255'],
@@ -55,7 +52,7 @@ class LocationRequest extends FormRequest
             'is_default' => ['boolean'],
         ];
 
-        if ($method == 'POST') {
+        if ($this->method() == 'POST') {
             $rules['location_name'][] = 'required';
             $rules['location_email'][] = 'required';
             $rules['is_auto_lat_lng'][] = 'required';
