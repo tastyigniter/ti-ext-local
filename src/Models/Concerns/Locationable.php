@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models\Concerns;
 
-use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Exception\FlashException;
 use Igniter\Flame\Support\Facades\Igniter;
 use Igniter\Local\Models\Scopes\LocationableScope;
 use Igniter\User\Facades\AdminAuth;
@@ -48,7 +48,7 @@ trait Locationable
         $locationable = $this->getLocationableRelationObject();
 
         if (Igniter::runningInAdmin() && !AdminAuth::isSuperUser() && $locationable->count()) {
-            throw new SystemException(lang('igniter::admin.alert_warning_locationable_delete'));
+            throw new FlashException(lang('igniter::admin.alert_warning_locationable_delete'));
         }
 
         $locationable->detach();

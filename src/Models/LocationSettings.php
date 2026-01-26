@@ -22,6 +22,11 @@ class LocationSettings extends Model
         ],
     ];
 
+    protected array $queryModifierFilters = [
+        'location_id' => 'applyLocationId',
+        'item' => 'applyItem',
+    ];
+
     protected array $settingsValues = [];
 
     protected static array $registeredSettings = [];
@@ -103,6 +108,16 @@ class LocationSettings extends Model
     public static function clearInternalCache(): void
     {
         static::$instances = [];
+    }
+
+    public function scopeApplyLocationId($query, $locationId)
+    {
+        return $query->where('location_id', $locationId);
+    }
+
+    public function scopeApplyItem($query, $item)
+    {
+        return $query->where('item', $item);
     }
 
     //

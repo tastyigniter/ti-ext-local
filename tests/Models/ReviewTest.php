@@ -17,6 +17,7 @@ use Igniter\User\Models\Customer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 it('creates a review for a completed sale', function(): void {
+    ReviewSettings::set('approve_reviews', false);
     $status = Status::factory()->create();
     setting()->set(['completed_order_status' => [$status->getKey()]]);
     $reviewable = Order::factory()->create([

@@ -6,7 +6,7 @@ namespace Igniter\Local\Tests\Models\Concerns;
 
 use Igniter\Cart\Models\Menu;
 use Igniter\Cart\Models\Order;
-use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Exception\FlashException;
 use Igniter\Local\Models\Location;
 use Igniter\Local\Models\Review;
 use Igniter\User\Facades\AdminAuth;
@@ -33,7 +33,7 @@ it('throws exception when detaching locations as non-superuser', function(): voi
     $request->shouldReceive('path')->andReturn('admin/menus/edit/1');
     app()->instance('request', $request);
 
-    $this->expectException(SystemException::class);
+    $this->expectException(FlashException::class);
     $this->expectExceptionMessage(lang('igniter::admin.alert_warning_locationable_delete'));
 
     $menu->delete();
