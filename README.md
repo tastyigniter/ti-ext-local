@@ -27,7 +27,7 @@ Please see [CHANGELOG](https://github.com/tastyigniter/ti-ext-local/blob/master/
 
 ## Reporting issues
 
-If you encounter a bug in this extension, please report it using the [Issue Tracker](https://github.com/tastyigniter/ti-ext-local/issues) on GitHub.
+If you encounter a bug in this extension, please report it using the [Issue Tracker](https://github.com/tastyigniter/TastyIgniter/issues) on GitHub.
 
 ## Contributing
 
