@@ -21,10 +21,6 @@ The TastyIgniter Local extension enhances your TastyIgniter application with loc
 
 Documentation can be found on the [TastyIgniter documentation website](https://tastyigniter.com/docs/extensions/local).
 
-## Changelog
-
-Please see [CHANGELOG](https://github.com/tastyigniter/ti-ext-local/blob/master/CHANGELOG.md) for more information on what has changed recently.
-
 ## Reporting issues
 
 If you encounter a bug in this extension, please report it using the [Issue Tracker](https://github.com/tastyigniter/TastyIgniter/issues) on GitHub.
