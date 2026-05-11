@@ -58,7 +58,7 @@ class Extension extends BaseExtension
 
     protected array $morphMap = [
         'location_areas' => LocationArea::class,
-        'locations' => \Igniter\Local\Models\Location::class,
+        'locations' => LocationModel::class,
         'working_hours' => WorkingHour::class,
     ];
 

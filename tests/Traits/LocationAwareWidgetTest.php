@@ -75,7 +75,7 @@ it('does not apply location scope when location is not current or assigned', fun
 });
 
 it('applies location scope to assigned only', function(): void {
-    $location = \Igniter\Local\Models\Location::factory()->create();
+    $location = Location::factory()->create();
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([$location->id]);
 
     $query = Menu::query();
@@ -87,7 +87,7 @@ it('applies location scope to assigned only', function(): void {
 });
 
 it('applies location scope', function(): void {
-    $location = \Igniter\Local\Models\Location::factory()->create();
+    $location = Location::factory()->create();
     LocationFacade::shouldReceive('currentOrAssigned')->andReturn([$location->id]);
 
     $query = Menu::query();
