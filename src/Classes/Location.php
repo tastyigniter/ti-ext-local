@@ -617,7 +617,7 @@ class Location
         return $cartTotal >= $this->minimumOrderTotal($orderType);
     }
 
-    public function checkDistance()
+    public function checkDistance(): ?float
     {
         return $this->getModel()
             ->calculateDistance($this->userPosition()->getCoordinates())
