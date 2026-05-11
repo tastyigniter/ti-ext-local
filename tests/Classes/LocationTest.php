@@ -609,7 +609,7 @@ it('returns formatted distance when distance is an instance of Distance', functi
         'longitude' => -74.0,
     ]);
     $this->location->putSession('position', $userPosition);
-    Geocoder::shouldReceive('driver')->andReturn(mock(AbstractProvider::class, function($mock) {
+    Geocoder::shouldReceive('driver')->andReturn(mock(AbstractProvider::class, function($mock): void {
         $mock->shouldReceive('distance')->andReturn(new Distance(2129.6443 * 1000, 0));
     }));
 
