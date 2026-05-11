@@ -7,6 +7,7 @@ namespace Igniter\Local\Tests\Classes;
 use Carbon\Carbon;
 use Igniter\Cart\Classes\AbstractOrderType;
 use Igniter\Cart\Facades\Cart;
+use Igniter\Flame\Geolite\Contracts\AbstractProvider;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Geolite\Model\Distance;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
@@ -608,7 +609,9 @@ it('returns formatted distance when distance is an instance of Distance', functi
         'longitude' => -74.0,
     ]);
     $this->location->putSession('position', $userPosition);
-    Geocoder::shouldReceive('distance')->andReturn(new Distance(2129.6443 * 1000, 0));
+    Geocoder::shouldReceive('driver')->andReturn(mock(AbstractProvider::class, function($mock) {
+        $mock->shouldReceive('distance')->andReturn(new Distance(2129.6443 * 1000, 0));
+    }));
 
     expect($this->location->checkDistance())->toBe(2129.6443);
 });

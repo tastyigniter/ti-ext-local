@@ -60,7 +60,7 @@ trait LocationHelpers
         $distance->setTo($position);
         $distance->in($this->getDistanceUnit());
 
-        return Geocoder::distance($distance);
+        return Geocoder::driver()->distance($distance);
     }
 
     public function getCoordinates(): CoordinatesInterface
