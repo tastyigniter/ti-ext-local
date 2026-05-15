@@ -169,6 +169,12 @@ parameters:
 			path: src/Models/LocationSettings.php
 
 		-
+			message: '#^Call to function array_key_exists\(\) with ''form'' and non\-empty\-array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Models/LocationSettings.php
+
+		-
 			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$customer\.$#'
 			identifier: property.notFound
 			count: 1

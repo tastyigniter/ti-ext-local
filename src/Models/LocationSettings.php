@@ -63,7 +63,7 @@ class LocationSettings extends Model
     #[Override]
     protected function afterFetch()
     {
-        $this->settingsValues = (array)$this->data ?: [];
+        $this->settingsValues = (array)$this->data;
         $this->setRawAttributes(array_merge($this->settingsValues, $this->getAttributes()));
     }
 

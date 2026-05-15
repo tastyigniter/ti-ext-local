@@ -37,7 +37,7 @@ class Location
 
     protected ?LocationModel $model = null;
 
-    protected string $locationModel = \Igniter\Local\Models\Location::class;
+    protected string $locationModel = LocationModel::class;
 
     protected ?CoveredArea $coveredArea = null;
 
@@ -243,7 +243,7 @@ class Location
      */
     public function getOrderType($code = null)
     {
-        $code = is_null($code) ? $this->orderType() : $code;
+        $code ??= $this->orderType();
 
         return $this->getOrderTypes()->get($code);
     }
@@ -617,7 +617,7 @@ class Location
         return $cartTotal >= $this->minimumOrderTotal($orderType);
     }
 
-    public function checkDistance()
+    public function checkDistance(): ?float
     {
         return $this->getModel()
             ->calculateDistance($this->userPosition()->getCoordinates())

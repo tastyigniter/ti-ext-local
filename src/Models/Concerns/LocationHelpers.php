@@ -8,6 +8,7 @@ use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Geolite\Contracts\DistanceInterface;
 use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Geolite\Facades\Geolite;
+use Igniter\Flame\Geolite\Model\Distance;
 use Igniter\Local\Models\LocationSettings;
 
 trait LocationHelpers
@@ -52,7 +53,7 @@ trait LocationHelpers
         ];
     }
 
-    public function calculateDistance(CoordinatesInterface $position)
+    public function calculateDistance(CoordinatesInterface $position): ?Distance
     {
         $distance = $this->makeDistance();
 
@@ -60,7 +61,7 @@ trait LocationHelpers
         $distance->setTo($position);
         $distance->in($this->getDistanceUnit());
 
-        return Geocoder::distance($distance);
+        return Geocoder::driver()->distance($distance);
     }
 
     public function getCoordinates(): CoordinatesInterface
