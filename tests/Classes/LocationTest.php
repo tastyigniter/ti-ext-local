@@ -335,6 +335,7 @@ it('checks order time returns false when no future days and location is closed',
     $orderType = mock(AbstractOrderType::class);
     $location->shouldReceive('getOrderType')->andReturn($orderType);
     $location->shouldReceive('isClosed')->andReturnTrue();
+    $orderType->shouldReceive('allowsBookingAt')->andReturnTrue();
     $orderType->shouldReceive('getFutureDays')->andReturnFalse();
 
     expect($location->checkOrderTime(now()->toDateTimeString()))->toBeFalse();
@@ -345,10 +346,33 @@ it('checks order time returns false when location is closed in future dates', fu
     $orderType = mock(AbstractOrderType::class);
     $location->shouldReceive('getOrderType')->andReturn($orderType);
     $location->shouldReceive('isClosed')->andReturnFalse();
+    $orderType->shouldReceive('allowsBookingAt')->andReturnTrue();
     $orderType->shouldReceive('getMinimumFutureDays')->andReturn(5);
     $orderType->shouldReceive('getFutureDays')->andReturn(10);
 
     expect($location->checkOrderTime(now()->addDay()))->toBeFalse();
+});
+
+it('checks order time returns false when order type rejects the ASAP/Later choice', function(): void {
+    $location = mock(Location::class)->makePartial();
+    $orderType = mock(AbstractOrderType::class);
+    $location->shouldReceive('getOrderType')->andReturn($orderType);
+    $orderType->shouldReceive('allowsBookingAt')->with(false)->andReturnFalse();
+
+    expect($location->checkOrderTime(now()->addHour(), null, false))->toBeFalse();
+});
+
+it('checks order time passes the isAsap flag through to the order type', function(): void {
+    $location = mock(Location::class)->makePartial();
+    $orderType = mock(AbstractOrderType::class);
+    $location->shouldReceive('getOrderType')->andReturn($orderType);
+    $orderType->shouldReceive('allowsBookingAt')->with(true)->once()->andReturnTrue();
+    $orderType->shouldReceive('getFutureDays')->andReturn(10);
+    $orderType->shouldReceive('getMinimumFutureDays')->andReturn(0);
+    $orderType->shouldReceive('getSchedule->isOpenAt')->andReturnTrue();
+    $location->shouldReceive('isClosed')->andReturnFalse();
+
+    expect($location->checkOrderTime(now()->addHour(), null, true))->toBeTrue();
 });
 
 it('orderTimeIsAsap returns first schedule timeslot when session date time is in the past', function(): void {

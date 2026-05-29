@@ -340,7 +340,7 @@ class Location
         return Carbon::parse($this->getOrderType()->getSchedule()->getCloseTime());
     }
 
-    public function checkOrderTime($timestamp = null, $orderTypeCode = null)
+    public function checkOrderTime($timestamp = null, $orderTypeCode = null, ?bool $isAsap = null)
     {
         if (is_null($timestamp)) {
             $timestamp = $this->orderDateTime();
@@ -355,6 +355,10 @@ class Location
         }
 
         $orderType = $this->getOrderType($orderTypeCode);
+
+        if (!$orderType->allowsBookingAt($isAsap)) {
+            return false;
+        }
 
         if (!$orderType->getFutureDays() && $this->isClosed()) {
             return false;
