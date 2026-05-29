@@ -49,7 +49,7 @@ use Override;
  * @method static void openTime(void $type = null, void $format = null)
  * @method static void closeTime(void $type = null, void $format = null)
  * @method static void lastOrderTime()
- * @method static bool checkOrderTime(void $timestamp = null, void $orderTypeCode = null)
+ * @method static bool checkOrderTime(void $timestamp = null, void $orderTypeCode = null, ?bool $isAsap = null)
  * @method static Carbon orderDateTime()
  * @method static bool orderTimeIsAsap()
  * @method static bool hasAsapSchedule()
