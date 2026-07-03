@@ -49,18 +49,6 @@ parameters:
 			path: src/Classes/WorkingRange.php
 
 		-
-			message: '#^Call to an undefined method DateTimeInterface\:\:addDay\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Classes/WorkingSchedule.php
-
-		-
-			message: '#^Call to an undefined method DateTimeInterface\:\:lt\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Classes/WorkingSchedule.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1

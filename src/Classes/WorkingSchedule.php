@@ -452,7 +452,7 @@ class WorkingSchedule
         }
 
         $nextEndDate = $this->nextCloseAt($endDate->copy()->subDay());
-        if ($nextEndDate !== null && Carbon::instance($nextEndDate)->startOfDay()->lt(Carbon::instance($dateTime)->startOfDay())) {
+        if ($nextEndDate instanceof DateTimeInterface && Carbon::instance($nextEndDate)->startOfDay()->lt(Carbon::instance($dateTime)->startOfDay())) {
             $endDate = Carbon::instance($nextEndDate)->addDay();
         }
 
