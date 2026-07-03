@@ -113,24 +113,12 @@ class WorkingPeriod implements ArrayAccess, Countable, IteratorAggregate, String
 
     public function closesLate(): bool
     {
-        foreach ($this->ranges as $range) {
-            if ($range->endsNextDay()) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->ranges, fn(WorkingRange $range): bool => $range->endsNextDay());
     }
 
     public function opensLateAt(WorkingTime $time): bool
     {
-        foreach ($this->ranges as $range) {
-            if ($range->endsNextDay() && $range->containsTime($time)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->ranges, fn(WorkingRange $range): bool => $range->endsNextDay() && $range->containsTime($time));
     }
 
     public function timeslot(DateTimeInterface $dateTime, DateInterval $interval, ?DateInterval $leadTime = null): WorkingTimeslot
