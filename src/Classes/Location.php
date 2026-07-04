@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Closure;
 use DateTime;
 use DateTimeInterface;
+use Deprecated;
 use Igniter\Cart\Classes\AbstractOrderType;
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Flame\Geolite\Model\Location as UserLocation;
@@ -586,9 +587,7 @@ class Location
         return $this->coveredArea()->deliveryAmount($cartTotal);
     }
 
-    /**
-     * @deprecated remove after v4, use minimumOrderTotal() instead
-     */
+    #[Deprecated(message: 'remove after v4, use minimumOrderTotal() instead')]
     public function minimumOrder($cartTotal)
     {
         return $this->minimumOrderTotal();
@@ -604,9 +603,7 @@ class Location
         return $this->coveredArea()->listConditions();
     }
 
-    /**
-     * @deprecated remove after v4, use checkMinimumOrderTotal() instead
-     */
+    #[Deprecated(message: 'remove after v4, use checkMinimumOrderTotal() instead')]
     public function checkMinimumOrder($cartTotal): bool
     {
         return $this->checkMinimumOrderTotal($cartTotal);

@@ -233,13 +233,14 @@ class WorkingSchedule
             $dateTime = clone $dateTime;
         }
 
-        $nextCloseAt = $this->forDate($dateTime)->nextCloseAt(
-            WorkingTime::fromDateTime($dateTime),
-        );
-
         if (!$this->hasPeriod()) {
             return null;
         }
+
+        $forDate = $this->forDate($dateTime);
+        $nextCloseAt = $forDate->isEmpty()
+            ? false
+            : $forDate->nextCloseAt(WorkingTime::fromDateTime($dateTime));
 
         while ($nextCloseAt === false) {
             $dateTime = $dateTime->modify('+1 day')->setTime(0, 0);
@@ -451,8 +452,8 @@ class WorkingSchedule
         }
 
         $nextEndDate = $this->nextCloseAt($endDate->copy()->subDay());
-        if ($nextEndDate->lt($dateTime)) {
-            $endDate = $nextEndDate->addDay();
+        if ($nextEndDate instanceof DateTimeInterface && Carbon::instance($nextEndDate)->startOfDay()->lt(Carbon::instance($dateTime)->startOfDay())) {
+            $endDate = Carbon::instance($nextEndDate)->addDay();
         }
 
         return new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
