@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Tests\Models\Concerns;
 
+use Igniter\Flame\Database\Attach\Manipulator;
 use Igniter\Flame\Database\Attach\Media;
 use Igniter\Flame\Geolite\Contracts\CoordinatesInterface;
 use Igniter\Local\Models\Location;
@@ -121,7 +122,7 @@ it('checks if location has gallery', function(): void {
     $location = Location::factory()->create();
     $media = new Media;
     $media->setRelation('attachment', $location);
-    $media->addFromRaw('raw-content', 'media-file.jpg', 'gallery');
+    $media->addFromRaw(Manipulator::decodedBlankImage(), 'media-file.png', 'gallery');
 
     $result = $location->hasGallery();
 
@@ -132,7 +133,7 @@ it('returns correct gallery', function(): void {
     $location = Location::factory()->create();
     $media = Media::create();
     $media->setRelation('attachment', $location);
-    $media->addFromRaw('raw-content', 'media-file.jpg', 'gallery');
+    $media->addFromRaw(Manipulator::decodedBlankImage(), 'media-file.png', 'gallery');
 
     $result = $location->getGallery();
 
