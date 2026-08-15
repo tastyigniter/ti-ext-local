@@ -46,7 +46,7 @@ it('returns correct validation rules', function(): void {
         ->and($rules)->toHaveKey('boundaries.distance.*.distance', ['sometimes', 'required', 'numeric'])
         ->and($rules)->toHaveKey('boundaries.distance.*.charge', ['sometimes', 'required', 'numeric'])
         ->and($rules)->toHaveKey('conditions', ['sometimes', 'array'])
-        ->and($rules)->toHaveKey('conditions.*.amount', ['sometimes', 'required', 'numeric'])
+        ->and($rules)->toHaveKey('conditions.*.amount', ['sometimes', 'required', 'currency'])
         ->and($rules)->toHaveKey('conditions.*.type', ['sometimes', 'required', 'alpha_dash'])
-        ->and($rules)->toHaveKey('conditions.*.total', ['sometimes', 'required', 'numeric']);
+        ->and($rules)->toHaveKey('conditions.*.total', ['sometimes', 'required', 'currency']);
 });

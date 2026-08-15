@@ -52,9 +52,9 @@ class LocationAreaRequest extends FormRequest
             'boundaries.distance.*.distance' => ['sometimes', 'required', 'numeric'],
             'boundaries.distance.*.charge' => ['sometimes', 'required', 'numeric'],
             'conditions' => ['sometimes', 'array'],
-            'conditions.*.amount' => ['sometimes', 'required', 'numeric'],
+            'conditions.*.amount' => ['sometimes', 'required', 'currency'],
             'conditions.*.type' => ['sometimes', 'required', 'alpha_dash'],
-            'conditions.*.total' => ['sometimes', 'required', 'numeric'],
+            'conditions.*.total' => ['sometimes', 'required', 'currency'],
         ];
     }
 }
