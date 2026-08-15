@@ -391,7 +391,7 @@ class WorkingSchedule
     protected function applyTimezone(DateTimeInterface $date): DateTimeInterface
     {
         if ($this->timezone && method_exists($date, 'setTimezone')) {
-            $date = $date->setTimezone($this->timezone);
+            return $date->setTimezone($this->timezone);
         }
 
         return $date;
