@@ -107,7 +107,7 @@ class LocationArea extends Model implements AreaInterface
     public function getColorAttribute($value)
     {
         if ((string)$value === '') {
-            $value = array_random(self::$areaColors);
+            return array_random(self::$areaColors);
         }
 
         return $value;
