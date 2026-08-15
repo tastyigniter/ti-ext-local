@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "tastyigniter/core": "^v4.0",
+        "tastyigniter/core": "^v4.4",
         "tastyigniter/ti-ext-automation": "^v4.0",
         "tastyigniter/ti-ext-cart": "^v4.0",
         "tastyigniter/ti-ext-reservation": "^v4.0"
