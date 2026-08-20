@@ -3,6 +3,8 @@
     data-control="map-area"
     data-alias="{{ $this->alias }}"
     data-remove-handler="{{ $this->getEventHandler('onDeleteArea') }}"
+    data-sort-handler="{{ $this->getEventHandler('onSortAreas') }}"
+    data-sortable-input-name="{{ $sortableInputName }}"
     data-sortable-container="#{{ $this->getId('areas') }}"
     data-sortable-handle=".{{ $this->getId('areas') }}-handle"
 >
