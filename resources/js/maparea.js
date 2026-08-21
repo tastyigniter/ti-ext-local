@@ -7,6 +7,7 @@
         this.$mapView = null
         this.options = options || {}
         this.$sortable = null
+        this.$sortableEl = null
         this.$sortableContainer = $(this.options.sortableContainer, this.$el)
 
         this.init()
@@ -30,6 +31,9 @@
         if (!el)
             return
 
+        if (this.$sortable && this.$sortableEl === el)
+            return
+
         if (this.$sortable) {
             try {
                 this.$sortable.destroy()
@@ -38,6 +42,7 @@
             this.$sortable = null
         }
 
+        this.$sortableEl = el
         this.$sortable = Sortable.create(el, {
             handle: this.options.sortableHandle,
             onEnd: $.proxy(this.onSortEnd, this),

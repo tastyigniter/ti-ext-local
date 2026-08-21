@@ -235,10 +235,14 @@ class MapArea extends BaseFormWidget
         $keyName = $relation->getModel()->getKeyName();
 
         $ownedIds = $relation->pluck($keyName)->all();
-        $sortedIds = array_values(array_intersect(
+        $sortedIds = array_values(array_unique(array_intersect(
             array_map('intval', $sortedIds),
             array_map('intval', $ownedIds),
-        ));
+        )));
+
+        throw_unless(count($sortedIds) === count($ownedIds),
+            new FlashException(lang('igniter.local::default.alert_invalid_area')),
+        );
 
         DB::transaction(function() use ($relation, $sortedIds): void {
             $relation->getModel()->setSortableOrder($sortedIds, array_keys($sortedIds));
