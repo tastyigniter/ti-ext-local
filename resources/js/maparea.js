@@ -7,6 +7,7 @@
         this.$mapView = null
         this.options = options || {}
         this.$sortable = null
+        this.$sortableEl = null
         this.$sortableContainer = $(this.options.sortableContainer, this.$el)
 
         this.init()
@@ -18,18 +19,34 @@
         this.$el.on('click', '[data-control="load-area"]', $.proxy(this.onLoadArea, this))
         this.$el.on('click', '[data-control="remove-area"]', $.proxy(this.onRemoveArea, this))
 
+        $(document).render($.proxy(this.bindSorting, this))
+
         this.bindSorting()
     }
 
     MapArea.prototype.bindSorting = function () {
-        var el = this.$sortableContainer.get(0),
-            sortableOptions = {
-                handle: this.options.sortableHandle,
-            }
+        this.$sortableContainer = $(this.options.sortableContainer, this.$el)
 
-        if (el) {
-            this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
+        var el = this.$sortableContainer.get(0)
+        if (!el)
+            return
+
+        if (this.$sortable && this.$sortableEl === el)
+            return
+
+        if (this.$sortable) {
+            try {
+                this.$sortable.destroy()
+            } catch (e) {
+            }
+            this.$sortable = null
         }
+
+        this.$sortableEl = el
+        this.$sortable = Sortable.create(el, {
+            handle: this.options.sortableHandle,
+            onEnd: $.proxy(this.onSortEnd, this),
+        })
     }
 
     MapArea.prototype.onModalShown = function (event, $modalEl) {
@@ -81,6 +98,27 @@
             data: {areaId: areaId},
         }).done(function () {
             $selectedArea.remove()
+        }).always(function () {
+            $.ti.loadingIndicator.hide()
+        });
+    }
+
+    MapArea.prototype.onSortEnd = function (event) {
+        if (event.oldIndex === event.newIndex)
+            return
+
+        var ids = this.$sortableContainer
+            .find('[data-control="area"] input[type="hidden"]')
+            .map(function () {
+                return $(this).val()
+            }).get()
+
+        var data = {}
+        data[this.options.sortableInputName] = ids
+
+        $.ti.loadingIndicator.show()
+        $.request(this.options.sortHandler, {
+            data: data,
         }).always(function () {
             $.ti.loadingIndicator.hide()
         });
@@ -156,6 +194,8 @@
     MapArea.DEFAULTS = {
         alias: undefined,
         removeHandler: undefined,
+        sortHandler: undefined,
+        sortableInputName: undefined,
         sortableHandle: '.maparea-item-handle',
         sortableContainer: '.field-maparea-items',
     }
