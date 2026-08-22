@@ -225,6 +225,36 @@ class MapArea extends BaseFormWidget
         ];
     }
 
+    public function onSortAreas(): array
+    {
+        throw_unless($sortedIds = array_filter((array)post($this->sortableInputName)),
+            new FlashException(lang('igniter.local::default.alert_invalid_area')),
+        );
+
+        $relation = $this->getRelationObject();
+        $keyName = $relation->getModel()->getKeyName();
+
+        $ownedIds = $relation->pluck($keyName)->all();
+        $sortedIds = array_values(array_unique(array_intersect(
+            array_map('intval', $sortedIds),
+            array_map('intval', $ownedIds),
+        )));
+
+        throw_unless(count($sortedIds) === count($ownedIds),
+            new FlashException(lang('igniter.local::default.alert_invalid_area')),
+        );
+
+        DB::transaction(function() use ($relation, $sortedIds): void {
+            $relation->getModel()->setSortableOrder($sortedIds, array_keys($sortedIds));
+        });
+
+        flash()->success(lang('igniter.local::default.alert_area_order_updated'))->now();
+
+        return [
+            '#notification' => $this->makePartial('flash'),
+        ];
+    }
+
     public function getMapShapeAttributes($area)
     {
         $areaColor = $area->color;
