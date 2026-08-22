@@ -61,6 +61,12 @@ parameters:
 			path: src/Classes/WorkingTimeslot.php
 
 		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:setSortableOrder\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/FormWidgets/MapArea.php
+
+		-
 			message: '#^Access to an undefined property Igniter\\Admin\\Classes\\BaseWidget\:\:\$previewMode\.$#'
 			identifier: property.notFound
 			count: 1

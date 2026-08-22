@@ -236,8 +236,8 @@ class MapArea extends BaseFormWidget
 
         $ownedIds = $relation->pluck($keyName)->all();
         $sortedIds = array_values(array_unique(array_intersect(
-            array_map('intval', $sortedIds),
-            array_map('intval', $ownedIds),
+            array_map(intval(...), $sortedIds),
+            array_map(intval(...), $ownedIds),
         )));
 
         throw_unless(count($sortedIds) === count($ownedIds),

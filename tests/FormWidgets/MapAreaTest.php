@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Igniter\Local\Tests\FormWidgets;
 
 use Igniter\Admin\Classes\FormField;
+use Igniter\Flame\Exception\FlashException;
 use Igniter\Local\FormWidgets\MapArea;
 use Igniter\Local\Http\Controllers\Locations;
 use Igniter\Local\Models\Location;
@@ -107,6 +108,34 @@ it('deletes area correctly', function(): void {
     $this->mapAreaWidget->onDeleteArea();
 
     expect(LocationArea::find($locationArea->area_id))->toBeNull();
+});
+
+it('sorts areas correctly', function(): void {
+    $areas = LocationArea::factory()->count(2)->create([
+        'location_id' => $this->location->getKey(),
+    ]);
+    $sortedIds = $areas->pluck('area_id')->reverse()->values()->all();
+    request()->request->set('___dragged_test_field', $sortedIds);
+
+    expect($this->mapAreaWidget->onSortAreas())->toHaveKey('#notification')
+        ->and($areas->first()->fresh()->priority)->toBe(1)
+        ->and($areas->last()->fresh()->priority)->toBe(0);
+});
+
+it('throws exception when sorting areas without ids', function(): void {
+    expect(fn() => $this->mapAreaWidget->onSortAreas())
+        ->toThrow(FlashException::class, lang('igniter.local::default.alert_invalid_area'));
+});
+
+it('throws exception when sorted area ids do not match owned areas', function(): void {
+    LocationArea::factory()->create([
+        'location_id' => $this->location->getKey(),
+    ]);
+    $otherArea = LocationArea::factory()->create();
+    request()->request->set('___dragged_test_field', [$otherArea->getKey()]);
+
+    expect(fn() => $this->mapAreaWidget->onSortAreas())
+        ->toThrow(FlashException::class, lang('igniter.local::default.alert_invalid_area'));
 });
 
 it('gets map shape attributes correctly', function(): void {
