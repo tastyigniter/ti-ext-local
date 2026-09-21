@@ -22,12 +22,12 @@ it('returns correct attribute labels', function(): void {
 
 it('returns correct validation rules', function(): void {
     $reviewRequest = new ReviewRequest;
-    $reviewRequest->merge(['reviewable_type' => 'locations']);
+    $reviewRequest->merge(['reviewable_type' => 'orders']);
 
     $rules = $reviewRequest->rules();
 
-    expect($rules)->toHaveKey('reviewable_type', ['required'])
-        ->and($rules)->toHaveKey('reviewable_id', ['required', 'integer', 'exists:locations,location_id'])
+    expect($rules)->toHaveKey('reviewable_type', ['required', 'in:orders,reservations'])
+        ->and($rules)->toHaveKey('reviewable_id', ['required', 'integer', 'exists:orders,order_id'])
         ->and($rules)->toHaveKey('location_id', ['required', 'integer'])
         ->and($rules)->toHaveKey('author', ['sometimes', 'required', 'string', 'between:2,255'])
         ->and($rules)->toHaveKey('quality', ['required', 'integer', 'min:1', 'max:5'])
@@ -35,4 +35,28 @@ it('returns correct validation rules', function(): void {
         ->and($rules)->toHaveKey('service', ['required', 'integer', 'min:1', 'max:5'])
         ->and($rules)->toHaveKey('review_text', ['required', 'between:2,1028'])
         ->and($rules)->toHaveKey('review_status', ['required', 'boolean']);
+});
+
+it('builds exists rules from the reviewable model mapping', function(): void {
+    $reviewRequest = new ReviewRequest;
+    $reviewRequest->merge(['reviewable_type' => 'reservations']);
+
+    expect($reviewRequest->rules()['reviewable_id'])->toBe(['required', 'integer', 'exists:reservations,reservation_id']);
+});
+
+it('does not interpolate unallowlisted reviewable types into exists rules', function(): void {
+    $reviewRequest = new ReviewRequest;
+    $reviewRequest->merge(['reviewable_type' => 'users']);
+
+    $rules = $reviewRequest->rules();
+
+    expect($rules['reviewable_type'])->toBe(['required', 'in:orders,reservations'])
+        ->and($rules['reviewable_id'])->toBe(['required', 'integer']);
+});
+
+it('does not interpolate non-string reviewable types into exists rules', function(): void {
+    $reviewRequest = new ReviewRequest;
+    $reviewRequest->merge(['reviewable_type' => ['users']]);
+
+    expect($reviewRequest->rules()['reviewable_id'])->toBe(['required', 'integer']);
 });
