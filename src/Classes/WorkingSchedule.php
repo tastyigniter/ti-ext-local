@@ -272,14 +272,14 @@ class WorkingSchedule
     {
         $time = $this->nextOpenAt(Carbon::now());
 
-        return ($time && $format) ? $time->format($format) : $time;
+        return ($time instanceof DateTimeInterface && $format) ? $time->format($format) : $time;
     }
 
     public function getCloseTime(?string $format = null): null|string|DateTimeInterface
     {
         $time = $this->nextCloseAt(Carbon::now());
 
-        return ($time && $format) ? $time->format($format) : $time;
+        return ($time instanceof DateTimeInterface && $format) ? $time->format($format) : $time;
     }
 
     public function checkStatus(null|int|string|DateTime $dateTime = null): string
@@ -326,9 +326,7 @@ class WorkingSchedule
 
     public function generateTimeslot(DateTime $date, DateInterval $interval, ?DateInterval $leadTime = null): Collection
     {
-        if (is_null($leadTime)) {
-            $leadTime = $interval;
-        }
+        $leadTime ??= $interval;
 
         return $this->forDate($date)
             ->timeslot($date, $interval, $leadTime)
@@ -390,7 +388,7 @@ class WorkingSchedule
 
     protected function applyTimezone(DateTimeInterface $date): DateTimeInterface
     {
-        if ($this->timezone && method_exists($date, 'setTimezone')) {
+        if ($this->timezone instanceof DateTimeZone && method_exists($date, 'setTimezone')) {
             return $date->setTimezone($this->timezone);
         }
 

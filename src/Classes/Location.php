@@ -320,18 +320,14 @@ class Location
 
     public function openTime(?string $type = null, ?string $format = null): null|string|DateTimeInterface
     {
-        if (is_null($type)) {
-            $type = $this->orderType();
-        }
+        $type ??= $this->orderType();
 
         return $this->workingSchedule($type)->getOpenTime($format);
     }
 
     public function closeTime(?string $type = null, ?string $format = null): null|string|DateTimeInterface
     {
-        if (is_null($type)) {
-            $type = $this->orderType();
-        }
+        $type ??= $this->orderType();
 
         return $this->workingSchedule($type)->getCloseTime($format);
     }
@@ -343,9 +339,7 @@ class Location
 
     public function checkOrderTime($timestamp = null, $orderTypeCode = null)
     {
-        if (is_null($timestamp)) {
-            $timestamp = $this->orderDateTime();
-        }
+        $timestamp ??= $this->orderDateTime();
 
         if (!$timestamp instanceof DateTime) {
             $timestamp = new DateTime($timestamp);
@@ -436,9 +430,7 @@ class Location
 
     public function scheduleTimeslot($orderType = null)
     {
-        if (is_null($orderType)) {
-            $orderType = $this->orderType();
-        }
+        $orderType ??= $this->orderType();
 
         if (array_key_exists($orderType, $this->scheduleTimeslotCache)) {
             return $this->scheduleTimeslotCache[$orderType];
@@ -556,11 +548,9 @@ class Location
             $area = $this->getModel()->findDeliveryArea($areaId);
         }
 
-        if (is_null($area)) {
-            $area = $this->getModel()->searchOrDefaultDeliveryArea(
-                $this->userPosition()->getCoordinates(),
-            );
-        }
+        $area ??= $this->getModel()->searchOrDefaultDeliveryArea(
+            $this->userPosition()->getCoordinates(),
+        );
 
         if (!$area instanceof LocationArea) {
             return new CoveredArea(new LocationArea);
@@ -623,9 +613,7 @@ class Location
 
     public function checkDeliveryCoverage(?UserLocation $userPosition = null)
     {
-        if (is_null($userPosition)) {
-            $userPosition = $this->userPosition();
-        }
+        $userPosition ??= $this->userPosition();
 
         return $this->coveredArea()->checkBoundary($userPosition->getCoordinates());
     }
