@@ -10,7 +10,6 @@ parameters:
         - resources/
     ignoreErrors:
 #        - '#PHPDoc tag @var#'
-        - identifier: generics.notGeneric
         - identifier: trait.unused
 #    excludePaths:
 #        - ./*/*/FileToBeExcluded.php

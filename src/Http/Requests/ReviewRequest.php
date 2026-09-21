@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Http\Requests;
 
+use Igniter\Local\Models\Review;
 use Igniter\System\Classes\FormRequest;
 use Override;
 
@@ -27,9 +28,20 @@ class ReviewRequest extends FormRequest
 
     public function rules(): array
     {
+        $reviewableType = $this->reviewable_type;
+        $modelClass = is_string($reviewableType)
+            ? (Review::$relatedSaleTypes[$reviewableType] ?? null)
+            : null;
+
+        $reviewableIdRules = ['required', 'integer'];
+        if (is_string($modelClass)) {
+            $model = new $modelClass;
+            $reviewableIdRules[] = sprintf('exists:%s,%s', $model->getTable(), $model->getKeyName());
+        }
+
         return [
-            'reviewable_type' => ['required'],
-            'reviewable_id' => ['required', 'integer', sprintf('exists:%s,%s_id', $this->reviewable_type, str_singular($this->reviewable_type))],
+            'reviewable_type' => ['required', 'in:'.implode(',', array_keys(Review::$relatedSaleTypes))],
+            'reviewable_id' => $reviewableIdRules,
             'location_id' => ['required', 'integer'],
             'author' => ['sometimes', 'required', 'string', 'between:2,255'],
             'quality' => ['required', 'integer', 'min:1', 'max:5'],

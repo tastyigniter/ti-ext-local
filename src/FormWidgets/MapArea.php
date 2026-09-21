@@ -306,9 +306,7 @@ class MapArea extends BaseFormWidget
 
     protected function makeAreaFormWidget($model, $context)
     {
-        if (is_null($model->location_id)) {
-            $model->location_id = $this->model->getKey();
-        }
+        $model->location_id ??= $this->model->getKey();
 
         $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $config['context'] = $context;

@@ -71,16 +71,14 @@ trait HasWorkingHours
         return $this->working_hours;
     }
 
-    public function newWorkingSchedule($type, $days = null)
+    public function newWorkingSchedule($type, int|array|null $days = null)
     {
         $types = $this->availableWorkingTypes();
         if (is_null($type) || !in_array($type, $types)) {
             throw new WorkingHourException(sprintf(lang('igniter.local::default.alert_invalid_schedule_type'), $type));
         }
 
-        if (is_null($days)) {
-            $days = $this->hasFutureOrder($type) ? (int)$this->futureOrderDays($type) : 0;
-        }
+        $days ??= $this->hasFutureOrder($type) ? (int)$this->futureOrderDays($type) : 0;
 
         $schedule = WorkingSchedule::create($days,
             $this->getWorkingHoursByType($type) ?? new Collection([]),
