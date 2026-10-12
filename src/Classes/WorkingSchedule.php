@@ -189,11 +189,19 @@ class WorkingSchedule
         return !$this->isOpenAt($dateTime);
     }
 
-    public function nextOpenAt(DateTimeInterface $dateTime): ?DateTimeInterface
+    /**
+     * @param  int|null  $searchDays  How many days the search may advance over closed days.
+     *                                Defaults to the number of future days orders are
+     *                                accepted for. Pass an explicit budget when the search
+     *                                is not bound by that customer-facing allowance.
+     */
+    public function nextOpenAt(DateTimeInterface $dateTime, ?int $searchDays = null): ?DateTimeInterface
     {
         if (!$dateTime instanceof DateTimeImmutable) {
             $dateTime = clone $dateTime;
         }
+
+        $searchDays ??= $this->maxDays;
 
         $nextOpenAt = $this->forDate($dateTime)->nextOpenAt(
             WorkingTime::fromDateTime($dateTime),
@@ -205,7 +213,7 @@ class WorkingSchedule
 
         $days = 0;
         while ($nextOpenAt === false) {
-            if ($days >= $this->maxDays) {
+            if ($days >= $searchDays) {
                 return null;
             }
 
@@ -440,7 +448,14 @@ class WorkingSchedule
     protected function createPeriodForDays(Carbon $dateTime): false|DatePeriod
     {
         $startDate = $dateTime->copy()->startOfDay()->subDays(2);
-        if (!($startDate = $this->nextOpenAt($startDate)) instanceof DateTimeInterface) {
+
+        // The window this period spans runs from two days back (a late night period is
+        // held by the day it opens on) to maxDays ahead, so the search for its first
+        // open day must be allowed to cross that whole window. Bounding it by maxDays
+        // alone strands the search on a closed day: with future orders turned off
+        // (maxDays = 0) it cannot step over a single one, so a location whose weekly
+        // closing day falls on "two days ago" reports no timeslots at all while open.
+        if (!($startDate = $this->nextOpenAt($startDate, $this->maxDays + 2)) instanceof DateTimeInterface) {
             return false;
         }
 

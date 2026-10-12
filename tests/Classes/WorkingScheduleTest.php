@@ -255,6 +255,57 @@ it('gets timeslot correctly', function(): void {
         ->and($timeslot['2023-01-02'])->toHaveCount(22);
 });
 
+it('gets timeslot when the weekly closing day falls two days before today', function(): void {
+    $this->travelTo(new DateTime('2023-01-05 10:00:00')); // Thursday, closing day + 2
+    $workingSchedule = new WorkingSchedule('UTC', 0); // future orders turned off
+    $workingSchedule->setType(Location::DELIVERY);
+    $workingSchedule->fill([
+        'periods' => [
+            'wednesday' => [['08:00', '17:00']],
+            'thursday' => [['08:00', '17:00']],
+            'friday' => [['08:00', '17:00']],
+            // closed on tuesday
+        ],
+    ]);
+
+    $timeslot = $workingSchedule->getTimeslot(15)->all();
+
+    expect($timeslot)->toHaveKey('2023-01-05')
+        ->and($timeslot['2023-01-05'])->not->toBeEmpty();
+});
+
+it('gets timeslot for today only when future orders are turned off', function(): void {
+    $this->travelTo(new DateTime('2023-01-05 10:00:00')); // Thursday
+    $workingSchedule = new WorkingSchedule('UTC', 0); // future orders turned off
+    $workingSchedule->setType(Location::DELIVERY);
+    $workingSchedule->fill([
+        'periods' => [
+            'wednesday' => [['08:00', '17:00']],
+            'thursday' => [['08:00', '17:00']],
+            'friday' => [['08:00', '17:00']],
+        ],
+    ]);
+
+    $timeslot = $workingSchedule->getTimeslot(15)->all();
+
+    expect(array_keys($timeslot))->toBe(['2023-01-05']);
+});
+
+it('gets empty timeslot when the whole window is closed', function(): void {
+    $this->travelTo(new DateTime('2023-01-05 10:00:00')); // Thursday
+    $workingSchedule = new WorkingSchedule('UTC', 0); // future orders turned off
+    $workingSchedule->setType(Location::DELIVERY);
+    $workingSchedule->fill([
+        'periods' => [
+            'monday' => [['08:00', '17:00']],
+        ],
+    ]);
+
+    $timeslot = $workingSchedule->getTimeslot(15)->all();
+
+    expect($timeslot)->toBeEmpty();
+});
+
 it('gets empty timeslot when no next open time', function(): void {
     $this->travelTo(new DateTime('2023-01-03 10:00:00')); // Tuesday
     $workingSchedule = new WorkingSchedule('UTC', [0, 5]);
