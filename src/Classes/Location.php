@@ -268,7 +268,7 @@ class Location
         return $this->orderType() === LocationModel::COLLECTION;
     }
 
-    public function hasOrderType($code = null)
+    public function hasOrderType($code = null): bool
     {
         if (!$orderType = $this->getOrderType($code)) {
             return false;
@@ -378,7 +378,7 @@ class Location
         return make_carbon($dateTime);
     }
 
-    public function orderTimeIsAsap()
+    public function orderTimeIsAsap(): bool
     {
         if (!$this->hasAsapSchedule()) {
             return false;
@@ -395,7 +395,7 @@ class Location
         return $orderTimeIsAsap || ($dateTime && now()->isAfter($dateTime));
     }
 
-    public function hasAsapSchedule()
+    public function hasAsapSchedule(): bool
     {
         if ($this->getOrderType()->getMinimumFutureDays()) {
             return false;

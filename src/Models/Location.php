@@ -158,7 +158,7 @@ class Location extends Model implements LocationInterface
         return static::whereIsEnabled()->dropdown('location_name');
     }
 
-    public static function onboardingIsComplete()
+    public static function onboardingIsComplete(): bool
     {
         if (($model = self::getDefault()) === null) {
             return false;
