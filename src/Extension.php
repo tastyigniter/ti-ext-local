@@ -168,7 +168,10 @@ class Extension extends BaseExtension
     public function registerMailTemplates(): array
     {
         return [
-            'igniter.local::mail.review_chase' => 'lang:igniter.local::default.reviews.text_chase_email',
+            'igniter.local::mail.review_chase' => [
+                'label' => 'lang:igniter.local::default.reviews.text_chase_email',
+                'variables' => ['igniter::system.mail_variables.text_group_order'],
+            ],
         ];
     }
 
