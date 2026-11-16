@@ -37,12 +37,6 @@ parameters:
 			path: src/Classes/WorkingPeriod.php
 
 		-
-			message: '#^Comparison operation "\=\=" between DateInterval and 0 results in an error\.$#'
-			identifier: equal.invalid
-			count: 1
-			path: src/Classes/WorkingRange.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1

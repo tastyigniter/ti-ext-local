@@ -71,7 +71,7 @@ class WorkingRange implements Stringable
     {
         $diffInHours = $this->start()->diff($this->end());
 
-        return ($diffInHours->h == 23 && $diffInHours->i == 59) || $diffInHours == 0;
+        return ($diffInHours->h == 23 && $diffInHours->i == 59) || ($diffInHours->h == 0 && $diffInHours->i == 0);
     }
 
     public function containsTime(WorkingTime $time): bool
