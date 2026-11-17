@@ -11,6 +11,7 @@ use Igniter\Flame\Database\Factories\HasFactory;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Igniter\Local\Classes\FeaturedLocations;
 use Igniter\Local\Contracts\LocationInterface;
 use Igniter\Local\Models\Concerns\HasDeliveryAreas;
 use Igniter\Local\Models\Concerns\HasWorkingHours;
@@ -43,6 +44,9 @@ use Override;
  * @property bool|null $location_status
  * @property string|null $permalink_slug
  * @property bool $is_default
+ * @property bool $is_featured
+ * @property Carbon|null $featured_from
+ * @property Carbon|null $featured_until
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property int $is_auto_lat_lng
@@ -103,6 +107,9 @@ class Location extends Model implements LocationInterface
     protected $casts = [
         'location_country_id' => 'integer',
         'location_status' => 'boolean',
+        'is_featured' => 'boolean',
+        'featured_from' => 'date',
+        'featured_until' => 'date',
         'location_lat' => 'double',
         'location_lng' => 'double',
     ];
@@ -152,6 +159,11 @@ class Location extends Model implements LocationInterface
     ];
 
     public $url;
+
+    public function isFeatured(): bool
+    {
+        return resolve(FeaturedLocations::class)->isFeatured($this);
+    }
 
     public static function getDropdownOptions()
     {

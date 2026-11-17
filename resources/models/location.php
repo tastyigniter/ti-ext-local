@@ -227,6 +227,36 @@ $config['form']['tabs'] = [
             'span' => 'right',
             'cssClass' => 'flex-width',
         ],
+        'is_featured' => [
+            'label' => 'lang:igniter.local::default.label_featured',
+            'type' => 'switch',
+            'default' => 0,
+            'span' => 'right',
+            'cssClass' => 'flex-width',
+            'comment' => 'lang:igniter.local::default.help_featured',
+        ],
+        'featured_from' => [
+            'label' => 'lang:igniter.local::default.label_featured_from',
+            'type' => 'datepicker',
+            'mode' => 'date',
+            'span' => 'left',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'is_featured',
+                'condition' => 'checked',
+            ],
+        ],
+        'featured_until' => [
+            'label' => 'lang:igniter.local::default.label_featured_until',
+            'type' => 'datepicker',
+            'mode' => 'date',
+            'span' => 'right',
+            'trigger' => [
+                'action' => 'show',
+                'field' => 'is_featured',
+                'condition' => 'checked',
+            ],
+        ],
         'location_lat' => [
             'label' => 'lang:igniter.local::default.label_latitude',
             'type' => 'text',

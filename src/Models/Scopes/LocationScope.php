@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Igniter\Local\Models\Scopes;
 
+use Carbon\CarbonInterface;
 use Igniter\Flame\Database\Scope;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -27,6 +28,17 @@ class LocationScope extends Scope
             $sql .= ' sin( radians( location_lat ) ) ) ) AS distance';
 
             return $builder->selectRaw($sql, [$latitude, $longitude, $latitude]);
+        };
+    }
+
+    public function addWhereIsFeatured()
+    {
+        return function(Builder $builder, ?CarbonInterface $date = null) {
+            $day = ($date ?? now())->toDateString();
+
+            return $builder->where('is_featured', true)
+                ->where(fn($query) => $query->whereNull('featured_from')->orWhere('featured_from', '<=', $day))
+                ->where(fn($query) => $query->whereNull('featured_until')->orWhere('featured_until', '>=', $day));
         };
     }
 }
