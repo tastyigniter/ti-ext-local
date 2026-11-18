@@ -18,6 +18,7 @@ use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Support\Facades\Igniter;
 use Igniter\Local\AutomationRules\Conditions\ReviewCount;
 use Igniter\Local\CartConditions\Delivery;
+use Igniter\Local\Classes\FeaturedLocations;
 use Igniter\Local\Classes\Location;
 use Igniter\Local\Facades\Location as LocationFacade;
 use Igniter\Local\FormWidgets\MapArea;
@@ -64,6 +65,7 @@ class Extension extends BaseExtension
 
     public array $singletons = [
         OrderTypes::class,
+        FeaturedLocations::class,
         'location' => Location::class,
     ];
 

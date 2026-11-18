@@ -26,6 +26,9 @@ class LocationRequest extends FormRequest
             'location_lng' => lang('igniter.local::default.label_longitude'),
             'description' => lang('igniter::admin.label_description'),
             'location_status' => lang('igniter::admin.label_status'),
+            'is_featured' => lang('igniter.local::default.label_featured'),
+            'featured_from' => lang('igniter.local::default.label_featured_from'),
+            'featured_until' => lang('igniter.local::default.label_featured_until'),
             'permalink_slug' => lang('igniter.local::default.label_permalink_slug'),
             'gallery.title' => lang('igniter.local::default.label_gallery_title'),
             'gallery.description' => lang('igniter::admin.label_description'),
@@ -50,6 +53,9 @@ class LocationRequest extends FormRequest
             'description' => ['max:3028'],
             'location_status' => ['boolean'],
             'is_default' => ['boolean'],
+            'is_featured' => ['sometimes', 'boolean'],
+            'featured_from' => ['nullable', 'date'],
+            'featured_until' => ['nullable', 'date', 'after_or_equal:featured_from'],
         ];
 
         if ($this->method() == 'POST') {
