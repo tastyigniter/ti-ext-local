@@ -41,6 +41,23 @@ it('adds locations extensions feature', function(): void {
         ->and($this->featured->isFeatured($extra->getKey()))->toBeTrue();
 });
 
+it('features no locations when none are featured', function(): void {
+    expect($this->featured->ids())->toBe([])
+        ->and($this->featured->boostedIds(new Coordinates(51.5, -0.12)))->toBe([]);
+});
+
+it('reloads featured locations after clearing the cache', function(): void {
+    expect($this->featured->ids())->toBe([]);
+
+    $location = Location::factory()->create(['location_status' => true, 'is_featured' => true]);
+
+    expect($this->featured->ids())->toBe([]);
+
+    $this->featured->clearCache();
+
+    expect($this->featured->ids())->toBe([$location->getKey()]);
+});
+
 it('boosts featured locations that deliver to the coordinates', function(): void {
     $delivers = Location::factory()->create(['location_status' => true, 'is_featured' => true]);
     $delivers->delivery_areas()->create([
