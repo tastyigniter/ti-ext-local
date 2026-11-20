@@ -191,7 +191,7 @@ return [
     'text_empty' => 'There are no locations available.',
     'text_24_7' => '24/7',
     'text_daily' => 'Daily',
-    'text_settings_title' => 'Location Settings',
+    'text_settings_title' => 'Location: Settings',
     'text_flexible' => 'Flexible',
     'text_timesheet' => 'Timesheet',
     'text_schedule' => 'Schedule',
