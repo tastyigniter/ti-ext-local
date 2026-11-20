@@ -21,6 +21,8 @@ return [
     'text_select_location' => 'Select a location',
     'text_add_location' => 'New location',
     'text_condition_all_orders' => '{amount} on all orders',
+    'text_condition_above_total' => '{amount} above {total}',
+    'text_condition_below_total' => '{amount} below {total}',
     'text_delivery_areas' => 'Delivery Areas',
     'text_min_total' => 'Min. Order Amount',
 
