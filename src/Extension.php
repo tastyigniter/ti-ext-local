@@ -284,6 +284,7 @@ class Extension extends BaseExtension
                     $charts->mergeDataset('reports', 'sets', [
                         'reviews' => [
                             'label' => 'lang:igniter.local::default.reviews.text_title',
+                            'permission' => 'Admin.Reviews',
                             'color' => '#FFB74D',
                             'model' => Review::class,
                             'column' => 'created_at',

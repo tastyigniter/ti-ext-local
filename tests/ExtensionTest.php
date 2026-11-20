@@ -216,7 +216,8 @@ it('returns registered dashboard charts', function(): void {
     };
     $datasets = $charts->testDatasets();
 
-    expect($datasets['reports']['sets']['reviews']['model'])->toBe(Review::class);
+    expect($datasets['reports']['sets']['reviews']['model'])->toBe(Review::class)
+        ->and($datasets['reports']['sets']['reviews']['permission'])->toBe('Admin.Reviews');
 });
 
 it('registers locations picker admin menus when running in admin', function(): void {
