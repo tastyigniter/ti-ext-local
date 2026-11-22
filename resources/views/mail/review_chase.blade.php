@@ -28,7 +28,7 @@ Restaurant: {{$location_name}}
 {!! $order_menu['menu_options'] !!}
 - {{ $order_menu['menu_price'] }}
 - {{ $order_menu['menu_subtotal'] }}
-{!! $order_menu['menu_comment'] !!}
+{{ $order_menu['menu_comment'] }}
 @endforeach
 @endif
 
@@ -69,7 +69,7 @@ We would really appreciate you leaving a review to tell us how we did and help u
         @foreach($order_menus as $order_menu)
             <tr>
                 <td>{{ $order_menu['menu_quantity'] }} x {{ $order_menu['menu_name'] }}
-                    <br>{!! $order_menu['menu_options'] !!}<br>{!! $order_menu['menu_comment'] !!}</td>
+                    <br>{!! $order_menu['menu_options'] !!}<br>{{ $order_menu['menu_comment'] }}</td>
                 <td align="right">{{ $order_menu['menu_price'] }}</td>
                 <td align="right">{{ $order_menu['menu_subtotal'] }}</td>
             </tr>

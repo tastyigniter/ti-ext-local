@@ -34,6 +34,7 @@ class Locations extends AdminController
     public array $formConfig = [
         'name' => 'lang:igniter.local::default.text_form_name',
         'model' => Location::class,
+        'recordName' => 'location_name',
         'create' => [
             'title' => 'lang:igniter::admin.form.create_title',
             'redirect' => 'locations/edit/{location_id}',

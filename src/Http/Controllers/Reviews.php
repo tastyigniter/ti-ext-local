@@ -33,6 +33,7 @@ class Reviews extends AdminController
     public array $formConfig = [
         'name' => 'lang:igniter.local::default.reviews.text_form_name',
         'model' => Review::class,
+        'recordName' => 'review_id',
         'request' => ReviewRequest::class,
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
